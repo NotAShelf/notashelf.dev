@@ -1,0 +1,124 @@
+body {
+  color: #f8fafc;
+  background-color: #0c0a09;
+  line-height: 1.6;
+  font-family: system-ui, clean, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  margin-bottom: 1.5em;
+}
+
+h1,
+h2,
+h3 {
+  margin-top: 1.5em;
+}
+
+a {
+  color: #e5e7eb;
+  text-decoration: none;
+  position: relative;
+}
+
+a:hover {
+  color: #f1f5f9;
+  text-decoration: underline;
+}
+
+a:active {
+  color: #a1a1a1;
+}
+
+a:visited {
+  color: #9ca3af;
+}
+
+section {
+  margin: 15px 0;
+  padding: 5px 0;
+}
+
+footer {
+  text-align: center;
+}
+
+code,
+.text-mono {
+  font-family: monospace;
+  color: #f8fafc;
+  background-color: #020617;
+  padding: 2px;
+}
+
+.centered-divider {
+  border: none;
+  height: 2px;
+  background-color: #f1f5f9;
+  width: 35%;
+  margin: 20px auto;
+}
+
+.primary {
+  text-align: left;
+  max-width: 65ch;
+  padding: 7.5px 15px;
+  margin: 0 auto;
+}
+
+.socials {
+  padding: 5px;
+}
+
+.interesting {
+  display: flex;
+  margin: auto;
+}
+
+.button-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 4px 2px;
+}
+
+.btn {
+  display: inline-block;
+  width: 100%;
+  color: #f8fafc;
+  background-color: #292524;
+  padding: 8px 2px;
+  margin: 5px 7px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  min-height: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #44403c;
+}
+
+.webring-div {
+  align-content: center;
+  font-size: 1.1em;
+}
+
+.webring-button,
+.webring-button:hover,
+.webring-button:visited {
+  color: #7eb4e0;
+  font-size: 1.2em;
+}
+
+.webring-button:hover {
+  text-decoration: underline;
+}
+
+.webring-button,
+.webring-button:visited {
+  text-decoration: none;
+}
