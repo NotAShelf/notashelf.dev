@@ -18,22 +18,22 @@ h3 {
 }
 
 a {
-  color: #e5e7eb;
+  color: #e0e7ff;
   text-decoration: none;
   position: relative;
 }
 
 a:hover {
-  color: #f1f5f9;
+  color: #c7d2fe;
   text-decoration: underline;
 }
 
 a:active {
-  color: #a1a1a1;
+  color: #bfdbfe;
 }
 
 a:visited {
-  color: #9ca3af;
+  color: #c7d2fe;
 }
 
 section {
@@ -104,14 +104,12 @@ code,
 
 .webring-div {
   align-content: center;
-  font-size: 1.1em;
 }
 
 .webring-button,
 .webring-button:hover,
 .webring-button:visited {
   color: #7eb4e0;
-  font-size: 1.2em;
 }
 
 .webring-button:hover {
