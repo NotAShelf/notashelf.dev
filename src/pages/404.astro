@@ -1,0 +1,151 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faSearch, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+---
+
+<BaseLayout
+  title="Page Not Found"
+  description="The page you're looking for doesn't exist or has been moved."
+>
+  <div class="error-container">
+    <div class="error-content">
+      <h1 class="error-code">404</h1>
+      <div class="error-divider"></div>
+      <h2 class="error-title">Page Not Found</h2>
+      <p class="error-message">
+        The page you're looking for doesn't exist or has been moved.
+      </p>
+
+      <div class="error-actions">
+        <a href="/" class="action-button primary">
+          <FontAwesomeIcon icon={faHome} />
+          <span>Home</span>
+        </a>
+        <a href="/posts" class="action-button">
+          <FontAwesomeIcon icon={faSearch} />
+          <span>Blog Posts</span>
+        </a>
+        <button onclick="history.back()" class="action-button">
+          <FontAwesomeIcon icon={faArrowLeft} />
+          <span>Go Back</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style lang="scss">
+  @import '../styles/variables';
+
+  .error-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 200px);
+    padding: 2rem;
+  }
+
+  .error-content {
+    text-align: center;
+    max-width: 500px;
+  }
+
+  .error-code {
+    font-size: 8rem;
+    font-weight: 800;
+    line-height: 1;
+    margin: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.4)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 1rem;
+  }
+
+  .error-divider {
+    width: 80px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 1.5rem auto;
+    border-radius: 3px;
+  }
+
+  .error-title {
+    font-size: 2rem;
+    margin: 0 0 1.5rem;
+    color: $secondary;
+  }
+
+  .error-message {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  .error-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .action-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.2rem;
+    background-color: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    border-radius: 6px;
+    border: none;
+    font-size: 0.95rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px);
+    }
+
+    &.primary {
+      background-color: lighten($primary, 15%);
+
+      &:hover {
+        background-color: lighten($primary, 20%);
+      }
+    }
+
+    :global(svg) {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .error-code {
+      font-size: 6rem;
+    }
+
+    .error-title {
+      font-size: 1.7rem;
+    }
+
+    .error-actions {
+      flex-direction: column;
+    }
+
+    .action-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
