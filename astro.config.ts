@@ -4,22 +4,21 @@ import mdx from "@astrojs/mdx";
 import remarkToc from "remark-toc";
 import react from "@astrojs/react";
 
+import sitemap from "@astrojs/sitemap";
+
 // https://astro.build/config
 export default defineConfig({
   output: "static",
   site: "https://notashelf.dev",
   trailingSlash: "never",
   // https://docs.astro.build/en/reference/configuration-reference/
-  integrations: [
-    mdx({
-      remarkPlugins: [
-        remarkHeadingIds,
-        [remarkToc, { heading: "contents" }],
-        remarkEmDash,
-      ],
-    }),
-    react(),
-  ],
+  integrations: [mdx({
+    remarkPlugins: [
+      remarkHeadingIds,
+      [remarkToc, { heading: "contents" }],
+      remarkEmDash,
+    ],
+  }), react(), sitemap()],
   markdown: {
     remarkPlugins: [
       remarkHeadingIds,
