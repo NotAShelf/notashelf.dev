@@ -32,25 +32,7 @@ jobs:
         run: |
           # Execute generation script
           # If the script fails, we should abort here.
-          nix build .#build-site \
-            -o link || exit 1
-
-          # We can't write the feed inside a symlinked directory
-          cp -Lr link/ out && chmod 777 out
-
-          # Generate feed
-          nix run .#json2rss -- \
-            --metadata tools/meta.json --posts_path out/posts/posts.json --feed_path out/feed.xml || exit 1
-
-
-          # Check if the feed has been generated successfully
-          file="out/feed.xml"
-          if [ ! -f "$file" ]; then
-            echo "Error: The file $file is missing!"
-            exit 1
-          else
-            echo "The file $file exists."
-          fi
+          nix build .#build-site -o link || exit 1
 
       - name: "Deploy to GitHub Pages"
         uses: JamesIves/github-pages-deploy-action@v4
