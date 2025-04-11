@@ -1,0 +1,806 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faUser,
+  faCode,
+  faLayerGroup,
+  faFileAlt,
+  faEnvelope,
+  faArrowRight,
+  faSnowflake,
+} from '@fortawesome/free-solid-svg-icons';
+import {
+  faGithub,
+  faTwitter,
+  faDiscord,
+  faRust,
+  faLinux,
+  faGolang
+} from '@fortawesome/free-brands-svg-icons';
+---
+
+<BaseLayout
+  title="About | NotAShelf"
+  description="Software engineer, sailor, political scientist and FOSS contributor"
+  keywords={["about", "linux", "nix", "nixos", "open source", "hyprland"]}
+>
+  <section class="about-container">
+    <div class="about-header fade-in">
+      <div class="profile-image-container">
+        <img src="https://avatars.githubusercontent.com/u/62766066?v=4" alt="Profile Picture" class="profile-image" />
+        <div class="tech-badges">
+          <span class="tech-badge" data-tooltip="NixOS">
+            <FontAwesomeIcon icon={faSnowflake} />
+          </span>
+          <span class="tech-badge" data-tooltip="Linux">
+            <FontAwesomeIcon icon={faLinux} />
+          </span>
+          <span class="tech-badge" data-tooltip="Rust">
+            <FontAwesomeIcon icon={faRust} />
+          </span>
+          <span class="tech-badge" data-tooltip="Go">
+            <FontAwesomeIcon icon={faGolang} />
+          </span>
+        </div>
+      </div>
+      <div class="about-intro">
+        <h1>Hey, I'm raf</h1>
+        <p class="lead">
+          Sailor, political scientist, academic, FOSS contributor, and digital artist.
+          I'm passionate about operating systems, open-source software, and system administration.
+        </p>
+        <div class="about-links">
+          <a href="https://github.com/NotAShelf" class="social-link" target="_blank" rel="noopener">
+            <FontAwesomeIcon icon={faGithub} /> GitHub
+          </a>
+          <a href="#contact" class="social-link highlight">
+            <FontAwesomeIcon icon={faEnvelope} /> Contact
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <section class="about-section fade-in" style="--delay: 0.1s">
+        <h2>Background <FontAwesomeIcon icon={faUser} /></h2>
+        <div class="section-content">
+          <p>
+            I've been programming since 2018, entering the world of Linux, programming, and OSS
+            through a lengthy misadventure involving a Linux VPS, a large-scale Minecraft server,
+            and an imminent crisis.
+          </p>
+          <p>
+            Currently, I'm focusing on backend applications, application security, and system
+            administration. I'm also interested in the role of information system and data
+            integrity/privacy within the policymaking process in contemporary politics,
+            which I've decided to base my PhD thesis on.
+          </p>
+          <p>
+            I take part in the Hyprland community, playing an active role in community management
+            and acting as a supporting developer for Nix.
+          </p>
+        </div>
+      </section>
+
+      <section class="about-section fade-in" style="--delay: 0.2s">
+        <h2>Tech Stack <FontAwesomeIcon icon={faLayerGroup} /></h2>
+        <div class="section-content">
+          <div class="skills-container">
+            <div class="skill-category">
+              <h3>Languages</h3>
+              <ul class="skill-list">
+                <li>Go</li>
+                <li>Rust</li>
+                <li>C</li>
+                <li>TypeScript</li>
+                <li>Python</li>
+                <li>Nix</li>
+              </ul>
+            </div>
+            <div class="skill-category">
+              <h3>Systems</h3>
+              <ul class="skill-list">
+                <li>NixOS</li>
+                <li>Linux</li>
+                <li>Hyprland</li>
+                <li>Neovim</li>
+              </ul>
+            </div>
+            <div class="skill-category">
+              <h3>Focus Areas</h3>
+              <ul class="skill-list">
+                <li>System Administration</li>
+                <li>Backend Development</li>
+                <li>Application Security</li>
+                <li>FOSS Contribution</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-section fade-in" style="--delay: 0.3s">
+        <h2>Featured Projects <FontAwesomeIcon icon={faCode} /></h2>
+        <div class="section-content">
+          <div class="projects-grid">
+            <div class="project-card">
+              <div class="project-header">
+                <h3>Nyx</h3>
+                <div class="project-links">
+                  <a href="https://github.com/notashelf/nyx" target="_blank" rel="noopener" aria-label="View on GitHub">
+                    <FontAwesomeIcon icon={faGithub} />
+                  </a>
+                </div>
+              </div>
+              <p>
+                The first child of Chaos and also an alias for my configuration for the ultimate declarative Linux distro, NixOS!
+              </p>
+              <div class="project-tags">
+                <span class="tag">NixOS</span>
+                <span class="tag">Configuration</span>
+                <span class="tag">Declarative</span>
+              </div>
+            </div>
+
+            <div class="project-card">
+              <div class="project-header">
+                <h3>nvf</h3>
+                <div class="project-links">
+                  <a href="https://github.com/notashelf/nvf" target="_blank" rel="noopener" aria-label="View on GitHub">
+                    <FontAwesomeIcon icon={faGithub} />
+                  </a>
+                </div>
+              </div>
+              <p>
+                A highly extensible and distro agnostic configuration framework for Neovim using Nix.
+              </p>
+              <div class="project-tags">
+                <span class="tag">Nix</span>
+                <span class="tag">Neovim</span>
+                <span class="tag">Configuration</span>
+              </div>
+            </div>
+
+            <div class="project-card">
+              <div class="project-header">
+                <h3>Hyprkeys</h3>
+                <div class="project-links">
+                  <a href="https://github.com/hyprland-community/Hyprkeys" target="_blank" rel="noopener" aria-label="View on GitHub">
+                    <FontAwesomeIcon icon={faGithub} />
+                  </a>
+                </div>
+              </div>
+              <p>
+                Powerful and easy to use keyboard utility designed for my favorite Wayland Compositor, Hyprland.
+              </p>
+              <div class="project-tags">
+                <span class="tag">Go</span>
+                <span class="tag">Hyprland</span>
+                <span class="tag">Utility</span>
+              </div>
+            </div>
+          </div>
+          <div class="more-projects">
+            <a href="https://github.com/NotAShelf" class="more-link" target="_blank" rel="noopener">
+              View more projects on GitHub <FontAwesomeIcon icon={faArrowRight} />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="about-section fade-in" style="--delay: 0.5s">
+        <h2>Let's Connect <FontAwesomeIcon icon={faEnvelope} /></h2>
+        <div class="section-content">
+          <p class="contact-text">
+            Want to talk? Ask a question? Want to discuss NixOS, Hyprland, or system administration?
+            Feel free to reach out through any of the following channels:
+          </p>
+          <div class="contact-options">
+            <a href="mailto:raf@notashelf.dev" class="contact-option">
+              <FontAwesomeIcon icon={faEnvelope} />
+              <span>raf@notashelf.dev</span>
+            </a>
+            <a href="https://discord.com/users/419880181101232129" target="_blank" rel="noopener" class="contact-option">
+              <FontAwesomeIcon icon={faDiscord} />
+              <span>@notashelf</span>
+            </a>
+            <a href="https://matrix.to/#/@raf:notashelf.dev" target="_blank" rel="noopener" class="contact-option">
+              <FontAwesomeIcon icon={faCode} />
+              <span>Matrix</span>
+            </a>
+            <a href="https://twitter.com/NotAShelf" target="_blank" rel="noopener" class="contact-option">
+              <FontAwesomeIcon icon={faTwitter} />
+              <span>Twitter</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    const techBadges = document.querySelectorAll('.tech-badge');
+    techBadges.forEach(badge => {
+      badge.addEventListener('mouseenter', function() {
+        const tooltip = this.getAttribute('data-tooltip');
+        if (tooltip) {
+          const tooltipEl = document.createElement('div');
+          tooltipEl.className = 'tooltip';
+          tooltipEl.textContent = tooltip;
+
+          this.appendChild(tooltipEl);
+
+          setTimeout(() => {
+            tooltipEl.classList.add('visible');
+          }, 10);
+        }
+      });
+
+      badge.addEventListener('mouseleave', function() {
+        const tooltipEl = this.querySelector('.tooltip');
+        if (tooltipEl) {
+          tooltipEl.classList.remove('visible');
+          setTimeout(() => {
+            tooltipEl.remove();
+          }, 200);
+        }
+      });
+    });
+  });
+</script>
+
+<style lang="scss">
+  @import '../styles/variables';
+
+  .about-container {
+    width: 100%;
+    max-width: 80ch;
+    margin: 0 auto;
+    padding: 2rem 0 4rem;
+  }
+
+  .about-header {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .profile-image-container {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .profile-image {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 3px solid lighten($primary, 10%);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                box-shadow 0.3s ease,
+                filter 0.3s ease;
+    filter: saturate(0.9);
+
+    &:hover {
+      transform: scale(1.05) rotate(-2deg);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      filter: saturate(1.1);
+    }
+  }
+
+  .tech-badges {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    gap: 0.5rem;
+    transform: translateY(30%);
+  }
+
+  .tech-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: lighten($primary, 10%);
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    color: $secondary;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+
+    &:hover {
+      transform: translateY(-3px);
+      background: lighten($primary, 15%);
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .tooltip {
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+
+    &.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid rgba(0, 0, 0, 0.8);
+    }
+  }
+
+  .about-intro {
+    flex: 1;
+
+    h1 {
+      font-size: 1.8rem;
+      margin: 0 0 1rem;
+      line-height: 1.2;
+      background: linear-gradient(
+        to right,
+        $secondary,
+        darken($secondary, 15%)
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      color: darken($secondary, 10%);
+    }
+  }
+
+  .about-links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    color: $secondary;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    &.highlight {
+      background: transparentize(lighten($primary, 10%), 0.7);
+
+      &:hover {
+        background: transparentize(lighten($primary, 15%), 0.6);
+      }
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .content-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .about-section {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transition-delay: var(--delay, 0s);
+
+    &.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+      svg {
+        color: lighten($primary, 15%);
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    p {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+      color: darken($secondary, 5%);
+    }
+  }
+
+  .section-content {
+    padding: 0 0.5rem;
+  }
+
+  // Skills section
+  .skills-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+  }
+
+  .skill-category {
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: lighten($primary, 15%);
+    }
+  }
+
+  .skill-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      padding: 0.4rem 0;
+      position: relative;
+      padding-left: 1.2rem;
+
+      &:before {
+        content: "•";
+        color: lighten($primary, 15%);
+        position: absolute;
+        left: 0;
+      }
+    }
+  }
+
+  // Projects section
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-card {
+    background: linear-gradient(
+      135deg,
+      lighten($primary, 5%),
+      lighten($primary, 8%)
+    );
+    border-radius: 8px;
+    padding: 1.5rem;
+    height: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.3),
+        rgba(255, 255, 255, 0.1)
+      );
+      transform: translateY(-100%);
+      transition: transform 0.3s ease;
+    }
+
+    &:hover:before {
+      transform: translateY(0);
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      margin: 0 0 0.2rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+      margin: 0.8rem 0;
+      flex-grow: 1;
+    }
+  }
+
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+  }
+
+  .project-links {
+    a {
+      color: $secondary;
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: auto;
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    background: rgba(255, 255, 255, 0.08);
+    color: darken($secondary, 10%);
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+  }
+
+  .more-projects, .more-posts {
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .more-link {
+    display: inline-flex;
+    align-items: center;
+    color: $secondary;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+
+    svg {
+      margin-left: 0.4rem;
+      width: 14px;
+      height: 14px;
+      transition: transform 0.2s ease;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+
+      svg {
+        transform: translateX(3px);
+      }
+    }
+  }
+
+  // Blog posts section
+  .blog-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .blog-post {
+    padding: 1.5rem;
+    border-radius: 8px;
+    background: linear-gradient(
+      135deg,
+      lighten($primary, 4%),
+      lighten($primary, 6%)
+    );
+    text-decoration: none;
+    color: $secondary;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+      transform: translateY(-3px) translateX(3px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      margin: 0.3rem 0 0.6rem;
+      color: $secondary;
+    }
+
+    .post-date {
+      font-size: 0.8rem;
+      color: darken($secondary, 30%);
+    }
+
+    .post-preview {
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      color: darken($secondary, 15%);
+      line-height: 1.5;
+    }
+
+    .read-more {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: lighten($primary, 30%);
+
+      svg {
+        width: 12px;
+        height: 12px;
+        transition: transform 0.2s ease;
+      }
+    }
+
+    &:hover .read-more svg {
+      transform: translateX(3px);
+    }
+  }
+
+  // Contact section
+  .contact-text {
+    margin-bottom: 1.5rem;
+    font-size: 1.05rem;
+  }
+
+  .contact-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .contact-option {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.8rem 1.2rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: $secondary;
+    text-decoration: none;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    svg {
+      width: 18px;
+      height: 18px;
+      color: lighten($primary, 15%);
+    }
+  }
+
+  // Responsive styles
+  @media (max-width: 768px) {
+    .about-header {
+      flex-direction: column;
+      text-align: center;
+      gap: 2rem;
+    }
+
+    .profile-image-container {
+      margin: 0 auto;
+    }
+
+    .about-intro {
+      h1 {
+        font-size: 1.6rem;
+      }
+    }
+
+    .about-links {
+      justify-content: center;
+    }
+
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .skills-container {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .skills-container {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-options {
+      flex-direction: column;
+    }
+
+    .contact-option {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .social-link {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

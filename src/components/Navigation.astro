@@ -1,0 +1,75 @@
+---
+const secondaryNavItems = [
+  { title: "Posts", url: "/posts" },
+  { title: "About", url: "/about" },
+  { title: "Privacy", url: "/privacy" }
+];
+---
+
+<div class="nav-wrapper">
+  <div class="nav-left">
+    <a class="nav-button" href="/">Index</a>
+  </div>
+  <div class="nav-right">
+    {secondaryNavItems.map(item => (
+      <a class="nav-button" href={item.url}>{item.title}</a>
+    ))}
+  </div>
+</div>
+<hr class="nav-border">
+
+<style lang="scss">
+  @import '../styles/variables';
+
+  .nav-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem 0;
+    box-sizing: border-box;
+  }
+
+  .nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-right {
+    justify-content: flex-end;
+  }
+
+  .nav-button {
+    font-family: Lato, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 800;
+    color: $secondary;
+    background: transparent;
+    text-decoration: none;
+    border: none;
+    margin: 0 5px;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover {
+      color: lighten($secondary, 5%);
+    }
+  }
+
+  .nav-left .nav-button:first-child {
+    margin-left: 0;
+  }
+
+  .nav-right .nav-button:last-child {
+    margin-right: 0;
+  }
+
+  .nav-border {
+    background-color: #1e242b;
+    width: 100%;
+    border: none;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+  }
+</style>

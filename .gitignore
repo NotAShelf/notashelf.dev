@@ -1,6 +1,11 @@
 # Nix
 result*
+.direnv
 
 # Manual builds
-out/
-feed.xml
+/dist
+/.astro
+/node_modules
+/npm-debug.log*
+
+

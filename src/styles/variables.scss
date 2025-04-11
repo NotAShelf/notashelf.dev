@@ -1,0 +1,18 @@
+// Theme colors
+$primary: #1a1a1a; // Dark background
+$secondary: #f0f0f0; // Light text
+$hover-color: #75b5aa; // Teal-like accent for links
+
+// Typography
+$font-family-primary: -apple-system, BlinkMacSystemFont, "Segoe UI",
+  "Roboto Slab", Roboto, Arial, sans-serif, "Oxygen-Sans", Ubuntu, Cantarell,
+  "Helvetica Neue", Helvetica, "游ゴシック", "PingFang SC", STXihei, "华文细黑",
+  "Microsoft Yahei", 微软雅黑, SimSun, 宋体, Heiti, 黑体, sans-serif, serif;
+$font-family-secondary: -apple-system, BlinkMacSystemFont, "Segoe UI",
+  "Courier Prime", Roboto, Arial, sans-serif, "Oxygen-Sans", Ubuntu, Cantarell,
+  "Helvetica Neue", Helvetica, "游ゴシック", "PingFang SC", STXihei, "华文细黑",
+  "Microsoft Yahei", 微软雅黑, SimSun, 宋体, Heiti, 黑体, sans-serif, serif;
+$font-family-pre: "Source Code Pro", "Lucida Console", monospace;
+
+// Breakpoints
+$screen-tablet: 768px;

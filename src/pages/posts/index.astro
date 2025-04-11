@@ -1,0 +1,455 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import Pagination from '../../components/Pagination.astro';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faArchive,
+  faSearch,
+  faXmark,
+  faMagnifyingGlass
+} from '@fortawesome/free-solid-svg-icons';
+
+// Get URL parameters for filtering and search
+const searchQuery = Astro.url.searchParams.get('q') || '';
+const selectedTag = Astro.url.searchParams.get('tag') || '';
+const currentPage = parseInt(Astro.url.searchParams.get('page') || '1');
+const postsPerPage = 5;
+
+// Get all blog posts
+const allPosts = await getCollection('posts');
+
+// Extract all unique tags from posts
+const allTags = [...new Set(
+  allPosts
+    .filter(post => !post.data.draft && !post.data.archived)
+    .flatMap(post => post.data.keywords || [])
+)].sort();
+
+// Filter posts based on search, tags, and archive status
+const filteredPosts = allPosts
+  .filter(post => !post.data.draft && !post.data.archived)
+  .filter(post => {
+    // Tag filter
+    if (selectedTag && (!post.data.keywords || !post.data.keywords.includes(selectedTag))) {
+      return false;
+    }
+
+    // Search filter (case insensitive)
+    if (searchQuery) {
+      const searchLower = searchQuery.toLowerCase();
+      const titleMatch = post.data.title.toLowerCase().includes(searchLower);
+      const descMatch = post.data.description ?
+        post.data.description.toLowerCase().includes(searchLower) : false;
+
+      return titleMatch || descMatch;
+    }
+
+    return true;
+  })
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+// Calculate pagination
+const totalPosts = filteredPosts.length;
+const totalPages = Math.ceil(totalPosts / postsPerPage);
+const startIndex = (currentPage - 1) * postsPerPage;
+const endIndex = startIndex + postsPerPage;
+const posts = filteredPosts.slice(startIndex, endIndex);
+
+// Get base URL for pagination that preserves filters
+const paginationBaseUrl = `/posts${searchQuery ? `?q=${searchQuery}` : ''}${searchQuery && selectedTag ? '&' : (selectedTag ? '?' : '')}${selectedTag ? `tag=${selectedTag}` : ''}`;
+---
+
+<BaseLayout
+  title="Blog Posts"
+  description="Collection of blog posts"
+>
+  <div class="posts-header">
+    <h1 class="page-title">Blog Posts</h1>
+    <a href="/archive" class="archive-link">
+      <FontAwesomeIcon icon={faArchive} /> View Archive
+    </a>
+  </div>
+
+  <div class="filters-container">
+    <div class="search-container">
+      <form action="/posts" method="get">
+        <input
+          type="text"
+          name="q"
+          id="search-input"
+          placeholder="Search posts..."
+          value={searchQuery}
+          aria-label="Search posts"
+        />
+        {selectedTag && <input type="hidden" name="tag" value={selectedTag} />}
+
+        <button type="submit" class="search-button">
+          <FontAwesomeIcon icon={faMagnifyingGlass} />
+        </button>
+
+        {searchQuery && (
+          <a
+            href={selectedTag ? `/posts?tag=${selectedTag}` : '/posts'}
+            class="clear-search"
+            aria-label="Clear search"
+          >
+            <FontAwesomeIcon icon={faXmark} />
+          </a>
+        )}
+      </form>
+    </div>
+
+    <div class="tags-container">
+      <div class="tags-wrap">
+        <a
+          href={searchQuery ? `/posts?q=${searchQuery}` : '/posts'}
+          class={`tag-filter ${!selectedTag ? 'active' : ''}`}
+        >
+          All
+        </a>
+
+        {allTags.map(tag => (
+          <a
+            href={`/posts?${searchQuery ? `q=${searchQuery}&` : ''}tag=${tag}`}
+            class={`tag-filter ${selectedTag === tag ? 'active' : ''}`}
+          >
+            {tag}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  {totalPosts > 0 ? (
+    <>
+      <ul class="post-list">
+        {posts.map(post => (
+          <li class="post-dropdown-item">
+            <a href={`/posts/${post.slug}`} class="dropdown-link">
+              <div class="post-content">
+                <div class="post-header">
+                  <h2 class="post-title">{post.data.title}</h2>
+                  {post.data.keywords && post.data.keywords.length > 0 && (
+                    <div class="post-tags">
+                      {post.data.keywords.map(tag => (
+                        <span class="post-tag">{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <time datetime={post.data.date} class="post-date">
+                  {new Date(post.data.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </time>
+                {post.data.description && <p class="post-description">{post.data.description}</p>}
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        baseUrl={paginationBaseUrl}
+      />
+    </>
+  ) : (
+    <div class="no-results">
+      <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
+      <p>No posts found matching your criteria</p>
+      <a href="/posts" class="reset-filters">Reset filters</a>
+    </div>
+  )}
+</BaseLayout>
+
+<style lang="scss">
+  @import '../../styles/variables';
+
+  .posts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .page-title {
+    margin-bottom: 0;
+  }
+
+  .archive-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: darken($secondary, 20%);
+    text-decoration: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: $secondary;
+    }
+
+    :global(svg) {
+      width: 0.9rem;
+      height: 0.9rem;
+    }
+  }
+
+  .filters-container {
+    margin-bottom: 1.5rem;
+  }
+
+  .search-container {
+    margin-bottom: 1rem;
+
+    form {
+      position: relative;
+      display: flex;
+    }
+
+    #search-input {
+      flex: 1;
+      padding: 0.6rem 0.8rem;
+      padding-right: 2.5rem;
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: $secondary;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      width: 100%;
+
+      &:focus {
+        outline: none;
+        background-color: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+    }
+
+    .search-button {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      padding: 0 0.8rem;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+
+      &:hover {
+        color: $secondary;
+      }
+
+      :global(svg) {
+        width: 0.9rem;
+        height: 0.9rem;
+      }
+    }
+
+    .clear-search {
+      position: absolute;
+      right: 2.5rem;
+      top: 0;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0 0.5rem;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      text-decoration: none;
+
+      &:hover {
+        color: $secondary;
+      }
+
+      :global(svg) {
+        width: 0.9rem;
+        height: 0.9rem;
+      }
+    }
+  }
+
+  .tags-container {
+    margin-bottom: 1rem;
+  }
+
+  .tags-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .tag-filter {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    margin-bottom: 0.5rem;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: $secondary;
+    }
+
+    &.active {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: $secondary;
+      font-weight: 500;
+    }
+  }
+
+  .post-list {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    list-style: none;
+  }
+
+  .post-dropdown-item {
+    background-color: lighten($primary, 6%);
+    list-style: none;
+    padding: 12px 16px;
+    border: 1px solid darken($primary, 1%);
+    border-radius: 6px;
+    margin: 12px 0;
+    width: 100%;
+    height: 140px;
+    display: flex;
+    overflow: hidden;
+    transition: background-color 0.15s ease-out, transform 0.1s ease-out;
+
+    &:hover {
+      cursor: pointer;
+      color: darken($secondary, 4%);
+      background-color: lighten($primary, 9%);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .dropdown-link {
+    display: block;
+    text-decoration: none;
+    width: 100%;
+    color: $secondary;
+
+    &:visited {
+      color: $secondary;
+    }
+  }
+
+  .post-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    width: 100%;
+  }
+
+  .post-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+  }
+
+  .post-date {
+    font-size: 0.75em;
+    color: darken($secondary, 20%);
+    margin: 0 0 8px 0;
+    display: block;
+  }
+
+  .post-description {
+    font-size: 0.85em;
+    color: darken($secondary, 10%);
+    margin: 0;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-left: 12px;
+  }
+
+  .post-tag {
+    font-size: 0.7rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 3rem 2rem;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+
+    :global(.search-icon) {
+      font-size: 2rem;
+      opacity: 0.5;
+      margin-bottom: 1rem;
+      display: block;
+      width: 2rem !important;
+      height: 2rem !important;
+      margin: 0 auto 1rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .reset-filters {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: $secondary;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-1px);
+      }
+    }
+  }
+</style>

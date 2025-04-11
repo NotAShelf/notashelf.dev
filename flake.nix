@@ -1,8 +1,5 @@
 {
-  # Reproducibility is not a concern, since nobody is *actually* supposed to reproduce
-  # this project. Setting URL to "nixpkgs" allows getting nixpkgs from the local registry
-  # which avoids fetching nixpkgs for simple maintenance work.
-  inputs.nixpkgs.url = "nixpkgs";
+  inputs.nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
 
   outputs = {
     nixpkgs,
@@ -24,14 +21,9 @@
       blog = pkgs.mkShellNoCC {
         name = "blog-dev";
         packages = with pkgs; [
-          # Utilities required by the build tooling
-          jq
-          sassc
-          pandoc
-          python3
-
           # Eslint_d
           nodejs-slim
+          pnpm
         ];
       };
     });
@@ -39,94 +31,66 @@
     packages = forEachSystem (system: let
       pkgs = pkgsForEach.${system};
     in {
-      json2rss = pkgs.stdenvNoCC.mkDerivation {
-        pname = "json2rss";
-        version =
-          if (self ? rev)
-          then (builtins.substring 0 7 self.rev)
-          else "dirty";
-
-        src = ./tools/json2rss.py;
-        nativeBuildInputs = [pkgs.makeWrapper];
-
-        buildCommand = ''
-          mkdir -p $out/bin
-          install -Dm755 $src $out/bin/json2rss
-
-          wrapProgram $out/bin/json2rss \
-            --prefix PATH : ${lib.makeBinPath [(pkgs.python3.withPackages (_: []))]} \
-            --set METADATA_FILE ${./tools/meta.json}
-        '';
-
-        meta.description = "Generate a rss feed from post metadata";
-      };
-
       build-site = let
-        # Files that we would like to avoid copying to the build sandbox
-        # and therefore the nix store.
-        junkfiles = [
-          "flake.nix"
-          "flake.lock"
-          "LICENSE"
-          ".gitignore"
-          ".gitattributes"
-          ".editorconfig"
-          ".envrc"
-          "README.md"
-        ];
-
-        repoDirFilter = name: type:
-          !((type == "directory") && ((baseNameOf name) == "tools"))
-          && !((type == "directory") && ((baseNameOf (dirOf name)) == ".github"))
-          && !(builtins.any (r: (builtins.match r (baseNameOf name)) != null) junkfiles);
-
-        cleanBlogSource = src:
-          lib.cleanSourceWith {
-            filter = repoDirFilter;
-            src = lib.cleanSource src;
-          };
+        fs = lib.fileset;
       in
-        pkgs.stdenvNoCC.mkDerivation {
+        pkgs.stdenvNoCC.mkDerivation (finalAttrs: {
           pname = "build-site";
           version =
             if (self ? rev)
             then (builtins.substring 0 7 self.rev)
             else "dirty";
 
-          # Required by the build tooling
+          src = fs.toSource {
+            root = ./.;
+            fileset = fs.intersection (fs.fromSource (lib.sources.cleanSource ./.)) (
+              fs.unions [
+                ./src
+                ./public
+                ./package.json
+                ./pnpm-lock.yaml
+                (fs.fileFilter (file: file.hasExt "ts") ./.)
+              ]
+            );
+          };
+
+          pnpmDeps = pkgs.pnpm_10.fetchDeps {
+            inherit (finalAttrs) pname src;
+            hash = "sha256-Tk18qGGQWsgYuLSEV8jsUciDTeO2on4ZAmHxS5ZSpm0=";
+          };
+
           nativeBuildInputs = with pkgs; [
-            pandoc
-            sassc
-            jq
+            git
+            nodejs
+            pnpm_10.configHook
           ];
 
-          src = cleanBlogSource ./.;
-          dontConfigure = true;
+          env = {
+            ASTRO_TELEMETRY_DISABLED = true;
+          };
 
-          # Prepare the environment for building
-          patchPhase = let
-            bash = lib.getExe pkgs.bash;
-          in ''
-            runHook prePatch
+          buildPhase = ''
+            runHook preBuild
 
-            # Create a modified copy of the Makefile to use bash explicitly
-            # This works around a weird shell bug that I think is exclusive
-            # to the Nix sandbox. Thank you Skye for the tip.
-            sed -i 's|./build/process_post.sh|${bash} ./build/process_post.sh|g' Makefile
-            sed -i 's|./build/process_page.sh|${bash} ./build/process_page.sh|g' Makefile
-            sed -i 's|./build/generate_json.sh|${bash} ./build/generate_json.sh|g' Makefile
+            pnpm run build -- --standalone --disable-updater
 
-            runHook postPatch
+            runHook postBuild
           '';
 
-          # This allows skipping the install phase since the default target will
-          # handle the installation. We must explicitly disable the install phase
-          # to avoid errors.
-          makeFlags = ["OUT_DIR=$(out)"];
-          dontInstall = true;
+          installPhase = ''
+            runHook preInstall
 
-          meta.description = "Pure, reproducible builder for my blog";
-        };
+            cp -rvf dist $out
+
+            runHook postInstall;
+          '';
+
+          meta = {
+            description = "Pure, reproducible builder for my blog";
+            license = lib.licenses.cc40;
+            maintainers = [lib.maintainers.NotAShelf];
+          };
+        });
     });
   };
 }

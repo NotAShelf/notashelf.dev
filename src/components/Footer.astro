@@ -1,0 +1,55 @@
+---
+const currentYear = new Date().getFullYear();
+const copyrightYear = currentYear === 2024 ? "2024" : `2024-${currentYear}`;
+---
+
+<footer>
+  <div class="footer-divider"></div>
+  <p>&copy; <span id="copyright">{copyrightYear}</span> NotAShelf</p>
+  <div class="footer-icons">
+    <a href="https://github.com/notashelf" aria-label="GitHub">
+      <i class="lni lni-github" title="GitHub"></i>
+    </a>
+    <a href="https://twitter.com/notashelf" aria-label="Twitter">
+      <i class="lni lni-twitter-old" title="Twitter"></i>
+    </a>
+    <a href="/rss.xml" aria-label="RSS Feed">
+      <i class="lni lni-rss-right" title="RSS Feed"></i>
+    </a>
+  </div>
+</footer>
+
+<style lang="scss">
+  footer {
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    margin-top: auto;
+    position: relative;
+
+    .footer-divider {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20%;
+      height: 1px;
+      background-color: white;
+    }
+
+    .footer-icons {
+      margin: 15px 0;
+
+      a {
+        color: white;
+        text-decoration: none;
+        margin: 0 10px;
+        font-size: 1.2rem;
+
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+</style>
