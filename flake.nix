@@ -87,7 +87,7 @@
 
           meta = {
             description = "Pure, reproducible builder for my blog";
-            license = lib.licenses.cc40;
+            license = lib.licenses.cc-by-nc-40;
             maintainers = [lib.maintainers.NotAShelf];
           };
         });
