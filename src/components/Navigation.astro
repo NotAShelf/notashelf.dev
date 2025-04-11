@@ -2,7 +2,7 @@
 const secondaryNavItems = [
   { title: "Posts", url: "/posts" },
   { title: "About", url: "/about" },
-  { title: "Privacy", url: "/privacy" }
+  { title: "Privacy", url: "/privacy" },
 ];
 ---
 
@@ -11,15 +11,19 @@ const secondaryNavItems = [
     <a class="nav-button" href="/">Index</a>
   </div>
   <div class="nav-right">
-    {secondaryNavItems.map(item => (
-      <a class="nav-button" href={item.url}>{item.title}</a>
-    ))}
+    {
+      secondaryNavItems.map((item) => (
+        <a class="nav-button" href={item.url}>
+          {item.title}
+        </a>
+      ))
+    }
   </div>
 </div>
-<hr class="nav-border">
+<hr class="nav-border" />
 
 <style lang="scss">
-  @import '../styles/variables';
+  @import "../styles/variables";
 
   .nav-wrapper {
     display: flex;
@@ -29,7 +33,8 @@ const secondaryNavItems = [
     box-sizing: border-box;
   }
 
-  .nav-left, .nav-right {
+  .nav-left,
+  .nav-right {
     display: flex;
     align-items: center;
   }

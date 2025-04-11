@@ -1,7 +1,7 @@
 ---
-import Navigation from '../components/Navigation.astro';
-import Footer from '../components/Footer.astro';
-import '../styles/global.scss';
+import Navigation from "../components/Navigation.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.scss";
 
 export interface Props {
   title: string;
@@ -16,23 +16,30 @@ const {
   description,
   keywords = [],
   date,
-  showBackgroundGrid = true
+  showBackgroundGrid = true,
 } = Astro.props;
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=yes"
+    />
     <title>{title}</title>
     <meta name="description" content={description} />
-    {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
+    {
+      keywords.length > 0 && (
+        <meta name="keywords" content={keywords.join(", ")} />
+      )
+    }
     {date && <meta property="article:published_time" content={date} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css" />
   </head>
   <body>
-    {showBackgroundGrid && <div class="background-pattern"></div>}
+    {showBackgroundGrid && <div class="background-pattern" />}
 
     <div class="page-container">
       <Navigation />
@@ -45,20 +52,35 @@ const {
     </div>
 
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const fadeElements = document.querySelectorAll('.fade-in');
+      document.addEventListener("DOMContentLoaded", () => {
+        const fadeElements = document.querySelectorAll(".fade-in");
 
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-              observer.unobserve(entry.target);
-            }
-          });
-        }, { threshold: 0.1 });
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1 },
+        );
 
-        fadeElements.forEach(el => observer.observe(el));
+        fadeElements.forEach((el) => observer.observe(el));
       });
+    </script>
+    <script
+      defer
+      data-domain="notashelf.dev"
+      src="https://pl.notashelf.dev/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"
+    ></script>
+    <script>
+      window.plausible =
+        window.plausible ||
+        function () {
+          (window.plausible.q = window.plausible.q || []).push(arguments);
+        };
     </script>
   </body>
 </html>
@@ -68,7 +90,9 @@ const {
     box-sizing: border-box;
   }
 
-  *, *:before, *:after {
+  *,
+  *:before,
+  *:after {
     box-sizing: inherit;
   }
 
@@ -116,7 +140,9 @@ const {
   :global(.fade-in) {
     opacity: 0;
     transform: translateY(10px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transition:
+      opacity 0.6s ease-out,
+      transform 0.6s ease-out;
     transition-delay: var(--delay, 0s);
   }
 

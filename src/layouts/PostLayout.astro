@@ -1,7 +1,7 @@
 ---
-import BaseLayout from './BaseLayout.astro';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import BaseLayout from "./BaseLayout.astro";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 export interface Props {
   frontmatter: {
@@ -9,30 +9,32 @@ export interface Props {
     description?: string;
     date?: string;
     keywords?: string[];
-  }
+  };
 }
 
 const { frontmatter } = Astro.props;
 const { title, description, date, keywords = [] } = frontmatter;
 
 // Format date if it exists
-const formattedDate = date ? new Date(date).toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric'
-}) : null;
+const formattedDate = date
+  ? new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  : null;
 
 // Calculate reading time based on content
-const content = await Astro.slots.render('default');
+const content = await Astro.slots.render("default");
 const wordCount = content.split(/\s+/g).length;
 const readingTime = Math.max(1, Math.ceil(wordCount / 200)); // 200 words per minute
 
 // Simple regex to extract headings with their IDs
 const headingRegex = /<h([2-3])[^>]*id="([^"]*)"[^>]*>(.*?)<\/h\1>/g;
-const headings = Array.from(content.matchAll(headingRegex), match => ({
+const headings = Array.from(content.matchAll(headingRegex), (match) => ({
   level: parseInt(match[1]),
   id: match[2],
-  text: match[3].replace(/<[^>]*>/g, '')
+  text: match[3].replace(/<[^>]*>/g, ""),
 }));
 
 // Show TOC only if there are enough headings
@@ -54,32 +56,36 @@ const showToc = headings.length >= 2;
         <span class="reading-time">{readingTime} min read</span>
       </div>
 
-      {keywords.length > 0 && (
-        <div class="post-tags">
-          {keywords.map(tag => (
-            <span class="tag">{tag}</span>
-          ))}
-        </div>
-      )}
+      {
+        keywords.length > 0 && (
+          <div class="post-tags">
+            {keywords.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        )
+      }
     </div>
 
-    {showToc && (
-      <div class="toc-container">
-        <details class="toc" open>
-          <summary>Table of Contents</summary>
-          <nav class="toc-list">
-            {headings.map(heading => (
-              <a
-                href={`#${heading.id}`}
-                class={`toc-item level-${heading.level}`}
-              >
-                {heading.text}
-              </a>
-            ))}
-          </nav>
-        </details>
-      </div>
-    )}
+    {
+      showToc && (
+        <div class="toc-container">
+          <details class="toc" open>
+            <summary>Table of Contents</summary>
+            <nav class="toc-list">
+              {headings.map((heading) => (
+                <a
+                  href={`#${heading.id}`}
+                  class={`toc-item level-${heading.level}`}
+                >
+                  {heading.text}
+                </a>
+              ))}
+            </nav>
+          </details>
+        </div>
+      )
+    }
 
     <div class="post-content">
       <slot />
@@ -95,53 +101,57 @@ const showToc = headings.length >= 2;
 
 <script>
   // Highlight active ToC item when scrolling
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("DOMContentLoaded", () => {
     // Get all headings from the document
-    const headings = Array.from(document.querySelectorAll('.post-content h2, .post-content h3'));
-    const tocItems = Array.from(document.querySelectorAll('.toc-item'));
+    const headings = Array.from(
+      document.querySelectorAll(".post-content h2, .post-content h3"),
+    );
+    const tocItems = Array.from(document.querySelectorAll(".toc-item"));
 
     if (headings.length === 0 || tocItems.length === 0) return;
 
     // Set up intersection observer
     const observerOptions = {
-      rootMargin: '-80px 0px -30% 0px',
-      threshold: 0
+      rootMargin: "-80px 0px -30% 0px",
+      threshold: 0,
     };
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           // Find the corresponding TOC item
           const headingId = entry.target.id;
-          const tocItem = tocItems.find(item => item.getAttribute('href') === `#${headingId}`);
+          const tocItem = tocItems.find(
+            (item) => item.getAttribute("href") === `#${headingId}`,
+          );
 
           if (tocItem) {
             // Remove active class from all items
-            tocItems.forEach(item => item.classList.remove('active'));
+            tocItems.forEach((item) => item.classList.remove("active"));
 
             // Add active class to current item
-            tocItem.classList.add('active');
+            tocItem.classList.add("active");
           }
         }
       });
     }, observerOptions);
 
     // Observe each heading
-    headings.forEach(heading => {
+    headings.forEach((heading) => {
       observer.observe(heading);
     });
 
     // Add smooth scrolling to TOC links
-    tocItems.forEach(link => {
-      link.addEventListener('click', (e) => {
+    tocItems.forEach((link) => {
+      link.addEventListener("click", (e) => {
         e.preventDefault();
-        const targetId = link.getAttribute('href').substring(1);
+        const targetId = link.getAttribute("href").substring(1);
         const targetElement = document.getElementById(targetId);
 
         if (targetElement) {
           window.scrollTo({
             top: targetElement.offsetTop - 70,
-            behavior: 'smooth'
+            behavior: "smooth",
           });
 
           // Update URL hash without jumping
@@ -153,7 +163,7 @@ const showToc = headings.length >= 2;
 </script>
 
 <style lang="scss" is:global>
-  @import '../styles/variables';
+  @import "../styles/variables";
 
   // Code syntax highlighting styles
   pre {
@@ -166,7 +176,7 @@ const showToc = headings.length >= 2;
     background-color: lighten($primary, 3%) !important;
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
@@ -184,7 +194,7 @@ const showToc = headings.length >= 2;
       background: transparent;
       padding: 0;
       border-radius: 0;
-      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-family: "JetBrains Mono", "Fira Code", monospace;
       font-size: 0.9rem;
       line-height: 1.5;
     }
@@ -195,26 +205,26 @@ const showToc = headings.length >= 2;
     padding: 0.2rem 0.4rem;
     border-radius: 4px;
     font-size: 0.85em;
-    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-family: "JetBrains Mono", "Fira Code", monospace;
   }
 
   // Blockquotes (non-admonition)
   blockquote:not(.admonition) {
-  margin: 2rem 0;
-  padding: 1rem 1.5rem;
-  border-left: 3px solid rgba(255, 255, 255, 0.15);
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 0 4px 4px 0;
+    margin: 2rem 0;
+    padding: 1rem 1.5rem;
+    border-left: 3px solid rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 0 4px 4px 0;
 
-  > * {
-    margin-top: 0;
-    margin-bottom: 0.8rem;
-  }
+    > * {
+      margin-top: 0;
+      margin-bottom: 0.8rem;
+    }
 
-  > *:last-child {
-    margin-bottom: 0;
+    > *:last-child {
+      margin-bottom: 0;
+    }
   }
-}
 
   // Admonitions (special blockquotes)
   blockquote.admonition {
@@ -293,7 +303,8 @@ const showToc = headings.length >= 2;
       }
     }
 
-    &.admonition-warning, &.admonition-caution {
+    &.admonition-warning,
+    &.admonition-caution {
       border-left: 4px solid #f39c12;
 
       .admonition-title {
@@ -337,12 +348,16 @@ const showToc = headings.length >= 2;
 
   // Make headings linkable
   .post-content {
-    h2, h3, h4, h5, h6 {
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
       position: relative;
       scroll-margin-top: 80px;
 
       &:hover::after {
-        content: '#';
+        content: "#";
         position: absolute;
         left: -1.2rem;
         top: 50%;
@@ -435,7 +450,7 @@ const showToc = headings.length >= 2;
 </style>
 
 <style lang="scss">
-  @import '../styles/variables';
+  @import "../styles/variables";
 
   .post {
     max-width: 75ch;
@@ -573,7 +588,7 @@ const showToc = headings.length >= 2;
       position: relative;
 
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         bottom: -5px;
         left: 0;
@@ -593,7 +608,8 @@ const showToc = headings.length >= 2;
       margin-bottom: 1.5rem;
     }
 
-    :global(ul), :global(ol) {
+    :global(ul),
+    :global(ol) {
       margin-bottom: 1.5rem;
       padding-left: 1.5rem;
 

@@ -1,17 +1,19 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
-import Pagination from '../components/Pagination.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import Pagination from "../components/Pagination.astro";
 
 // Pagination settings
 const postsPerPage = 10;
-const currentPage = parseInt(Astro.url.searchParams.get('page') || '1');
+const currentPage = parseInt(Astro.url.searchParams.get("page") || "1");
 
 // Get all archived posts and sort by date
-const allPosts = await getCollection('posts');
+const allPosts = await getCollection("posts");
 const archivedPosts = allPosts
-  .filter(post => post.data.archived && !post.data.draft)
-  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+  .filter((post) => post.data.archived && !post.data.draft)
+  .sort(
+    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+  );
 
 // Calculate pagination
 const totalPosts = archivedPosts.length;
@@ -21,57 +23,63 @@ const endIndex = startIndex + postsPerPage;
 const posts = archivedPosts.slice(startIndex, endIndex);
 ---
 
-<BaseLayout
-  title="Archive"
-  description="Archive of outdated blog posts"
->
+<BaseLayout title="Archive" description="Archive of outdated blog posts">
   <div class="archive-header">
     <h1 class="page-title">Archive</h1>
     <p class="archive-description">
-      Outdated posts that are kept for historical reference. The information in these posts may no longer be accurate or relevant.
+      Outdated posts that are kept for historical reference. The information in
+      these posts may no longer be accurate or relevant.
     </p>
   </div>
 
-  {posts.length === 0 ? (
-    <div class="empty-archive">
-      <p>No archived posts yet.</p>
-    </div>
-  ) : (
-    <ul class="post-list">
-      {posts.map(post => (
-        <li class="post-dropdown-item">
-          <a href={`/archive/${post.slug}`} class="dropdown-link">
-            <div class="post-content">
-              <div class="post-header">
-                <h2 class="post-title">{post.data.title}</h2>
-                {post.data.keywords && post.data.keywords.length > 0 && (
-                  <div class="post-tags">
-                    {post.data.keywords.map(tag => (
-                      <span class="post-tag">{tag}</span>
-                    ))}
-                  </div>
+  {
+    posts.length === 0 ? (
+      <div class="empty-archive">
+        <p>No archived posts yet.</p>
+      </div>
+    ) : (
+      <ul class="post-list">
+        {posts.map((post) => (
+          <li class="post-dropdown-item">
+            <a href={`/archive/${post.slug}`} class="dropdown-link">
+              <div class="post-content">
+                <div class="post-header">
+                  <h2 class="post-title">{post.data.title}</h2>
+                  {post.data.keywords && post.data.keywords.length > 0 && (
+                    <div class="post-tags">
+                      {post.data.keywords.map((tag) => (
+                        <span class="post-tag">{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <time datetime={post.data.date} class="post-date">
+                  {new Date(post.data.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </time>
+                {post.data.description && (
+                  <p class="post-description">{post.data.description}</p>
                 )}
               </div>
-              <time datetime={post.data.date} class="post-date">
-                {new Date(post.data.date).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </time>
-              {post.data.description && <p class="post-description">{post.data.description}</p>}
-            </div>
-          </a>
-        </li>
-      ))}
-    </ul>
-  )}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
 
-  {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} />}
+  {
+    totalPages > 1 && (
+      <Pagination currentPage={currentPage} totalPages={totalPages} />
+    )
+  }
 </BaseLayout>
 
 <style lang="scss">
-  @import '../styles/variables';
+  @import "../styles/variables";
 
   .archive-header {
     margin-bottom: 2rem;
@@ -113,7 +121,9 @@ const posts = archivedPosts.slice(startIndex, endIndex);
     height: 140px;
     display: flex;
     overflow: hidden;
-    transition: background-color 0.15s ease-out, transform 0.1s ease-out;
+    transition:
+      background-color 0.15s ease-out,
+      transform 0.1s ease-out;
     opacity: 0.8;
 
     &:hover {

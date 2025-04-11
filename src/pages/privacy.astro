@@ -1,16 +1,14 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faInfoCircle,
   faShield,
   faExclamationCircle,
   faQuestion,
-  faArrowRight
-} from '@fortawesome/free-solid-svg-icons';
-import {
-  faGithub
-} from '@fortawesome/free-brands-svg-icons';
+  faArrowRight,
+} from "@fortawesome/free-solid-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 const lastUpdated = "February 16, 2025";
 const effectiveDate = "April 5, 2024";
@@ -30,7 +28,11 @@ const effectiveDate = "April 5, 2024";
     </div>
 
     <div class="policy-summary">
-      <p>This site collects <strong>no personal data</strong>, uses <strong>no cookies</strong>, and only runs minimal analytics to understand site traffic.</p>
+      <p>
+        This site collects <strong>no personal data</strong>, uses <strong
+          >no cookies</strong
+        >, and only runs minimal analytics to understand site traffic.
+      </p>
     </div>
 
     <div class="policy-grid">
@@ -41,8 +43,9 @@ const effectiveDate = "April 5, 2024";
         <div class="section-content">
           <h2>Agreement</h2>
           <p>
-            By visiting <code>notashelf.dev</code>, you agree to these terms. They may change without prior notice.
-            Any changes will be communicated on this page.
+            By visiting <code>notashelf.dev</code>, you agree to these terms.
+            They may change without prior notice. Any changes will be
+            communicated on this page.
           </p>
         </div>
       </div>
@@ -54,14 +57,21 @@ const effectiveDate = "April 5, 2024";
         <div class="section-content">
           <h2>Information Collection</h2>
           <p>
-            This site doesn't collect personal information or use trackers or ads.
-            The source code is available on <a href="https://github.com/notashelf/notashelf.dev">GitHub</a>.
+            This site doesn't collect personal information or use trackers or
+            ads. The source code is available on <a
+              href="https://github.com/notashelf/notashelf.dev">GitHub</a
+            >.
           </p>
 
           <ul class="policy-list">
             <li><span class="highlight">Does not</span> set cookies</li>
-            <li><span class="highlight">Does not</span> store shared browser data</li>
-            <li><span class="highlight">Does not</span> share information with third parties</li>
+            <li>
+              <span class="highlight">Does not</span> store shared browser data
+            </li>
+            <li>
+              <span class="highlight">Does not</span> share information with third
+              parties
+            </li>
           </ul>
         </div>
       </div>
@@ -73,9 +83,10 @@ const effectiveDate = "April 5, 2024";
         <div class="section-content">
           <h2>Site Analytics</h2>
           <p>
-            This site runs <a href="https://plausible.io">Plausible Analytics</a> to collect anonymous usage data.
-            The goal is to track overall website trends, not individual visitors.
-            All data is aggregated with no personal information collected.
+            This site runs <a href="https://plausible.io">Plausible Analytics</a
+            > to collect anonymous usage data. The goal is to track overall website
+            trends, not individual visitors. All data is aggregated with no personal
+            information collected.
           </p>
         </div>
       </div>
@@ -96,7 +107,12 @@ const effectiveDate = "April 5, 2024";
     </div>
 
     <div class="policy-footer">
-      <a href="https://github.com/notashelf/notashelf.dev" class="github-link" target="_blank" rel="noopener">
+      <a
+        href="https://github.com/notashelf/notashelf.dev"
+        class="github-link"
+        target="_blank"
+        rel="noopener"
+      >
         <FontAwesomeIcon icon={faGithub} />
         Source code
       </a>
@@ -120,7 +136,7 @@ const effectiveDate = "April 5, 2024";
   .policy-header h1 {
     margin: 0 0 0.75rem;
     font-size: 1.8rem;
-    background: linear-gradient(to right, #fff, rgba(255,255,255,0.8));
+    background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.8));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -141,7 +157,11 @@ const effectiveDate = "April 5, 2024";
   }
 
   .policy-summary {
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.08));
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.08)
+    );
     padding: 1rem;
     border-radius: 6px;
     margin-bottom: 1.5rem;

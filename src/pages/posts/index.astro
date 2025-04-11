@@ -1,37 +1,42 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
-import Pagination from '../../components/Pagination.astro';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import Pagination from "../../components/Pagination.astro";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArchive,
   faSearch,
   faXmark,
-  faMagnifyingGlass
-} from '@fortawesome/free-solid-svg-icons';
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 
 // Get URL parameters for filtering and search
-const searchQuery = Astro.url.searchParams.get('q') || '';
-const selectedTag = Astro.url.searchParams.get('tag') || '';
-const currentPage = parseInt(Astro.url.searchParams.get('page') || '1');
+const searchQuery = Astro.url.searchParams.get("q") || "";
+const selectedTag = Astro.url.searchParams.get("tag") || "";
+const currentPage = parseInt(Astro.url.searchParams.get("page") || "1");
 const postsPerPage = 5;
 
 // Get all blog posts
-const allPosts = await getCollection('posts');
+const allPosts = await getCollection("posts");
 
 // Extract all unique tags from posts
-const allTags = [...new Set(
-  allPosts
-    .filter(post => !post.data.draft && !post.data.archived)
-    .flatMap(post => post.data.keywords || [])
-)].sort();
+const allTags = [
+  ...new Set(
+    allPosts
+      .filter((post) => !post.data.draft && !post.data.archived)
+      .flatMap((post) => post.data.keywords || []),
+  ),
+].sort();
 
 // Filter posts based on search, tags, and archive status
 const filteredPosts = allPosts
-  .filter(post => !post.data.draft && !post.data.archived)
-  .filter(post => {
+  .filter((post) => !post.data.draft && !post.data.archived)
+  .filter((post) => {
     // Tag filter
-    if (selectedTag && (!post.data.keywords || !post.data.keywords.includes(selectedTag))) {
+    if (
+      selectedTag &&
+      (!post.data.keywords || !post.data.keywords.includes(selectedTag))
+    ) {
       return false;
     }
 
@@ -39,15 +44,18 @@ const filteredPosts = allPosts
     if (searchQuery) {
       const searchLower = searchQuery.toLowerCase();
       const titleMatch = post.data.title.toLowerCase().includes(searchLower);
-      const descMatch = post.data.description ?
-        post.data.description.toLowerCase().includes(searchLower) : false;
+      const descMatch = post.data.description
+        ? post.data.description.toLowerCase().includes(searchLower)
+        : false;
 
       return titleMatch || descMatch;
     }
 
     return true;
   })
-  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+  .sort(
+    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+  );
 
 // Calculate pagination
 const totalPosts = filteredPosts.length;
@@ -57,13 +65,10 @@ const endIndex = startIndex + postsPerPage;
 const posts = filteredPosts.slice(startIndex, endIndex);
 
 // Get base URL for pagination that preserves filters
-const paginationBaseUrl = `/posts${searchQuery ? `?q=${searchQuery}` : ''}${searchQuery && selectedTag ? '&' : (selectedTag ? '?' : '')}${selectedTag ? `tag=${selectedTag}` : ''}`;
+const paginationBaseUrl = `/posts${searchQuery ? `?q=${searchQuery}` : ""}${searchQuery && selectedTag ? "&" : selectedTag ? "?" : ""}${selectedTag ? `tag=${selectedTag}` : ""}`;
 ---
 
-<BaseLayout
-  title="Blog Posts"
-  description="Collection of blog posts"
->
+<BaseLayout title="Blog Posts" description="Collection of blog posts">
   <div class="posts-header">
     <h1 class="page-title">Blog Posts</h1>
     <a href="/archive" class="archive-link">
@@ -88,87 +93,97 @@ const paginationBaseUrl = `/posts${searchQuery ? `?q=${searchQuery}` : ''}${sear
           <FontAwesomeIcon icon={faMagnifyingGlass} />
         </button>
 
-        {searchQuery && (
-          <a
-            href={selectedTag ? `/posts?tag=${selectedTag}` : '/posts'}
-            class="clear-search"
-            aria-label="Clear search"
-          >
-            <FontAwesomeIcon icon={faXmark} />
-          </a>
-        )}
+        {
+          searchQuery && (
+            <a
+              href={selectedTag ? `/posts?tag=${selectedTag}` : "/posts"}
+              class="clear-search"
+              aria-label="Clear search"
+            >
+              <FontAwesomeIcon icon={faXmark} />
+            </a>
+          )
+        }
       </form>
     </div>
 
     <div class="tags-container">
       <div class="tags-wrap">
         <a
-          href={searchQuery ? `/posts?q=${searchQuery}` : '/posts'}
-          class={`tag-filter ${!selectedTag ? 'active' : ''}`}
+          href={searchQuery ? `/posts?q=${searchQuery}` : "/posts"}
+          class={`tag-filter ${!selectedTag ? "active" : ""}`}
         >
           All
         </a>
 
-        {allTags.map(tag => (
-          <a
-            href={`/posts?${searchQuery ? `q=${searchQuery}&` : ''}tag=${tag}`}
-            class={`tag-filter ${selectedTag === tag ? 'active' : ''}`}
-          >
-            {tag}
-          </a>
-        ))}
+        {
+          allTags.map((tag) => (
+            <a
+              href={`/posts?${searchQuery ? `q=${searchQuery}&` : ""}tag=${tag}`}
+              class={`tag-filter ${selectedTag === tag ? "active" : ""}`}
+            >
+              {tag}
+            </a>
+          ))
+        }
       </div>
     </div>
   </div>
 
-  {totalPosts > 0 ? (
-    <>
-      <ul class="post-list">
-        {posts.map(post => (
-          <li class="post-dropdown-item">
-            <a href={`/posts/${post.slug}`} class="dropdown-link">
-              <div class="post-content">
-                <div class="post-header">
-                  <h2 class="post-title">{post.data.title}</h2>
-                  {post.data.keywords && post.data.keywords.length > 0 && (
-                    <div class="post-tags">
-                      {post.data.keywords.map(tag => (
-                        <span class="post-tag">{tag}</span>
-                      ))}
-                    </div>
+  {
+    totalPosts > 0 ? (
+      <>
+        <ul class="post-list">
+          {posts.map((post) => (
+            <li class="post-dropdown-item">
+              <a href={`/posts/${post.slug}`} class="dropdown-link">
+                <div class="post-content">
+                  <div class="post-header">
+                    <h2 class="post-title">{post.data.title}</h2>
+                    {post.data.keywords && post.data.keywords.length > 0 && (
+                      <div class="post-tags">
+                        {post.data.keywords.map((tag) => (
+                          <span class="post-tag">{tag}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <time datetime={post.data.date} class="post-date">
+                    {new Date(post.data.date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </time>
+                  {post.data.description && (
+                    <p class="post-description">{post.data.description}</p>
                   )}
                 </div>
-                <time datetime={post.data.date} class="post-date">
-                  {new Date(post.data.date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </time>
-                {post.data.description && <p class="post-description">{post.data.description}</p>}
-              </div>
-            </a>
-          </li>
-        ))}
-      </ul>
+              </a>
+            </li>
+          ))}
+        </ul>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        baseUrl={paginationBaseUrl}
-      />
-    </>
-  ) : (
-    <div class="no-results">
-      <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
-      <p>No posts found matching your criteria</p>
-      <a href="/posts" class="reset-filters">Reset filters</a>
-    </div>
-  )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          baseUrl={paginationBaseUrl}
+        />
+      </>
+    ) : (
+      <div class="no-results">
+        <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
+        <p>No posts found matching your criteria</p>
+        <a href="/posts" class="reset-filters">
+          Reset filters
+        </a>
+      </div>
+    )
+  }
 </BaseLayout>
 
 <style lang="scss">
-  @import '../../styles/variables';
+  @import "../../styles/variables";
 
   .posts-header {
     display: flex;
@@ -336,7 +351,9 @@ const paginationBaseUrl = `/posts${searchQuery ? `?q=${searchQuery}` : ''}${sear
     height: 140px;
     display: flex;
     overflow: hidden;
-    transition: background-color 0.15s ease-out, transform 0.1s ease-out;
+    transition:
+      background-color 0.15s ease-out,
+      transform 0.1s ease-out;
 
     &:hover {
       cursor: pointer;

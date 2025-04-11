@@ -4,12 +4,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "astro": "astro",
     "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro check --force && astro build",
+    "build": "astro build",
+    "check": "astro check",
     "preview": "astro preview",
-    "check": "astro check --force",
-    "astro": "astro"
+    "fmt": "prettier . --write"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
@@ -32,9 +32,7 @@
     "slugify": "^1.6.6",
     "typescript": "^5.8.3",
     "unified": "^11.0.5",
-    "unist-util-visit": "^5.0.0"
-  },
-  "devDependencies": {
+    "unist-util-visit": "^5.0.0",
     "@astrojs/mdx": "^2.3.1",
     "@astrojs/rss": "^4.0.11",
     "@eslint/js": "^9.24.0",
@@ -43,6 +41,8 @@
     "eslint-plugin-astro": "^1.3.1",
     "rehype-slug": "^6.0.0",
     "sass": "^1.86.3",
-    "typescript-eslint": "^8.29.1"
+    "typescript-eslint": "^8.29.1",
+    "prettier": "3.5.3",
+    "prettier-plugin-astro": "0.14.1"
   }
 }

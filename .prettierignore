@@ -1,0 +1,5 @@
+# Files I don't want Prettier to touch
+# It gets pnpm lock for some stupid reason
+**/*.md
+**/*.json
+**/*.yaml

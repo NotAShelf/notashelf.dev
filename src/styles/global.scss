@@ -1,4 +1,4 @@
-@import 'variables';
+@import "variables";
 
 *,
 ::before,
@@ -78,7 +78,6 @@ main {
   font-family: $font-family-primary;
 
   a {
-
     &:hover,
     &:link,
     &:visited,

@@ -1,12 +1,12 @@
 ---
-import { getCollection } from 'astro:content';
-import PostLayout from '../../layouts/PostLayout.astro';
+import { getCollection } from "astro:content";
+import PostLayout from "../../layouts/PostLayout.astro";
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts');
+  const posts = await getCollection("posts");
   return posts
-    .filter(post => post.data.archived && !post.data.draft)
-    .map(post => ({
+    .filter((post) => post.data.archived && !post.data.draft)
+    .map((post) => ({
       params: { slug: post.slug },
       props: { post },
     }));

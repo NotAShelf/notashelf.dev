@@ -1,23 +1,32 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
 
 // Get latest posts for featured section
-const allPosts = await getCollection('posts');
-const featuredPosts = allPosts
-  .filter(post => !post.data.draft)
-  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+const allPosts = await getCollection("posts");
+const sortedPosts = allPosts
+  .filter((post) => !post.data.draft)
+  .sort(
+    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+  )
   .slice(0, 3);
 
-// Calculate reading time for each post
-featuredPosts.forEach(post => {
+// Calculate reading time and create properly typed objects
+const featuredPosts = sortedPosts.map((post) => {
   const wordCount = post.body.split(/\s+/g).length;
-  post.readingTime = Math.max(1, Math.ceil(wordCount / 200));
+  return {
+    ...post,
+    readingTime: Math.max(1, Math.ceil(wordCount / 200)),
+  };
 });
 
 // Get random post for spotlight feature
-const spotlightPost = featuredPosts.length > 0 ?
-  featuredPosts[Math.floor(Math.random() * Math.min(featuredPosts.length, 3))] : null;
+const spotlightPost =
+  featuredPosts.length > 0
+    ? featuredPosts[
+        Math.floor(Math.random() * Math.min(featuredPosts.length, 3))
+      ]
+    : null;
 ---
 
 <BaseLayout
@@ -26,13 +35,17 @@ const spotlightPost = featuredPosts.length > 0 ?
 >
   <section id="hero" class="hero fade-in">
     <div class="hero-content">
-      <img class="profile-picture" src="https://avatars.githubusercontent.com/u/62766066?v=4" alt="Profile Picture">
+      <img
+        class="profile-picture"
+        src="https://avatars.githubusercontent.com/u/62766066?v=4"
+        alt="Profile Picture"
+      />
       <h1 class="reveal-text">Howdy! Welcome to my collection of notes.</h1>
       <p class="intro">
-        This is where I store my notes on various topics and processes that I find
-        particularly difficult, obscure or otherwise interesting. They will be mostly on
-        Linux, Nix, NixOS or System Administration. I <em>might</em> write on programming
-        too but expect the former more often.
+        This is where I store my notes on various topics and processes that I
+        find particularly difficult, obscure or otherwise interesting. They will
+        be mostly on Linux, Nix, NixOS or System Administration. I <em>might</em
+        > write on programming too but expect the former more often.
       </p>
       <div class="cta-buttons">
         <a href="/posts" class="cta-button primary">Blog Posts</a>
@@ -46,107 +59,130 @@ const spotlightPost = featuredPosts.length > 0 ?
     </div>
   </section>
 
-  {featuredPosts.length > 0 && (
-    <section id="latest-notes" class="latest-notes fade-in">
-      <h2 class="section-title">Latest Notes</h2>
+  {
+    featuredPosts.length > 0 && (
+      <section id="latest-notes" class="latest-notes fade-in">
+        <h2 class="section-title">Latest Notes</h2>
 
-      <div class="featured-content">
-        {spotlightPost && (
-          <a href={`/posts/${spotlightPost.slug}`} class="spotlight-post">
-            <div class="spotlight-content">
-              <h3>{spotlightPost.data.title}</h3>
-              <div class="post-meta">
-                <time datetime={spotlightPost.data.date}>
-                  {new Date(spotlightPost.data.date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                  })}
-                </time>
-                <span class="reading-time">{spotlightPost.readingTime} min read</span>
-              </div>
-              {spotlightPost.data.description && <p>{spotlightPost.data.description}</p>}
-              <span class="read-more">Read article <i class="lni lni-arrow-right"></i></span>
-            </div>
-          </a>
-        )}
-
-        <div class="posts-side">
-          {featuredPosts
-            .filter(post => post.slug !== spotlightPost?.slug)
-            .slice(0, 2)
-            .map((post, index) => (
-              <a href={`/posts/${post.slug}`} class={`side-post ${index === 0 ? 'first' : 'second'}`}>
-                <h3>{post.data.title}</h3>
+        <div class="featured-content">
+          {spotlightPost && (
+            <a href={`/posts/${spotlightPost.slug}`} class="spotlight-post">
+              <div class="spotlight-content">
+                <h3>{spotlightPost.data.title}</h3>
                 <div class="post-meta">
-                  <time datetime={post.data.date}>
-                    {new Date(post.data.date).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric'
-                    })}
+                  <time datetime={spotlightPost.data.date}>
+                    {new Date(spotlightPost.data.date).toLocaleDateString(
+                      "en-US",
+                      {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      },
+                    )}
                   </time>
-                  <span class="reading-time">{post.readingTime} min read</span>
+                  <span class="reading-time">
+                    {spotlightPost.readingTime} min read
+                  </span>
                 </div>
-              </a>
-            ))
-          }
-        </div>
-      </div>
+                {spotlightPost.data.description && (
+                  <p>{spotlightPost.data.description}</p>
+                )}
+                <span class="read-more">
+                  Read article <i class="lni lni-arrow-right" />
+                </span>
+              </div>
+            </a>
+          )}
 
-      <div class="see-all">
-        <a href="/posts" class="see-all-link">View all notes <i class="lni lni-arrow-right"></i></a>
-      </div>
-    </section>
-  )}
+          <div class="posts-side">
+            {featuredPosts
+              .filter((post) => post.slug !== spotlightPost?.slug)
+              .slice(0, 2)
+              .map((post, index) => (
+                <a
+                  href={`/posts/${post.slug}`}
+                  class={`side-post ${index === 0 ? "first" : "second"}`}
+                >
+                  <h3>{post.data.title}</h3>
+                  <div class="post-meta">
+                    <time datetime={post.data.date}>
+                      {new Date(post.data.date).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </time>
+                    <span class="reading-time">
+                      {post.readingTime} min read
+                    </span>
+                  </div>
+                </a>
+              ))}
+          </div>
+        </div>
+
+        <div class="see-all">
+          <a href="/posts" class="see-all-link">
+            View all notes <i class="lni lni-arrow-right" />
+          </a>
+        </div>
+      </section>
+    )
+  }
 </BaseLayout>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("DOMContentLoaded", () => {
     // Fade in elements
-    const fadeElements = document.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
+    const fadeElements = document.querySelectorAll(".fade-in");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
 
-    fadeElements.forEach(el => observer.observe(el));
+    fadeElements.forEach((el) => observer.observe(el));
 
     // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener("click", (e) => {
         e.preventDefault();
-        const targetId = this.getAttribute('href');
+        const targetId = anchor.getAttribute("href");
         const targetElement = document.querySelector(targetId);
 
         if (targetElement) {
           targetElement.scrollIntoView({
-            behavior: 'smooth'
+            behavior: "smooth",
           });
         }
       });
     });
 
     // Pulse animation for scroll arrow
-    const scrollArrow = document.querySelector('.scroll-arrow');
+    const scrollArrow = document.querySelector(".scroll-arrow");
     if (scrollArrow) {
-      scrollArrow.classList.add('animate');
+      scrollArrow.classList.add("animate");
     }
   });
 </script>
 
 <style lang="scss">
-  @import '../styles/variables';
+  @import "../styles/variables";
+  @use "sass:color";
 
   // Animations
   .fade-in {
     opacity: 0;
     transform: translateY(10px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transition:
+      opacity 0.6s ease-out,
+      transform 0.6s ease-out;
 
     &.visible {
       opacity: 1;
@@ -159,28 +195,43 @@ const spotlightPost = featuredPosts.length > 0 ?
     overflow: hidden;
 
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: darken($primary, 2%);
+      background: color.scale($primary, $lightness: -2%);
       transform: translateX(-100%);
       animation: reveal 1.2s cubic-bezier(0.77, 0, 0.18, 1) forwards;
     }
   }
 
   @keyframes reveal {
-    0% { transform: translateX(-100%); }
-    50% { transform: translateX(0); }
-    100% { transform: translateX(100%); }
+    0% {
+      transform: translateX(-100%);
+    }
+    50% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(100%);
+    }
   }
 
   @keyframes pulse {
-    0% { transform: translateY(0); opacity: 0.8; }
-    50% { transform: translateY(10px); opacity: 1; }
-    100% { transform: translateY(0); opacity: 0.8; }
+    0% {
+      transform: translateY(0);
+      opacity: 0.8;
+    }
+    50% {
+      transform: translateY(10px);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 0.8;
+    }
   }
 
   // Hero section
@@ -217,9 +268,11 @@ const spotlightPost = featuredPosts.length > 0 ?
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    border: 3px solid lighten($primary, 15%);
+    border: 3px solid color.scale($primary, $lightness: 15%);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+    transition:
+      transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+      box-shadow 0.3s ease;
 
     &:hover {
       transform: scale(1.05) rotate(-2deg);
@@ -230,7 +283,7 @@ const spotlightPost = featuredPosts.length > 0 ?
   .intro {
     line-height: 1.6;
     margin: 0 auto 1.5rem;
-    color: darken($secondary, 10%);
+    color: color.scale($secondary, $lightness: -10%);
     font-size: 1rem;
     padding: 0 1rem;
   }
@@ -253,7 +306,7 @@ const spotlightPost = featuredPosts.length > 0 ?
     overflow: hidden;
 
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       bottom: 0;
       left: 0;
@@ -269,7 +322,7 @@ const spotlightPost = featuredPosts.length > 0 ?
     }
 
     &.primary {
-      background-color: lighten($primary, 10%);
+      background-color: color.scale($primary, $lightness: 10%);
       color: $secondary;
 
       &:hover {
@@ -384,8 +437,8 @@ const spotlightPost = featuredPosts.length > 0 ?
   .spotlight-post {
     background: linear-gradient(
       135deg,
-      lighten($primary, 6%),
-      lighten($primary, 8%)
+      color.scale($primary, $lightness: 6%),
+      color.scale($primary, $lightness: 8%)
     );
     border-radius: 8px;
     padding: 1.25rem;
@@ -400,7 +453,7 @@ const spotlightPost = featuredPosts.length > 0 ?
     box-sizing: border-box;
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
@@ -442,14 +495,14 @@ const spotlightPost = featuredPosts.length > 0 ?
       font-size: 0.8rem;
 
       time {
-        color: darken($secondary, 20%);
+        color: color.scale($secondary, $lightness: -20%);
       }
 
       .reading-time {
         margin-left: 1rem;
         padding-left: 1rem;
         border-left: 1px solid rgba(255, 255, 255, 0.1);
-        color: darken($secondary, 20%);
+        color: color.scale($secondary, $lightness: -20%);
       }
     }
 
@@ -457,7 +510,7 @@ const spotlightPost = featuredPosts.length > 0 ?
       font-size: 0.9rem;
       line-height: 1.5;
       margin: 0 0 1.25rem;
-      color: darken($secondary, 10%);
+      color: color.scale($secondary, $lightness: -10%);
     }
 
     .read-more {
@@ -484,7 +537,7 @@ const spotlightPost = featuredPosts.length > 0 ?
   }
 
   .side-post {
-    background-color: lighten($primary, 6%);
+    background-color: color.scale($primary, $lightness: 6%);
     border-radius: 8px;
     padding: 1rem;
     text-decoration: none;
@@ -497,7 +550,7 @@ const spotlightPost = featuredPosts.length > 0 ?
     width: 100%;
 
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       bottom: 0;
       right: 0;
@@ -511,7 +564,7 @@ const spotlightPost = featuredPosts.length > 0 ?
 
     &:hover {
       transform: translateY(-2px) translateX(2px);
-      background-color: lighten($primary, 8%);
+      background-color: color.scale($primary, $lightness: 8%);
 
       &::after {
         transform: translate(50%, 50%) scale(15);
@@ -538,14 +591,14 @@ const spotlightPost = featuredPosts.length > 0 ?
       font-size: 0.75rem;
 
       time {
-        color: darken($secondary, 20%);
+        color: color.scale($secondary, $lightness: -20%);
       }
 
       .reading-time {
         margin-left: 0.8rem;
         padding-left: 0.8rem;
         border-left: 1px solid rgba(255, 255, 255, 0.1);
-        color: darken($secondary, 20%);
+        color: color.scale($secondary, $lightness: -20%);
       }
     }
   }

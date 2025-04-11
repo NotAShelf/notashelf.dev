@@ -12,13 +12,17 @@ export default defineConfig({
   site: "https://notashelf.dev",
   trailingSlash: "never",
   // https://docs.astro.build/en/reference/configuration-reference/
-  integrations: [mdx({
-    remarkPlugins: [
-      remarkHeadingIds,
-      [remarkToc, { heading: "contents" }],
-      remarkEmDash,
-    ],
-  }), react(), sitemap()],
+  integrations: [
+    mdx({
+      remarkPlugins: [
+        remarkHeadingIds,
+        [remarkToc, { heading: "contents" }],
+        remarkEmDash,
+      ],
+    }),
+    react(),
+    sitemap(),
+  ],
   markdown: {
     remarkPlugins: [
       remarkHeadingIds,

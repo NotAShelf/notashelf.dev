@@ -1,6 +1,6 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
   faCode,
@@ -9,15 +9,15 @@ import {
   faEnvelope,
   faArrowRight,
   faSnowflake,
-} from '@fortawesome/free-solid-svg-icons';
+} from "@fortawesome/free-solid-svg-icons";
 import {
   faGithub,
   faTwitter,
   faDiscord,
   faRust,
   faLinux,
-  faGolang
-} from '@fortawesome/free-brands-svg-icons';
+  faGolang,
+} from "@fortawesome/free-brands-svg-icons";
 ---
 
 <BaseLayout
@@ -28,7 +28,11 @@ import {
   <section class="about-container">
     <div class="about-header fade-in">
       <div class="profile-image-container">
-        <img src="https://avatars.githubusercontent.com/u/62766066?v=4" alt="Profile Picture" class="profile-image" />
+        <img
+          src="https://avatars.githubusercontent.com/u/62766066?v=4"
+          alt="Profile Picture"
+          class="profile-image"
+        />
         <div class="tech-badges">
           <span class="tech-badge" data-tooltip="NixOS">
             <FontAwesomeIcon icon={faSnowflake} />
@@ -47,11 +51,17 @@ import {
       <div class="about-intro">
         <h1>Hey, I'm raf</h1>
         <p class="lead">
-          Sailor, political scientist, academic, FOSS contributor, and digital artist.
-          I'm passionate about operating systems, open-source software, and system administration.
+          Sailor, political scientist, academic, FOSS contributor, and digital
+          artist. I'm passionate about operating systems, open-source software,
+          and system administration.
         </p>
         <div class="about-links">
-          <a href="https://github.com/NotAShelf" class="social-link" target="_blank" rel="noopener">
+          <a
+            href="https://github.com/NotAShelf"
+            class="social-link"
+            target="_blank"
+            rel="noopener"
+          >
             <FontAwesomeIcon icon={faGithub} /> GitHub
           </a>
           <a href="#contact" class="social-link highlight">
@@ -66,19 +76,20 @@ import {
         <h2>Background <FontAwesomeIcon icon={faUser} /></h2>
         <div class="section-content">
           <p>
-            I've been programming since 2018, entering the world of Linux, programming, and OSS
-            through a lengthy misadventure involving a Linux VPS, a large-scale Minecraft server,
-            and an imminent crisis.
+            I've been programming since 2018, entering the world of Linux,
+            programming, and OSS through a lengthy misadventure involving a
+            Linux VPS, a large-scale Minecraft server, and an imminent crisis.
           </p>
           <p>
-            Currently, I'm focusing on backend applications, application security, and system
-            administration. I'm also interested in the role of information system and data
-            integrity/privacy within the policymaking process in contemporary politics,
-            which I've decided to base my PhD thesis on.
+            Currently, I'm focusing on backend applications, application
+            security, and system administration. I'm also interested in the role
+            of information system and data integrity/privacy within the
+            policymaking process in contemporary politics, which I've decided to
+            base my PhD thesis on.
           </p>
           <p>
-            I take part in the Hyprland community, playing an active role in community management
-            and acting as a supporting developer for Nix.
+            I take part in the Hyprland community, playing an active role in
+            community management and acting as a supporting developer for Nix.
           </p>
         </div>
       </section>
@@ -128,13 +139,19 @@ import {
               <div class="project-header">
                 <h3>Nyx</h3>
                 <div class="project-links">
-                  <a href="https://github.com/notashelf/nyx" target="_blank" rel="noopener" aria-label="View on GitHub">
+                  <a
+                    href="https://github.com/notashelf/nyx"
+                    target="_blank"
+                    rel="noopener"
+                    aria-label="View on GitHub"
+                  >
                     <FontAwesomeIcon icon={faGithub} />
                   </a>
                 </div>
               </div>
               <p>
-                The first child of Chaos and also an alias for my configuration for the ultimate declarative Linux distro, NixOS!
+                The first child of Chaos and also an alias for my configuration
+                for the ultimate declarative Linux distro, NixOS!
               </p>
               <div class="project-tags">
                 <span class="tag">NixOS</span>
@@ -147,13 +164,19 @@ import {
               <div class="project-header">
                 <h3>nvf</h3>
                 <div class="project-links">
-                  <a href="https://github.com/notashelf/nvf" target="_blank" rel="noopener" aria-label="View on GitHub">
+                  <a
+                    href="https://github.com/notashelf/nvf"
+                    target="_blank"
+                    rel="noopener"
+                    aria-label="View on GitHub"
+                  >
                     <FontAwesomeIcon icon={faGithub} />
                   </a>
                 </div>
               </div>
               <p>
-                A highly extensible and distro agnostic configuration framework for Neovim using Nix.
+                A highly extensible and distro agnostic configuration framework
+                for Neovim using Nix.
               </p>
               <div class="project-tags">
                 <span class="tag">Nix</span>
@@ -166,13 +189,19 @@ import {
               <div class="project-header">
                 <h3>Hyprkeys</h3>
                 <div class="project-links">
-                  <a href="https://github.com/hyprland-community/Hyprkeys" target="_blank" rel="noopener" aria-label="View on GitHub">
+                  <a
+                    href="https://github.com/hyprland-community/Hyprkeys"
+                    target="_blank"
+                    rel="noopener"
+                    aria-label="View on GitHub"
+                  >
                     <FontAwesomeIcon icon={faGithub} />
                   </a>
                 </div>
               </div>
               <p>
-                Powerful and easy to use keyboard utility designed for my favorite Wayland Compositor, Hyprland.
+                Powerful and easy to use keyboard utility designed for my
+                favorite Wayland Compositor, Hyprland.
               </p>
               <div class="project-tags">
                 <span class="tag">Go</span>
@@ -182,8 +211,15 @@ import {
             </div>
           </div>
           <div class="more-projects">
-            <a href="https://github.com/NotAShelf" class="more-link" target="_blank" rel="noopener">
-              View more projects on GitHub <FontAwesomeIcon icon={faArrowRight} />
+            <a
+              href="https://github.com/NotAShelf"
+              class="more-link"
+              target="_blank"
+              rel="noopener"
+            >
+              View more projects on GitHub <FontAwesomeIcon
+                icon={faArrowRight}
+              />
             </a>
           </div>
         </div>
@@ -193,23 +229,39 @@ import {
         <h2>Let's Connect <FontAwesomeIcon icon={faEnvelope} /></h2>
         <div class="section-content">
           <p class="contact-text">
-            Want to talk? Ask a question? Want to discuss NixOS, Hyprland, or system administration?
-            Feel free to reach out through any of the following channels:
+            Want to talk? Ask a question? Want to discuss NixOS, Hyprland, or
+            system administration? Feel free to reach out through any of the
+            following channels:
           </p>
           <div class="contact-options">
             <a href="mailto:raf@notashelf.dev" class="contact-option">
               <FontAwesomeIcon icon={faEnvelope} />
               <span>raf@notashelf.dev</span>
             </a>
-            <a href="https://discord.com/users/419880181101232129" target="_blank" rel="noopener" class="contact-option">
+            <a
+              href="https://discord.com/users/419880181101232129"
+              target="_blank"
+              rel="noopener"
+              class="contact-option"
+            >
               <FontAwesomeIcon icon={faDiscord} />
               <span>@notashelf</span>
             </a>
-            <a href="https://matrix.to/#/@raf:notashelf.dev" target="_blank" rel="noopener" class="contact-option">
+            <a
+              href="https://matrix.to/#/@raf:notashelf.dev"
+              target="_blank"
+              rel="noopener"
+              class="contact-option"
+            >
               <FontAwesomeIcon icon={faCode} />
               <span>Matrix</span>
             </a>
-            <a href="https://twitter.com/NotAShelf" target="_blank" rel="noopener" class="contact-option">
+            <a
+              href="https://twitter.com/NotAShelf"
+              target="_blank"
+              rel="noopener"
+              class="contact-option"
+            >
               <FontAwesomeIcon icon={faTwitter} />
               <span>Twitter</span>
             </a>
@@ -221,39 +273,42 @@ import {
 </BaseLayout>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
+  document.addEventListener("DOMContentLoaded", () => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
 
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    document.querySelectorAll(".fade-in").forEach((el) => observer.observe(el));
 
-    const techBadges = document.querySelectorAll('.tech-badge');
-    techBadges.forEach(badge => {
-      badge.addEventListener('mouseenter', function() {
-        const tooltip = this.getAttribute('data-tooltip');
+    const techBadges = document.querySelectorAll(".tech-badge");
+    techBadges.forEach((badge) => {
+      badge.addEventListener("mouseenter", function () {
+        const tooltip = this.getAttribute("data-tooltip");
         if (tooltip) {
-          const tooltipEl = document.createElement('div');
-          tooltipEl.className = 'tooltip';
+          const tooltipEl = document.createElement("div");
+          tooltipEl.className = "tooltip";
           tooltipEl.textContent = tooltip;
 
           this.appendChild(tooltipEl);
 
           setTimeout(() => {
-            tooltipEl.classList.add('visible');
+            tooltipEl.classList.add("visible");
           }, 10);
         }
       });
 
-      badge.addEventListener('mouseleave', function() {
-        const tooltipEl = this.querySelector('.tooltip');
+      badge.addEventListener("mouseleave", function () {
+        const tooltipEl = this.querySelector(".tooltip");
         if (tooltipEl) {
-          tooltipEl.classList.remove('visible');
+          tooltipEl.classList.remove("visible");
           setTimeout(() => {
             tooltipEl.remove();
           }, 200);
@@ -264,7 +319,7 @@ import {
 </script>
 
 <style lang="scss">
-  @import '../styles/variables';
+  @import "../styles/variables";
 
   .about-container {
     width: 100%;
@@ -293,9 +348,10 @@ import {
     border-radius: 50%;
     border: 3px solid lighten($primary, 10%);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-                box-shadow 0.3s ease,
-                filter 0.3s ease;
+    transition:
+      transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+      box-shadow 0.3s ease,
+      filter 0.3s ease;
     filter: saturate(0.9);
 
     &:hover {
@@ -360,7 +416,7 @@ import {
     }
 
     &:after {
-      content: '';
+      content: "";
       position: absolute;
       bottom: -5px;
       left: 50%;
@@ -446,7 +502,9 @@ import {
   .about-section {
     opacity: 0;
     transform: translateY(10px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transition:
+      opacity 0.6s ease-out,
+      transform 0.6s ease-out;
     transition-delay: var(--delay, 0s);
 
     &.visible {
@@ -532,7 +590,9 @@ import {
     border-radius: 8px;
     padding: 1.5rem;
     height: 100%;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -545,7 +605,7 @@ import {
     }
 
     &:before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
@@ -617,7 +677,8 @@ import {
     border-radius: 4px;
   }
 
-  .more-projects, .more-posts {
+  .more-projects,
+  .more-posts {
     text-align: center;
     margin-top: 1rem;
   }
