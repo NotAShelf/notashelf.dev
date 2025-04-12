@@ -5,7 +5,6 @@ import {
   faUser,
   faCode,
   faLayerGroup,
-  faFileAlt,
   faEnvelope,
   faArrowRight,
   faSnowflake,
@@ -290,7 +289,7 @@ import {
 
     const techBadges = document.querySelectorAll(".tech-badge");
     techBadges.forEach((badge) => {
-      badge.addEventListener("mouseenter", function () {
+      badge.addEventListener("mouseenter", function (this: HTMLElement) {
         const tooltip = this.getAttribute("data-tooltip");
         if (tooltip) {
           const tooltipEl = document.createElement("div");
@@ -305,7 +304,7 @@ import {
         }
       });
 
-      badge.addEventListener("mouseleave", function () {
+      badge.addEventListener("mouseleave", function (this: HTMLElement) {
         const tooltipEl = this.querySelector(".tooltip");
         if (tooltipEl) {
           tooltipEl.classList.remove("visible");
