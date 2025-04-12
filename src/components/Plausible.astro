@@ -1,0 +1,19 @@
+---
+export interface Props {
+  domain: string;
+  src?: string;
+}
+
+const {
+  domain = "notashelf.dev",
+  src = "https://pl.notashelf.dev/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js",
+} = Astro.props;
+---
+
+<script defer is:inline data-domain={domain} src={src}></script>
+<script>
+  const fallback = function () {
+    (window.plausible.q = window.plausible.q || []).push(arguments);
+  };
+  window.plausible = window.plausible || fallback;
+</script>
