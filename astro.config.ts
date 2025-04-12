@@ -1,11 +1,10 @@
 import { defineConfig } from "astro/config";
 import { remarkHeadingIds, remarkTitleHeadings, remarkEmDash } from "./src/lib";
-import mdx from "@astrojs/mdx";
 import remarkToc from "remark-toc";
+import rehypeExternalLinks from "rehype-external-links";
+import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
-
 import sitemap from "@astrojs/sitemap";
-
 import partytown from "@astrojs/partytown";
 
 // https://astro.build/config
@@ -14,20 +13,43 @@ export default defineConfig({
   site: "https://notashelf.dev",
   trailingSlash: "never",
   // https://docs.astro.build/en/reference/configuration-reference/
-  integrations: [mdx({
-    remarkPlugins: [
-      remarkHeadingIds,
-      remarkEmDash,
-      remarkTitleHeadings,
-      [remarkToc, { heading: "contents" }],
-    ],
-  }), react(), sitemap(), partytown()],
+  integrations: [
+    mdx({
+      remarkPlugins: [
+        remarkHeadingIds,
+        remarkEmDash,
+        remarkTitleHeadings,
+        [remarkToc, { heading: "contents" }],
+      ],
+      rehypePlugins: [
+        [
+          rehypeExternalLinks,
+          {
+            target: "_blank",
+            rel: ["nofollow, noopener, noreferrer"],
+          },
+        ],
+      ],
+    }),
+    react(),
+    sitemap(),
+    partytown(),
+  ],
   markdown: {
     remarkPlugins: [
       remarkHeadingIds,
       remarkEmDash,
       remarkTitleHeadings,
       [remarkToc, { heading: "contents" }],
+    ],
+    rehypePlugins: [
+      [
+        rehypeExternalLinks,
+        {
+          target: "_blank",
+          rel: ["nofollow, noopener, noreferrer"],
+        },
+      ],
     ],
     shikiConfig: {
       theme: "one-dark-pro",
