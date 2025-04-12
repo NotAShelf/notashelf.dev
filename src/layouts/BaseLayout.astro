@@ -2,7 +2,6 @@
 import Navigation from "../components/Navigation.astro";
 import Footer from "../components/Footer.astro";
 import Plausible from "../components/Plausible.astro";
-import "../styles/global.scss";
 
 export interface Props {
   title: string;
@@ -75,24 +74,11 @@ const {
   </body>
 </html>
 
-<style>
-  html {
-    box-sizing: border-box;
-  }
-
-  *,
-  *:before,
-  *:after {
-    box-sizing: inherit;
-  }
-
-  body {
-    margin: 0;
-    padding: 0;
-  }
+<style lang="scss" is:global>
+  @use "../styles/global" as *;
 
   .page-container {
-    width: 80ch;
+    width: $content-width;
     max-width: 100%;
     margin: 0 auto;
     padding: 0 1rem;
@@ -100,7 +86,7 @@ const {
   }
 
   .content-wrapper {
-    width: 80ch;
+    width: $content-width;
     max-width: 100%;
     margin: 0 auto;
     padding: 0;
@@ -125,19 +111,5 @@ const {
     background-size: 20px 20px;
     z-index: -1;
     pointer-events: none;
-  }
-
-  :global(.fade-in) {
-    opacity: 0;
-    transform: translateY(10px);
-    transition:
-      opacity 0.6s ease-out,
-      transform 0.6s ease-out;
-    transition-delay: var(--delay, 0s);
-  }
-
-  :global(.fade-in.visible) {
-    opacity: 1;
-    transform: translateY(0);
   }
 </style>
