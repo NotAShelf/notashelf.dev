@@ -165,15 +165,16 @@ const showToc = headings.length >= 2;
 </script>
 
 <style lang="scss">
-  @import "../styles/global";
+  @use "../styles/global" as *;
 
   .post {
     max-width: $content-width;
     margin: 0 auto;
-  }
 
-  .post a {
-    word-break: break-all;
+    a {
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
   }
 
   .post-title {
@@ -258,6 +259,15 @@ const showToc = headings.length >= 2;
 
     :global(p) {
       margin-bottom: 1.5rem;
+      margin-top: 0;
+    }
+
+    :global(blockquote p) {
+      margin-bottom: 0;
+    }
+
+    :global(blockquote p + p) {
+      margin-top: 0.5rem;
     }
 
     :global(ul),
