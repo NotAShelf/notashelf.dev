@@ -6,7 +6,6 @@ import {
   faShield,
   faExclamationCircle,
   faQuestion,
-  faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
@@ -120,7 +119,9 @@ const effectiveDate = "April 5, 2024";
   </article>
 </BaseLayout>
 
-<style>
+<style lang="scss">
+  @import "../styles/variables";
+
   .privacy-policy {
     line-height: 1.5;
     max-width: 80ch;
@@ -323,5 +324,15 @@ const effectiveDate = "April 5, 2024";
     .privacy-policy {
       padding: 1rem 0;
     }
+  }
+
+  // HACK: add a hidden spacer to force consistent layout height
+  // Without this, navbar shifts a few pixels right when the page is loaded.
+  .privacy-policy::after {
+    content: "";
+    display: block;
+    height: 1px;
+    min-height: calc(100vh - 300px);
+    visibility: hidden;
   }
 </style>
