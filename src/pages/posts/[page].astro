@@ -9,7 +9,42 @@ import {
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 
-// Get all blog posts
+// Define the paths that will be generated
+export async function getStaticPaths() {
+  const allPosts = await getCollection("posts");
+  const filteredPosts = allPosts
+    .filter((post) => !post.data.draft && !post.data.archived)
+    .sort(
+      (a, b) =>
+        new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+    );
+
+  const postsPerPage = 5;
+  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+
+  // Generate pages starting from page 2 (page 1 is handled by index.astro)
+  return Array.from({ length: totalPages - 1 }).map((_, i) => {
+    const pageNum = i + 2; // Start from page 2
+    return {
+      params: { page: pageNum.toString() },
+      props: {
+        page: pageNum,
+        posts: filteredPosts.slice(
+          (pageNum - 1) * postsPerPage,
+          pageNum * postsPerPage,
+        ),
+        totalPosts: filteredPosts.length,
+      },
+    };
+  });
+}
+
+// Get parameters from the route
+const { page: currentPage, posts, totalPosts } = Astro.props;
+const postsPerPage = 5;
+const totalPages = Math.ceil(totalPosts / postsPerPage);
+
+// Get all blog posts for extracting tags
 const allPosts = await getCollection("posts");
 
 // Extract all unique tags from posts
@@ -20,20 +55,6 @@ const allTags = [
       .flatMap((post) => post.data.keywords || []),
   ),
 ].sort();
-
-// Filter out draft and archived posts
-const filteredPosts = allPosts
-  .filter((post) => !post.data.draft && !post.data.archived)
-  .sort(
-    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
-  );
-
-// Calculate pagination
-const postsPerPage = 5;
-const totalPosts = filteredPosts.length;
-const totalPages = Math.ceil(totalPosts / postsPerPage);
-const currentPage = 1;
-const posts = filteredPosts.slice(0, postsPerPage);
 ---
 
 <BaseLayout title="Blog Posts" description="Collection of blog posts">
@@ -140,36 +161,31 @@ const posts = filteredPosts.slice(0, postsPerPage);
   document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById(
       "search-input",
-    ) as HTMLInputElement;
+    ) as HTMLInputElement | null;
     const searchForm = document.getElementById(
       "search-form",
-    ) as HTMLFormElement;
+    ) as HTMLFormElement | null;
     const clearButton = document.getElementById(
       "clear-search",
-    ) as HTMLButtonElement;
+    ) as HTMLButtonElement | null;
     const resetButton = document.getElementById(
       "reset-filters",
-    ) as HTMLButtonElement;
+    ) as HTMLButtonElement | null;
     const tagButtons = document.querySelectorAll(".tag-filter");
     const postItems = document.querySelectorAll(".post-dropdown-item");
-    const noResults = document.querySelector(".no-results") as HTMLDivElement;
-    const postList = document.querySelector(".post-list") as HTMLUListElement;
-
-    if (
-      !searchInput ||
-      !searchForm ||
-      !clearButton ||
-      !resetButton ||
-      !noResults ||
-      !postList
-    ) {
-      return;
-    }
+    const noResults = document.querySelector(
+      ".no-results",
+    ) as HTMLDivElement | null;
+    const postList = document.querySelector(
+      ".post-list",
+    ) as HTMLUListElement | null;
 
     let activeTag = "";
 
     // Filter posts based on current search and tag
     function filterPosts() {
+      if (!searchInput || !postList || !noResults || !clearButton) return;
+
       const searchTerm = searchInput.value.toLowerCase();
       let visibleCount = 0;
 
@@ -182,10 +198,9 @@ const posts = filteredPosts.slice(0, postsPerPage);
         const title = titleElement.textContent?.toLowerCase() || "";
         const description =
           descriptionElement?.textContent?.toLowerCase() || "";
-        const postElement = post as HTMLElement;
-        const keywordsText = postElement.dataset.keywords || "";
-        const keywords = keywordsText
-          ? keywordsText.toLowerCase().split(",")
+        const keywords = (post as HTMLElement).dataset.keywords
+          ? (post as HTMLElement).dataset.keywords?.toLowerCase().split(",") ||
+            []
           : [];
 
         const matchesSearch =
@@ -218,16 +233,20 @@ const posts = filteredPosts.slice(0, postsPerPage);
     }
 
     // Handle search
-    searchForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      filterPosts();
-    });
+    if (searchForm) {
+      searchForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        filterPosts();
+      });
+    }
 
     // Handle clear button
-    clearButton.addEventListener("click", () => {
-      searchInput.value = "";
-      filterPosts();
-    });
+    if (clearButton && searchInput) {
+      clearButton.addEventListener("click", () => {
+        searchInput.value = "";
+        filterPosts();
+      });
+    }
 
     // Handle tag filters
     tagButtons.forEach((btn) => {
@@ -240,17 +259,19 @@ const posts = filteredPosts.slice(0, postsPerPage);
     });
 
     // Handle reset filters button
-    resetButton.addEventListener("click", () => {
-      searchInput.value = "";
-      activeTag = "";
-      tagButtons.forEach((btn) => {
-        btn.classList.remove("active");
-        if ((btn as HTMLElement).dataset.tag === "") {
-          btn.classList.add("active");
-        }
+    if (resetButton && searchInput) {
+      resetButton.addEventListener("click", () => {
+        searchInput.value = "";
+        activeTag = "";
+        tagButtons.forEach((btn) => {
+          btn.classList.remove("active");
+          if ((btn as HTMLElement).dataset.tag === "") {
+            btn.classList.add("active");
+          }
+        });
+        filterPosts();
       });
-      filterPosts();
-    });
+    }
   });
 </script>
 

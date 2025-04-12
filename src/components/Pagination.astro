@@ -1,4 +1,10 @@
 ---
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
+
 export interface Props {
   currentPage: number;
   totalPages: number;
@@ -17,18 +23,12 @@ if (endPage - startPage + 1 < displayedPages) {
   startPage = Math.max(1, endPage - displayedPages + 1);
 }
 
-// Function to create page URLs with proper encoding
+// Create page URLs with proper formats for static builds
 function getPageUrl(page: number) {
-  const url = new URL(baseUrl, Astro.url.origin);
-
-  // If this is page 1, remove any page parameter
   if (page === 1) {
-    url.searchParams.delete("page");
-  } else {
-    url.searchParams.set("page", page.toString());
+    return baseUrl;
   }
-
-  return url.pathname + (url.search ? url.search : "");
+  return `${baseUrl}/${page}`;
 }
 ---
 
@@ -42,7 +42,7 @@ function getPageUrl(page: number) {
         aria-disabled={currentPage <= 1}
         tabindex={currentPage <= 1 ? -1 : 0}
       >
-        <i class="lni lni-chevron-left" />
+        <FontAwesomeIcon icon={faChevronLeft} className="chevron-icon" />
       </a>
 
       {startPage > 1 && (
@@ -85,7 +85,7 @@ function getPageUrl(page: number) {
         aria-disabled={currentPage >= totalPages}
         tabindex={currentPage >= totalPages ? -1 : 0}
       >
-        <i class="lni lni-chevron-right" />
+        <FontAwesomeIcon icon={faChevronRight} className="chevron-icon" />
       </a>
     </nav>
   )
@@ -136,6 +136,12 @@ function getPageUrl(page: number) {
     &.prev,
     &.next {
       font-size: 0.8rem;
+    }
+
+    :global(.chevron-icon) {
+      width: 0.55rem !important;
+      height: 0.55rem !important;
+      color: darken($secondary, 20%);
     }
   }
 
