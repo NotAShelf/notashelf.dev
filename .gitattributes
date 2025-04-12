@@ -8,8 +8,8 @@
 
 # Try to get markdown files to be treated as markdown
 # by linguist - ** prefix is for all subdirectories.
-notes/**/*.md linguist-detectable
-notes/**/*.md linguist-language=Markdown
+/**/*.md linguist-detectable
+/**/*.mdx linguist-detectable
 
 # Git Configuration files
 *.gitattributes linguist-detectable=false
@@ -19,4 +19,6 @@ notes/**/*.md linguist-language=Markdown
 *.editorconfig linguist-detectable=false
 *.editorconfig linguist-documentation=false
 
+# Everything else
+public/rss/*.xsl linguist-vendored
 
