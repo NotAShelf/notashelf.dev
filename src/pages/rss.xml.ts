@@ -15,7 +15,6 @@ export async function GET(): Promise<Response> {
   const postItems = await Promise.all(
     sortedPosts.map(async (post) => {
       // Render the post content to HTML
-      const { Content } = await post.render();
       const rawContent = await marked.parse(post.body);
 
       return {
