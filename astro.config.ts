@@ -1,5 +1,5 @@
 import { defineConfig } from "astro/config";
-import { remarkHeadingIds, remarkEmDash } from "./src/remark";
+import { remarkHeadingIds, remarkTitleHeadings, remarkEmDash } from "./src/lib";
 import mdx from "@astrojs/mdx";
 import remarkToc from "remark-toc";
 import react from "@astrojs/react";
@@ -16,8 +16,9 @@ export default defineConfig({
     mdx({
       remarkPlugins: [
         remarkHeadingIds,
-        [remarkToc, { heading: "contents" }],
         remarkEmDash,
+        remarkTitleHeadings,
+        [remarkToc, { heading: "contents" }],
       ],
     }),
     react(),
@@ -27,7 +28,7 @@ export default defineConfig({
     remarkPlugins: [
       remarkHeadingIds,
       remarkEmDash,
-
+      remarkTitleHeadings,
       [remarkToc, { heading: "contents" }],
     ],
     shikiConfig: {
@@ -43,8 +44,5 @@ export default defineConfig({
   },
   devToolbar: {
     enabled: false,
-  },
-  content: {
-    directory: "content",
   },
 });
