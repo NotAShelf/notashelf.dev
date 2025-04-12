@@ -41,22 +41,25 @@
             then (builtins.substring 0 7 self.rev)
             else "dirty";
 
-          src = fs.toSource {
-            root = ./.;
-            fileset = fs.intersection (fs.fromSource (lib.sources.cleanSource ./.)) (
-              fs.unions [
-                ./src
-                ./public
-                ./package.json
-                ./pnpm-lock.yaml
-                (fs.fileFilter (file: file.hasExt "ts") ./.)
-              ]
-            );
-          };
+          src = let
+            sp = ./.;
+          in
+            fs.toSource {
+              root = sp;
+              fileset = fs.intersection (fs.fromSource (lib.sources.cleanSource sp)) (
+                fs.unions [
+                  ./src
+                  ./public
+                  ./package.json
+                  ./pnpm-lock.yaml
+                  ./astro.config.ts
+                ]
+              );
+            };
 
           pnpmDeps = pkgs.pnpm_10.fetchDeps {
             inherit (finalAttrs) pname src;
-            hash = "sha256-6fUd1tvrBrYgJkFKgF2IMYobNSIW9kWGGI3HB0KvTTc=";
+            hash = "sha256-RHBPXfUdKFHjXWY/OaaQ1vZ/Ha/aiQmzVyrYBtJqF7k=";
           };
 
           nativeBuildInputs = with pkgs; [
