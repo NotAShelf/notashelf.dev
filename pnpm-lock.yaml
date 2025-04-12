@@ -11,6 +11,9 @@ importers:
       '@astrojs/mdx':
         specifier: ^4.2.3
         version: 4.2.3(astro@5.6.1(rollup@4.39.0)(sass@1.86.3)(typescript@5.8.3)(yaml@2.7.1))
+      '@astrojs/partytown':
+        specifier: ^2.1.4
+        version: 2.1.4
       '@astrojs/react':
         specifier: ^4.2.3
         version: 4.2.3(@types/react-dom@19.1.2(@types/react@19.1.1))(@types/react@19.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.86.3)(yaml@2.7.1)
@@ -162,6 +165,9 @@ packages:
     engines: {node: ^18.17.1 || ^20.3.0 || >=22.0.0}
     peerDependencies:
       astro: ^5.0.0
+
+  '@astrojs/partytown@2.1.4':
+    resolution: {integrity: sha512-loUrAu0cGYFDC6dHVRiomdsBJ41VjDYXPA+B3Br51V5hENFgDSOLju86OIj1TvBACcsB22UQV7BlppODDG5gig==}
 
   '@astrojs/prism@3.2.0':
     resolution: {integrity: sha512-GilTHKGCW6HMq7y3BUv9Ac7GMe/MO9gi9GW62GzKtth0SwukCu/qp2wLiGpEujhY+VVhaG9v7kv/5vFzvf4NYw==}
@@ -752,6 +758,11 @@ packages:
   '@pkgr/core@0.1.2':
     resolution: {integrity: sha512-fdDH1LSGfZdTH2sxdpVMw31BanV28K/Gry0cVFxaNP77neJSkd82mM8ErPNYs9e+0O7SdHBLTDzDgwUuy18RnQ==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
+
+  '@qwik.dev/partytown@0.11.0':
+    resolution: {integrity: sha512-MHime7cxj7KGrapGZ1VqLkXXq5BLNqvjNZndRJVvMkUWn92F2bsezlWW1lKDoFaKCKu2xv9LRUZL99RYOs+ccA==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
 
   '@rollup/pluginutils@5.1.4':
     resolution: {integrity: sha512-USm05zrsFxYLPdWWq+K3STlWiT/3ELn3RcV5hJMghpeAIhxfsUIg6mt12CBJBInWMV4VneoV7SfGv8xIwo2qNQ==}
@@ -1358,6 +1369,10 @@ packages:
 
   dlv@1.1.3:
     resolution: {integrity: sha512-+HlytyjlPKnIG8XuRG8WvmBP8xs8P71y+SKKS6ZXWoEgLuePxtDoUEiH7WkdePWrQ5JBpE6aoVqfZfJUQkjXwA==}
+
+  dotenv@16.5.0:
+    resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
+    engines: {node: '>=12'}
 
   dset@3.1.4:
     resolution: {integrity: sha512-2QF/g9/zTaPDc3BjNcVTGoBbXBgYfMTTceLaYcFJ/W9kggFUkhxD/hMEeuLKbugyef9SqAx8cpgwlIP/jinUTA==}
@@ -3256,6 +3271,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@astrojs/partytown@2.1.4':
+    dependencies:
+      '@qwik.dev/partytown': 0.11.0
+      mrmime: 2.0.1
+
   '@astrojs/prism@3.2.0':
     dependencies:
       prismjs: 1.30.0
@@ -3802,6 +3822,10 @@ snapshots:
     optional: true
 
   '@pkgr/core@0.1.2': {}
+
+  '@qwik.dev/partytown@0.11.0':
+    dependencies:
+      dotenv: 16.5.0
 
   '@rollup/pluginutils@5.1.4(rollup@4.39.0)':
     dependencies:
@@ -4540,6 +4564,8 @@ snapshots:
   diff@5.2.0: {}
 
   dlv@1.1.3: {}
+
+  dotenv@16.5.0: {}
 
   dset@3.1.4: {}
 

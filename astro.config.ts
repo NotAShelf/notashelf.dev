@@ -6,24 +6,22 @@ import react from "@astrojs/react";
 
 import sitemap from "@astrojs/sitemap";
 
+import partytown from "@astrojs/partytown";
+
 // https://astro.build/config
 export default defineConfig({
   output: "static",
   site: "https://notashelf.dev",
   trailingSlash: "never",
   // https://docs.astro.build/en/reference/configuration-reference/
-  integrations: [
-    mdx({
-      remarkPlugins: [
-        remarkHeadingIds,
-        remarkEmDash,
-        remarkTitleHeadings,
-        [remarkToc, { heading: "contents" }],
-      ],
-    }),
-    react(),
-    sitemap(),
-  ],
+  integrations: [mdx({
+    remarkPlugins: [
+      remarkHeadingIds,
+      remarkEmDash,
+      remarkTitleHeadings,
+      [remarkToc, { heading: "contents" }],
+    ],
+  }), react(), sitemap(), partytown()],
   markdown: {
     remarkPlugins: [
       remarkHeadingIds,

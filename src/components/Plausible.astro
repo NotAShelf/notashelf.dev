@@ -10,8 +10,19 @@ const {
 } = Astro.props;
 ---
 
-<script defer is:inline data-domain={domain} src={src}></script>
+<script defer type="text/partytown" is:inline data-domain={domain} src={src}
+></script>
 <script>
+  declare global {
+    interface Window {
+      plausible: {
+        q?: any[];
+        (...args: any[]): void;
+        [key: string]: any;
+      };
+    }
+  }
+
   const fallback = function () {
     (window.plausible.q = window.plausible.q || []).push(arguments);
   };
