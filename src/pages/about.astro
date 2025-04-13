@@ -8,6 +8,7 @@ import {
   faEnvelope,
   faArrowRight,
   faSnowflake,
+  faUserGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faGithub,
@@ -106,14 +107,22 @@ import {
                 <li>TypeScript</li>
                 <li>Python</li>
                 <li>Nix</li>
+                <li>R</li>
+              </ul>
+            </div>
+            <div class="skill-category">
+              <h3>Soft Skills</h3>
+              <ul class="skill-list">
+                <li>Linux</li>
+                <li>Git</li>
+                <li>CI/CD</li>
               </ul>
             </div>
             <div class="skill-category">
               <h3>Systems</h3>
               <ul class="skill-list">
-                <li>NixOS</li>
                 <li>Linux</li>
-                <li>Hyprland</li>
+                <li>Nix/OS</li>
                 <li>Neovim</li>
               </ul>
             </div>
@@ -123,8 +132,71 @@ import {
                 <li>System Administration</li>
                 <li>Backend Development</li>
                 <li>Application Security</li>
+                <li>DevSecOps</li>
                 <li>FOSS Contribution</li>
               </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-section fade-in" style="--delay: 0.25s">
+        <h2>Affiliations <FontAwesomeIcon icon={faUserGroup} /></h2>
+        <div class="section-content">
+          <p>
+            I'm actively involved with several open-source communities and
+            projects. These affiliations represent both my contributions and the
+            communities I help maintain and support.
+          </p>
+          <div class="affiliations-grid">
+            <div class="affiliation-card">
+              <div class="affiliation-logo">
+                <img
+                  src="/images/hyprland-logo.png"
+                  alt="Hyprland Logo"
+                  width="40"
+                  height="40"
+                />
+              </div>
+              <div class="affiliation-content">
+                <h3>Hyprland</h3>
+                <p>
+                  Supporting developer and community manager for the beautiful
+                  and innovative Wayland compositor, Hyprland
+                </p>
+              </div>
+            </div>
+
+            <div class="affiliation-card">
+              <div class="affiliation-logo">
+                <img
+                  src="/images/nixos-logo.svg"
+                  alt="NixOS Logo"
+                  width="40"
+                  height="40"
+                />
+              </div>
+              <div class="affiliation-content">
+                <h3>NixOS</h3>
+                <p>
+                  NixOS hacker, Nixpkgs contributor and 25.05 release editor. I
+                  am always looking for new ways to improve the Nix/OS
+                  ecosystem.
+                </p>
+              </div>
+            </div>
+
+            <div class="affiliation-card">
+              <div class="affiliation-logo">
+                <FontAwesomeIcon icon={faGithub} />
+              </div>
+              <div class="affiliation-content">
+                <h3>FOSS Projects</h3>
+                <p>
+                  Contributor to and creator of various open-source projects,
+                  with a focus on system utilities and configuration tools.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -676,6 +748,74 @@ import {
     border-radius: 4px;
   }
 
+  // Affiliations section
+  .affiliations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .affiliation-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .affiliation-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    color: lighten($primary, 15%);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding: 8px;
+    box-sizing: border-box;
+
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
+
+    svg {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  .affiliation-content {
+    h3 {
+      font-size: 1.1rem;
+      margin: 0 0 0.5rem;
+      color: $secondary;
+    }
+
+    p {
+      font-size: 0.9rem;
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+
   .more-projects,
   .more-posts {
     text-align: center;
@@ -841,6 +981,12 @@ import {
 
     .skills-container {
       grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .affiliations-grid {
+      grid-template-columns: 1fr;
     }
   }
 
