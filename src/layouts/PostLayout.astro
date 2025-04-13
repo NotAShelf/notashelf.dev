@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faCode } from "@fortawesome/free-solid-svg-icons";
 
 export interface Props {
   frontmatter: {
@@ -39,6 +39,13 @@ const headings = Array.from(content.matchAll(headingRegex), (match) => ({
 
 // Show TOC only if there are enough headings
 const showToc = headings.length >= 2;
+
+// Get current URL to determine slug
+const currentPath = Astro.url.pathname;
+const slug = currentPath.split("/").filter(Boolean).pop();
+
+// Get git revision from environment variable or default to main
+const gitRevision = import.meta.env.GIT_REV || "main";
 ---
 
 <BaseLayout
@@ -54,6 +61,15 @@ const showToc = headings.length >= 2;
       <div class="meta-left">
         {formattedDate && <time datetime={date || ""}>{formattedDate}</time>}
         <span class="reading-time">{readingTime} min read</span>
+        <a
+          href={`https://github.com/notashelf/notashelf.dev/blob/${gitRevision}/src/content/posts/${slug}.md`}
+          class="source-link"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="View Markdown Source"
+        >
+          <FontAwesomeIcon icon={faCode} /> Source
+        </a>
       </div>
 
       {
@@ -147,6 +163,27 @@ const showToc = headings.length >= 2;
     font-size: 0.9rem;
     padding-left: 1rem;
     border-left: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .source-link {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding-left: 1rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    color: #aaa;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $secondary;
+    }
+
+    :global(svg) {
+      width: 0.9rem !important;
+      height: 0.9rem !important;
+    }
   }
 
   .post-tags {
@@ -264,6 +301,12 @@ const showToc = headings.length >= 2;
       flex-direction: column;
       align-items: flex-start;
       gap: 1rem;
+    }
+
+    .source-link,
+    .reading-time {
+      border-left: none;
+      padding-left: 0;
     }
   }
 </style>
