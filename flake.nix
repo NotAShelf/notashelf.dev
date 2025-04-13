@@ -59,17 +59,17 @@
 
           pnpmDeps = pkgs.pnpm_10.fetchDeps {
             inherit (finalAttrs) pname src;
-            hash = "sha256-RHBPXfUdKFHjXWY/OaaQ1vZ/Ha/aiQmzVyrYBtJqF7k=";
+            hash = "sha256-3Pm2ay6zF0rbeO7cMPjn8sT5RPPt0O4mP4VdgikJZyc=";
           };
 
           nativeBuildInputs = with pkgs; [
-            git
             nodejs
             pnpm_10.configHook
           ];
 
           env = {
             ASTRO_TELEMETRY_DISABLED = true;
+            GIT_REV = self.shortRev or "main";
           };
 
           buildPhase = ''
@@ -90,7 +90,6 @@
 
           meta = {
             description = "Pure, reproducible builder for my blog";
-            license = lib.licenses.cc-by-nc-40;
             maintainers = [lib.maintainers.NotAShelf];
           };
         });
