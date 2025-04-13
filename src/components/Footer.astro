@@ -1,15 +1,20 @@
 ---
 import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
-import { faRss } from "@fortawesome/free-solid-svg-icons";
+import { faCodeBranch, faRss } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const currentYear = new Date().getFullYear();
 const copyrightYear = currentYear === 2024 ? "2024" : `2024-${currentYear}`;
+const gitEnv = import.meta.env.GIT_ENV || "development";
 ---
 
 <footer>
   <div class="footer-divider"></div>
   <p>&copy; <span id="copyright">{copyrightYear}</span> NotAShelf</p>
+  <div class="built-from">
+    <FontAwesomeIcon icon={faCodeBranch} title="Git Branch" className="icon" />
+    <span>{gitEnv}</span>
+  </div>
   <div class="footer-icons">
     <a href="https://github.com/notashelf" aria-label="GitHub">
       <FontAwesomeIcon icon={faGithub} title="GitHub" className="icon" />
@@ -44,6 +49,15 @@ const copyrightYear = currentYear === 2024 ? "2024" : `2024-${currentYear}`;
       width: 20%;
       height: 1px;
       background-color: white;
+    }
+
+    .built-from {
+      margin: 8px 0;
+      font-size: 0.9em;
+
+      .icon {
+        margin-right: 5px;
+      }
     }
 
     .footer-icons {
