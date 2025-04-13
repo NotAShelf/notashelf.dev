@@ -1,18 +1,10 @@
 import { visit } from "unist-util-visit";
-import type { Root } from "mdast";
-import type { VFile } from "vfile";
 
-// Define a type that matches Astro's expected remark plugin format
-type RemarkPlugin = () => (tree: Root, file: VFile) => void;
-
-interface TextNode {
-  type: "text";
-  value: string;
-}
+type RemarkPlugin = () => (tree: any, file: any) => void;
 
 const remarkEmDash: RemarkPlugin = () => {
-  return (tree: Root, _file: VFile) => {
-    visit(tree, "text", (node: TextNode) => {
+  return (tree, _file) => {
+    visit(tree, "text", (node: { value: string }) => {
       // Replace --- with em dash (—), but avoid replacing frontmatter delimiters
       // This regex looks for triple dashes with non-dash characters or spaces around them
       node.value = node.value.replace(/([^\-\s])---([^\-\s])/g, "$1—$2");
