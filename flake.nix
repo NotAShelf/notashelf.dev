@@ -46,10 +46,14 @@
           in
             fs.toSource {
               root = sp;
+
+              # Filter everything outside of what's specified here. Configuration files
+              # are good to include, but linter/formatter configs are not necessary.
               fileset = fs.intersection (fs.fromSource (lib.sources.cleanSource sp)) (
                 fs.unions [
                   ./src
                   ./public
+                  ./posts
                   ./package.json
                   ./pnpm-lock.yaml
                   ./astro.config.ts
