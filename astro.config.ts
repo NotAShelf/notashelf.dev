@@ -1,6 +1,7 @@
 import { defineConfig } from "astro/config";
 import { remarkEmDash } from "./src/lib";
 import remarkToc from "remark-toc";
+import remarkGfm from "remark-gfm";
 import rehypeExternalLinks from "rehype-external-links";
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
@@ -15,7 +16,11 @@ export default defineConfig({
   // https://docs.astro.build/en/reference/configuration-reference/
   integrations: [
     mdx({
-      remarkPlugins: [remarkEmDash, [remarkToc, { heading: "contents" }]],
+      remarkPlugins: [
+        remarkEmDash,
+        remarkGfm,
+        [remarkToc, { heading: "contents" }],
+      ],
       rehypePlugins: [
         [
           rehypeExternalLinks,
@@ -31,7 +36,11 @@ export default defineConfig({
     partytown(),
   ],
   markdown: {
-    remarkPlugins: [remarkEmDash, [remarkToc, { heading: "contents" }]],
+    remarkPlugins: [
+      remarkEmDash,
+      remarkGfm,
+      [remarkToc, { heading: "contents" }],
+    ],
     rehypePlugins: [
       [
         rehypeExternalLinks,
