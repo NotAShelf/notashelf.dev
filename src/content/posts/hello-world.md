@@ -1,7 +1,7 @@
 ---
 title: "Hello World"
 description: "New year, new blog and new obsessions; all in one place."
-date: "2025-01-01"
+date: 2025-01-01
 keywords: []
 ---
 

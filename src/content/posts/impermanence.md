@@ -1,7 +1,7 @@
 ---
 title: "Full Disk Encryption and Impermanence on NixOS"
 description: "Notes on setting up Impermanence with Full Disk Encryption on a NixOS system"
-date: "2025-02-15"
+date: 2025-02-15
 keywords: ["nix", "nixos", "tutorial", "linux"]
 ---
 

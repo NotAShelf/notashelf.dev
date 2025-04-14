@@ -1,7 +1,7 @@
 ---
 title: "Headscale on NixOS, Tailscale anywhere"
 description: "Brief introduction to running your own Tailscale coordination server, Headscale"
-date: "2023-11-11"
+date: 2023-11-11
 archived: true
 ---
 

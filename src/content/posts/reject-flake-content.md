@@ -1,7 +1,7 @@
 ---
 title: "What is nixConfig, Should You Trust It?"
 description: "A quick look into Nix's 'controversial' nixConfig settings"
-date: "2025-03-31"
+date: 2025-03-31
 keywords: ["nix", "flakes", "security"]
 ---
 

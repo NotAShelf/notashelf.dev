@@ -1,7 +1,7 @@
 ---
 title: "System Backlight"
 description: "A quick encounter with System Backlight on a random Linux Kernel update."
-date: "2023-01-22"
+date: 2023-01-22
 archived: true
 ---
 

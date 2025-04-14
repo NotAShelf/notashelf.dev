@@ -2,6 +2,8 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import Pagination from "../components/Pagination.astro";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArchive } from "@fortawesome/free-solid-svg-icons";
 
 // Pagination settings
 const postsPerPage = 10;
@@ -24,13 +26,17 @@ const posts = archivedPosts.slice(startIndex, endIndex);
 ---
 
 <BaseLayout title="Archive" description="Archive of outdated blog posts">
-  <div class="archive-header">
+  <div class="posts-header">
     <h1 class="page-title">Archive</h1>
-    <p class="archive-description">
-      Outdated posts that are kept for historical reference. The information in
-      these posts may no longer be accurate or relevant.
-    </p>
+    <a href="/posts" class="posts-link">
+      <FontAwesomeIcon icon={faArchive} /> Back to Posts
+    </a>
   </div>
+
+  <p class="archive-description">
+    Outdated posts that are kept for historical reference. The information in
+    these posts may no longer be accurate or relevant.
+  </p>
 
   {
     posts.length === 0 ? (
@@ -53,7 +59,7 @@ const posts = archivedPosts.slice(startIndex, endIndex);
                     </div>
                   )}
                 </div>
-                <time datetime={post.data.date} class="post-date">
+                <time datetime={post.data.date.toISOString()} class="post-date">
                   {new Date(post.data.date).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
@@ -73,7 +79,11 @@ const posts = archivedPosts.slice(startIndex, endIndex);
 
   {
     totalPages > 1 && (
-      <Pagination currentPage={currentPage} totalPages={totalPages} />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        baseUrl="/archive"
+      />
     )
   }
 </BaseLayout>
@@ -81,20 +91,44 @@ const posts = archivedPosts.slice(startIndex, endIndex);
 <style lang="scss">
   @use "../styles/global" as *;
 
-  .archive-header {
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  .posts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
   }
 
   .page-title {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  .posts-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: darken($secondary, 20%);
+    text-decoration: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: $secondary;
+    }
+
+    :global(svg) {
+      width: 0.9rem !important;
+      height: 0.9rem !important;
+    }
   }
 
   .archive-description {
     color: darken($secondary, 20%);
     font-size: 0.9rem;
     font-style: italic;
+    margin-bottom: 1.5rem;
   }
 
   .empty-archive {
@@ -111,10 +145,10 @@ const posts = archivedPosts.slice(startIndex, endIndex);
   }
 
   .post-dropdown-item {
-    background-color: rgba(255, 255, 255, 0.03);
+    background-color: lighten($primary, 6%);
     list-style: none;
     padding: 12px 16px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid darken($primary, 1%);
     border-radius: 6px;
     margin: 12px 0;
     width: 100%;
@@ -124,15 +158,13 @@ const posts = archivedPosts.slice(startIndex, endIndex);
     transition:
       background-color 0.15s ease-out,
       transform 0.1s ease-out;
-    opacity: 0.8;
 
     &:hover {
       cursor: pointer;
       color: darken($secondary, 4%);
-      background-color: rgba(255, 255, 255, 0.05);
+      background-color: lighten($primary, 9%);
       transform: translateY(-1px);
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      opacity: 1;
     }
   }
 
@@ -200,7 +232,7 @@ const posts = archivedPosts.slice(startIndex, endIndex);
 
   .post-tag {
     font-size: 0.7rem;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.1);
     padding: 2px 8px;
     border-radius: 3px;
   }

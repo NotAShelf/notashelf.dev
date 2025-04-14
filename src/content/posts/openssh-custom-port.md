@@ -1,7 +1,7 @@
 ---
 title: "Nix Remote Builders on non-standard OpenSSH ports"
 description: "Setting up Nix remote builders on unique setups."
-date: "2023-07-14"
+date: 2023-07-14
 archived: true
 ---
 

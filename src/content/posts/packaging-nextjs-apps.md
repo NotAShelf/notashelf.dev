@@ -1,7 +1,7 @@
 ---
 title: "Packaging NextJS Webapps with Nix"
 description: "Quick tutorial/journal on packaging NextJS projects with Nix"
-date: "2023-05-21"
+date: 2023-05-21
 archived: true
 ---
 

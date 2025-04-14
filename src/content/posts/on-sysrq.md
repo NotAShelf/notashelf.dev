@@ -1,7 +1,7 @@
 ---
 title: "On SysRq"
 description: "Understanding, using or disabling SysRq as per your needs"
-date: "2024-05-11"
+date: 2024-05-11
 archived: true
 ---
 

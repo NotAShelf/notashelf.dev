@@ -1,7 +1,7 @@
 ---
 title: "Building Deterministic Typst Packages with Nix"
 description: "Every time I think to myself 'no way Nix can do this,' Nix does it anyway."
-date: "2025-03-17"
+date: 2025-03-17
 keywords: ["tutorial", "nix", "software"]
 ---
 

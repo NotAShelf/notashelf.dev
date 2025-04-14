@@ -1,7 +1,7 @@
 ---
 title: "Considerations"
 description: "Yet another heart-to-heart for no reason other than to empty my head"
-date: "2025-04-07"
+date: 2025-04-07
 keywords: ["thoughts"]
 ---
 

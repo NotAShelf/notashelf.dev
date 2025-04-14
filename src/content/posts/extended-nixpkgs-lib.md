@@ -1,7 +1,7 @@
 ---
 title: "When, Why and How to Extend Nixpkgs' Standard Library"
 description: "Reasons why and how you might create your own extended library"
-date: "2025-02-01"
+date: 2025-02-01
 keywords: ["nix", "tutorial"]
 ---
 

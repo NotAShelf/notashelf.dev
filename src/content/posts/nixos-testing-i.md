@@ -1,7 +1,7 @@
 ---
 title: "NixOS Testing Framework I: On VM Tests"
 description: "Introduction to the NixOS testing framework with flakes"
-date: "2025-04-03"
+date: 2025-04-03
 keywords: ["nix", "nixos", "tutorial"]
 ---
 

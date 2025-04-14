@@ -1,7 +1,7 @@
 ---
 title: "Signing Git commits with SSH keys"
 description: "Setting up SSH signing for your many, many Git commits"
-date: "2025-02-24"
+date: 2025-02-24
 keywords: ["tutorial", "linux", "git"]
 ---
 

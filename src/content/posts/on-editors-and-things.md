@@ -1,7 +1,7 @@
 ---
 title: "On Editors and Things"
 description: "Heartfelt ramblings about available editors"
-date: "2025-03-11"
+date: 2025-03-11
 keywords: ["software", "neovim", "news"]
 ---
 

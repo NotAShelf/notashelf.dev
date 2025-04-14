@@ -1,7 +1,7 @@
 ---
 title: My New Tech Stack
 description: From Javascript, to Golang and Rust
-date: "2025-04-03"
+date: 2025-04-03
 keywords: ["software", "programming"]
 ---
 

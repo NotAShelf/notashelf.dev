@@ -1,7 +1,7 @@
 ---
 title: "NixOS Security I: Systemd"
 description: "First installment to a series on securing your NixOS systems"
-date: "2025-03-03"
+date: 2025-03-03
 tags: ["linux", "security", "nixos", "tutorial"]
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "Nix Remote Builders"
 description: "Taking full advantage of Nix's scalability."
-date: "2025-02-17"
+date: 2025-02-17
 keywords: ["nix", "nixos", "tutorial", "linux"]
 ---
 

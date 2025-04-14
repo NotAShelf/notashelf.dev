@@ -1,6 +1,6 @@
 ---
 title: "Lazy Evaluation in Nix: Where Your Conditionals Go to Die"
-date: "2025-01-30"
+date: 2025-01-30
 description: "Exploring lazy evaluation in relative depth"
 keywords: ["nix", "programming"]
 ---

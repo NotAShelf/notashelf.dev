@@ -1,6 +1,6 @@
 ---
 title: "Stop Scraping my Git Forge!"
-date: "2025-01-07"
+date: 2025-01-07
 description: "Just one of those that should be illegal, but is not."
 keywords: ["rant", "linux", "guide"]
 ---
