@@ -1,0 +1,16 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+  keywords?: string[];
+  date?: string;
+}
+
+const { title, description, keywords = [], date } = Astro.props;
+---
+
+<title>{title}</title>
+<meta property="og:site_name" content="NotAShelf" />
+<meta name="description" content={description} />
+{keywords.length > 0 && <meta name="keywords" content={keywords.join(", ")} />}
+{date && <meta property="article:published_time" content={date} />}
