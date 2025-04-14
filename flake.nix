@@ -59,7 +59,7 @@
 
           pnpmDeps = pkgs.pnpm_10.fetchDeps {
             inherit (finalAttrs) pname src;
-            hash = "sha256-DwYWc6ISkBeSaqVIh8MnXWrb6VGRf21yoOK3+SDkAy8=";
+            hash = "sha256-Ce6uIDYEJ7XjQ7hyB3ECBLyl2Y6dIEFDeXXSW85aSKI=";
           };
 
           nativeBuildInputs = with pkgs; [
