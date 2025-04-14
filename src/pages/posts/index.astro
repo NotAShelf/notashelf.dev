@@ -8,6 +8,7 @@ import {
   faXmark,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
+import type { PostEntry } from "../../lib/types";
 
 // Get all blog posts
 const allPosts = await getCollection("posts");
@@ -16,16 +17,17 @@ const allPosts = await getCollection("posts");
 const allTags = [
   ...new Set(
     allPosts
-      .filter((post) => !post.data.draft && !post.data.archived)
-      .flatMap((post) => post.data.keywords || []),
+      .filter((post: PostEntry) => !post.data.draft && !post.data.archived)
+      .flatMap((post: PostEntry) => post.data.keywords || []),
   ),
 ].sort();
 
 // Filter out draft and archived posts
 const filteredPosts = allPosts
-  .filter((post) => !post.data.draft && !post.data.archived)
+  .filter((post: PostEntry) => !post.data.draft && !post.data.archived)
   .sort(
-    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+    (a: PostEntry, b: PostEntry) =>
+      new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
   );
 
 // Calculate pagination
@@ -87,24 +89,24 @@ const posts = filteredPosts.slice(0, postsPerPage);
 
   <ul class="post-list">
     {
-      posts.map((post) => (
+      posts.map((post: PostEntry) => (
         <li
           class="post-dropdown-item"
           data-keywords={post.data.keywords?.join(",")}
         >
-          <a href={`/posts/${post.slug}`} class="dropdown-link">
+          <a href={`/posts/${post.id}`} class="dropdown-link">
             <div class="post-content">
               <div class="post-header">
                 <h2 class="post-title">{post.data.title}</h2>
                 {post.data.keywords && post.data.keywords.length > 0 && (
                   <div class="post-tags">
-                    {post.data.keywords.map((tag) => (
+                    {post.data.keywords.map((tag: string) => (
                       <span class="post-tag">{tag}</span>
                     ))}
                   </div>
                 )}
               </div>
-              <time datetime={post.data.date} class="post-date">
+              <time datetime={post.data.date.toISOString()} class="post-date">
                 {new Date(post.data.date).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",

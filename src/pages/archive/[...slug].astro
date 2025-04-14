@@ -1,0 +1,21 @@
+---
+import { render } from "astro:content";
+import PostLayout from "../../layouts/PostLayout.astro";
+import ArchiveBanner from "../../components/ArchiveBanner.astro";
+import { getPostStaticPaths, convertPostDates } from "../../lib/postUtils";
+import type { PostEntry } from "../../lib/types";
+
+export const prerender = true;
+export async function getStaticPaths() {
+  return getPostStaticPaths();
+}
+
+const { entry } = Astro.props as { entry: PostEntry };
+const { Content } = await render(entry);
+const frontmatter = convertPostDates(entry.data);
+---
+
+<PostLayout frontmatter={frontmatter}>
+  <ArchiveBanner />
+  <Content />
+</PostLayout>

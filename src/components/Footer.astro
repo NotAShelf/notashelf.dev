@@ -1,4 +1,8 @@
 ---
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
+import { faRss } from "@fortawesome/free-solid-svg-icons";
+
 const currentYear = new Date().getFullYear();
 const copyrightYear = currentYear === 2024 ? "2024" : `2024-${currentYear}`;
 ---
@@ -8,13 +12,13 @@ const copyrightYear = currentYear === 2024 ? "2024" : `2024-${currentYear}`;
   <p>&copy; <span id="copyright">{copyrightYear}</span> NotAShelf</p>
   <div class="footer-icons">
     <a href="https://github.com/notashelf" aria-label="GitHub">
-      <i class="lni lni-github" title="GitHub"></i>
+      <FontAwesomeIcon icon={faGithub} title="GitHub" className="icon" />
     </a>
     <a href="https://twitter.com/notashelf" aria-label="Twitter">
-      <i class="lni lni-twitter-old" title="Twitter"></i>
+      <FontAwesomeIcon icon={faTwitter} title="Twitter" className="icon" />
     </a>
     <a href="/rss.xml" aria-label="RSS Feed">
-      <i class="lni lni-rss-right" title="RSS Feed"></i>
+      <FontAwesomeIcon icon={faRss} title="RSS Feed" className="icon" />
     </a>
   </div>
 </footer>
@@ -26,6 +30,11 @@ const copyrightYear = currentYear === 2024 ? "2024" : `2024-${currentYear}`;
     text-align: center;
     margin-top: auto;
     position: relative;
+
+    .icon {
+      width: 0.7em;
+      height: 0.7em;
+    }
 
     .footer-divider {
       position: absolute;
@@ -44,7 +53,6 @@ const copyrightYear = currentYear === 2024 ? "2024" : `2024-${currentYear}`;
         color: white;
         text-decoration: none;
         margin: 0 10px;
-        font-size: 1.2rem;
 
         &:hover {
           opacity: 0.8;
