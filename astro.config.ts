@@ -1,8 +1,9 @@
 import { defineConfig } from "astro/config";
 import { remarkEmDash } from "./src/lib";
-import remarkToc from "remark-toc";
 import remarkGfm from "remark-gfm";
+import remarkToc from "remark-toc";
 import rehypeExternalLinks from "rehype-external-links";
+
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
@@ -10,12 +11,21 @@ import partytown from "@astrojs/partytown";
 
 // https://astro.build/config
 export default defineConfig({
-  output: "static",
   site: "https://notashelf.dev",
+  output: "static",
   trailingSlash: "never",
+  devToolbar: {
+    enabled: false,
+  },
+
   // https://docs.astro.build/en/reference/configuration-reference/
   integrations: [
+    react(),
+    sitemap(),
+    partytown(),
     mdx({
+      gfm: true,
+      smartypants: true,
       remarkPlugins: [
         remarkEmDash,
         remarkGfm,
@@ -26,16 +36,15 @@ export default defineConfig({
           rehypeExternalLinks,
           {
             target: "_blank",
-            rel: ["nofollow, noopener, noreferrer"],
+            rel: ["nofollow", "noopener", "noreferrer"],
           },
         ],
       ],
     }),
-    react(),
-    sitemap(),
-    partytown(),
   ],
   markdown: {
+    gfm: true,
+    smartypants: true,
     remarkPlugins: [
       remarkEmDash,
       remarkGfm,
@@ -46,7 +55,7 @@ export default defineConfig({
         rehypeExternalLinks,
         {
           target: "_blank",
-          rel: ["nofollow, noopener, noreferrer"],
+          rel: ["nofollow", "noopener", "noreferrer"],
         },
       ],
     ],
@@ -56,12 +65,10 @@ export default defineConfig({
       wrap: true,
     },
   },
+
   // https://docs.astro.build/en/reference/configuration-reference/#prefetch-options
   prefetch: {
     prefetchAll: true,
     defaultStrategy: "hover",
-  },
-  devToolbar: {
-    enabled: false,
   },
 });
