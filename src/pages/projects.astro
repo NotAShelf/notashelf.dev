@@ -1,0 +1,231 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import type { ProjectEntry } from "../lib/types";
+
+// Get all projects
+const allProjects = (await getCollection("projects")) as ProjectEntry[];
+const sortedProjects = allProjects.sort((a, b) => {
+  // First sort by active status (active first)
+  if (a.data.active && !b.data.active) return -1;
+  if (!a.data.active && b.data.active) return 1;
+
+  // Then sort by start date (newest first)
+  const dateB = b.data.startDate?.valueOf() ?? 0;
+  const dateA = a.data.startDate?.valueOf() ?? 0;
+  return dateB - dateA;
+});
+
+// Format project start date. I'll try to define the date for each project
+// that gets added, but there *might* be projects of which I forgot the
+// creation date. In content config, date is optional and this handles
+// the case where it is *not* defined.
+const formatDate = (date: Date | undefined) => {
+  if (!date) return "Date Unknown";
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+  });
+};
+---
+
+<BaseLayout title="Projects" description="Projects by NotAShelf">
+  <div class="projects-container">
+    <h1 class="page-title">Projects</h1>
+    <p class="page-description">
+      A collection of personal and open source projects I've worked on.
+    </p>
+
+    <div class="projects-grid">
+      {
+        sortedProjects.map((project) => (
+          <div class={`project-card ${!project.data.active ? "inactive" : ""}`}>
+            <div class="project-content">
+              <h2 class="project-title">
+                <a
+                  href={project.data.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {project.data.title}
+                </a>
+              </h2>
+
+              <div class="project-meta">
+                <span class="project-date">
+                  {formatDate(project.data.startDate)}
+                </span>
+                {project.data.active ? (
+                  <span class="status-badge active">Active</span>
+                ) : (
+                  <span class="status-badge inactive">Inactive</span>
+                )}
+              </div>
+
+              {project.data.description && (
+                <p class="project-description">{project.data.description}</p>
+              )}
+
+              <div class="project-tags">
+                {project.data.tags.map((tag) => (
+                  <span class="project-tag">{tag.id}</span>
+                ))}
+              </div>
+
+              <a
+                href={project.data.sourceUrl}
+                class="view-project"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View Project →
+              </a>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>
+
+<style lang="scss">
+  @use "sass:color";
+  @use "../styles/global" as *;
+
+  .projects-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .page-title {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+
+  .page-description {
+    color: color.scale($secondary, $lightness: -10%);
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    max-width: 60ch;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background-color: lighten($primary, 6%);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid darken($primary, 1%);
+    height: 100%;
+
+    &:hover {
+      transform: translateY(-4px);
+      background-color: lighten($primary, 9%);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    &.inactive {
+      opacity: 0.7;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+
+  .project-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .project-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+
+    a {
+      color: $secondary;
+      text-decoration: none;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: color.scale($primary, $lightness: 40%);
+      }
+    }
+  }
+
+  .project-meta {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+    gap: 0.75rem;
+  }
+
+  .project-date {
+    color: color.scale($secondary, $lightness: -15%);
+  }
+
+  .project-description {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    color: color.scale($secondary, $lightness: -8%);
+    line-height: 1.5;
+  }
+
+  .status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+
+    &.active {
+      background-color: lighten($primary, 10%);
+      color: $secondary;
+    }
+
+    &.inactive {
+      background-color: darken($primary, 2%);
+      color: color.scale($secondary, $lightness: -15%);
+    }
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .project-tag {
+    background-color: lighten($primary, 4%);
+    color: color.scale($secondary, $lightness: -5%);
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+  }
+
+  .view-project {
+    margin-top: auto;
+    color: color.scale($primary, $lightness: 25%);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+    align-self: flex-start;
+
+    &:hover {
+      color: color.scale($primary, $lightness: 40%);
+      text-decoration: underline;
+    }
+  }
+</style>
