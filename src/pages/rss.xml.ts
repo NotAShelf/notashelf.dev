@@ -10,9 +10,6 @@ import { compile } from "@mdx-js/mdx";
 import remarkMdx from "remark-mdx";
 
 // Process markdown to HTML
-// A bit sad that I have to reinitiate remark to support the features
-// I need instead of just reusing the instance that I already configured
-// in astro.config.ts
 async function markdownToHtml(content: string): Promise<string> {
   const result = await remark()
     .use(remarkParse)
@@ -78,18 +75,23 @@ export async function GET(): Promise<Response> {
       // or content type
       const isMdx = post.id.endsWith(".mdx");
 
+      // Treat post body as a string, provide fallback
+      // XXX: Custom content collection was more trouble
+      // than what it was worth...
+      const postContent = post.body || "";
+
       // Render the post content to HTML using the appropriate
       // processor
       const htmlContent = isMdx
-        ? await mdxToHtml(post.body)
-        : await markdownToHtml(post.body);
+        ? await mdxToHtml(postContent)
+        : await markdownToHtml(postContent);
 
       return {
         title: post.data.title,
         pubDate: new Date(post.data.date),
         description: post.data.description,
         content: htmlContent,
-        link: `/posts/${post.slug}/`,
+        link: `/posts/${post.id}/`,
         categories: post.data.keywords,
       };
     }),
