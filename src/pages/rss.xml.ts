@@ -105,5 +105,6 @@ export async function GET(): Promise<Response> {
     items: postItems,
     customData: `<language>en-us</language>`,
     stylesheet: "/rss-styles.xsl",
+    trailingSlash: false,
   });
 }
