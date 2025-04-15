@@ -217,6 +217,8 @@ blockquote.admonition {
 }
 
 // Enhanced footnotes
+// Default styles provided by marked-gfm are quite barebones
+// and look out of place with my own design. Lets fix that.
 .footnotes {
   margin-top: 3rem;
   padding-top: 1rem;
