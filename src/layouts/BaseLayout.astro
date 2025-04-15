@@ -35,6 +35,9 @@ const {
       date={date}
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <link rel="alternate" type="application/rss+xml" title="{title}" href={new URL("rss.xml", Astro.site)}/>
+
+    <!-- Get the Plausible analytics component. This collects minimal, non-identifying analytics -->
     <Plausible domain="notashelf.dev" />
   </head>
   <body>
@@ -51,7 +54,7 @@ const {
     </div>
 
     <script>
-      import "../scripts/hero-fadein.js";
+      import "../scripts/fadein.js";
     </script>
   </body>
 </html>
@@ -81,6 +84,7 @@ const {
     margin: 0;
   }
 
+  // Creates a grid pattern on the background.
   .background-pattern {
     position: fixed;
     top: 0;

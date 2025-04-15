@@ -88,29 +88,7 @@ const sidePosts = featuredPosts
 </BaseLayout>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    // Fade in elements
-    const fadeElements = document.querySelectorAll(".fade-in");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 },
-    );
-
-    fadeElements.forEach((el) => observer.observe(el));
-
-    // Pulse animation for scroll arrow
-    const scrollArrow = document.querySelector(".scroll-arrow");
-    if (scrollArrow) {
-      scrollArrow.classList.add("animate");
-    }
-  });
+  import "../scripts/page-index.js"
 </script>
 <script>
   import "../scripts/anchor.js";
