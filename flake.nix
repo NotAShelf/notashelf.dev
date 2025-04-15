@@ -14,6 +14,8 @@
     forEachSystem = lib.genAttrs systems;
     pkgsForEach = legacyPackages;
   in {
+    formatter = forEachSystem (system: nixpkgs.legacyPackages.${system}.alejandra);
+
     devShells = forEachSystem (system: let
       pkgs = pkgsForEach.${system};
     in {
@@ -98,5 +100,8 @@
           };
         });
     });
+
+    # Make sure that the packages and devshells are valid.
+    checks = self.packages // self.devShells;
   };
 }
