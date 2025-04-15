@@ -57,7 +57,7 @@ from a project with the same name by Jordan Isaacs but I had many different,
 conflicting ideas in mind. So much so, that it warranted the soft-fork to take
 it in a different direction. neovim-flake, the original one, was a learning
 experience. I learned a lot about how to write Nix, and I also learned how _not_
-to write Nix. [^1]
+to write Nix.
 
 > A not-so-recent discovery that I have made is that I learn by doing.
 > _Explicitly_ by doing. Little bit (a lot) of research later, I found the state
