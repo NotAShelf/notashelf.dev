@@ -99,7 +99,7 @@ It imports `nixos/lib/default.nix` and wraps the `runTest` function that is
 defined in NixOS library, which is _inherited from the testing library inside
 the NixOS library inside nixpkgs..._ Ugh.
 
-Regardless, and in the spirit of `runTest`, there are a few paramaters that you
+Regardless, and in the spirit of `runTest`, there are a few parameters that you
 can pass to `runNixOSTest`. I will not be covering _all_ of them, but here are
 those that you _want_ to pass for a functional test.
 

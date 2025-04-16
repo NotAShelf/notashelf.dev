@@ -25,7 +25,7 @@ settings
 ```js
 // next.config.js
 module.exports = {
-  distDir: "dist", // an artitrary path for your export
+  distDir: "dist", // an arbitrary path for your export
   output: "export",
 };
 ```

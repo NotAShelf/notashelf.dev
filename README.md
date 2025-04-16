@@ -14,7 +14,7 @@ single site that is built with Astro.
 
 I think it's still pretty lightweight, but I've gone a bit more overboard this
 time around because of _how easy_ Astro made it to overengineer things. Using
-Pandoc, Bash and Makefiles was a great experiment, but comperatively this is
+Pandoc, Bash and Makefiles was a great experiment, but comparatively this is
 much better to work with.
 
 ### Features
@@ -31,9 +31,9 @@ Main reasons I've chosen Astro
 
 ## Building
 
-The defaut dev shell provides everything you need to build the site; `nodejs`
+The default dev shell provides everything you need to build the site; `nodejs`
 and `pnpm`. Use Direnv for your own sanity, and run `pnpm run build` to produce
-a static site. You may serve it locally with `pnpm run dev`, or via Nginx using
+a static site. You may serve it locally with `pnpm run dev`, or via NGINX using
 the production build.
 
 Alternatively there is a Nix package provided as `build-site`, which can be
