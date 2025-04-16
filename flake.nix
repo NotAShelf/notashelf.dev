@@ -26,6 +26,9 @@
           # Eslint_d
           nodejs-slim
           pnpm
+
+          # To run 'typos' on my content every once in a while
+          typos
         ];
       };
     });
