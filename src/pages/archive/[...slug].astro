@@ -1,8 +1,8 @@
 ---
 import { render } from "astro:content";
-import PostLayout from "../../layouts/PostLayout.astro";
 import ArchiveBanner from "../../components/ArchiveBanner.astro";
-import { getPostStaticPaths, convertPostDates } from "../../lib/postUtils";
+import PostLayout from "../../layouts/PostLayout.astro";
+import { convertPostDates, getPostStaticPaths } from "../../lib/postUtils";
 import type { PostEntry } from "../../lib/types";
 
 export const prerender = true;

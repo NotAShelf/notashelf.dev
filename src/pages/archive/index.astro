@@ -1,9 +1,9 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import { faArchive } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getCollection } from "astro:content";
 import Pagination from "../../components/Pagination.astro";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArchive } from "@fortawesome/free-solid-svg-icons";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 import type { PostEntry } from "../../lib/types";
 
 // Pagination settings
