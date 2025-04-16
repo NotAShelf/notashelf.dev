@@ -1,2 +1,6 @@
 files.extend-exclude = ["flake.lock"]
+default.extend-ignore-words-re = [
+  "moreso" # this is a valid word.
+
+]
 
