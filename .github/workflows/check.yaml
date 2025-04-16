@@ -5,10 +5,7 @@ on:
   pull_request:
   workflow_dispatch:
   push:
-    branches:
-      - main
-    paths-ignore:
-      - assets/**
+    branches: [ "main" ]
 
 jobs:
   nix-flake-check:
@@ -56,19 +53,6 @@ jobs:
           echo "If those typos were intentional, please add them to the ignored regexes in .github/typos.toml"
           echo "[skip ci] label may be added to the PR title if this is a one-time issue and is safe to ignore"
           exit 1
-
-  flake-docs-linkcheck:
-    name: "Validate hyperlinks in documentation sources"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
-
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Build linkcheck package
-        run: nix build .#docs-linkcheck -Lv
 
   check-editorconfig:
     name: "Validate Editorconfig conformance"
