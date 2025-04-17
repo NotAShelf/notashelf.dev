@@ -1,0 +1,8 @@
+{
+  "title": "ndg",
+  "description": "Alternative documentation generation for any Nix based module system",
+  "sourceUrl": "https://github.com/feel-co/ndg",
+  "startDate": "2024-03-02",
+  "tags": ["nixos", "linux", "sysadmin"],
+  "active": true
+}

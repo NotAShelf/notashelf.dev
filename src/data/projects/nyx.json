@@ -1,8 +1,9 @@
 {
-  "title": "Nyx NixOS Configuration",
+  "title": "Nyx",
   "description": "First child of chaos, and my ever-evolving NixOS configuration",
-  "sourceUrl": "https://github.com/notashelf/nvf",
+  "sourceUrl": "https://github.com/notashelf/nyx",
   "startDate": "2022-11-03",
   "tags": ["nixos", "linux", "sysadmin"],
-  "active": true
+  "active": true,
+  "featurable": false
 }

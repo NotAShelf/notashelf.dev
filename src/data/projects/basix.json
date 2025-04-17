@@ -1,0 +1,8 @@
+{
+  "title": "Basix",
+  "description": "Extensive Base16 and Base24 collection for Nix integration ",
+  "sourceUrl": "https://github.com/NotAShelf/Basix",
+  "startDate": "2024-05-11",
+  "tags": ["nix", "nixos", "theming"],
+  "active": true
+}

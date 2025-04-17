@@ -3,7 +3,7 @@
   "title": "Hjem",
   "description": "Streamlined, elegant $HOME management with Nix",
   "sourceUrl": "https://github.com/feel-co/hjem",
-  "startDate": "2023-02-01",
-  "tags": ["nix", "nixos", "linux"],
+  "startDate": "2024-12-13 ",
+  "tags": ["nix", "nixos", "linux", "home-management"],
   "active": true
 }
