@@ -1,7 +1,4 @@
 ---
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 export interface PostWithReadingTime {
   id: string;
   data: {
@@ -19,6 +16,14 @@ interface Props {
 }
 
 const { spotlightPost, sidePosts } = Astro.props;
+
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
 ---
 
 <div class="featured-content">
@@ -26,26 +31,25 @@ const { spotlightPost, sidePosts } = Astro.props;
     spotlightPost && (
       <a href={`/posts/${spotlightPost.id}`} class="spotlight-post">
         <div class="spotlight-content">
-          <h3>{spotlightPost.data.title}</h3>
-          <div class="post-meta">
-            <time datetime={spotlightPost.data.date.toISOString()}>
-              {new Date(spotlightPost.data.date).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
-            </time>
-            <span class="reading-time">
-              {spotlightPost.readingTime} min read
-            </span>
+          <div class="content-header">
+            <h3>{spotlightPost.data.title}</h3>
+            <div class="post-meta">
+              <time datetime={spotlightPost.data.date.toISOString()}>
+                {formatDate(spotlightPost.data.date)}
+              </time>
+              <span class="reading-time">
+                {spotlightPost.readingTime} min read
+              </span>
+            </div>
           </div>
-          {spotlightPost.data.description && (
-            <p>{spotlightPost.data.description}</p>
-          )}
-          <span class="read-more">
-            Read article{" "}
-            <FontAwesomeIcon icon={faArrowRight} className="arrow-icon" />
-          </span>
+
+          <div class="content-body">
+            {spotlightPost.data.description ? (
+              <p>{spotlightPost.data.description}</p>
+            ) : (
+              <div class="spacer" />
+            )}
+          </div>
         </div>
       </a>
     )
@@ -61,11 +65,7 @@ const { spotlightPost, sidePosts } = Astro.props;
           <h3>{post.data.title}</h3>
           <div class="post-meta">
             <time datetime={post.data.date.toISOString()}>
-              {new Date(post.data.date).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
+              {formatDate(post.data.date)}
             </time>
             <span class="reading-time">{post.readingTime} min read</span>
           </div>
@@ -130,10 +130,12 @@ const { spotlightPost, sidePosts } = Astro.props;
       &::before {
         transform: translateY(0);
       }
+    }
 
-      .read-more svg {
-        transform: translateX(4px);
-      }
+    .spotlight-content {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
 
     h3 {
@@ -160,24 +162,22 @@ const { spotlightPost, sidePosts } = Astro.props;
       }
     }
 
+    .content-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 3rem;
+    }
+
+    .spacer {
+      flex: 1;
+    }
+
     p {
       font-size: 0.9rem;
       line-height: 1.5;
-      margin: 0 0 1.25rem;
+      margin: 0;
       color: color.scale($secondary, $lightness: -10%);
-    }
-
-    .read-more {
-      font-size: 0.85rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      margin-top: auto;
-
-      svg {
-        margin-left: 0.3rem;
-        transition: transform 0.2s ease;
-      }
     }
   }
 
@@ -200,8 +200,9 @@ const { spotlightPost, sidePosts } = Astro.props;
     position: relative;
     overflow: hidden;
     flex: 1;
+    display: grid;
+    grid-template-rows: auto auto;
     box-sizing: border-box;
-    width: 100%;
 
     &::after {
       content: "";
@@ -237,6 +238,11 @@ const { spotlightPost, sidePosts } = Astro.props;
       font-size: 1rem;
       margin: 0 0 0.5rem;
       line-height: 1.3;
+      min-height: 2.6rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .post-meta {
@@ -257,13 +263,6 @@ const { spotlightPost, sidePosts } = Astro.props;
     }
   }
 
-  :global(.arrow-icon) {
-    font-size: 1.1em;
-    width: 0.9em;
-    height: 0.9em;
-  }
-
-  // Responsive styles
   @media (max-width: 768px) {
     .featured-content {
       grid-template-columns: 1fr;
@@ -272,6 +271,7 @@ const { spotlightPost, sidePosts } = Astro.props;
 
     .side-post h3 {
       font-size: 0.95rem;
+      min-height: 2.45rem;
     }
   }
 </style>
