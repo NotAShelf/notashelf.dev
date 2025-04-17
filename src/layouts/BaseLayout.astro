@@ -35,7 +35,12 @@ const {
       date={date}
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-    <link rel="alternate" type="application/rss+xml" title="{title}" href={new URL("rss.xml", Astro.site)}/>
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="{title}"
+      href={new URL("rss.xml", Astro.site)}
+    />
 
     <!-- Get the Plausible analytics component. This collects minimal, non-identifying analytics -->
     <Plausible domain="notashelf.dev" />
