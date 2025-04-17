@@ -63,12 +63,14 @@ const formatDate = (date: Date | undefined) => {
               </div>
 
               {project.data.description && (
-                <p class="project-description">{project.data.description}</p>
+                <div class="description-container">
+                  <p class="project-description">{project.data.description}</p>
+                </div>
               )}
 
               <div class="project-tags">
                 {project.data.tags.map((tag) => (
-                  <span class="project-tag">{tag.id}</span>
+                  <span class="project-tag">{tag}</span>
                 ))}
               </div>
 
@@ -124,6 +126,8 @@ const formatDate = (date: Date | undefined) => {
     transition: all 0.3s ease;
     border: 1px solid darken($primary, 1%);
     height: 100%;
+    display: flex;
+    flex-direction: column;
 
     &:hover {
       transform: translateY(-4px);
@@ -175,11 +179,22 @@ const formatDate = (date: Date | undefined) => {
     color: color.scale($secondary, $lightness: -15%);
   }
 
+  .description-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
   .project-description {
     margin-bottom: 1rem;
     font-size: 0.95rem;
     color: color.scale($secondary, $lightness: -8%);
     line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
   }
 
   .status-badge {
@@ -216,15 +231,15 @@ const formatDate = (date: Date | undefined) => {
 
   .view-project {
     margin-top: auto;
-    color: color.scale($primary, $lightness: 25%);
+    color: $secondary;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 0.9rem;
     transition: color 0.2s ease;
     align-self: flex-start;
 
     &:hover {
-      color: color.scale($primary, $lightness: 40%);
+      color: color.scale($secondary, $lightness: 20%);
       text-decoration: underline;
     }
   }
