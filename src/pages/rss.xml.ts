@@ -60,7 +60,20 @@ async function mdxToHtml(content: string): Promise<string> {
   }
 }
 
+// Fix relative URLs in HTML content
+function fixRelativeUrls(htmlContent: string, postUrl: string): string {
+  // Replace footnote references (e.g., #user-content-fn-1) with absolute URLs
+  // XXX: Hacky implementation. Wish I knew a better way of doing this.
+  return htmlContent.replace(
+    /(href|src)=("|')#([^"']*)("|')/g,
+    `$1=$2${postUrl}#$3$4`,
+  );
+}
+
 export async function GET(): Promise<Response> {
+  const site = import.meta.env.SITE || "https://notashelf.dev";
+  const feedUrl = `${site}/rss.xml`;
+
   const posts: CollectionEntry<"posts">[] = await getCollection("posts");
   const sortedPosts = posts
     .filter((post) => !post.data.draft)
@@ -76,22 +89,27 @@ export async function GET(): Promise<Response> {
       const isMdx = post.id.endsWith(".mdx");
 
       // Treat post body as a string, provide fallback
-      // XXX: Custom content collection was more trouble
-      // than what it was worth...
+      // XXX: Custom content collections were much more trouble than
+      // what they were worth. This is what I would call a 'kitchen sink'
+      // implementation at best, but it works. Until it doesn't, probably.
       const postContent = post.body || "";
+      const postUrl = `${site}/posts/${post.id}/`;
 
       // Render the post content to HTML using the appropriate
       // processor
-      const htmlContent = isMdx
+      let htmlContent = isMdx
         ? await mdxToHtml(postContent)
         : await markdownToHtml(postContent);
+
+      // Fix relative URLs in the HTML content
+      htmlContent = fixRelativeUrls(htmlContent, postUrl);
 
       return {
         title: post.data.title,
         pubDate: new Date(post.data.date),
         description: post.data.description,
         content: htmlContent,
-        link: `/posts/${post.id}/`,
+        link: postUrl,
         categories: post.data.keywords,
       };
     }),
@@ -101,10 +119,16 @@ export async function GET(): Promise<Response> {
     title: "NotAShelf's Blog",
     description:
       "Personal notes on Linux, Nix, NixOS, System Administration and Programming",
-    site: import.meta.env.SITE || "https://notashelf.dev",
+    site: site,
     items: postItems,
-    customData: `<language>en-us</language>`,
+    customData: `
+      <language>en-us</language>
+      <atom:link href="${feedUrl}" rel="self" type="application/rss+xml" />
+    `,
     stylesheet: "/rss-styles.xsl",
     trailingSlash: false,
+    xmlns: {
+      atom: "http://www.w3.org/2005/Atom",
+    },
   });
 }
