@@ -18,7 +18,7 @@ been using Tailscale for a while now, but in an effort to move all of my
 services to self-owned hardware some of my services have been moved over to my
 NixOS server over time.
 
-Many of Tailscale’s components are open-source, especially its clients, but the
+Many of Tailscale's components are open-source, especially its clients, but the
 server remains closed-source. Tailscale is a SaaS product and monetization
 naturally is a big concern, however, we care more about controlling our own data
 than their attempts of monetization.
