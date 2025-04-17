@@ -14,13 +14,6 @@ const posts = defineCollection({
   }),
 });
 
-const tags = defineCollection({
-  loader: file(`./src/data/tags.json`),
-  schema: z.object({
-    id: z.string(),
-  }),
-});
-
 const projects = defineCollection({
   loader: glob({ pattern: "**/[^_]*.json", base: `./src/data/projects` }),
   schema: () =>
@@ -29,7 +22,7 @@ const projects = defineCollection({
       description: z.string().optional(),
       sourceUrl: z.string(),
       startDate: z.coerce.date().optional(),
-      tags: z.array(reference("tags")).default([]),
+      tags: z.array(z.string()).default([]),
       active: z.boolean().default(true),
       featurable: z.boolean().default(true),
     }),
@@ -37,6 +30,5 @@ const projects = defineCollection({
 
 export const collections = {
   posts,
-  tags,
   projects,
 };
