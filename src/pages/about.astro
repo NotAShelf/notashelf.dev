@@ -1,4 +1,5 @@
 ---
+import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
   faDiscord,
   faGithub,
@@ -8,7 +9,6 @@ import {
   faTwitter,
 } from "@fortawesome/free-brands-svg-icons";
 import {
-  faArrowRight,
   faCode,
   faEnvelope,
   faLayerGroup,
@@ -17,7 +17,101 @@ import {
   faUserGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import FeaturedProjects from "../components/FeaturedProjects.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+const techBadges = [
+  { icon: faSnowflake, tooltip: "NixOS" },
+  { icon: faLinux, tooltip: "Linux" },
+  { icon: faRust, tooltip: "Rust" },
+  { icon: faGolang, tooltip: "Go" },
+];
+
+interface ImageAffiliation {
+  logo: string;
+  name: string;
+  description: string;
+  isIcon?: false;
+}
+
+interface IconAffiliation {
+  logo: IconDefinition;
+  name: string;
+  description: string;
+  isIcon: true;
+}
+
+type Affiliation = ImageAffiliation | IconAffiliation;
+
+const affiliations: Affiliation[] = [
+  {
+    logo: "/images/hyprland-logo.png",
+    name: "Hyprland",
+    description:
+      "Supporting developer and community manager for the beautiful and innovative Wayland compositor, Hyprland",
+  },
+  {
+    logo: "/images/nixos-logo.svg",
+    name: "NixOS",
+    description:
+      "NixOS hacker, Nixpkgs contributor and 25.05 release editor. I am always looking for new ways to improve the Nix/OS ecosystem.",
+  },
+  {
+    logo: faGithub,
+    isIcon: true,
+    name: "FOSS Projects",
+    description:
+      "Contributor to and creator of various open-source projects, with a focus on system utilities and configuration tools.",
+  },
+];
+
+const contactOptions = [
+  {
+    icon: faEnvelope,
+    text: "raf@notashelf.dev",
+    href: "mailto:raf@notashelf.dev",
+  },
+  {
+    icon: faDiscord,
+    text: "@notashelf",
+    href: "https://discord.com/users/419880181101232129",
+  },
+  {
+    icon: faCode,
+    text: "Matrix",
+    href: "https://matrix.to/#/@raf:notashelf.dev",
+  },
+  {
+    icon: faTwitter,
+    text: "Twitter",
+    href: "https://twitter.com/NotAShelf",
+  },
+];
+
+const skillCategories = [
+  {
+    title: "Languages",
+    skills: ["Go", "Rust", "C", "TypeScript", "Python", "Nix", "R"],
+  },
+  {
+    title: "Soft Skills",
+    skills: ["Linux", "Git", "CI/CD"],
+  },
+  {
+    title: "Systems",
+    skills: ["Linux", "Nix/OS", "Neovim"],
+  },
+  {
+    title: "Focus Areas",
+    skills: [
+      "System Administration",
+      "Backend Development",
+      "Application Security",
+      "DevSecOps",
+      "FOSS Contribution",
+    ],
+  },
+];
 ---
 
 <BaseLayout
@@ -34,18 +128,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           class="profile-image"
         />
         <div class="tech-badges">
-          <span class="tech-badge" data-tooltip="NixOS">
-            <FontAwesomeIcon icon={faSnowflake} />
-          </span>
-          <span class="tech-badge" data-tooltip="Linux">
-            <FontAwesomeIcon icon={faLinux} />
-          </span>
-          <span class="tech-badge" data-tooltip="Rust">
-            <FontAwesomeIcon icon={faRust} />
-          </span>
-          <span class="tech-badge" data-tooltip="Go">
-            <FontAwesomeIcon icon={faGolang} />
-          </span>
+          {
+            techBadges.map((badge) => (
+              <span class="tech-badge" data-tooltip={badge.tooltip}>
+                <FontAwesomeIcon icon={badge.icon} />
+              </span>
+            ))
+          }
         </div>
       </div>
       <div class="about-intro">
@@ -98,44 +187,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <h2>Tech Stack <FontAwesomeIcon icon={faLayerGroup} /></h2>
         <div class="section-content">
           <div class="skills-container">
-            <div class="skill-category">
-              <h3>Languages</h3>
-              <ul class="skill-list">
-                <li>Go</li>
-                <li>Rust</li>
-                <li>C</li>
-                <li>TypeScript</li>
-                <li>Python</li>
-                <li>Nix</li>
-                <li>R</li>
-              </ul>
-            </div>
-            <div class="skill-category">
-              <h3>Soft Skills</h3>
-              <ul class="skill-list">
-                <li>Linux</li>
-                <li>Git</li>
-                <li>CI/CD</li>
-              </ul>
-            </div>
-            <div class="skill-category">
-              <h3>Systems</h3>
-              <ul class="skill-list">
-                <li>Linux</li>
-                <li>Nix/OS</li>
-                <li>Neovim</li>
-              </ul>
-            </div>
-            <div class="skill-category">
-              <h3>Focus Areas</h3>
-              <ul class="skill-list">
-                <li>System Administration</li>
-                <li>Backend Development</li>
-                <li>Application Security</li>
-                <li>DevSecOps</li>
-                <li>FOSS Contribution</li>
-              </ul>
-            </div>
+            {
+              skillCategories.map((category) => (
+                <div class="skill-category">
+                  <h3>{category.title}</h3>
+                  <ul class="skill-list">
+                    {category.skills.map((skill) => (
+                      <li>{skill}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+            }
           </div>
         </div>
       </section>
@@ -149,151 +212,34 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             communities I help maintain and support.
           </p>
           <div class="affiliations-grid">
-            <div class="affiliation-card">
-              <div class="affiliation-logo">
-                <img
-                  src="/images/hyprland-logo.png"
-                  alt="Hyprland Logo"
-                  width="40"
-                  height="40"
-                />
-              </div>
-              <div class="affiliation-content">
-                <h3>Hyprland</h3>
-                <p>
-                  Supporting developer and community manager for the beautiful
-                  and innovative Wayland compositor, Hyprland
-                </p>
-              </div>
-            </div>
-
-            <div class="affiliation-card">
-              <div class="affiliation-logo">
-                <img
-                  src="/images/nixos-logo.svg"
-                  alt="NixOS Logo"
-                  width="40"
-                  height="40"
-                />
-              </div>
-              <div class="affiliation-content">
-                <h3>NixOS</h3>
-                <p>
-                  NixOS hacker, Nixpkgs contributor and 25.05 release editor. I
-                  am always looking for new ways to improve the Nix/OS
-                  ecosystem.
-                </p>
-              </div>
-            </div>
-
-            <div class="affiliation-card">
-              <div class="affiliation-logo">
-                <FontAwesomeIcon icon={faGithub} />
-              </div>
-              <div class="affiliation-content">
-                <h3>FOSS Projects</h3>
-                <p>
-                  Contributor to and creator of various open-source projects,
-                  with a focus on system utilities and configuration tools.
-                </p>
-              </div>
-            </div>
+            {
+              affiliations.map((affiliation) => (
+                <div class="affiliation-card">
+                  <div class="affiliation-logo">
+                    {affiliation.isIcon ? (
+                      <FontAwesomeIcon icon={affiliation.logo} />
+                    ) : (
+                      <img
+                        src={affiliation.logo}
+                        alt={`${affiliation.name} Logo`}
+                        width="40"
+                        height="40"
+                      />
+                    )}
+                  </div>
+                  <div class="affiliation-content">
+                    <h3>{affiliation.name}</h3>
+                    <p>{affiliation.description}</p>
+                  </div>
+                </div>
+              ))
+            }
           </div>
         </div>
       </section>
 
       <section class="about-section fade-in" style="--delay: 0.3s">
-        <h2>Featured Projects <FontAwesomeIcon icon={faCode} /></h2>
-        <div class="section-content">
-          <div class="projects-grid">
-            <div class="project-card">
-              <div class="project-header">
-                <h3>Nyx</h3>
-                <div class="project-links">
-                  <a
-                    href="https://github.com/notashelf/nyx"
-                    target="_blank"
-                    rel="noopener"
-                    aria-label="View on GitHub"
-                  >
-                    <FontAwesomeIcon icon={faGithub} />
-                  </a>
-                </div>
-              </div>
-              <p>
-                The first child of Chaos and also an alias for my configuration
-                for the ultimate declarative Linux distro, NixOS!
-              </p>
-              <div class="project-tags">
-                <span class="tag">NixOS</span>
-                <span class="tag">Configuration</span>
-                <span class="tag">Declarative</span>
-              </div>
-            </div>
-
-            <div class="project-card">
-              <div class="project-header">
-                <h3>nvf</h3>
-                <div class="project-links">
-                  <a
-                    href="https://github.com/notashelf/nvf"
-                    target="_blank"
-                    rel="noopener"
-                    aria-label="View on GitHub"
-                  >
-                    <FontAwesomeIcon icon={faGithub} />
-                  </a>
-                </div>
-              </div>
-              <p>
-                A highly extensible and distro agnostic configuration framework
-                for Neovim using Nix.
-              </p>
-              <div class="project-tags">
-                <span class="tag">Nix</span>
-                <span class="tag">Neovim</span>
-                <span class="tag">Configuration</span>
-              </div>
-            </div>
-
-            <div class="project-card">
-              <div class="project-header">
-                <h3>Hyprkeys</h3>
-                <div class="project-links">
-                  <a
-                    href="https://github.com/hyprland-community/Hyprkeys"
-                    target="_blank"
-                    rel="noopener"
-                    aria-label="View on GitHub"
-                  >
-                    <FontAwesomeIcon icon={faGithub} />
-                  </a>
-                </div>
-              </div>
-              <p>
-                Powerful and easy to use keyboard utility designed for my
-                favorite Wayland Compositor, Hyprland.
-              </p>
-              <div class="project-tags">
-                <span class="tag">Go</span>
-                <span class="tag">Hyprland</span>
-                <span class="tag">Utility</span>
-              </div>
-            </div>
-          </div>
-          <div class="more-projects">
-            <a
-              href="https://github.com/NotAShelf"
-              class="more-link"
-              target="_blank"
-              rel="noopener"
-            >
-              View more projects on GitHub <FontAwesomeIcon
-                icon={faArrowRight}
-              />
-            </a>
-          </div>
-        </div>
+        <FeaturedProjects mode="recent" title="Recently Updated Projects" />
       </section>
 
       <section id="contact" class="about-section fade-in" style="--delay: 0.5s">
@@ -305,37 +251,23 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             following channels:
           </p>
           <div class="contact-options">
-            <a href="mailto:raf@notashelf.dev" class="contact-option">
-              <FontAwesomeIcon icon={faEnvelope} />
-              <span>raf@notashelf.dev</span>
-            </a>
-            <a
-              href="https://discord.com/users/419880181101232129"
-              target="_blank"
-              rel="noopener"
-              class="contact-option"
-            >
-              <FontAwesomeIcon icon={faDiscord} />
-              <span>@notashelf</span>
-            </a>
-            <a
-              href="https://matrix.to/#/@raf:notashelf.dev"
-              target="_blank"
-              rel="noopener"
-              class="contact-option"
-            >
-              <FontAwesomeIcon icon={faCode} />
-              <span>Matrix</span>
-            </a>
-            <a
-              href="https://twitter.com/NotAShelf"
-              target="_blank"
-              rel="noopener"
-              class="contact-option"
-            >
-              <FontAwesomeIcon icon={faTwitter} />
-              <span>Twitter</span>
-            </a>
+            {
+              contactOptions.map((option) => (
+                <a
+                  href={option.href}
+                  class="contact-option"
+                  target={
+                    option.href.startsWith("mailto:") ? undefined : "_blank"
+                  }
+                  rel={
+                    option.href.startsWith("mailto:") ? undefined : "noopener"
+                  }
+                >
+                  <FontAwesomeIcon icon={option.icon} />
+                  <span>{option.text}</span>
+                </a>
+              ))
+            }
           </div>
         </div>
       </section>
@@ -359,20 +291,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
     document.querySelectorAll(".fade-in").forEach((el) => observer.observe(el));
 
-    const techBadges = document.querySelectorAll(".tech-badge");
-    techBadges.forEach((badge) => {
+    document.querySelectorAll(".tech-badge").forEach((badge) => {
       badge.addEventListener("mouseenter", function (this: HTMLElement) {
         const tooltip = this.getAttribute("data-tooltip");
         if (tooltip) {
           const tooltipEl = document.createElement("div");
           tooltipEl.className = "tooltip";
           tooltipEl.textContent = tooltip;
-
           this.appendChild(tooltipEl);
-
-          setTimeout(() => {
-            tooltipEl.classList.add("visible");
-          }, 10);
+          setTimeout(() => tooltipEl.classList.add("visible"), 10);
         }
       });
 
@@ -380,9 +307,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         const tooltipEl = this.querySelector(".tooltip");
         if (tooltipEl) {
           tooltipEl.classList.remove("visible");
-          setTimeout(() => {
-            tooltipEl.remove();
-          }, 200);
+          setTimeout(() => tooltipEl.remove(), 200);
         }
       });
     });
@@ -610,7 +535,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     padding: 0 0.5rem;
   }
 
-  // Skills section
   .skills-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -644,111 +568,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
   }
 
-  // Projects section
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .project-card {
-    background: linear-gradient(
-      135deg,
-      lighten($primary, 5%),
-      lighten($primary, 8%)
-    );
-    border-radius: 8px;
-    padding: 1.5rem;
-    height: 100%;
-    transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    }
-
-    &:before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      background: linear-gradient(
-        to right,
-        rgba(255, 255, 255, 0.1),
-        rgba(255, 255, 255, 0.3),
-        rgba(255, 255, 255, 0.1)
-      );
-      transform: translateY(-100%);
-      transition: transform 0.3s ease;
-    }
-
-    &:hover:before {
-      transform: translateY(0);
-    }
-
-    h3 {
-      font-size: 1.2rem;
-      margin: 0 0 0.2rem;
-    }
-
-    p {
-      font-size: 0.95rem;
-      margin: 0.8rem 0;
-      flex-grow: 1;
-    }
-  }
-
-  .project-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 0.5rem;
-  }
-
-  .project-links {
-    a {
-      color: $secondary;
-      text-decoration: none;
-      opacity: 0.7;
-      transition: opacity 0.2s ease;
-
-      &:hover {
-        opacity: 1;
-      }
-
-      svg {
-        width: 20px;
-        height: 20px;
-      }
-    }
-  }
-
-  .project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: auto;
-  }
-
-  .tag {
-    font-size: 0.75rem;
-    background: rgba(255, 255, 255, 0.08);
-    color: darken($secondary, 10%);
-    padding: 0.3rem 0.6rem;
-    border-radius: 4px;
-  }
-
-  // Affiliations section
   .affiliations-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -816,106 +635,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
   }
 
-  .more-projects,
-  .more-posts {
-    text-align: center;
-    margin-top: 1rem;
-  }
-
-  .more-link {
-    display: inline-flex;
-    align-items: center;
-    color: $secondary;
-    text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    background: rgba(255, 255, 255, 0.05);
-    transition: all 0.2s ease;
-
-    svg {
-      margin-left: 0.4rem;
-      width: 14px;
-      height: 14px;
-      transition: transform 0.2s ease;
-    }
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.1);
-
-      svg {
-        transform: translateX(3px);
-      }
-    }
-  }
-
-  // Blog posts section
-  .blog-posts {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .blog-post {
-    padding: 1.5rem;
-    border-radius: 8px;
-    background: linear-gradient(
-      135deg,
-      lighten($primary, 4%),
-      lighten($primary, 6%)
-    );
-    text-decoration: none;
-    color: $secondary;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-
-    &:hover {
-      transform: translateY(-3px) translateX(3px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    }
-
-    h3 {
-      font-size: 1.2rem;
-      margin: 0.3rem 0 0.6rem;
-      color: $secondary;
-    }
-
-    .post-date {
-      font-size: 0.8rem;
-      color: darken($secondary, 30%);
-    }
-
-    .post-preview {
-      font-size: 0.95rem;
-      margin-bottom: 1rem;
-      color: darken($secondary, 15%);
-      line-height: 1.5;
-    }
-
-    .read-more {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: lighten($primary, 30%);
-
-      svg {
-        width: 12px;
-        height: 12px;
-        transition: transform 0.2s ease;
-      }
-    }
-
-    &:hover .read-more svg {
-      transform: translateX(3px);
-    }
-  }
-
-  // Contact section
   .contact-text {
     margin-bottom: 1.5rem;
     font-size: 1.05rem;
@@ -953,7 +672,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     }
   }
 
-  // Responsive styles
   @media (max-width: 768px) {
     .about-header {
       flex-direction: column;
@@ -973,10 +691,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
     .about-links {
       justify-content: center;
-    }
-
-    .projects-grid {
-      grid-template-columns: 1fr;
     }
 
     .skills-container {

@@ -2,6 +2,7 @@
 import { faArrowRight, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getCollection } from "astro:content";
+import FeaturedProjects from "../components/FeaturedProjects.astro";
 import PostSpotlight from "../components/PostSpotlight.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
@@ -23,13 +24,8 @@ const featuredPosts = sortedPosts.map((post) => {
   };
 });
 
-// Get random post for spotlight feature
-const spotlightPost =
-  featuredPosts.length > 0
-    ? featuredPosts[
-        Math.floor(Math.random() * Math.min(featuredPosts.length, 3))
-      ]
-    : null;
+// Always use the most recent post for spotlight
+const spotlightPost = featuredPosts.length > 0 ? featuredPosts[0] : null;
 
 // Get side posts (excluding spotlight post)
 const sidePosts = featuredPosts
@@ -85,10 +81,12 @@ const sidePosts = featuredPosts
       </section>
     )
   }
+
+  <FeaturedProjects mode="featured" title="Featured Projects" />
 </BaseLayout>
 
 <script>
-  import "../scripts/page-index.js"
+  import "../scripts/page-index.js";
 </script>
 <script>
   import "../scripts/anchor.js";
