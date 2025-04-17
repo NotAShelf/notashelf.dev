@@ -1,0 +1,23 @@
+[
+  {
+    "id": "hyprland",
+    "logo": "/images/hyprland-logo.png",
+    "name": "Hyprland",
+    "description": "Supporting developer and community manager for the beautiful and innovative Wayland compositor, Hyprland",
+    "isIcon": false
+  },
+  {
+    "id": "nixos",
+    "logo": "/images/nixos-logo.svg",
+    "name": "NixOS",
+    "description": "NixOS hacker, Nixpkgs contributor and 25.05 release editor. I am always looking for new ways to improve the Nix/OS ecosystem.",
+    "isIcon": false
+  },
+  {
+    "id": "foss",
+    "logoIcon": "faGithub",
+    "name": "FOSS Projects",
+    "description": "Contributor to and creator of various open-source projects, with a focus on system utilities and configuration tools.",
+    "isIcon": true
+  }
+]

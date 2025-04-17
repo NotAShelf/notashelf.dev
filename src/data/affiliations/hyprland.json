@@ -1,0 +1,6 @@
+{
+  "logo": "/images/hyprland-logo.png",
+  "name": "Hyprland",
+  "description": "Supporting developer and community manager for the beautiful and innovative Wayland compositor, Hyprland",
+  "isIcon": false
+}

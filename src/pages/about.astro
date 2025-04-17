@@ -17,52 +17,68 @@ import {
   faUserGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getCollection } from "astro:content";
 import FeaturedProjects from "../components/FeaturedProjects.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+// Get affiliations from collection
+const affiliationsEntries = await getCollection("affiliations");
+
+// Map the icon names to actual icon objects
+const getIconByName = (name: string): IconDefinition => {
+  const icons: Record<string, IconDefinition> = {
+    faGithub,
+    faTwitter,
+    faDiscord,
+    faRust,
+    faLinux,
+    faGolang,
+    faCode,
+    faEnvelope,
+    faLayerGroup,
+    faSnowflake,
+    faUser,
+    faUserGroup,
+  };
+  return icons[name] || faCode;
+};
+
+interface ProcessedAffiliation {
+  id: string;
+  logo: string | IconDefinition;
+  name: string;
+  description: string;
+  isIcon: boolean;
+}
+
+// Process affiliations to convert string icon names to actual icon objects
+const affiliations: ProcessedAffiliation[] = affiliationsEntries.map(
+  (entry) => {
+    const data = entry.data;
+    if (data.isIcon && data.logoIcon) {
+      return {
+        id: entry.id,
+        logo: getIconByName(data.logoIcon),
+        name: data.name,
+        description: data.description,
+        isIcon: data.isIcon,
+      };
+    }
+    return {
+      id: entry.id,
+      logo: data.logo || "",
+      name: data.name,
+      description: data.description,
+      isIcon: data.isIcon,
+    };
+  },
+);
 
 const techBadges = [
   { icon: faSnowflake, tooltip: "NixOS" },
   { icon: faLinux, tooltip: "Linux" },
   { icon: faRust, tooltip: "Rust" },
   { icon: faGolang, tooltip: "Go" },
-];
-
-interface ImageAffiliation {
-  logo: string;
-  name: string;
-  description: string;
-  isIcon?: false;
-}
-
-interface IconAffiliation {
-  logo: IconDefinition;
-  name: string;
-  description: string;
-  isIcon: true;
-}
-
-type Affiliation = ImageAffiliation | IconAffiliation;
-
-const affiliations: Affiliation[] = [
-  {
-    logo: "/images/hyprland-logo.png",
-    name: "Hyprland",
-    description:
-      "Supporting developer and community manager for the beautiful and innovative Wayland compositor, Hyprland",
-  },
-  {
-    logo: "/images/nixos-logo.svg",
-    name: "NixOS",
-    description:
-      "NixOS hacker, Nixpkgs contributor and 25.05 release editor. I am always looking for new ways to improve the Nix/OS ecosystem.",
-  },
-  {
-    logo: faGithub,
-    isIcon: true,
-    name: "FOSS Projects",
-    description:
-      "Contributor to and creator of various open-source projects, with a focus on system utilities and configuration tools.",
-  },
 ];
 
 const contactOptions = [
@@ -217,10 +233,12 @@ const skillCategories = [
                 <div class="affiliation-card">
                   <div class="affiliation-logo">
                     {affiliation.isIcon ? (
-                      <FontAwesomeIcon icon={affiliation.logo} />
+                      <FontAwesomeIcon
+                        icon={affiliation.logo as IconDefinition}
+                      />
                     ) : (
                       <img
-                        src={affiliation.logo}
+                        src={affiliation.logo as string}
                         alt={`${affiliation.name} Logo`}
                         width="40"
                         height="40"
@@ -342,7 +360,7 @@ const skillCategories = [
     width: 160px;
     height: 160px;
     border-radius: 50%;
-    border: 3px solid lighten($primary, 10%);
+    border: 3px solid scale-color($primary, $lightness: 10%);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     transition:
       transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
@@ -372,7 +390,7 @@ const skillCategories = [
     justify-content: center;
     width: 32px;
     height: 32px;
-    background: lighten($primary, 10%);
+    background: scale-color($primary, $lightness: 10%);
     border-radius: 50%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     color: $secondary;
@@ -382,7 +400,7 @@ const skillCategories = [
 
     &:hover {
       transform: translateY(-3px);
-      background: lighten($primary, 15%);
+      background: scale-color($primary, $lightness: 15%);
     }
 
     svg {
@@ -435,7 +453,7 @@ const skillCategories = [
       background: linear-gradient(
         to right,
         $secondary,
-        darken($secondary, 15%)
+        scale-color($secondary, $lightness: -15%)
       );
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -447,7 +465,7 @@ const skillCategories = [
       font-size: 1.1rem;
       line-height: 1.6;
       margin-bottom: 1.5rem;
-      color: darken($secondary, 10%);
+      color: scale-color($secondary, $lightness: -10%);
     }
   }
 
@@ -476,10 +494,10 @@ const skillCategories = [
     }
 
     &.highlight {
-      background: transparentize(lighten($primary, 10%), 0.7);
+      background: transparentize(scale-color($primary, $lightness: 10%), 0.7);
 
       &:hover {
-        background: transparentize(lighten($primary, 15%), 0.6);
+        background: transparentize(scale-color($primary, $lightness: 15%), 0.6);
       }
     }
 
@@ -518,7 +536,7 @@ const skillCategories = [
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 
       svg {
-        color: lighten($primary, 15%);
+        color: scale-color($primary, $lightness: 15%);
         width: 20px;
         height: 20px;
       }
@@ -527,7 +545,7 @@ const skillCategories = [
     p {
       margin-bottom: 1rem;
       line-height: 1.6;
-      color: darken($secondary, 5%);
+      color: scale-color($secondary, $lightness: -5%);
     }
   }
 
@@ -545,7 +563,7 @@ const skillCategories = [
     h3 {
       font-size: 1.1rem;
       margin-bottom: 1rem;
-      color: lighten($primary, 15%);
+      color: scale-color($primary, $lightness: 15%);
     }
   }
 
@@ -561,7 +579,7 @@ const skillCategories = [
 
       &:before {
         content: "•";
-        color: lighten($primary, 15%);
+        color: scale-color($primary, $lightness: 15%);
         position: absolute;
         left: 0;
       }
@@ -600,7 +618,7 @@ const skillCategories = [
     width: 50px;
     height: 50px;
     flex-shrink: 0;
-    color: lighten($primary, 15%);
+    color: scale-color($primary, $lightness: 15%);
     background: rgba(255, 255, 255, 0.05);
     border-radius: 6px;
     padding: 8px;
@@ -668,7 +686,7 @@ const skillCategories = [
     svg {
       width: 18px;
       height: 18px;
-      color: lighten($primary, 15%);
+      color: scale-color($primary, $lightness: 15%);
     }
   }
 
