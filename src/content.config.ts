@@ -31,6 +31,7 @@ const projects = defineCollection({
       startDate: z.coerce.date().optional(),
       tags: z.array(reference("tags")).default([]),
       active: z.boolean().default(true),
+      featurable: z.boolean().default(true),
     }),
 });
 
