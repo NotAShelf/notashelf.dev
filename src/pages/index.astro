@@ -39,13 +39,25 @@ const sidePosts = featuredPosts
 >
   <section id="hero" class="hero fade-in">
     <div class="hero-content">
-      <img
-        class="profile-picture"
-        src="/images/avatar.png"
-        alt="Profile Picture"
-        decoding="async"
-        loading="lazy"
-      />
+      <picture>
+        <source
+          srcset="/images/avatar-120.webp 1x, /images/avatar-240.webp 2x"
+          type="image/webp"
+        />
+        <source
+          srcset="/images/avatar-120.png 1x, /images/avatar-240.png 2x"
+          type="image/png"
+        />
+        <img
+          class="profile-picture"
+          src="/images/avatar-120.png"
+          alt="Profile Picture"
+          width="120"
+          height="120"
+          decoding="async"
+          loading="lazy"
+        />
+      </picture>
       <h1 class="reveal-text">Howdy! Welcome to my collection of notes.</h1>
       <p class="intro">
         This is where I store my notes on various topics and processes that I

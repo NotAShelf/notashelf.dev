@@ -1,0 +1,50 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  class?: string;
+  loading?: "lazy" | "eager";
+  decoding?: "async" | "sync" | "auto";
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  class: className = "",
+  loading = "lazy",
+  decoding = "async",
+} = Astro.props;
+
+// Generate paths for different formats and resolutions
+const imagePath = src.substring(0, src.lastIndexOf("."));
+const extension = src.substring(src.lastIndexOf(".") + 1);
+
+// Standard resolution paths
+const standardWebp = `${imagePath}-${width}.webp`;
+const standardOriginal = `${imagePath}-${width}.${extension}`;
+
+// High resolution (2x) paths
+const highResWebp = `${imagePath}-${width * 2}.webp`;
+const highResOriginal = `${imagePath}-${width * 2}.${extension}`;
+---
+
+<picture>
+  <source srcset={`${standardWebp} 1x, ${highResWebp} 2x`} type="image/webp" />
+  <source
+    srcset={`${standardOriginal} 1x, ${highResOriginal} 2x`}
+    type={`image/${extension}`}
+  />
+  <img
+    class={className}
+    src={standardOriginal}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loading}
+    decoding={decoding}
+  />
+</picture>
