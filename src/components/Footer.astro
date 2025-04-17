@@ -29,7 +29,7 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
     </div>
     <div class="nix-webring">
       <a
-        href="https://nixwebr.ing/prev"
+        href="https://nixwebr.ing/prev/notashelf"
         title="Previous site in the Nix webring"
         aria-label="Previous site"
       >
@@ -37,7 +37,7 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
       </a>
       <div class="webring-container">
         <a
-          href="https://nixwebr.ing/random"
+          href="https://nixwebr.ing/rand"
           class="webring-logo"
           title="Visit a random site in the Nix webring"
           aria-label="Random site"
@@ -52,11 +52,11 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
           This site is part of the <a
             href="https://nixwebr.ing"
             class="webring-link">Nix webring</a
-          >. Click logo for random site.
+          >. Click the logo to visit a random site.
         </div>
       </div>
       <a
-        href="https://nixwebr.ing/next"
+        href="https://nixwebr.ing/next/notashelf"
         title="Next site in the Nix webring"
         aria-label="Next site"
       >
@@ -165,19 +165,22 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
           padding: 4px 8px;
           border-radius: 3px;
           font-size: 0.75em;
-          white-space: nowrap;
           opacity: 0;
           visibility: hidden;
           transition:
             opacity 0.2s,
             visibility 0.2s;
           z-index: 10;
-          width: max-content;
-          max-width: 220px;
+          width: 180px;
+          white-space: normal;
+          text-align: center;
+          line-height: 1.4;
 
           .webring-link {
             color: #7ebae4;
             text-decoration: none;
+            white-space: nowrap;
+            display: inline;
 
             &:hover {
               text-decoration: underline;
