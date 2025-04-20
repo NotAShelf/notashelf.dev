@@ -49,10 +49,8 @@ RNS consists of several key components:
 
 The system exposes functions like `nvim_set_option_bool()`,
 `nvim_create_keymap()`, and `plugin_config_begin()` that can be called from C,
-Rust, or Zig.
-
-Now let's walk through each component, because I'm quite proud of how deranged
-the design is.
+Rust, or Zig. Now, let's walk through each component, because I'm quite proud of
+how ~~deranged~~ intricate the design is.
 
 ### The FFI Bridge
 
@@ -93,11 +91,11 @@ This function does a few critical things:
 2. `extern "C"` specifies the C calling convention
 3. `*const c_char` is Rust's way of dealing with C strings (null-terminated
    character arrays)
-4. The entire operation is wrapped in `match` expressions for safety, converting
-   potential failures into simple integer returns
+4. The entire operation is wrapped in `match` expressions for safety, which is
+   converting potential failures into _simple_ (and inefficient) integer returns
 
 Under the hood, `extract_c_string` is converting an unsafe C string pointer into
-a safe Rust `String`, handling null pointers and invalid UTF-8:
+a safe Rust `String`, and handling null pointers or invalid UTF-8:
 
 ```rust
 pub(crate) fn extract_c_string(ptr: *const c_char) -> Result<String> {
