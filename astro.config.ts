@@ -71,4 +71,10 @@ export default defineConfig({
     prefetchAll: true,
     defaultStrategy: "hover",
   },
+
+  // Old endpoints for blog.notashelf.dev
+  redirects: {
+    "/blog": "/posts",
+    "/blog/": "/posts/",
+  },
 });
