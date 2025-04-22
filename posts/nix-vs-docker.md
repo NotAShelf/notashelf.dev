@@ -39,97 +39,203 @@ entire build cache. Even when using pinned base images and lockfiles, there's
 always a risk that some transient state---like a registry being temporarily
 down, or a package mirror being updated---will corrupt reproducibility.
 
-Nix expressions are declarative. You describe what you want, not how to get
-there. Every package build is a function of its inputs: the source code, the
-compiler, the dependencies, the environment variables, and the build scripts.
-Nothing more. There's no hidden context. No reliance on the global state of your
-machine. No network access during builds unless you explicitly allow it.
+Take this example:
 
-The difference isn't just philosophical. It has real-world consequences. Docker
-requires effort to avoid flakiness; with Nix, reproducibility is the default.
+```dockerfile
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+CMD ["node", "index.js"]
+```
+
+If `npm install` happens at build time, the image depends on the current state
+of the npm registry. A patch update upstream can change your build without
+notice. It's not deterministic, and it's not safe.
+
+Here's how the same thing works in Nix:
+
+```nix
+pkgs.mkShell {
+  buildInputs = [ pkgs.nodejs ];
+  shellHook = ''
+    export NODE_PATH=$(npm config get prefix)/lib/node_modules
+  '';
+}
+```
+
+In a real build derivation, you'd pin the exact Node version and even vendor
+`node_modules` to guarantee purity. That's not just possible---it's the default
+behavior. The build is a pure function. Run it anywhere with the same inputs,
+get the same output.
+
+Nix expressions, on another hand, are declarative. You describe what you want,
+not how to get there. Every package build is a function of its inputs: the
+source code, the compiler, the dependencies, the environment variables, and the
+build scripts. Nothing more. There's no hidden context. No reliance on the
+global state of your machine. No network access during builds unless you
+explicitly allow it, e.g., with `--no-sandbox`.
 
 ## Filesystem and Image Composition
 
-Docker builds up layers. Each command in the Dockerfile creates a new layer,
-stored as a filesystem diff. These layers are stacked, forming the final image.
-It's an efficient system for caching, but it introduces complexity. Layers can
-contain unnecessary files from intermediate steps. Cleanup has to be done
-manually. Even well-maintained images can end up being several hundred megabytes
-large, containing outdated binaries or untracked build artifacts.
+Docker builds up layers. Each command creates a filesystem diff. These are
+cached and stacked. But unless you're extremely careful, you accumulate garbage.
 
-With Nix, there are no layers. Every build output is stored in a
-content-addressed path in the Nix store. The path is derived from a hash of all
-the inputs and instructions used to produce it. This guarantees that the same
-build will always result in the same output, byte-for-byte. It also allows
-deduplication and caching across projects, machines, and users.
+Consider a typical pattern:
 
-In practice, this means that building ten similar applications with Nix doesn't
-result in ten different bloated images. Shared dependencies are stored once.
-Nothing is duplicated unless it's different. There's no need to worry about
-layer ordering or cache busting hacks. You build what you need, and you get
-exactly what you asked for.
+```dockerfile
+RUN apt-get update && apt-get install -y build-essential python3 \
+    && rm -rf /var/lib/apt/lists/*
+```
+
+This trick is needed to keep images small. If you forget to clean up, that layer
+includes every downloaded `.deb` file and package index.
+
+With Nix, you never need these hacks. The build output contains only what was
+declared. Here's a `default.nix` to build a Python app:
+
+```nix
+{ pkgs ? import <nixpkgs> {} }:
+
+pkgs.buildPythonPackage {
+  pname = "myapp";
+  version = "0.1.0";
+  src = ./.;
+  propagatedBuildInputs = [ pkgs.python3.pkgs.requests ];
+}
+```
+
+No accidental state. No garbage left in `/var`. And no need to manually squash
+layers. You get a single, deduplicated output path like:
+
+```sh
+/nix/store/some-hash-myapp-0.1.0/
+```
+
+That path is content-addressed. You can copy it, cache it, or reproduce it
+anywhere.
 
 ## Reproducibility
 
-Docker tries to be reproducible, but it isn't by default. You have to go out of
-your way to pin image versions, lock dependency managers, and scrub any
-filesystem state that could introduce noise. The moment you rely on
-`apt-get update` or `npm install` inside the image, your image depends on the
-state of the outside world. That state changes. Sometimes subtly. Sometimes
-catastrophically.
+Docker can be made reproducible if you treat it like a hostile system and strip
+away everything nondeterministic. This _is_ possible, but you'll notice very
+quickly that the defaults work against you. Correctness is possible, but it is
+pushed back in the name of 'convenience' for mediocre solutions to difficult
+problems.
 
-Nix flips this. It assumes you want reproducibility, and forces you to be
-explicit when you don't. If you want to download something during a build, you
-must declare it. If your package depends on a specific version of a compiler or
-library, it's part of the derivation. Every dependency, direct or transitive, is
-captured in the build plan. And because the output path is a hash of all those
-inputs, you can verify the build just by checking the hash. No need to diff
-images or inspect layers manually.
+You can, for example, pin your base image. Vendor your dependencies. Disable all
+dynamic package resolution. Even then, something can, and most likely will,
+still slip through.
 
-In multi-stage Docker builds, you sometimes strip down an application to get a
-smaller final image. With Nix, there's no need for tricks. You can separate
-build and runtime environments cleanly, and export only what you need. And
-you'll know it's exactly what you built, because the path hash won't match
-otherwise.
+In Nix, however, reproducibility is not an extra step. It is part of the system
+design. If your build depends on `openssl`, and the OpenSSL derivation changes,
+the hash of your app changes. If nothing changes, the hash remains the same.
+
+Want to verify the reproducibility of your derivation? Diff it.
+
+```sh
+nix build .#myapp
+nix build .#myapp --rebuild
+diff -r result/ result-2/
+```
+
+Or use diffoscope. Regardless, the outputs will be byte-for-byte identical.
+Docker can't promise that unless you freeze the entire universe.
 
 ## Deployment and Distribution
 
-Docker's deployment model revolves around registries. You build an image, push
-it to a registry, then pull it down on the production host. This requires an
-always-running Docker daemon, appropriate access credentials, and often,
-time-consuming image pulls and extraction.
+Docker deployments depend on registries. Push your image to Docker Hub, Amazon
+ECR, or GitHub Container Registry. Then pull it down somewhere else. This step
+adds overhead. You're moving entire layered tarballs across the network.
 
-Nix doesn't need a central registry. You can copy store paths directly between
-systems using nix copy or serve them with a binary cache. With tools like
-Cachix, you can distribute build artifacts without pushing or pulling massive
-tarballs. If the path already exists on the target machine, no data transfer
-happens. It's fast, secure, and minimal.
+And of course, if you use private registries, you're stuck managing credentials
+and dealing with rate limits or token expiry.
 
-If you really need Docker images---for example, when deploying to
-Kubernetes---you can still generate OCI-compatible containers from Nix builds
-using tools like `nix2container` or the `dockerTools` module in Nixpkgs. This
-means you get the deterministic builds and precise dependency control of Nix,
-packaged into a form that the rest of your infrastructure can understand. And
-those images are smaller, cleaner, and more predictable.
+With Nix, you have direct control. You can copy artifacts from one machine to
+another with:
+
+```sh
+nix copy --to ssh://prod-server ./result
+```
+
+Or even to an S3-compatible storage system:
+
+```sh
+nix copy --to s3://my-bucket?region=eu-west-1&endpoint=example.com nixpkgs#hello
+```
+
+No registry required. No daemon involved. And thanks to the content hash,
+nothing is copied if the store path already exists.
+
+If you are working with a public project, using a binary cache like Cachix is
+even simpler. You can build things inside Github workflows, upload once, and
+reuse everywhere.
+
+And if you really need Docker compatibility?
+
+```nix
+dockerTools.buildImage {
+  name = "myapp";
+  config = {
+    Cmd = [ "node" "index.js" ];
+  };
+  contents = [ myApp ];
+}
+```
+
+This gives you a reproducible Docker image—without relying on a Dockerfile or
+layers at all.
 
 ## Security and Isolation
 
-Docker's model relies on a daemon that often runs as root. Images can come from
-untrusted sources, and the build process may include shell scripts that modify
-the system in arbitrary ways. Sandboxing is leaky unless you run everything in
-production with additional tooling like AppArmor, seccomp, or rootless
-containers.
+Docker builds often run with elevated privileges. The Docker daemon runs as
+root, and most images execute shell commands during build. Unless you harden
+every stage, you're at risk. Sandboxing is optional. Escape vectors are known.
 
-Nix builds run in a sandbox by default. They have no access to the host system,
-no write access to the filesystem, and no network access unless explicitly
-permitted. The build environment is minimal and predictable. There's no implicit
-trust. You can audit exactly what goes into a derivation, and verify it at every
-stage.
+Nix doesn't run a daemon. It doesn't need root. And by default, it builds in a
+sandbox with no network, no writable files, and no access to your home
+directory.
 
-When you deploy with Nix, you're not just moving bits around. You're verifying a
-closed system. You know every file. You know every dependency. You can recreate
-it from scratch at any time, with no surprises. This is also what makes NixOS
-the true endgame of distro-hopping.
+Here's an example failure you'd get if you try to break the sandbox:
+
+```sh
+cp ~/.ssh/id_rsa .
+```
+
+If you're building with `--option sandbox true`, this fails. The sandbox
+prevents access outside declared paths.
+
+This model isn't just more secure. It's verifiable. You can trace the entire
+dependency graph and inspect every file that went into the build. That's the
+foundation NixOS builds on---where your entire OS, including the kernel, is just
+another derivation.
+
+## Tooling and Ecosystem
+
+Docker is supported by a wide array of third-party tools. Compose, BuildKit,
+Docker Hub, Portainer, etc. Each one of those tools are trying to solve a piece
+of the container puzzle, but these tools are fragmented and often orthogonal.
+Compose files don't integrate cleanly with Dockerfiles. Secrets management is
+bolted on. Native caching and layering are leaky abstractions at bes
+
+The Nix ecosystem, in contrast, is more unified. Flakes, [^1] despite their
+current state and perception by the community, give you a single entry point for
+dependency specification, building, testing, and deployment. You define inputs,
+outputs, and devShells in one file, and they work across all tools that support
+the flake interface.
+
+[^1]: I know, I know. There is a lot of outrage around flakes. But consider
+    this: every
+
+Need to test a system configuration? Use `nixos-rebuild test` with a flake. Need
+a temporary environment for hacking? `nix develop`. Want to run integration
+tests? Use `nixos-test`. Tools like `lorri`, `direnv`, and `nixd` enhance
+developer ergonomics with automatic environment loading and IDE integration.
+
+Instead of chaining loosely-coupled CLIs and YAML fragments, Nix encourages
+composition. Everything is just a function, and everything is declarative. This
+reduces surface area and makes behavior more predictable.
 
 ## Closing Thoughts
 
