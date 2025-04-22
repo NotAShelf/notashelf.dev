@@ -75,6 +75,5 @@ export default defineConfig({
   // Old endpoints for blog.notashelf.dev
   redirects: {
     "/blog": "/posts",
-    "/blog/": "/posts/",
   },
 });
