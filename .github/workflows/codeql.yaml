@@ -1,0 +1,45 @@
+name: CodeQL
+
+permissions:
+  security-events: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - "**.ts"
+      - "tsconfig.json"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "flake.nix"
+      - "flake.lock"
+      - ".github/workflows/codeql.yaml"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "**.ts"
+      - "tsconfig.json"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "flake.nix"
+      - "flake.lock"
+      - ".github/workflows/codeql.yaml"
+
+jobs:
+  codeql-scan:
+    name: "Run CodeQL Scan"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript-typescript"
