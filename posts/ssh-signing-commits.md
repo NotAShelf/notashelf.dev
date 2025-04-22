@@ -76,7 +76,7 @@ First you would like to add `programs.git.signing` to your home.nix as follows:
 # home.nix
 programs.git = {
   signing = {
-    key = "${config.home.homeDirectory}/.ssh/my-key.pub"
+    key = "${config.home.homeDirectory}/.ssh/my-key.pub";
     signByDefault = true;
   };
 
