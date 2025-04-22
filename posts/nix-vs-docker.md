@@ -54,7 +54,7 @@ If `npm install` happens at build time, the image depends on the current state
 of the npm registry. A patch update upstream can change your build without
 notice. It's not deterministic, and it's not safe.
 
-Here's how the same thing works in Nix:
+Here's how the same thing works in Nix using a shell environment:
 
 ```nix
 pkgs.mkShell {
@@ -70,18 +70,17 @@ In a real build derivation, you'd pin the exact Node version and even vendor
 behavior. The build is a pure function. Run it anywhere with the same inputs,
 get the same output.
 
-Nix expressions, on another hand, are declarative. You describe what you want,
-not how to get there. Every package build is a function of its inputs: the
-source code, the compiler, the dependencies, the environment variables, and the
-build scripts. Nothing more. There's no hidden context. No reliance on the
-global state of your machine. No network access during builds unless you
-explicitly allow it, e.g., with `--no-sandbox`.
+Nix expressions are declarative. You describe what you want, not how to get
+there. Every package build is a function of its inputs: the source code, the
+compiler, the dependencies, the environment variables, and the build scripts.
+Nothing more. There's no hidden context. No reliance on the global state of your
+machine. No network access during builds unless you explicitly allow it, e.g.,
+with `--no-sandbox`.
 
 ## Filesystem and Image Composition
 
 Docker builds up layers. Each command creates a filesystem diff. These are
 cached and stacked. But unless you're extremely careful, you accumulate garbage.
-
 Consider a typical pattern:
 
 ```dockerfile
@@ -90,10 +89,11 @@ RUN apt-get update && apt-get install -y build-essential python3 \
 ```
 
 This trick is needed to keep images small. If you forget to clean up, that layer
-includes every downloaded `.deb` file and package index.
+includes every downloaded `.deb` file and package index. There are also
+situations where `/var/lib/apt/lists/` _needs_ to remain in place.
 
 With Nix, you never need these hacks. The build output contains only what was
-declared. Here's a `default.nix` to build a Python app:
+declared. For example, here's a `default.nix` to build a Python application:
 
 ```nix
 { pkgs ? import <nixpkgs> {} }:
@@ -106,27 +106,26 @@ pkgs.buildPythonPackage {
 }
 ```
 
-No accidental state. No garbage left in `/var`. And no need to manually squash
-layers. You get a single, deduplicated output path like:
+No accidental state. No garbage left in `/var`. No need to squash layers. You
+get a single, deduplicated output path like:
 
 ```sh
 /nix/store/some-hash-myapp-0.1.0/
 ```
 
 That path is content-addressed. You can copy it, cache it, or reproduce it
-anywhere.
+anywhere. You can even `nix bundle` it to allow running it elsewhere, though the
+API around it is a bit ambiguous.
 
 ## Reproducibility
 
 Docker can be made reproducible if you treat it like a hostile system and strip
-away everything nondeterministic. This _is_ possible, but you'll notice very
+away everything non-deterministic. This _is_ possible, but you'll notice very
 quickly that the defaults work against you. Correctness is possible, but it is
 pushed back in the name of 'convenience' for mediocre solutions to difficult
-problems.
-
-You can, for example, pin your base image. Vendor your dependencies. Disable all
-dynamic package resolution. Even then, something can, and most likely will,
-still slip through.
+problems. You can, for example, pin your base image. Vendor your dependencies.
+Disable all dynamic package resolution. Even then, something can—and most likely
+will---still slip through.
 
 In Nix, however, reproducibility is not an extra step. It is part of the system
 design. If your build depends on `openssl`, and the OpenSSL derivation changes,
@@ -140,8 +139,8 @@ nix build .#myapp --rebuild
 diff -r result/ result-2/
 ```
 
-Or use diffoscope. Regardless, the outputs will be byte-for-byte identical.
-Docker can't promise that unless you freeze the entire universe.
+Or use `diffoscope`. Regardless, the outputs will be byte-for-byte identical.
+Docker can't really promise that unless you freeze the entire universe.
 
 ## Deployment and Distribution
 
@@ -165,14 +164,16 @@ Or even to an S3-compatible storage system:
 nix copy --to s3://my-bucket?region=eu-west-1&endpoint=example.com nixpkgs#hello
 ```
 
-No registry required. No daemon involved. And thanks to the content hash,
+No registry required. No daemon [^1] involved. And thanks to the content hash,
 nothing is copied if the store path already exists.
 
-If you are working with a public project, using a binary cache like Cachix is
-even simpler. You can build things inside Github workflows, upload once, and
-reuse everywhere.
+[^1]: Nix _does_ run as a daemon, but unlike the Docker daemon it only runs when
+    you are _building_ things. It is not constantly running, therefore there is
+    a smaller attack vector through the daemon.
 
-And if you really need Docker compatibility?
+If you're working with a public project, using a binary cache like Cachix is
+even simpler. You can build things inside GitHub workflows, upload once, and
+reuse everywhere. And if you really need Docker compatibility?
 
 ```nix
 dockerTools.buildImage {
@@ -184,7 +185,7 @@ dockerTools.buildImage {
 }
 ```
 
-This gives you a reproducible Docker image—without relying on a Dockerfile or
+This gives you a reproducible Docker image---without relying on a Dockerfile or
 layers at all.
 
 ## Security and Isolation
@@ -208,30 +209,31 @@ prevents access outside declared paths.
 
 This model isn't just more secure. It's verifiable. You can trace the entire
 dependency graph and inspect every file that went into the build. That's the
-foundation NixOS builds on---where your entire OS, including the kernel, is just
+foundation NixOS builds on---here your entire OS, including the kernel, is just
 another derivation.
 
 ## Tooling and Ecosystem
 
 Docker is supported by a wide array of third-party tools. Compose, BuildKit,
-Docker Hub, Portainer, etc. Each one of those tools are trying to solve a piece
+Docker Hub, Portainer, etc. Each one of those tools is trying to solve a piece
 of the container puzzle, but these tools are fragmented and often orthogonal.
 Compose files don't integrate cleanly with Dockerfiles. Secrets management is
-bolted on. Native caching and layering are leaky abstractions at bes
+bolted on. Native caching and layering are leaky abstractions at best.
 
-The Nix ecosystem, in contrast, is more unified. Flakes, [^1] despite their
-current state and perception by the community, give you a single entry point for
-dependency specification, building, testing, and deployment. You define inputs,
-outputs, and devShells in one file, and they work across all tools that support
-the flake interface.
-
-[^1]: I know, I know. There is a lot of outrage around flakes. But consider
-    this: every
+The Nix ecosystem, in contrast, is more unified. Flakes, despite their current
+state and perception by the community, give you a single entry point for
+dependency specification, building, testing, and deployment. You define your
+inputs, and then you define your outputs: your packages, formatters, or your
+devShells in one file, and they work across all tools that support the flake
+interface. In fact, you can even bypass the flake interface with a project that
+uses flakes _reproducibly_. It is that integrated.
 
 Need to test a system configuration? Use `nixos-rebuild test` with a flake. Need
 a temporary environment for hacking? `nix develop`. Want to run integration
-tests? Use `nixos-test`. Tools like `lorri`, `direnv`, and `nixd` enhance
-developer ergonomics with automatic environment loading and IDE integration.
+tests? Use `nixos-test`. Software tests? Nix has
+[got your back](https://notashelf.dev/posts/nixos-testing-i). Tools like
+`lorri`, `direnv`, and `nixd` enhance developer ergonomics with automatic
+environment loading and IDE integration.
 
 Instead of chaining loosely-coupled CLIs and YAML fragments, Nix encourages
 composition. Everything is just a function, and everything is declarative. This
