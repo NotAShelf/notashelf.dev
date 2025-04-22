@@ -96,13 +96,16 @@ With Nix, you never need these hacks. The build output contains only what was
 declared. For example, here's a `default.nix` to build a Python application:
 
 ```nix
+# XXX: The `import <nixpkgs>` pattern is actually discouraged, and it is usually
+# not very reproducible. This is here as an example, but I encourage you to take
+# a look at the twin article for more correct examples with better explanations.
 { pkgs ? import <nixpkgs> {} }:
 
 pkgs.buildPythonPackage {
   pname = "myapp";
   version = "0.1.0";
   src = ./.;
-  propagatedBuildInputs = [ pkgs.python3.pkgs.requests ];
+  propagatedBuildInputs = [ pkgs.python3Packages.requests ];
 }
 ```
 
@@ -113,9 +116,10 @@ get a single, deduplicated output path like:
 /nix/store/some-hash-myapp-0.1.0/
 ```
 
-That path is content-addressed. You can copy it, cache it, or reproduce it
-anywhere. You can even `nix bundle` it to allow running it elsewhere, though the
-API around it is a bit ambiguous.
+That path is input-addressed and reproducible. You can copy it, cache it, or
+reproduce it anywhere. You can even `nix bundle` it to allow running it
+elsewhere, though the API around it is a bit ambiguous and besides the scope of
+today's post.
 
 ## Reproducibility
 
