@@ -12,17 +12,17 @@ You rename a batch of files with a ten-line Python script, or you alias a common
 function to format JSON from the clipboard.
 
 You're not even trying to be clever. You're just solving tiny problems. Making
-the machine do what it should have done in the first place.
-
-And then something happens. You cross a _threshold_.\
-You look at your tools, your environment, your operating system---even your
-editor---and suddenly everything is fair game.
+the machine do what it should have done in the first place. And then something
+happens. You cross a _threshold_. You look at your tools, your environment, your
+operating system---even your editor---and suddenly **everything** is fair game.
 
 You _could_ rebuild that (if you wanted to).\
-You could _improve_ that (if you wanted to.\
+You could _improve_ that (if you wanted to).
 
 Then someone challenges you. As banter maybe, perhaps jokingly but also with a
 dash of hope. Then the air in the room changes.
+
+It suddenly becomes something else. It becomes:
 
 You _should_.
 
@@ -34,15 +34,17 @@ only _you_ can see.
 Before I could program, broken software was frustrating but ignorable. For years
 I've simply "used" a computer, as a consumer. I was what companies were
 concerned with tricking into buying their products, or subscribing to their
-services.
+services. Not the technical geek that they prefer to avoid with their software
+releases, or banning from their games based on an OS.
 
 Now it has become _provocative_. I can see the patterns that I wish I couldn't,
 find oversights that I can attribute to a certain understanding (or the lack
 thereof) of a certain concept and I can _hear_ what has been echoing in the head
 of the computer illiterate person who conjured the program I have to debug.
 
-I notice flaws like a surgeon notices a limp.\
-Why does this site send ten megabytes of JavaScript for a static page?\
+I notice flaws like a good surgeon notices a limp.\
+Why the _hell_ does this site send ten megabytes of JavaScript for a static
+page?\
 Why is the CLI output not parseable by `awk`?\
 Why is this config hardcoded when it could be declarative?
 
@@ -117,7 +119,7 @@ I think we lie to ourselves.
 > "If I just get this setup right, I'll never have to touch it again."\
 > "If I just write this one tool, my workflow will be seamless."\
 > "If I automate this, I'll save time forever." [^3]\
-> "Write once, run everywhere"\
+> "Write once, run everywhere." My ass.
 
 [^3]: Remember when you spent 2 hours automating a 30 minute task? Yeah, it's
     that again.
@@ -177,7 +179,7 @@ backwards hell where people create software that you have to interact with?
 
 The first step is recognizing that _not everything broken is yours to fix_.\
 Not every tool needs replacing.\
-Not every bad experience is a call to action.\
+Not every bad experience is a call to action.
 
 Sometimes, it's OK to just _use_ the thing. Sometimes it's enough to know _why_
 it's broken---even if you don't fix it. Sometimes the most disciplined thing you
