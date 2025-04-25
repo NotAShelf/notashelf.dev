@@ -44,7 +44,7 @@
           version =
             if (self ? rev)
             then (builtins.substring 0 7 self.rev)
-            else "dirty";
+            else "main";
 
           src = let
             sp = ./.;
@@ -68,7 +68,7 @@
 
           pnpmDeps = pkgs.pnpm_10.fetchDeps {
             inherit (finalAttrs) pname src;
-            hash = "sha256-uM1MUQLEXeGTXsR26znOqhHS90U5VcxYhBIKS0+avRA=";
+            hash = "sha256-pEk2c50E2vlWaHzw4UP1Q0OhE5AOnqes8DIfcfgFUD0=";
           };
 
           nativeBuildInputs = with pkgs; [
@@ -78,7 +78,7 @@
 
           env = {
             ASTRO_TELEMETRY_DISABLED = true;
-            GIT_REV = self.shortRev or "main";
+            GIT_REV = finalAttrs.version;
           };
 
           buildPhase = ''
