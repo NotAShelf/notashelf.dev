@@ -1,6 +1,5 @@
 import { visit } from "unist-util-visit";
-
-type RemarkPlugin = () => (tree: any, file: any) => void;
+import type { RemarkPlugin } from "../types";
 
 const remarkEmDash: RemarkPlugin = () => {
   return (tree, _file) => {
