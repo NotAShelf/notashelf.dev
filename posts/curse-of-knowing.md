@@ -88,7 +88,7 @@ these projects can become. Empty systems we keep building, waiting for purpose,
 for clarity, for... salvation? I'm not sure how else would you call this
 pursuit.
 
-[^1]: From, I believe, Kafka's _The Zurau Aphorisms_
+[^1]: From, I believe, Kafka's _The Zurau Aphorisms_.
 
 ## Entropy Is Undefeated
 
@@ -199,7 +199,7 @@ emotional clarity?
 - Knowing when to stop.
 
 This is what I'm trying to learn now. After the excitement. After the obsession.
-After the burnout.I'm trying to let things stay a little broken. Because I've
+After the burnout. I'm trying to let things stay a little broken. Because I've
 realized I don't want to _fix everything_. I just want to feel OK in a world
 that often isn't. I can fix something, but not everything.
 
