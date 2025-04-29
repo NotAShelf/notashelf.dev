@@ -95,7 +95,7 @@ pursuit.
 Now let's go back. Back to when we didn't know better.
 
 Software doesn't stay solved. Every solution you write starts to rot the moment
-it exists. Not know, not later, but eventually. Libraries deprecate. APIs
+it exists. Not now, not later, but eventually. Libraries deprecate. APIs
 change. Performance regressions creep in. Your once-perfect tool breaks silently
 because `libfoo.so` is now `libfoo.so.2`. [^2]
 
@@ -152,7 +152,7 @@ I have written entire applications just to avoid thinking about why I was
 unhappy. Programming gives you instant feedback. You run the thing, and it
 works. Or it _doesn't_, and you fix it. Either way, you're _doing something_.
 
-That kind of agency is addictive. Especially when the rest of life doesn' offer
+That kind of agency is addictive. Especially when the rest of life doesn't offer
 it. We program because we _can_, even when we shouldn't. Because at least it
 gives us something to rebel against.
 
@@ -205,7 +205,7 @@ that often isn't. I can fix something, but not everything.
 
 ---
 
-You learn how to program. You learn how to fix things.But the hardest thing
+You learn how to program. You learn how to fix things. But the hardest thing
 you'll ever learn is when to _leave them broken_.
 
 And maybe that's the most human skill of all.
