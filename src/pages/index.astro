@@ -1,10 +1,10 @@
 ---
+import FeaturedProjects from "@components/FeaturedProjects.astro";
+import PostSpotlight from "@components/PostSpotlight.astro";
 import { faArrowRight, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import BaseLayout from "@layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
-import FeaturedProjects from "../components/FeaturedProjects.astro";
-import PostSpotlight from "../components/PostSpotlight.astro";
-import BaseLayout from "../layouts/BaseLayout.astro";
 
 // Get latest posts for featured section
 const allPosts = await getCollection("posts");
