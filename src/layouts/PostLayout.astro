@@ -63,7 +63,7 @@ const gitRevision = import.meta.env.GIT_REV || "main";
         {formattedDate && <time datetime={date || ""}>{formattedDate}</time>}
         <span class="reading-time">{readingTime} min read</span>
         <a
-          href={`https://github.com/notashelf/notashelf.dev/blob/${gitRevision}/src/content/posts/${slug}.md`}
+          href={`https://github.com/notashelf/notashelf.dev/blob/${gitRevision}/posts/${slug}.md`}
           class="source-link"
           target="_blank"
           rel="noopener noreferrer"
