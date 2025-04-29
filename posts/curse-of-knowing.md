@@ -88,14 +88,14 @@ these projects can become. Empty systems we keep building, waiting for purpose,
 for clarity, for... salvation? I'm not sure how else would you call this
 pursuit.
 
-[^1]: From, I believe, Kafka's _The Zurau Aphorisms_
+[^1]: From, I believe, Kafka's _The Zurau Aphorisms_.
 
 ## Entropy Is Undefeated
 
 Now let's go back. Back to when we didn't know better.
 
 Software doesn't stay solved. Every solution you write starts to rot the moment
-it exists. Not know, not later, but eventually. Libraries deprecate. APIs
+it exists. Not now, not later, but eventually. Libraries deprecate. APIs
 change. Performance regressions creep in. Your once-perfect tool breaks silently
 because `libfoo.so` is now `libfoo.so.2`. [^2]
 
@@ -152,7 +152,7 @@ I have written entire applications just to avoid thinking about why I was
 unhappy. Programming gives you instant feedback. You run the thing, and it
 works. Or it _doesn't_, and you fix it. Either way, you're _doing something_.
 
-That kind of agency is addictive. Especially when the rest of life doesn' offer
+That kind of agency is addictive. Especially when the rest of life doesn't offer
 it. We program because we _can_, even when we shouldn't. Because at least it
 gives us something to rebel against.
 
@@ -199,13 +199,13 @@ emotional clarity?
 - Knowing when to stop.
 
 This is what I'm trying to learn now. After the excitement. After the obsession.
-After the burnout.I'm trying to let things stay a little broken. Because I've
+After the burnout. I'm trying to let things stay a little broken. Because I've
 realized I don't want to _fix everything_. I just want to feel OK in a world
 that often isn't. I can fix something, but not everything.
 
 ---
 
-You learn how to program. You learn how to fix things.But the hardest thing
+You learn how to program. You learn how to fix things. But the hardest thing
 you'll ever learn is when to _leave them broken_.
 
 And maybe that's the most human skill of all.
