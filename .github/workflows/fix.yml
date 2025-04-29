@@ -15,10 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
-      - uses: actions/checkout@v4
+
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
         with:
           fetch-depth: 2
-      - name: Get changed files
+
+      - name: "Get changed files"
         id: changed-files
         uses: dorny/paths-filter@v3
         with:
@@ -28,12 +31,13 @@ jobs:
               - 'package.json'
               - 'pnpm-lock.yaml'
 
+      # Exit early if no relevant files are updated
       - uses: DeterminateSystems/nix-installer-action@main
         if: steps.changed-files.outputs.files == 'true'
       - uses: DeterminateSystems/magic-nix-cache-action@main
         if: steps.changed-files.outputs.files == 'true'
 
-      - name: Get updated hash
+      - name: "Update Dependency Hash"
         if: steps.changed-files.outputs.files == 'true'
         run: |
           if nix build --print-build-logs .#build-site 2> /tmp/log; then
@@ -46,7 +50,9 @@ jobs:
           sed -e "s#hash =.*\$#hash = \"$hash\";#g" -i flake.nix
 
           git diff
-      - uses: stefanzweifel/git-auto-commit-action@v5
+
+      - name: "Update dependencies"
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Auto Update Vendor Hash"
+          commit_message: "meta: auto-update dependencies"
 
