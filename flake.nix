@@ -62,6 +62,7 @@
                   ./package.json
                   ./pnpm-lock.yaml
                   ./astro.config.ts
+                  ./tsconfig.json # for import aliases
                 ]
               );
             };
