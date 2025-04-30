@@ -79,6 +79,7 @@
           env = {
             ASTRO_TELEMETRY_DISABLED = true;
             GIT_REV = finalAttrs.version;
+            SITE_SRC = "https://github.com/notashelf/notashelf.dev";
           };
 
           buildPhase = ''

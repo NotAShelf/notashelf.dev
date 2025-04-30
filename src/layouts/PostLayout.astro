@@ -46,6 +46,10 @@ const slug = currentPath.split("/").filter(Boolean).pop();
 
 // Get git revision from environment variable or default to main
 const gitRevision = import.meta.env.GIT_REV || "main";
+
+// Get post sources from environment variable or default to the site source
+const postSrc =
+  import.meta.env.SITE_SRC || "https://github.com/notashelf/notashelf.dev";
 ---
 
 <BaseLayout
@@ -63,7 +67,7 @@ const gitRevision = import.meta.env.GIT_REV || "main";
         {formattedDate && <time datetime={date || ""}>{formattedDate}</time>}
         <span class="reading-time">{readingTime} min read</span>
         <a
-          href={`https://github.com/notashelf/notashelf.dev/blob/${gitRevision}/src/content/posts/${slug}.md`}
+          href={`${postSrc}/blob/${gitRevision}/src/content/posts/${slug}.md`}
           class="source-link"
           target="_blank"
           rel="noopener noreferrer"
