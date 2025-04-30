@@ -1,7 +1,7 @@
 ---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import type { ProjectEntry } from "@lib/types";
 import { getCollection } from "astro:content";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import type { ProjectEntry } from "../lib/types";
 
 // Get all projects
 const allProjects = (await getCollection("projects")) as ProjectEntry[];

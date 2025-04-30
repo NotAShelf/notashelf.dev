@@ -93,7 +93,7 @@ export async function GET(): Promise<Response> {
       // what they were worth. This is what I would call a 'kitchen sink'
       // implementation at best, but it works. Until it doesn't, probably.
       const postContent = post.body || "";
-      const postUrl = `${site}/posts/${post.id}/`;
+      const postUrl = `${site}/posts/${post.id}`;
 
       // Render the post content to HTML using the appropriate
       // processor

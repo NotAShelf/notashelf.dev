@@ -1,10 +1,10 @@
 ---
+import Pagination from "@components/Pagination.astro";
 import { faArchive } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import type { PostEntry } from "@lib/types";
 import { getCollection } from "astro:content";
-import Pagination from "../../components/Pagination.astro";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import type { PostEntry } from "../../lib/types";
 
 // Pagination settings
 const postsPerPage = 10;

@@ -13,6 +13,7 @@
     "isolatedModules": true,
     "incremental": true,
     "paths": {
+      // https://docs.astro.build/en/guides/typescript/#import-aliases
       "@/*": [
         "src/*"
       ],
@@ -32,7 +33,7 @@
         "src/data/*"
       ],
       "@scripts/*": [
-        "src/data/*"
+        "src/scripts/*"
       ]
     },
     "jsx": "react-jsx",
