@@ -16,7 +16,7 @@ of a NixOS configuration, there are easier and more ergonomic ways of doing so.
 
 In the context of Nix/OS, `nixpkgs.lib` refers to a module within the Nixpkgs
 repository that acts as a collection of helpful functions and other utilities
-designed around usage in Nixpkgs and by extension NixOS configurations.We often
+designed around usage in Nixpkgs and by extension NixOS configurations. We often
 use those functions to simplify our configurations and the Nix package build
 processes. It is available as a top-level attribute as `nixpkgs.lib`, but also
 inside `pkgs` as `pkgs.lib`. While using `lib.nixosSystem`, it is also added to
