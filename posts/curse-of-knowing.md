@@ -2,7 +2,7 @@
 title: "The Curse of Knowing How, or; Fixing Everything"
 date: 2025-04-24
 description: "A reflection on control, burnout, and the strange weight of technical fluency."
-tags: ["thoughts", "programming", "software"]
+keywords: ["thoughts", "programming", "software"]
 ---
 
 It starts innocently.
@@ -146,7 +146,7 @@ or a script because we are in a desperate need for a small victory. We write a
 new tool because we are overwhelmed. Refactor it, not because the code is messy,
 but your life is. We chase the perfect system because it gives us something to
 hold onto when everything else is spinning. This is the lesson I've taken from
-using NixOS.
+using [NixOS](https://nixos.org).
 
 I have written entire applications just to avoid thinking about why I was
 unhappy. Programming gives you instant feedback. You run the thing, and it
