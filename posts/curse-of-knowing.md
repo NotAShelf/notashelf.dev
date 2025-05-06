@@ -95,9 +95,9 @@ pursuit.
 Now let's go back. Back to when we didn't know better.
 
 Software doesn't stay solved. Every solution you write starts to rot the moment
-it exists. Not now, not later, but eventually. Libraries deprecate. APIs
-change. Performance regressions creep in. Your once-perfect tool breaks silently
-because `libfoo.so` is now `libfoo.so.2`. [^2]
+it exists. Not now, not later, but eventually. Libraries deprecate. APIs change.
+Performance regressions creep in. Your once-perfect tool breaks silently because
+`libfoo.so` is now `libfoo.so.2`. [^2]
 
 [^2]: Nix solves this. Or does it? Nix was a can of worms of its own.
 
@@ -158,7 +158,7 @@ gives us something to rebel against.
 
 ## The Burnout You Don't See Coming
 
-Burnout doesn not just come from overwork. It comes from _overresponsibility_.
+Burnout does not just come from overwork. It comes from _overresponsibility_.
 
 And programming, once internalized deeply enough, makes everything feel like
 your responsibility. The bloated website. The inefficient script. The clunky
