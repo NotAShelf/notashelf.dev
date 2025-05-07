@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Image } from "astro:assets";
 
 interface Props {
   src: string;
@@ -22,35 +22,37 @@ const {
 } = Astro.props;
 
 // Check if the source is a remote URL
-const isRemoteImage = src.startsWith('http://') || src.startsWith('https://');
+const isRemoteImage = src.startsWith("http://") || src.startsWith("https://");
 
 // For remote images we can't use the full Astro Image optimization
 // but for local images we can
 ---
 
-{isRemoteImage ? (
-  <img
-    src={src}
-    alt={alt}
-    width={width}
-    height={height}
-    class={className}
-    loading={loading}
-    decoding={decoding}
-  />
-) : (
-  <Image
-    src={src}
-    alt={alt}
-    width={width}
-    height={height}
-    class={className}
-    loading={loading}
-    decoding={decoding}
-    format="webp"
-    quality={80}
-  />
-)}
+{
+  isRemoteImage ? (
+    <img
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      class={className}
+      loading={loading}
+      decoding={decoding}
+    />
+  ) : (
+    <Image
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      class={className}
+      loading={loading}
+      decoding={decoding}
+      format="webp"
+      quality={80}
+    />
+  )
+}
 
 <style>
   img {

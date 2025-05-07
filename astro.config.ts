@@ -20,8 +20,8 @@ export default defineConfig({
 
   image: {
     service: {
-      entrypoint: "astro/assets/services/sharp"
-    }
+      entrypoint: "astro/assets/services/sharp",
+    },
   },
 
   // https://docs.astro.build/en/reference/configuration-reference/
