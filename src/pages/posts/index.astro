@@ -2,6 +2,8 @@
 import Pagination from "@components/Pagination.astro";
 import {
   faArchive,
+  faLayerGroup,
+  faList,
   faMagnifyingGlass,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
@@ -41,9 +43,16 @@ const posts = filteredPosts.slice(0, postsPerPage);
 <BaseLayout title="Blog Posts" description="Collection of blog posts">
   <div class="posts-header">
     <h1 class="page-title">Blog Posts</h1>
-    <a href="/archive" class="archive-link">
-      <FontAwesomeIcon icon={faArchive} /> View Archive
-    </a>
+    <div class="header-actions">
+      <button id="view-toggle" class="view-toggle" title="Toggle view mode" aria-label="Toggle between paginated and all posts view">
+        <FontAwesomeIcon icon={faLayerGroup} id="pagination-icon" />
+        <FontAwesomeIcon icon={faList} id="all-icon" style="display: none;" />
+        <span id="view-label">View All</span>
+      </button>
+      <a href="/archive" class="archive-link">
+        <FontAwesomeIcon icon={faArchive} /> View Archive
+      </a>
+    </div>
   </div>
 
   <div class="filters-container">
@@ -72,7 +81,7 @@ const posts = filteredPosts.slice(0, postsPerPage);
 
     <div class="tags-container">
       <div class="tags-wrap">
-        <button type="button" class="tag-filter active" data-tag="">
+        <button type="button" class="tag-filter" data-tag="">
           All
         </button>
 
@@ -123,6 +132,42 @@ const posts = filteredPosts.slice(0, postsPerPage);
     }
   </ul>
 
+  <ul class="post-list-all" style="display: none;">
+    {
+      filteredPosts.map((post: PostEntry) => (
+        <li
+          class="post-dropdown-item"
+          data-keywords={post.data.keywords?.join(",")}
+        >
+          <a href={`/posts/${post.id}`} class="dropdown-link">
+            <div class="post-content">
+              <div class="post-header">
+                <h2 class="post-title">{post.data.title}</h2>
+                {post.data.keywords && post.data.keywords.length > 0 && (
+                  <div class="post-tags">
+                    {post.data.keywords.map((tag: string) => (
+                      <span class="post-tag">{tag}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <time datetime={post.data.date.toISOString()} class="post-date">
+                {new Date(post.data.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </time>
+              {post.data.description && (
+                <p class="post-description">{post.data.description}</p>
+              )}
+            </div>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
   <div class="no-results" style="display: none;">
     <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
     <p>No posts found matching your criteria</p>
@@ -131,128 +176,209 @@ const posts = filteredPosts.slice(0, postsPerPage);
     </button>
   </div>
 
-  <Pagination
-    currentPage={currentPage}
-    totalPages={totalPages}
-    baseUrl="/posts"
-  />
+  <div id="pagination-container">
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      baseUrl="/posts"
+    />
+  </div>
 </BaseLayout>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const searchInput = document.getElementById(
-      "search-input",
-    ) as HTMLInputElement;
-    const searchForm = document.getElementById(
-      "search-form",
-    ) as HTMLFormElement;
-    const clearButton = document.getElementById(
-      "clear-search",
-    ) as HTMLButtonElement;
-    const resetButton = document.getElementById(
-      "reset-filters",
-    ) as HTMLButtonElement;
-    const tagButtons = document.querySelectorAll(".tag-filter");
-    const postItems = document.querySelectorAll(".post-dropdown-item");
-    const noResults = document.querySelector(".no-results") as HTMLDivElement;
-    const postList = document.querySelector(".post-list") as HTMLUListElement;
+  import PostSearchState from "/src/scripts/post-search-state.js";
 
-    if (
-      !searchInput ||
-      !searchForm ||
-      !clearButton ||
-      !resetButton ||
-      !noResults ||
-      !postList
-    ) {
+  document.addEventListener("DOMContentLoaded", () => {
+    // Get all DOM elements
+    const searchInput = document.getElementById("search-input");
+    const searchForm = document.getElementById("search-form");
+    const clearButton = document.getElementById("clear-search");
+    const resetButton = document.getElementById("reset-filters");
+    const tagButtons = document.querySelectorAll(".tag-filter");
+    const noResults = document.querySelector(".no-results");
+    const postList = document.querySelector(".post-list");
+    const postListAll = document.querySelector(".post-list-all");
+    const paginationContainer = document.getElementById("pagination-container");
+    const viewToggle = document.getElementById("view-toggle");
+    const paginationIcon = document.getElementById("pagination-icon");
+    const allIcon = document.getElementById("all-icon");
+    const viewLabel = document.getElementById("view-label");
+
+    if (!searchInput || !searchForm || !clearButton || !resetButton || !noResults || 
+        !postList || !postListAll || !paginationContainer || !viewToggle || 
+        !paginationIcon || !allIcon || !viewLabel) {
       return;
     }
 
-    let activeTag = "";
+    // Get saved state
+    const { searchTerm, activeTag, viewAll } = PostSearchState.getSearchState();
+    let isViewingAll = viewAll || false;
+    let currentActiveTag = activeTag || "";
+
+    // Initialize search field from saved state
+    if (searchTerm) {
+      searchInput.value = searchTerm;
+      clearButton.style.display = "";
+    }
+
+    // Initialize tag selection from saved state
+    if (currentActiveTag) {
+      tagButtons.forEach((btn) => {
+        if (btn.getAttribute("data-tag") === currentActiveTag) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+    } else {
+      // If no active tag, make "All" active
+      const allTagButton = Array.from(tagButtons).find(
+        (btn) => btn.getAttribute("data-tag") === ""
+      );
+      if (allTagButton) {
+        allTagButton.classList.add("active");
+      }
+    }
 
     // Filter posts based on current search and tag
     function filterPosts() {
       const searchTerm = searchInput.value.toLowerCase();
       let visibleCount = 0;
+      
+      // Save search state
+      PostSearchState.setSearchState(searchTerm, currentActiveTag, isViewingAll);
 
-      postItems.forEach((post) => {
+      // Determine which list to display
+      const usingSearchResults = searchTerm !== "";
+      const displayingPaginated = !isViewingAll && !usingSearchResults;
+      const displayingAll = isViewingAll || usingSearchResults;
+      
+      // Show/hide appropriate lists
+      postList.style.display = displayingPaginated ? "" : "none";
+      postListAll.style.display = displayingAll ? "" : "none";
+      paginationContainer.style.display = displayingPaginated ? "" : "none";
+      
+      // Filter posts in the visible list
+      const itemsToFilter = displayingAll 
+        ? postListAll.querySelectorAll(".post-dropdown-item") 
+        : postList.querySelectorAll(".post-dropdown-item");
+      
+      itemsToFilter.forEach((post) => {
         const titleElement = post.querySelector(".post-title");
         const descriptionElement = post.querySelector(".post-description");
-
         if (!titleElement) return;
 
         const title = titleElement.textContent?.toLowerCase() || "";
-        const description =
-          descriptionElement?.textContent?.toLowerCase() || "";
-        const postElement = post as HTMLElement;
-        const keywordsText = postElement.dataset.keywords || "";
-        const keywords = keywordsText
-          ? keywordsText.toLowerCase().split(",")
-          : [];
+        const description = descriptionElement?.textContent?.toLowerCase() || "";
+        const keywordsText = post.getAttribute("data-keywords") || "";
+        const keywords = keywordsText ? keywordsText.toLowerCase().split(",") : [];
 
-        const matchesSearch =
-          !searchTerm ||
-          title.includes(searchTerm) ||
-          description.includes(searchTerm);
+        const matchesSearch = !searchTerm || title.includes(searchTerm) || description.includes(searchTerm);
+        const matchesTag = !currentActiveTag || keywords.includes(currentActiveTag.toLowerCase());
 
-        const matchesTag =
-          !activeTag || keywords.includes(activeTag.toLowerCase());
-
-        if (matchesSearch && matchesTag) {
-          (post as HTMLElement).style.display = "";
-          visibleCount++;
-        } else {
-          (post as HTMLElement).style.display = "none";
-        }
+        post.style.display = (matchesSearch && matchesTag) ? "" : "none";
+        if (matchesSearch && matchesTag) visibleCount++;
       });
 
       // Show/hide no results message
       if (visibleCount === 0) {
-        postList.style.display = "none";
+        if (displayingPaginated) postList.style.display = "none";
+        if (displayingAll) postListAll.style.display = "none";
         noResults.style.display = "block";
       } else {
-        postList.style.display = "";
         noResults.style.display = "none";
       }
 
-      // Show/hide clear button
       clearButton.style.display = searchInput.value ? "" : "none";
+      document.documentElement.classList.remove('filtering-active');
     }
 
-    // Handle search
+    // Toggle between paginated view and view all
+    function updateViewMode(viewAll) {
+      isViewingAll = viewAll;
+      
+      if (viewAll) {
+        postList.style.display = "none";
+        postListAll.style.display = "";
+        paginationContainer.style.display = "none";
+        paginationIcon.style.display = "none";
+        allIcon.style.display = "";
+        viewLabel.textContent = "Paginate";
+      } else {
+        postList.style.display = "";
+        postListAll.style.display = "none";
+        paginationContainer.style.display = "";
+        paginationIcon.style.display = "";
+        allIcon.style.display = "none";
+        viewLabel.textContent = "View All";
+      }
+      
+      filterPosts();
+    }
+
+    // Set up event listeners
     searchForm.addEventListener("submit", (e) => {
       e.preventDefault();
       filterPosts();
     });
 
-    // Handle clear button
+    searchInput.addEventListener("input", () => {
+      clearButton.style.display = searchInput.value ? "" : "none";
+    });
+
     clearButton.addEventListener("click", () => {
       searchInput.value = "";
       filterPosts();
     });
 
-    // Handle tag filters
     tagButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
+        const tagValue = btn.getAttribute("data-tag") || "";
+        
         tagButtons.forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
-        activeTag = (btn as HTMLElement).dataset.tag || "";
-        filterPosts();
+        currentActiveTag = tagValue;
+        
+        // If a tag is selected (not "All"), automatically switch to view all posts
+        if (tagValue !== "" && !isViewingAll) {
+          isViewingAll = true;
+          updateViewMode(true);
+        } else {
+          filterPosts();
+        }
       });
     });
 
-    // Handle reset filters button
+    viewToggle.addEventListener("click", () => {
+      updateViewMode(!isViewingAll);
+      PostSearchState.setSearchState(searchInput.value, currentActiveTag, isViewingAll);
+    });
+
     resetButton.addEventListener("click", () => {
       searchInput.value = "";
-      activeTag = "";
+      currentActiveTag = "";
       tagButtons.forEach((btn) => {
         btn.classList.remove("active");
-        if ((btn as HTMLElement).dataset.tag === "") {
+        if (btn.getAttribute("data-tag") === "") {
           btn.classList.add("active");
         }
       });
+      PostSearchState.clearSearchState();
       filterPosts();
     });
+
+    // Save state when navigating with pagination
+    document.querySelectorAll('.pagination-link').forEach(link => {
+      link.addEventListener('click', () => {
+        PostSearchState.setSearchState(searchInput.value, currentActiveTag, isViewingAll);
+        if (searchInput.value || currentActiveTag) {
+          document.documentElement.classList.add('filtering-active');
+        }
+      });
+    });
+
+    // Apply initial filter with saved state
+    updateViewMode(isViewingAll);
   });
 </script>
 
@@ -270,7 +396,14 @@ const posts = filteredPosts.slice(0, postsPerPage);
     margin-bottom: 0;
   }
 
-  .archive-link {
+  .header-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .archive-link,
+  .view-toggle {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -280,6 +413,10 @@ const posts = filteredPosts.slice(0, postsPerPage);
     padding: 0.4rem 0.8rem;
     border-radius: 4px;
     transition: all 0.2s ease;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
 
     &:hover {
       background-color: rgba(255, 255, 255, 0.05);
@@ -410,7 +547,8 @@ const posts = filteredPosts.slice(0, postsPerPage);
     }
   }
 
-  .post-list {
+  .post-list,
+  .post-list-all {
     padding: 0;
     margin: 0;
     width: 100%;
@@ -548,6 +686,20 @@ const posts = filteredPosts.slice(0, postsPerPage);
         background-color: rgba(255, 255, 255, 0.15);
         transform: translateY(-1px);
       }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .header-actions {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+    }
+    
+    .archive-link, 
+    .view-toggle {
+      font-size: 0.8rem;
+      padding: 0.3rem 0.6rem;
     }
   }
 </style>

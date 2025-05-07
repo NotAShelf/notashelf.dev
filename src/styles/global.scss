@@ -5,3 +5,14 @@
 
 // Individual components
 @use "components/post";
+
+:root.filtering-active .post-list,
+:root.filtering-active .post-list-all {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.post-list,
+.post-list-all {
+  transition: opacity 0.1s ease;
+}
