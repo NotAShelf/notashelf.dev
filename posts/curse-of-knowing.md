@@ -168,7 +168,7 @@ The truth you are very well aware of is that you can't fix it all. You _know_
 this, you always knew it regardless of your level of skill. But try telling that
 to the part of your brain that sees every inefficiency as a moral failing.
 
-Nietzsche warned of gazing too long into the abyss. But he didn _not_ warn what
+Nietzsche warned of gazing too long into the abyss. But he did _not_ warn what
 happens when the abyss is a `Makefile` or a 30k line of code Typescript project.
 
 ## Learning to Let Go
