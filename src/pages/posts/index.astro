@@ -51,7 +51,11 @@ const posts = filteredPosts.slice(0, postsPerPage);
         aria-label="Toggle between paginated and all posts view"
       >
         <FontAwesomeIcon icon={faLayerGroup} id="pagination-icon" />
-        <FontAwesomeIcon icon={faList} id="all-icon" style="display: none;" />
+        <FontAwesomeIcon
+          icon={faList}
+          id="all-icon"
+          style={{ display: "none" }}
+        />
         <span id="view-label">View All</span>
       </button>
       <a href="/archive" class="archive-link">
@@ -189,23 +193,41 @@ const posts = filteredPosts.slice(0, postsPerPage);
 </BaseLayout>
 
 <script>
-  import PostSearchState from "/src/scripts/post-search-state.js";
+  import PostSearchState from "../../scripts/post-search-state";
 
   document.addEventListener("DOMContentLoaded", () => {
-    // Get all DOM elements
-    const searchInput = document.getElementById("search-input");
-    const searchForm = document.getElementById("search-form");
-    const clearButton = document.getElementById("clear-search");
-    const resetButton = document.getElementById("reset-filters");
-    const tagButtons = document.querySelectorAll(".tag-filter");
-    const noResults = document.querySelector(".no-results");
-    const postList = document.querySelector(".post-list");
-    const postListAll = document.querySelector(".post-list-all");
-    const paginationContainer = document.getElementById("pagination-container");
-    const viewToggle = document.getElementById("view-toggle");
-    const paginationIcon = document.getElementById("pagination-icon");
-    const allIcon = document.getElementById("all-icon");
-    const viewLabel = document.getElementById("view-label");
+    // Get all DOM elements with proper type casting
+    const searchInput = document.getElementById(
+      "search-input",
+    ) as HTMLInputElement;
+    const searchForm = document.getElementById(
+      "search-form",
+    ) as HTMLFormElement;
+    const clearButton = document.getElementById(
+      "clear-search",
+    ) as HTMLButtonElement;
+    const resetButton = document.getElementById(
+      "reset-filters",
+    ) as HTMLButtonElement;
+    const tagButtons = document.querySelectorAll(
+      ".tag-filter",
+    ) as NodeListOf<HTMLButtonElement>;
+    const noResults = document.querySelector(".no-results") as HTMLDivElement;
+    const postList = document.querySelector(".post-list") as HTMLUListElement;
+    const postListAll = document.querySelector(
+      ".post-list-all",
+    ) as HTMLUListElement;
+    const paginationContainer = document.getElementById(
+      "pagination-container",
+    ) as HTMLDivElement;
+    const viewToggle = document.getElementById(
+      "view-toggle",
+    ) as HTMLButtonElement;
+    const paginationIcon = document.getElementById(
+      "pagination-icon",
+    ) as HTMLElement;
+    const allIcon = document.getElementById("all-icon") as HTMLElement;
+    const viewLabel = document.getElementById("view-label") as HTMLElement;
 
     if (
       !searchInput ||
@@ -255,7 +277,7 @@ const posts = filteredPosts.slice(0, postsPerPage);
     }
 
     // Filter posts based on current search and tag
-    function filterPosts() {
+    function filterPosts(): void {
       const searchTerm = searchInput.value.toLowerCase();
       let visibleCount = 0;
 
@@ -278,8 +300,8 @@ const posts = filteredPosts.slice(0, postsPerPage);
 
       // Filter posts in the visible list
       const itemsToFilter = displayingAll
-        ? postListAll.querySelectorAll(".post-dropdown-item")
-        : postList.querySelectorAll(".post-dropdown-item");
+        ? postListAll.querySelectorAll<HTMLLIElement>(".post-dropdown-item")
+        : postList.querySelectorAll<HTMLLIElement>(".post-dropdown-item");
 
       itemsToFilter.forEach((post) => {
         const titleElement = post.querySelector(".post-title");
@@ -320,7 +342,7 @@ const posts = filteredPosts.slice(0, postsPerPage);
     }
 
     // Toggle between paginated view and view all
-    function updateViewMode(viewAll) {
+    function updateViewMode(viewAll: boolean): void {
       isViewingAll = viewAll;
 
       if (viewAll) {
@@ -398,18 +420,20 @@ const posts = filteredPosts.slice(0, postsPerPage);
     });
 
     // Save state when navigating with pagination
-    document.querySelectorAll(".pagination-link").forEach((link) => {
-      link.addEventListener("click", () => {
-        PostSearchState.setSearchState(
-          searchInput.value,
-          currentActiveTag,
-          isViewingAll,
-        );
-        if (searchInput.value || currentActiveTag) {
-          document.documentElement.classList.add("filtering-active");
-        }
+    document
+      .querySelectorAll<HTMLAnchorElement>(".pagination-link")
+      .forEach((link) => {
+        link.addEventListener("click", () => {
+          PostSearchState.setSearchState(
+            searchInput.value,
+            currentActiveTag,
+            isViewingAll,
+          );
+          if (searchInput.value || currentActiveTag) {
+            document.documentElement.classList.add("filtering-active");
+          }
+        });
       });
-    });
 
     // Apply initial filter with saved state
     updateViewMode(isViewingAll);
