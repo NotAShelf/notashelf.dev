@@ -65,7 +65,12 @@ const allTags = [
   <div class="posts-header">
     <h1 class="page-title">Blog Posts</h1>
     <div class="header-actions">
-      <button id="view-toggle" class="view-toggle" title="Toggle view mode" aria-label="Toggle between paginated and all posts view">
+      <button
+        id="view-toggle"
+        class="view-toggle"
+        title="Toggle view mode"
+        aria-label="Toggle between paginated and all posts view"
+      >
         <FontAwesomeIcon icon={faLayerGroup} id="pagination-icon" />
         <FontAwesomeIcon icon={faList} id="all-icon" style="display: none;" />
         <span id="view-label">View All</span>
@@ -102,9 +107,7 @@ const allTags = [
 
     <div class="tags-container">
       <div class="tags-wrap">
-        <button type="button" class="tag-filter" data-tag="">
-          All
-        </button>
+        <button type="button" class="tag-filter" data-tag=""> All </button>
 
         {
           allTags.map((tag) => (
@@ -225,9 +228,20 @@ const allTags = [
     const allIcon = document.getElementById("all-icon");
     const viewLabel = document.getElementById("view-label");
 
-    if (!searchInput || !searchForm || !clearButton || !resetButton || !noResults || 
-        !postList || !postListAll || !paginationContainer || !viewToggle || 
-        !paginationIcon || !allIcon || !viewLabel) {
+    if (
+      !searchInput ||
+      !searchForm ||
+      !clearButton ||
+      !resetButton ||
+      !noResults ||
+      !postList ||
+      !postListAll ||
+      !paginationContainer ||
+      !viewToggle ||
+      !paginationIcon ||
+      !allIcon ||
+      !viewLabel
+    ) {
       return;
     }
 
@@ -254,7 +268,7 @@ const allTags = [
     } else {
       // If no active tag, make "All" active
       const allTagButton = Array.from(tagButtons).find(
-        (btn) => btn.getAttribute("data-tag") === ""
+        (btn) => btn.getAttribute("data-tag") === "",
       );
       if (allTagButton) {
         allTagButton.classList.add("active");
@@ -265,39 +279,51 @@ const allTags = [
     function filterPosts() {
       const searchTerm = searchInput.value.toLowerCase();
       let visibleCount = 0;
-      
+
       // Save search state
-      PostSearchState.setSearchState(searchTerm, currentActiveTag, isViewingAll);
+      PostSearchState.setSearchState(
+        searchTerm,
+        currentActiveTag,
+        isViewingAll,
+      );
 
       // Determine which list to display
       const usingSearchResults = searchTerm !== "";
       const displayingPaginated = !isViewingAll && !usingSearchResults;
       const displayingAll = isViewingAll || usingSearchResults;
-      
+
       // Show/hide appropriate lists
       postList.style.display = displayingPaginated ? "" : "none";
       postListAll.style.display = displayingAll ? "" : "none";
       paginationContainer.style.display = displayingPaginated ? "" : "none";
-      
+
       // Filter posts in the visible list
-      const itemsToFilter = displayingAll 
-        ? postListAll.querySelectorAll(".post-dropdown-item") 
+      const itemsToFilter = displayingAll
+        ? postListAll.querySelectorAll(".post-dropdown-item")
         : postList.querySelectorAll(".post-dropdown-item");
-      
+
       itemsToFilter.forEach((post) => {
         const titleElement = post.querySelector(".post-title");
         const descriptionElement = post.querySelector(".post-description");
         if (!titleElement) return;
 
         const title = titleElement.textContent?.toLowerCase() || "";
-        const description = descriptionElement?.textContent?.toLowerCase() || "";
+        const description =
+          descriptionElement?.textContent?.toLowerCase() || "";
         const keywordsText = post.getAttribute("data-keywords") || "";
-        const keywords = keywordsText ? keywordsText.toLowerCase().split(",") : [];
+        const keywords = keywordsText
+          ? keywordsText.toLowerCase().split(",")
+          : [];
 
-        const matchesSearch = !searchTerm || title.includes(searchTerm) || description.includes(searchTerm);
-        const matchesTag = !currentActiveTag || keywords.includes(currentActiveTag.toLowerCase());
+        const matchesSearch =
+          !searchTerm ||
+          title.includes(searchTerm) ||
+          description.includes(searchTerm);
+        const matchesTag =
+          !currentActiveTag ||
+          keywords.includes(currentActiveTag.toLowerCase());
 
-        post.style.display = (matchesSearch && matchesTag) ? "" : "none";
+        post.style.display = matchesSearch && matchesTag ? "" : "none";
         if (matchesSearch && matchesTag) visibleCount++;
       });
 
@@ -311,13 +337,13 @@ const allTags = [
       }
 
       clearButton.style.display = searchInput.value ? "" : "none";
-      document.documentElement.classList.remove('filtering-active');
+      document.documentElement.classList.remove("filtering-active");
     }
 
     // Toggle between paginated view and view all
     function updateViewMode(viewAll) {
       isViewingAll = viewAll;
-      
+
       if (viewAll) {
         postList.style.display = "none";
         postListAll.style.display = "";
@@ -333,7 +359,7 @@ const allTags = [
         allIcon.style.display = "none";
         viewLabel.textContent = "View All";
       }
-      
+
       filterPosts();
     }
 
@@ -355,11 +381,11 @@ const allTags = [
     tagButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
         const tagValue = btn.getAttribute("data-tag") || "";
-        
+
         tagButtons.forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
         currentActiveTag = tagValue;
-        
+
         // If a tag is selected (not "All"), automatically switch to view all posts
         if (tagValue !== "" && !isViewingAll) {
           isViewingAll = true;
@@ -372,7 +398,11 @@ const allTags = [
 
     viewToggle.addEventListener("click", () => {
       updateViewMode(!isViewingAll);
-      PostSearchState.setSearchState(searchInput.value, currentActiveTag, isViewingAll);
+      PostSearchState.setSearchState(
+        searchInput.value,
+        currentActiveTag,
+        isViewingAll,
+      );
     });
 
     resetButton.addEventListener("click", () => {
@@ -389,11 +419,15 @@ const allTags = [
     });
 
     // Save state when navigating with pagination
-    document.querySelectorAll('.pagination-link').forEach(link => {
-      link.addEventListener('click', () => {
-        PostSearchState.setSearchState(searchInput.value, currentActiveTag, isViewingAll);
+    document.querySelectorAll(".pagination-link").forEach((link) => {
+      link.addEventListener("click", () => {
+        PostSearchState.setSearchState(
+          searchInput.value,
+          currentActiveTag,
+          isViewingAll,
+        );
         if (searchInput.value || currentActiveTag) {
-          document.documentElement.classList.add('filtering-active');
+          document.documentElement.classList.add("filtering-active");
         }
       });
     });
