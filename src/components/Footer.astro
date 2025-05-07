@@ -7,7 +7,6 @@ import {
   faRss,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ResponsiveImage from "./ResponsiveImage.astro";
 
 const currentYear = new Date().getFullYear();
 const copyrightYear = currentYear === 2024 ? "2024" : `2024-${currentYear}`;
@@ -43,12 +42,12 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
           title="Visit a random site in the Nix webring"
           aria-label="Random site"
         >
-          <ResponsiveImage
+          <img
             src="/images/nix-webring.svg"
             alt="Nix Webring"
-            width={36}
-            height={18}
             class="webring-img"
+            width="36"
+            height="18"
           />
         </a>
         <div class="webring-info">
@@ -148,9 +147,15 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
           display: block;
 
           .webring-img {
-            height: 18px;
-            width: auto;
+            height: 18px !important;
+            width: auto !important;
             opacity: 0.8;
+            
+            :global(img) {
+              height: 18px !important;
+              width: auto !important;
+              object-fit: contain;
+            }
 
             &:hover {
               opacity: 1;
