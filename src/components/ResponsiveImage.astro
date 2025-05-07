@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+
 interface Props {
   src: string;
   alt: string;
@@ -19,32 +21,42 @@ const {
   decoding = "async",
 } = Astro.props;
 
-// Generate paths for different formats and resolutions
-const imagePath = src.substring(0, src.lastIndexOf("."));
-const extension = src.substring(src.lastIndexOf(".") + 1);
+// Check if the source is a remote URL
+const isRemoteImage = src.startsWith('http://') || src.startsWith('https://');
 
-// Standard resolution paths
-const standardWebp = `${imagePath}-${width}.webp`;
-const standardOriginal = `${imagePath}-${width}.${extension}`;
-
-// High resolution (2x) paths
-const highResWebp = `${imagePath}-${width * 2}.webp`;
-const highResOriginal = `${imagePath}-${width * 2}.${extension}`;
+// For remote images we can't use the full Astro Image optimization
+// but for local images we can
 ---
 
-<picture>
-  <source srcset={`${standardWebp} 1x, ${highResWebp} 2x`} type="image/webp" />
-  <source
-    srcset={`${standardOriginal} 1x, ${highResOriginal} 2x`}
-    type={`image/${extension}`}
-  />
+{isRemoteImage ? (
   <img
-    class={className}
-    src={standardOriginal}
+    src={src}
     alt={alt}
     width={width}
     height={height}
+    class={className}
     loading={loading}
     decoding={decoding}
   />
-</picture>
+) : (
+  <Image
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    class={className}
+    loading={loading}
+    decoding={decoding}
+    format="webp"
+    quality={80}
+  />
+)}
+
+<style>
+  img {
+    object-fit: inherit;
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+</style>

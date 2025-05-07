@@ -18,6 +18,12 @@ export default defineConfig({
     enabled: false,
   },
 
+  image: {
+    service: {
+      entrypoint: "astro/assets/services/sharp"
+    }
+  },
+
   // https://docs.astro.build/en/reference/configuration-reference/
   integrations: [
     react(),

@@ -1,6 +1,7 @@
 ---
 import FeaturedProjects from "@components/FeaturedProjects.astro";
 import PostSpotlight from "@components/PostSpotlight.astro";
+import ResponsiveImage from "@components/ResponsiveImage.astro";
 import { faArrowRight, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import BaseLayout from "@layouts/BaseLayout.astro";
@@ -39,25 +40,17 @@ const sidePosts = featuredPosts
 >
   <section id="hero" class="hero fade-in">
     <div class="hero-content">
-      <picture>
-        <source
-          srcset="/images/avatar-120.webp 1x, /images/avatar-240.webp 2x"
-          type="image/webp"
-        />
-        <source
-          srcset="/images/avatar-120.png 1x, /images/avatar-240.png 2x"
-          type="image/png"
-        />
-        <img
-          class="profile-picture"
-          src="/images/avatar-120.png"
+      <div class="profile-image-wrapper">
+        <ResponsiveImage
+          src="/images/avatar.png"
           alt="Profile Picture"
-          width="120"
-          height="120"
-          decoding="async"
+          width={120}
+          height={120}
+          class="profile-picture"
           loading="lazy"
+          decoding="async"
         />
-      </picture>
+      </div>
       <h1 class="reveal-text">Howdy! Welcome to my collection of notes.</h1>
       <p class="intro">
         This is where I store my notes on various topics and processes that I
@@ -196,20 +189,30 @@ const sidePosts = featuredPosts
     letter-spacing: -0.02em;
   }
 
+  .profile-image-wrapper {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    position: relative;
+
+    :global(img) {
+      border-radius: 50%;
+      border: 3px solid color.scale($primary, $lightness: 15%);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      transition:
+        transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        box-shadow 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05) rotate(-2deg);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+      }
+    }
+  }
+
   .profile-picture {
     width: 120px;
     height: 120px;
-    border-radius: 50%;
-    border: 3px solid color.scale($primary, $lightness: 15%);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    transition:
-      transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-      box-shadow 0.3s ease;
-
-    &:hover {
-      transform: scale(1.05) rotate(-2deg);
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
-    }
   }
 
   .intro {

@@ -58,6 +58,7 @@
     "prettier": "3.5.3",
     "prettier-plugin-astro": "0.14.1",
     "prettier-plugin-astro-organize-imports": "^0.4.11",
+    "sharp": "^0.34.1",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.31.1"
   }

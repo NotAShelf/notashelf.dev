@@ -1,5 +1,6 @@
 ---
 import FeaturedProjects from "@components/FeaturedProjects.astro";
+import ResponsiveImage from "@components/ResponsiveImage.astro";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
   faDiscord,
@@ -138,11 +139,15 @@ const skillCategories = [
   <section class="about-container">
     <div class="about-header fade-in">
       <div class="profile-image-container">
-        <img
-          src="https://avatars.githubusercontent.com/u/62766066?v=4"
-          alt="Profile Picture"
-          class="profile-image"
-        />
+        <div class="profile-image-wrapper">
+          <ResponsiveImage
+            src="https://avatars.githubusercontent.com/u/62766066?v=4"
+            alt="Profile Picture"
+            width={160}
+            height={160}
+            class="profile-image"
+          />
+        </div>
         <div class="tech-badges">
           {
             techBadges.map((badge) => (
@@ -237,11 +242,11 @@ const skillCategories = [
                         icon={affiliation.logo as IconDefinition}
                       />
                     ) : (
-                      <img
+                      <ResponsiveImage
                         src={affiliation.logo as string}
                         alt={`${affiliation.name} Logo`}
-                        width="40"
-                        height="40"
+                        width={40}
+                        height={40}
                       />
                     )}
                   </div>
@@ -356,23 +361,22 @@ const skillCategories = [
     flex-shrink: 0;
   }
 
-  .profile-image {
+  .profile-image-wrapper {
     width: 160px;
     height: 160px;
+    overflow: hidden;
     border-radius: 50%;
-    border: 3px solid scale-color($primary, $lightness: 10%);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    transition:
-      transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-      box-shadow 0.3s ease,
-      filter 0.3s ease;
-    filter: saturate(0.9);
-
-    &:hover {
-      transform: scale(1.05) rotate(-2deg);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-      filter: saturate(1.1);
+    
+    :global(img) {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
     }
+  }
+
+  .profile-image {
+    // Keeping this class for backward compatibility
   }
 
   .tech-badges {
@@ -623,9 +627,9 @@ const skillCategories = [
     border-radius: 6px;
     padding: 8px;
     box-sizing: border-box;
+    overflow: hidden;
 
-    img {
-      display: block;
+    :global(img) {
       max-width: 100%;
       max-height: 100%;
       width: auto;
