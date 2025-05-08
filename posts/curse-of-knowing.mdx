@@ -5,6 +5,13 @@ description: "A reflection on control, burnout, and the strange weight of techni
 keywords: ["thoughts", "programming", "software"]
 ---
 
+import Banner from "@components/Banner.astro";
+
+<Banner type="info" title="In Appreciation" showIcon={false}>
+  If you have a second to spare, please see the [post-mortem](#post-mortem)
+  section below.
+</Banner>
+
 It starts innocently.
 
 You rename a batch of files with a ten-line Python script, or you alias a common
@@ -121,7 +128,8 @@ I think we lie to ourselves.
 > "If I automate this, I'll save time forever." [^3]\
 > "Write once, run everywhere." My ass.
 
-[^3]: Remember when you spent 2 hours automating a 30 minute task? Yeah, it's
+[^3]:
+    Remember when you spent 2 hours automating a 30 minute task? Yeah, it's
     that again.
 
 It is, I admit, a seductive lie. It frames programming as a conquest of sorts. A
@@ -209,3 +217,25 @@ You learn how to program. You learn how to fix things. But the hardest thing
 you'll ever learn is when to _leave them broken_.
 
 And maybe that's the most human skill of all.
+
+## Post-Mortem
+
+As of 6th of May, this post [has blown up on Hackernews](https://news.ycombinator.com/item?id=43902212).
+First of all, thank you all for your support and the kind words that I have received on various platforms. This post
+was not written with any other intention than getting some things off my chest and off my mind, but it was humbling
+to see that it resonated with _many_ different people of various origins. What surprised me the most was that it seems
+to resonate people outside the field of tech as well, so it seems the problem is not as exclusive to something as
+"arcane" as programming. Thank you also to those who were kind enough to point out small technical flaws in the site
+that I now feel compelled to fix, and those who pointed out small typos I've forgotten to push after storyboarding.
+
+It was also quite valuable in the sense that I was able to see my webserver configuration is _in fact_ able to handle
+lots of traffic. There was no downtime aside from a small hiccup after I messed up a configuration option while trying
+to relax my ratelimits to give the influx of readers a nicer experience.
+
+Lastly, thank you all that left their insight about the post itself (my writing, etc.) as comments on Hackernews or
+lobste.rs. I have no doubt missed some, but know that it matters a lot to me. Of course, feel free to contact me directly
+via e-mail (or any other method you prefer as detailed in [the about page](/about)) to let me know what could be better.
+
+Thank you, and all the best!
+
+--raf
