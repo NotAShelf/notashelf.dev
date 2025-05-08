@@ -41,6 +41,7 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 
 <style lang="scss">
   @use "../styles/global" as *;
+  @use "sass:color";
 
   .error-container {
     display: flex;
@@ -121,10 +122,10 @@ import BaseLayout from "@layouts/BaseLayout.astro";
     }
 
     &.primary {
-      background-color: lighten($primary, 15%);
+      background-color: color.scale($primary, $lightness: 15%);
 
       &:hover {
-        background-color: lighten($primary, 20%);
+        background-color: color.scale($primary, $lightness: 20%);
       }
     }
 

@@ -352,11 +352,11 @@ const formatDate = (date?: Date) => {
   }
 
   .project-card {
-    background-color: scale-color($primary, $lightness: 6%);
+    background-color: color.scale($primary, $lightness: 6%);
     border-radius: 8px;
     overflow: hidden;
     transition: all 0.3s ease;
-    border: 1px solid scale-color($primary, $lightness: -1%);
+    border: 1px solid color.scale($primary, $lightness: -1%);
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -364,7 +364,7 @@ const formatDate = (date?: Date) => {
 
     &:hover {
       transform: translateY(-4px);
-      background-color: scale-color($primary, $lightness: 9%);
+      background-color: color.scale($primary, $lightness: 9%);
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
     }
 
@@ -395,7 +395,7 @@ const formatDate = (date?: Date) => {
       transition: color 0.2s ease;
 
       &:hover {
-        color: scale-color($primary, $lightness: 40%);
+        color: color.scale($primary, $lightness: 40%);
       }
     }
   }
@@ -409,7 +409,7 @@ const formatDate = (date?: Date) => {
   }
 
   .project-date {
-    color: scale-color($secondary, $lightness: -15%);
+    color: color.scale($secondary, $lightness: -15%);
   }
 
   .status-badge {
@@ -419,13 +419,13 @@ const formatDate = (date?: Date) => {
     font-weight: 500;
 
     &.active {
-      background-color: scale-color($primary, $lightness: 10%);
+      background-color: color.scale($primary, $lightness: 10%);
       color: $secondary;
     }
 
     &.inactive {
-      background-color: scale-color($primary, $lightness: -2%);
-      color: scale-color($secondary, $lightness: -15%);
+      background-color: color.scale($primary, $lightness: -2%);
+      color: color.scale($secondary, $lightness: -15%);
     }
   }
 
@@ -438,7 +438,7 @@ const formatDate = (date?: Date) => {
   .project-description {
     margin-bottom: 0.75rem;
     font-size: 0.9rem;
-    color: scale-color($secondary, $lightness: -8%);
+    color: color.scale($secondary, $lightness: -8%);
     line-height: 1.5;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -455,14 +455,14 @@ const formatDate = (date?: Date) => {
   }
 
   .project-tag {
-    background-color: scale-color($primary, $lightness: 4%);
-    color: scale-color($secondary, $lightness: -5%);
+    background-color: color.scale($primary, $lightness: 4%);
+    color: color.scale($secondary, $lightness: -5%);
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
     font-size: 0.7rem;
 
     &.more {
-      background-color: scale-color($primary, $lightness: 2%);
+      background-color: color.scale($primary, $lightness: 2%);
       font-size: 0.65rem;
     }
   }
@@ -480,7 +480,7 @@ const formatDate = (date?: Date) => {
     gap: 0.3rem;
 
     &:hover {
-      color: scale-color($secondary, $lightness: 20%);
+      color: color.scale($secondary, $lightness: 20%);
 
       .arrow-icon {
         transform: translateX(4px);
@@ -506,7 +506,7 @@ const formatDate = (date?: Date) => {
     font-weight: 600;
     padding: 0.5rem 1rem;
     border-radius: 4px;
-    background-color: scale-color($primary, $lightness: 8%);
+    background-color: color.scale($primary, $lightness: 8%);
     transition: all 0.2s ease;
 
     .arrow-icon {
@@ -515,7 +515,7 @@ const formatDate = (date?: Date) => {
     }
 
     &:hover {
-      background-color: scale-color($primary, $lightness: 12%);
+      background-color: color.scale($primary, $lightness: 12%);
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 

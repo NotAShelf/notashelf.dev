@@ -24,6 +24,7 @@ const secondaryNavItems = [
 
 <style lang="scss">
   @use "../styles/global" as *;
+  @use "sass:color";
 
   .nav-wrapper {
     display: flex;
@@ -57,7 +58,7 @@ const secondaryNavItems = [
     white-space: nowrap;
 
     &:hover {
-      color: lighten($secondary, 5%);
+      color: color.scale($secondary, $lightness: 5%);
     }
   }
 

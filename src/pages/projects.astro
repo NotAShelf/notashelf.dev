@@ -120,18 +120,18 @@ const formatDate = (date: Date | undefined) => {
   }
 
   .project-card {
-    background-color: lighten($primary, 6%);
+    background-color: color.scale($primary, $lightness: 6%);
     border-radius: 8px;
     overflow: hidden;
     transition: all 0.3s ease;
-    border: 1px solid darken($primary, 1%);
+    border: 1px solid color.scale($primary, $lightness: -1%);
     height: 100%;
     display: flex;
     flex-direction: column;
 
     &:hover {
       transform: translateY(-4px);
-      background-color: lighten($primary, 9%);
+      background-color: color.scale($primary, $lightness: 9%);
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
     }
 
@@ -204,12 +204,12 @@ const formatDate = (date: Date | undefined) => {
     font-weight: 500;
 
     &.active {
-      background-color: lighten($primary, 10%);
+      background-color: color.scale($primary, $lightness: 10%);
       color: $secondary;
     }
 
     &.inactive {
-      background-color: darken($primary, 2%);
+      background-color: color.scale($primary, $lightness: -2%);
       color: color.scale($secondary, $lightness: -15%);
     }
   }
@@ -222,7 +222,7 @@ const formatDate = (date: Date | undefined) => {
   }
 
   .project-tag {
-    background-color: lighten($primary, 4%);
+    background-color: color.scale($primary, $lightness: 4%);
     color: color.scale($secondary, $lightness: -5%);
     padding: 0.25rem 0.6rem;
     border-radius: 4px;

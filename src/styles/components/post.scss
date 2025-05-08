@@ -1,4 +1,5 @@
 @use "../variables" as *;
+@use "sass:color";
 
 // Code syntax highlighting styles
 pre {
@@ -8,7 +9,7 @@ pre {
   overflow-x: auto;
   border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
-  background-color: lighten($primary, 3%) !important;
+  background-color: color.scale($primary, $lightness: 3%) !important;
 
   &::before {
     content: "";

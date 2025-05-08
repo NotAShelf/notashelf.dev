@@ -92,6 +92,7 @@ function getPageUrl(page: number) {
 }
 
 <style lang="scss">
+  @use "sass:color";
   @use "../styles/global" as *;
 
   .pagination {
@@ -141,7 +142,7 @@ function getPageUrl(page: number) {
     :global(.chevron-icon) {
       width: 0.55rem !important;
       height: 0.55rem !important;
-      color: darken($secondary, 20%);
+      color: color.scale($secondary, $lightness: -20%);
     }
   }
 

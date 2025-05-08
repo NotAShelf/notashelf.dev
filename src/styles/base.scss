@@ -1,4 +1,5 @@
 @use "variables" as *;
+@use "sass:color";
 
 // Reset and base elements
 *,
@@ -121,7 +122,7 @@ footer {
   margin: 0px 5px;
 
   &:hover {
-    color: lighten($secondary, 5%);
+    color: color.scale($secondary, $lightness: 5%);
   }
 }
 

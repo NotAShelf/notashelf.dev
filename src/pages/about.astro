@@ -339,6 +339,7 @@ const skillCategories = [
 
 <style lang="scss">
   @use "../styles/global" as *;
+  @use "sass:color";
 
   .about-container {
     width: 100%;
@@ -394,7 +395,7 @@ const skillCategories = [
     justify-content: center;
     width: 32px;
     height: 32px;
-    background: scale-color($primary, $lightness: 10%);
+    background: color.adjust(color.scale($primary, $lightness: 10%), $alpha: -0.7);
     border-radius: 50%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     color: $secondary;
@@ -404,7 +405,7 @@ const skillCategories = [
 
     &:hover {
       transform: translateY(-3px);
-      background: scale-color($primary, $lightness: 15%);
+      background: color.adjust(color.scale($primary, $lightness: 15%), $alpha: -0.6);
     }
 
     svg {
@@ -457,7 +458,7 @@ const skillCategories = [
       background: linear-gradient(
         to right,
         $secondary,
-        scale-color($secondary, $lightness: -15%)
+        color.scale($secondary, $lightness: -15%)
       );
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -469,7 +470,7 @@ const skillCategories = [
       font-size: 1.1rem;
       line-height: 1.6;
       margin-bottom: 1.5rem;
-      color: scale-color($secondary, $lightness: -10%);
+      color: color.scale($secondary, $lightness: -10%);
     }
   }
 
@@ -498,10 +499,10 @@ const skillCategories = [
     }
 
     &.highlight {
-      background: transparentize(scale-color($primary, $lightness: 10%), 0.7);
+      background: color.adjust(color.scale($primary, $lightness: 10%), $alpha: -0.7);
 
       &:hover {
-        background: transparentize(scale-color($primary, $lightness: 15%), 0.6);
+        background: color.adjust(color.scale($primary, $lightness: 15%), $alpha: -0.6);
       }
     }
 
@@ -540,7 +541,7 @@ const skillCategories = [
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 
       svg {
-        color: scale-color($primary, $lightness: 15%);
+        color: color.scale($primary, $lightness: 15%);
         width: 20px;
         height: 20px;
       }
@@ -549,7 +550,7 @@ const skillCategories = [
     p {
       margin-bottom: 1rem;
       line-height: 1.6;
-      color: scale-color($secondary, $lightness: -5%);
+      color: color.scale($secondary, $lightness: -5%);
     }
   }
 
@@ -567,7 +568,7 @@ const skillCategories = [
     h3 {
       font-size: 1.1rem;
       margin-bottom: 1rem;
-      color: scale-color($primary, $lightness: 15%);
+      color: color.scale($primary, $lightness: 15%);
     }
   }
 
@@ -583,7 +584,7 @@ const skillCategories = [
 
       &:before {
         content: "•";
-        color: scale-color($primary, $lightness: 15%);
+        color: color.scale($primary, $lightness: 15%);
         position: absolute;
         left: 0;
       }
@@ -622,7 +623,7 @@ const skillCategories = [
     width: 50px;
     height: 50px;
     flex-shrink: 0;
-    color: scale-color($primary, $lightness: 15%);
+    color: color.scale($primary, $lightness: 15%);
     background: rgba(255, 255, 255, 0.05);
     border-radius: 6px;
     padding: 8px;
@@ -690,7 +691,7 @@ const skillCategories = [
     svg {
       width: 18px;
       height: 18px;
-      color: scale-color($primary, $lightness: 15%);
+      color: color.scale($primary, $lightness: 15%);
     }
   }
 
