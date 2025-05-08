@@ -1,0 +1,316 @@
+---
+title: 'Dev Environments with Nix: No More Dockerfiles'
+description: 'How to use Nix and flakes to replace Docker in development'
+date: 2025-04-22
+keywords: ['nix', 'nixos', 'docker', 'development', 'flakes']
+---
+
+import Todo from "../src/components/blog/Todo.astro";
+
+# Dev Environments with Nix: No More Dockerfiles
+
+> This is the twin article for another post, "Nix vs Docker: Containers Without
+> the Bloat." If you are coming from a non-Nix background, I strongly encourage
+> you to read it in favor of a better explanation of Nix vs Docker. This post
+> focuses primarily on using Nix as a development tool to replace Docker in your
+> dev setup.
+
+Docker solved a real problem. Before it, keeping dev environments consistent was
+a nightmare. You'd install some dependencies, maybe jot down a README, and hope
+the next person could replicate your setup. Docker put it all in a container.
+You wrote a Dockerfile, built an image, and ran it anywhere.
+
+But Docker isn't a dev tool. It's a mediocre deployment tool vastly misused for
+development. Docker hides the host, which is great for deployment---not so much
+when you're writing code. Debugging becomes clunky. Editors struggle.
+Dependencies are baked in (and into) layers. Everything takes longer than it
+should.
+
+Nix offers a better way. With dev shells (à la `nix-shell` and `nix develop`),
+you write a simple config that defines your environment---the exact compiler
+version, CLI tools, libraries, and even environment variables. Anyone who runs
+it gets the same shell, same inputs, no containers, no fuss.
+
+## The Dockerfile Mentality
+
+I used to stick Docker into everything, because I thought it was the ultimate
+solution to reproducible, consistent development and deployment. Here's what
+development usually looks like with Docker:
+
+```Dockerfile
+FROM python:3.12
+WORKDIR /app
+COPY . .
+RUN pip install -r requirements.txt
+CMD ['python', 'main.py']
+```
+
+And then:
+
+```bash
+# First you have to build the app
+$ docker build -t myapp .
+
+# Then run it manually
+$ docker run -it -v $(pwd):/app myapp
+```
+
+You're in. Kind of. But now your code editor isn't aware of this container, and
+you can't use your usual tools unless you install them inside. You bind-mount
+code, so you're halfway in, halfway out. You also don't know how deep you are,
+unless you bind-mount the entire container. Yikes.
+
+Switching projects means switching containers. Upgrading dependencies often
+means rebuilding the image. It _does_ work, but it's clunky and
+time-consuming---especially for day-to-day development. I never enjoyed
+developing with Docker, let alone deploying.
+
+## The Nix Shell Way
+
+Nix introduces you to dedicated shells for your setups. Besides the possibility
+of creating your shells from templates (that you can store on Git, or in your
+system), dev shells are consistent, explicit and expressive ways of declaring
+your environment as code. Let's look at a Nix2 [^1] example
+
+[^1]: I will use Nix2 and Nix3 to refer to "legacy" nix commands such as
+    `nix-shell` ("nix2") vs the new, less agreed upon nix commands such as
+    `nix develop` ("nix3"). The schema for those generations of commands is not
+    consistent, but as a general rule of thumb, Nix2 commands are separated with
+    dashes, e.g., `nix-do-thing` while Nix3 leans into more into spaces for
+    separation, for example: `nix do-thing`. These terms are documented in the
+    official Nix manpages.
+
+```nix
+# shell.nix
+{ pkgs ?
+  import (builtins.fetchTarball {
+    name = "nixos-release-24.11";
+    url = "https://github.com/nixos/nixpkgs/archive/26d499fc9f1d567283d5d56fcf367edd815dba1d.tar.gz";
+    sha256 = "1kj5i5k7jzr9ahm2hrb5bnf9dmv89grykgpw4r7zr645va854y8l";
+  }) {}
+}:
+
+# Use mkShell to define a development environment
+pkgs.mkShell {
+  name = "python-dev";
+  # List the packages needed for development
+  packages = [
+    pkgs.python312
+
+    # Add Python libraries directly if desired, or use pip/poetry
+    pkgs.python312Packages.requests
+
+    # Add other development tools
+    # pkgs.ruff
+    # pkgs.mypy
+  ];
+
+  # Optional: Commands to run when the shell starts
+  /*
+    shellHook = ''
+      echo "Entered Python 3.12 development shell."
+      # Example: Install dependencies using poetry
+      # if requirements are managed that way
+      # if [ -f "pyproject.toml" ]; then
+      #   poetry install --no-root
+      # fi
+
+      # One of the ways you can set an environment variable inside a dev shell.
+      # A more idiomatic way to set those is using `env.VAR = "value";` inside
+      # mkShell.
+      export MY_DEV_VARIABLE="hello"
+    '';
+  */
+}
+```
+
+This `mkShell` definition fetches a specific pinned version of Nixpkgs (ensuring
+reproducibility) and makes Python 3.12 and the `requests` library available in
+the shell environment. Alternatively, you can use `pkgs ? import <nixpkgs> {}`
+to quickly bootstrap a shell using your system's Nixpkgs channel, though this is
+less reproducible unless the channel is pinned (e.g., via flakes).
+
+You would be right to point out the lack of an ergonomic interface for pinning
+in the legacy approach. In a sense, flakes solve this issue. With Nix3 (flakes),
+the dev shell would move to a `flake.nix` and defined as follows:
+
+```nix
+# flake.nix
+{
+  description = "Python Dev Shell";
+
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+
+  outputs = { self, nixpkgs }: {
+    devShells = {
+      default = forAllSystems (system: let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in pkgs.mkShell {
+          name = "python-dev";
+          packages = [
+            pkgs.python312
+
+            # Example: Include Poetry for dependency management
+            pkgs.poetry
+            pkgs.python312Packages.requests # Can still add packages directly
+          ];
+
+          # shellHook = ''
+          #  echo "Entered Flake-based Python dev shell."
+          #  poetry install --no-root
+          # '';
+        });
+    };
+  };
+}
+```
+
+In this example, Nix fetches Nixpkgs when you `nix flake lock` and stores hashes
+in a lockfile: `flake.lock`. This eases dependency tracking, and you can
+_easily_ update your inputs with `nix flake update` when you need to.
+
+With a Nix3 shell, you can run:
+
+```sh
+nix develop
+```
+
+And you are done. You're in a shell with Python 3.12 and Poetry, isolated from
+your host, fully reproducible. No container, no image build, no port juggling.
+Everything runs directly on your system---but safely, and reproducibly.
+
+### Using Direnv, or; No Globals, No Surprises
+
+Nix environments are defined top to bottom. If a tool is not available in
+`pkgs`, called locally, or not declared manually then it is not available. You
+have to be _explicit_ with where things come from. This means no accidental
+`brew install`, no system-wide changes. Everything is pulled from the Nix store
+in a way that is immutable, reproducible and reusable.
+
+You can switch projects, and each gets its own shell, and that is specialized
+tooling for each project as they are relevant.
+
+Project A needs Python 3.8, Project B needs Python 3.12. What do you do, install
+them globally? No! You declare relevant Python versions in the appropriate
+shells. Python 3.8 here, Python 3.12 there.
+
+Node 18 in one place, Node 20 in another. No conflicts, no virtualenvs, no
+Dockerfiles. Awesome!
+
+[Direnv](https://direnv.net/) is a tool that improves the dev shell experience.
+Instead of manually running `nix-shell` or `nix develop` when you enter a
+project directory, you can automate the process by using Direnv. It has a
+specialized Nix implementation that lets you put `use nix` or `use flake` in
+your `.envrc` to automatically initiate shells in trusted project directories.
+
+### Editors Work Naturally
+
+Docker isolates everything, including your editor. With Nix, your editor just
+works.
+
+Tools such as `direnv` also make this easier by allow you to load the dev shell
+automatically when you `cd` into a project. Language servers pick up the right
+compilers and tools. Autocomplete, linting, tests---all behave exactly like in
+CI, because you're in the same environment. In fact, pull your own language
+servers for all Nix is concerned! All useful LSPs are already packaged in
+Nixpkgs, and you can avoid installing them globally or with a hacky tool like
+mason.nvim in Neovim, which for reference, doesn't work on NixOS because it's
+badly designed. No mounting code into containers. No syncing files. No remote
+debugging. Just a real shell with real tools.
+
+<Todo title="TODO: This section is incomplete" description="The information
+  provided here is accurate, but incomplete. There are ways to approach service
+  bootstrapping with Nix on Non-NixOS services.">
+
+## Need Services? Bring Your Own
+
+Sometimes you need more than a shell. A local database, a queue, maybe Redis...
+Docker Compose is often reached for here.
+
+While you _could_ still use Docker Compose alongside your Nix shell for these,
+Nix offers integrated ways to manage services declaratively, keeping your entire
+development setup consistent.
+
+For NixOS users, system-level services can be defined directly in
+`configuration.nix`. For managing user-level services or for non-NixOS systems,
+[Home Manager](https://github.com/nix-community/home-manager) allows defining
+services (like PostgreSQL, Redis, etc.) within your user environment, often
+activated alongside your project's dev shell. Though you must note that those
+services would be running as Systemd **user services**, and it is not a good
+idea to put them in your Home-Manager configuration.
+
+Simpler scenarios might use process managers like `procman` or even just
+background processes launched via the `shellHook` in your `mkShell` or
+`flake.nix`. There are also community projects emerging specifically for
+managing development services with Nix flakes, offering alternatives to Docker
+Compose within the Nix ecosystem. The key is that you can define these services
+using the same Nix expressions and pinning mechanisms used for your development
+tools, ensuring the entire stack is reproducible.
+
+- https://github.com/Platonic-Systems/process-compose-flake
+- https://github.com/cachix/devenv
+
+</Todo>
+
+## Onboarding Is Instant
+
+To get started on a new project:
+
+```sh
+git clone ...
+cd repo
+nix develop # Or rely on direnv to load it automatically
+```
+
+That's it. No README instructions, no bash scripts, no local setup. Everything
+is pinned in the flake. Everyone gets the same result, guaranteed. Your CI uses
+the same flake. You test in the same environment you write in. No more "works on
+my machine." It either builds or it doesn't.
+
+## What About Docker Images?
+
+Still need to ship a Docker image? Nix can build those too. Nixpkgs includes
+`dockerTools` which allow you to build OCI images directly from Nix derivations.
+
+```nix
+# Example within a flake.nix or other Nix expression
+let
+  # Assume myPackage is a Nix derivation for your application
+  myPackage = pkgs.callPackage ./package.nix { };
+in
+pkgs.dockerTools.buildImage {
+  name = "myapp";
+  tag = "latest";
+  # Include your application derivation and any runtime dependencies
+  contents = [ myPackage pkgs.bash ];
+  config = {
+    # Define the command to run when the container starts
+    Cmd = [ "${myPackage}/bin/myapp" ];
+    WorkingDir = "/";
+    # Expose ports, set environment variables, etc.
+    # ExposedPorts = { "8080/tcp" = {}; };
+  };
+}
+```
+
+No Dockerfile. No wrestling with layer caching. Just a reproducible image, built
+by Nix, that behaves exactly like the dev shell it came from (assuming you
+include the necessary runtime dependencies). But for many deployment scenarios
+beyond simple containers (like deploying to VMs or bare metal), `nix build`
+producing direct artifacts might be all you need.
+
+## Conclusion
+
+Docker gave developers a way to approximate consistency. Nix guarantees it.
+
+Nix2 shells (`shell.nix`) have long been a way to define developer environments.
+With flakes, you define _everything_: the shell, the dependencies, the runtime,
+the build output. No layers, no mutation, no cleanup steps. It’s all explicit.
+Version-controlled. Reproducible. If you're using Docker to manage dev
+environments, you're doing more work than you need to. Switch to Nix. Keep your
+tools native, your shell fast, and your setup honest.
+
+This has been my thoughts on using Nix to replace Docker. I've switched, and I
+have never found setting up developer environments easier. But let me hear your
+thoughts. Shoot me an e-mail, hit me up on Matrix, or DM me on Discord. I'd love
+to know what your experience has been like. Cheers!

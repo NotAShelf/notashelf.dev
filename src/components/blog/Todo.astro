@@ -1,0 +1,129 @@
+---
+import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import {
+  faBug,
+  faExclamationTriangle,
+  faLightbulb,
+  faPencilAlt,
+  faSyncAlt,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+export interface Props {
+  title?: string;
+  description?: string;
+  icon?: IconDefinition;
+}
+
+const { title = "TODO", description, icon } = Astro.props;
+
+// Determine colors and default icon based on title
+let borderColor = "#ffe082";
+let backgroundColor = "rgba(255, 224, 130, 0.2)";
+let titleColor = "#ffe082";
+let defaultIcon = faPencilAlt;
+
+const lowerTitle = title.toLowerCase();
+
+if (lowerTitle.includes("urgent") || lowerTitle.includes("critical")) {
+  borderColor = "#ff8a65";
+  backgroundColor = "rgba(255, 138, 101, 0.2)";
+  titleColor = "#ff8a65";
+  defaultIcon = faExclamationTriangle;
+} else if (lowerTitle.includes("bug")) {
+  borderColor = "#e57373";
+  backgroundColor = "rgba(229, 115, 115, 0.2)";
+  titleColor = "#e57373";
+  defaultIcon = faBug;
+} else if (
+  lowerTitle.includes("refactor") ||
+  lowerTitle.includes("improvement")
+) {
+  borderColor = "#7986cb";
+  backgroundColor = "rgba(121, 134, 203, 0.2)";
+  titleColor = "#7986cb";
+  defaultIcon = faSyncAlt;
+} else if (lowerTitle.includes("note") || lowerTitle.includes("idea")) {
+  borderColor = "#81c784";
+  backgroundColor = "rgba(129, 199, 132, 0.2)";
+  titleColor = "#81c784";
+  defaultIcon = faLightbulb;
+}
+
+const displayIcon = icon || defaultIcon;
+---
+
+<div
+  class="todo-marker"
+  style={`--border-color: ${borderColor}; --background-color: ${backgroundColor}; --title-color: ${titleColor};`}
+>
+  <div class="todo-header">
+    {
+      displayIcon && (
+        <span class="todo-icon">
+          <FontAwesomeIcon icon={displayIcon} />
+        </span>
+      )
+    }
+    <span class="todo-title">{title}</span>
+  </div>
+  {description && <p class="todo-description">{description}</p>}
+  <div class="todo-content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .todo-marker {
+    background-color: var(--background-color);
+    border-left: 4px solid var(--border-color);
+    padding: 1rem 1rem 1rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 4px;
+  }
+
+  .todo-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .todo-icon {
+    color: var(--title-color);
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .todo-icon :global(svg) {
+    width: 1.1rem !important;
+    height: 1.1rem !important;
+    display: block;
+  }
+
+  .todo-title {
+    font-weight: bold;
+    color: var(--title-color);
+    font-size: 1rem;
+    text-transform: uppercase;
+  }
+
+  .todo-description {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .todo-content {
+    color: inherit;
+  }
+
+  .todo-content :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .todo-content :global(> *:first-child) {
+    margin-top: 0;
+  }
+</style>
