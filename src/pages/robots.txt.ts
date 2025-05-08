@@ -26,7 +26,7 @@ export async function GET(): Promise<Response> {
   ];
 
   const content = `
-${disallowedUserAgents.map(agent => `User-agent: ${agent}\nDisallow: /`).join("\n\n")}
+${disallowedUserAgents.map((agent) => `User-agent: ${agent}\nDisallow: /`).join("\n\n")}
 
 User-agent: *
 Disallow:

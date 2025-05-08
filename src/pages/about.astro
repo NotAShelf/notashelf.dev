@@ -395,7 +395,10 @@ const skillCategories = [
     justify-content: center;
     width: 32px;
     height: 32px;
-    background: color.adjust(color.scale($primary, $lightness: 10%), $alpha: -0.7);
+    background: color.adjust(
+      color.scale($primary, $lightness: 10%),
+      $alpha: -0.7
+    );
     border-radius: 50%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     color: $secondary;
@@ -405,7 +408,10 @@ const skillCategories = [
 
     &:hover {
       transform: translateY(-3px);
-      background: color.adjust(color.scale($primary, $lightness: 15%), $alpha: -0.6);
+      background: color.adjust(
+        color.scale($primary, $lightness: 15%),
+        $alpha: -0.6
+      );
     }
 
     svg {
@@ -499,10 +505,16 @@ const skillCategories = [
     }
 
     &.highlight {
-      background: color.adjust(color.scale($primary, $lightness: 10%), $alpha: -0.7);
+      background: color.adjust(
+        color.scale($primary, $lightness: 10%),
+        $alpha: -0.7
+      );
 
       &:hover {
-        background: color.adjust(color.scale($primary, $lightness: 15%), $alpha: -0.6);
+        background: color.adjust(
+          color.scale($primary, $lightness: 15%),
+          $alpha: -0.6
+        );
       }
     }
 
