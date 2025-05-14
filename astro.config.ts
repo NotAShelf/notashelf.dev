@@ -8,6 +8,7 @@ import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import partytown from "@astrojs/partytown";
+import svelte from "@astrojs/svelte";
 
 // https://astro.build/config
 export default defineConfig({
@@ -29,6 +30,7 @@ export default defineConfig({
     react(),
     sitemap(),
     partytown(),
+    svelte(),
     mdx({
       gfm: true,
       smartypants: true,
