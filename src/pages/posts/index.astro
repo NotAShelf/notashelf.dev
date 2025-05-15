@@ -1,5 +1,5 @@
 ---
-import Pagination from "@components/Pagination.astro";
+import Pagination from "@components/Pagination.svelte";
 import {
   faArchive,
   faLayerGroup,
@@ -188,6 +188,7 @@ const posts = filteredPosts.slice(0, postsPerPage);
       currentPage={currentPage}
       totalPages={totalPages}
       baseUrl="/posts"
+      client:load
     />
   </div>
 </BaseLayout>
