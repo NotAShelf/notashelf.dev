@@ -10,16 +10,16 @@ keywords: ["software", "neovim", "news"]
 Hi all, good news first. I am a **Release Editor for NixOS 25.05**. This is a
 bit difficult for me to talk about, since I do not know what exactly what it
 entails _yet_ but know that I am excited about it, and I wanted to share it with
-you dear reader. It has been one _hell_ of a journey so far, I am excited to see
+you, dear reader. It has been one _hell_ of a journey so far, I am excited to see
 what is to come. NixOS, with its flaws, has a special place in my heart and it
 is great to be able to finally play a part in the grand scheme of things.
 
 There are a few articles that I am working on, one of them being the
-continuation to the NixOS hardening series. Unfortunately there is not much time
+continuation of the NixOS hardening series. Unfortunately there is not much time
 on my hands, and my backlog is filling up again. Worry not though, they are
 coming along nicely. I also have some technical rants on the horizon, since I
 have not written one of those in a while. Until I get the time to finish those,
-enjoy this heart-felt rambling on editors and the heart-to-heart in an unusual
+enjoy this heartfelt rambling on editors and the heart-to-heart in an unusual
 pace.
 
 ## On Editors
@@ -30,16 +30,16 @@ proofread but it usually involves me sitting in front of a computer screen for
 hours on end and simply type away. Thanks to the relative leniency of my
 department, I have been able to use LaTeX in the past and more recently I have
 been enjoying [Typst](https://typst.app). Much of this editing, regardless of
-the framework, involves an editor. While would be all too simple to use
-something like Libreoffice, I rarely find myself opening `.docx` files to edit
-an essay, even less rare to be writing in one. What I use for most of my editing
+the framework, involves an editor. While it would be all too simple to use
+something like LibreOffice, I rarely find myself opening `.docx` files to edit
+an essay, and it's even less rare of an occurrence for me to be writing in one. What I use for most of my editing
 is, of course, my trusty Neovim setup.
 
 Neovim holds an interesting place in my tool belt. I have switched off
 VSCode--the editor I have started with-- due to its annoyingly high RAM usage
 and power draw on my laptop, which made it less than ideal for when I could not
 easily find a place to plug my charger. Around the same time I was learning
-about Linux (and customizing the hell out of my Archlinux setup) so it
+about Linux (and customizing the hell out of my Arch Linux setup) so it
 eventually lead to me checking out Neovim. It was something reminiscent of love
 at first sight. It was all snappy and intuitive and simple, I could not have
 asked for a better editor. Neovim _was_ what I was looking for.
@@ -53,7 +53,7 @@ Around this time, I switched to NixOS and began thinking about setting up Neovim
 declaratively on my system. `programs.neovim` was not quite intuitive, and
 linking a `nvim` directory to `~/.config/nvim` felt less than ideal. This lead
 to _neovim-flake_. I cannot quite call it my creation, as I have soft-forked it
-from a project with the same name by Jordan Isaacs but I had many different,
+from a project with the same name by Jordan Isaacs, but I had many different,
 conflicting ideas in mind. So much so, that it warranted the soft-fork to take
 it in a different direction. neovim-flake, the original one, was a learning
 experience. I learned a lot about how to write Nix, and I also learned how _not_
@@ -74,7 +74,7 @@ As I was saying, neovim-flake--now nvf--was a learning experience. More
 importantly, it was a testing ground for my "ideal" Neovim configuration. I have
 learned about Neovim as much as I have learned about Nix by maintaining nvf. The
 most important discovery while working on nvf and Neovim, was that **Neovim is a
-subpar editor**. I mean this in an endearing way of course, I would want my
+subpar editor**. I mean this in an endearing way of course; I would want my
 editor to become better and I think it is moving in the right direction,
 however, with contenders such as Helix now challenging Neovim's place it _might_
 be the time to reconsider priorities and re-allocate resources. Although I am
@@ -85,7 +85,7 @@ available as plugins on Neovim. There is no conflicting design choices or UI
 decisions. Not yet, anyway. I think consistent UI is a good thing to have in
 your editor, however good your UX may be.
 
-[^1]: This is due to my particular distaste of Lisp and Lisp-likes. Helix' so
+[^1]: This is due to my particular distaste of Lisp and Lisp-likes. Helix's so
     called "plugin system" is, at its core, a glorified Scheme interpreter and I
     do not feel positively about it. I believe there is also talks about using
     Scheme for _configuration_, and not just plugins. Compared to something like
@@ -139,12 +139,12 @@ modules to be improved for [nvf] in the near future, and an internal rewrite of
 [Schizofox]. [Hjem] is, fortunately, a team project and is able to proceed with
 and without me. I consider other public software (such as [Microfetch]) I've
 created to be stable, but perhaps they will be picked back up as well. I have
-been meaning to make Microfetch even faster (can't stop won't stop) for a while
+been meaning to make Microfetch even faster (can't stop, won't stop) for a while
 now...
 
-Regardless, there are a nice things in the future but I first need some free
+Regardless, there are many nice things planned for the future but I first need some free
 time. Working on a few projects, and it is almost the busy season at $WORK. But
-I digress. Wanted to give you this as a progress report, and to explain the
+I digress. I wanted to give you this as a progress report, and to explain the
 reasoning behind my absence. Some of those projects have been getting a lot of
 attention, even with my absence, so I wanted to personally thank everyone who
 has been submitting pull requests. You may not think much of it, but it means
