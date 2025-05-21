@@ -1,0 +1,5 @@
+---
+# Markdownlint views title in the frontmatter as a level one header and considers any
+# actual level one headers as duplicate. Disable that.
+MD025: false
+

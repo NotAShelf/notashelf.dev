@@ -24,8 +24,8 @@ perfect time to explore how you can leverage it for your own projects.
 
 ## Obtaining Nixpkgs
 
-We must first obtain the testers from somewhere. That somewhere is---
-naturally---Nixpkgs.
+We must first obtain the testers from somewhere. That somewhere
+is---naturally---Nixpkgs.
 
 Testers are `system` dependent, and they are dependant on `pkgs`. I don't think
 this is a surprise to anyone since we will be interacting with, well, packages
