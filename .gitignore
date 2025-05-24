@@ -8,4 +8,8 @@ result*
 /node_modules
 /npm-debug.log*
 
+# Doesn't need to be committed
+pnpm-workspace.yaml
+
+
 
