@@ -8,6 +8,7 @@ import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import partytown from "@astrojs/partytown";
+import svelte from "@astrojs/svelte";
 
 // https://astro.build/config
 export default defineConfig({
@@ -29,6 +30,7 @@ export default defineConfig({
     react(),
     sitemap(),
     partytown(),
+    svelte(),
     mdx({
       gfm: true,
       smartypants: true,
@@ -76,5 +78,16 @@ export default defineConfig({
   prefetch: {
     prefetchAll: true,
     defaultStrategy: "hover",
+  },
+
+  vite: {
+    define: {
+      // Inject environment variables for static builds. This makes it possible to respect
+      // variables from the Nix build environment in the static build.
+      "import.meta.env.GIT_REV": JSON.stringify(process.env.GIT_REV || "main"),
+      "import.meta.env.SITE_SRC": JSON.stringify(
+        process.env.SITE_SRC || "https://github.com/notashelf/notashelf.dev",
+      ),
+    },
   },
 });

@@ -1,5 +1,5 @@
 ---
-import Pagination from "@components/Pagination.astro";
+import Pagination from "@components/Pagination.svelte";
 import { faArchive } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import BaseLayout from "@layouts/BaseLayout.astro";
@@ -85,6 +85,7 @@ const posts = archivedPosts.slice(startIndex, endIndex);
         currentPage={currentPage}
         totalPages={totalPages}
         baseUrl="/archive"
+        client:load
       />
     )
   }
