@@ -79,4 +79,15 @@ export default defineConfig({
     prefetchAll: true,
     defaultStrategy: "hover",
   },
+
+  vite: {
+    define: {
+      // Inject environment variables for static builds. This makes it possible to respect
+      // variables from the Nix build environment in the static build.
+      "import.meta.env.GIT_REV": JSON.stringify(process.env.GIT_REV || "main"),
+      "import.meta.env.SITE_SRC": JSON.stringify(
+        process.env.SITE_SRC || "https://github.com/notashelf/notashelf.dev",
+      ),
+    },
+  },
 });
