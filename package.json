@@ -63,6 +63,8 @@
     "prettier-plugin-astro-organize-imports": "^0.4.11",
     "sharp": "^0.34.2",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.32.1"
+    "typescript-eslint": "^8.32.1",
+    "vite-plugin-top-level-await": "^1.5.0",
+    "vite-plugin-wasm": "^3.4.1"
   }
 }
