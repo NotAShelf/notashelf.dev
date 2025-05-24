@@ -20,7 +20,7 @@
       pkgs = pkgsForEach.${system};
     in {
       default = self.devShells.${system}.blog;
-      blog = pkgs.mkShellNoCC {
+      blog = pkgs.mkShell {
         name = "blog-dev";
         packages = with pkgs; [
           # Eslint_d
@@ -29,6 +29,13 @@
 
           # To run 'typos' on my content every once in a while
           typos
+
+          # WASM
+          cargo
+          rustc
+          rustfmt
+          wasm-pack
+          lld
         ];
       };
     });
