@@ -238,7 +238,7 @@
               </xsl:if>
 
               <div class="content">
-                <xsl:value-of select="content" disable-output-escaping="yes"/>
+                <xsl:value-of select="content"/>
               </div>
 
               <a href="{link}" class="read-more">Read on notashelf.dev →</a>
