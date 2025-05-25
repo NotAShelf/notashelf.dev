@@ -41,8 +41,9 @@
     });
 
     packages = forEachSystem (system: let
-      pkgs = pkgsForEach.${system};
+      pkgs = pkgsForEach."${system}";
     in {
+      default = self.packages.${system}.build-site;
       build-site = let
         fs = lib.fileset;
       in
@@ -68,19 +69,21 @@
                   ./package.json
                   ./pnpm-lock.yaml
                   ./pnpm-workspace.yaml
-                  ./tsconfig.json # for import aliases
                 ]
               );
             };
 
           pnpmDeps = pkgs.pnpm_10.fetchDeps {
             inherit (finalAttrs) pname src;
-            hash = "sha256-dgACOwM6D47OBenGcQFhNoC6yXR+SxsQqcE+wNb4QrA=";
+            hash = "sha256-7MKBq4VrOosV/XLWgbVtAUvFB1YCMjepRolez3rfqmA=";
           };
 
           nativeBuildInputs = with pkgs; [
             nodejs
             pnpm_10.configHook
+
+            cargo
+            wasm-pack
           ];
 
           env = {

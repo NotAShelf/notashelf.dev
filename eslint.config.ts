@@ -20,6 +20,7 @@ const config = tseslint.config(
       "**/.astro",
       "**/.github",
       "**/result",
+      "**/*.rs",
     ],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",

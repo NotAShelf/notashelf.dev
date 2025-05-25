@@ -80,7 +80,7 @@ checker, while initially imposing a learning curve, provides a safety net that
 prevents data races and dangling pointers. Unlike Go, where garbage collection
 kicks in unpredictably, Rust's compile-time borrow checker also ensures that
 memory is allocated and freed at the right time. Unlike C, which is another
-language I enjoy writing, but not so much *using, it doesn't require explicit
+language I enjoy writing, but not so much \*using, it doesn't require explicit
 `malloc`/`free` calls or reference counting in most cases, meaning it balances
 control and automation far better than either language.
 

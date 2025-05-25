@@ -415,11 +415,13 @@ remain on your disk. This is sometimes a security vulnerability, and sometimes
 just general annoyance. Impermanence completely eliminates configuration drift,
 and makes sure that your system is sparkly clean on each boot. Cool, right?
 
-[^1]: I could be using `tmpfs` for `/` at this point in time. Unfortunately,
+[^1]:
+    I could be using `tmpfs` for `/` at this point in time. Unfortunately,
     since I share this setup on some of my low-end laptops, I've got no RAM to
     spare - which is exactly why I have opted out with BTRFS. It is a reliable
     filesystem that I am used to, and it allows for us to use a script that
     we'll see later on.
 
-[^2]: Read about noatime
+[^2]:
+    Read about noatime
     [here](https://opensource.com/article/20/6/linux-noatime)

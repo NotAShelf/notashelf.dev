@@ -160,7 +160,8 @@ Stay safe.
 
 [very same documentation]: https://developers.facebook.com/docs/sharing/webmasters/web-crawlers
 
-[^1]: Meta's own web-crawler documentation indicates that they may choose to
+[^1]:
+    Meta's own web-crawler documentation indicates that they may choose to
     disregard your `robots.txt` if they are performing "integrity or security
     checks" which in truth is just a vague way to say that you may sometimes
     decide to _not_ play by the rules. At this point your bet is banning them by

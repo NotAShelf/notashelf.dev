@@ -1,6 +1,6 @@
 packages:
-  - apps/web
-  - packages/wasm/pkg
+  - apps/notashelf.dev
+  - packages/wasm-utils/pkg
 onlyBuiltDependencies:
   - sharp
   - wasm-pack

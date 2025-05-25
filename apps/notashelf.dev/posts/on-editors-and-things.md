@@ -85,7 +85,8 @@ available as plugins on Neovim. There is no conflicting design choices or UI
 decisions. Not yet, anyway. I think consistent UI is a good thing to have in
 your editor, however good your UX may be.
 
-[^1]: This is due to my particular distaste of Lisp and Lisp-likes. Helix's so
+[^1]:
+    This is due to my particular distaste of Lisp and Lisp-likes. Helix's so
     called "plugin system" is, at its core, a glorified Scheme interpreter and I
     do not feel positively about it. I believe there is also talks about using
     Scheme for _configuration_, and not just plugins. Compared to something like

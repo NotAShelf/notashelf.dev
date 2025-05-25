@@ -131,7 +131,8 @@ And that is all! You may now switch Home-Manager generations with either
 `home-manager switch` (if you are using home-manager in standalone mode). Do
 make sure to adapt the example to your own setup.
 
-[^1]: To be fair, I have known about SSH signing for a while now, but the
+[^1]:
+    To be fair, I have known about SSH signing for a while now, but the
     sunk-cost fallacy has prevented me from ever looking into it. As a matter of
     fact, I am still not convinced by it, but that is because I still use a
     Yubikey based GPG setup which partially obsoletes SSH signing and prevents

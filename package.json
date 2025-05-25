@@ -1,15 +1,16 @@
 {
   "private": true,
-  "workspaces": ["apps/web", "packages/wasm/pkg"],
+  "workspaces": [
+    "apps/notashelf.dev",
+    "packages/wasm-utils/pkg"
+  ],
   "scripts": {
-    "build": "pnpm run build:wasm && pnpm --filter ./apps/web run build",
-    "build:wasm": "cd packages/wasm && wasm-pack build --target web --out-dir pkg --out-name wasm-utils",
-    "dev": "pnpm run build:wasm && pnpm --filter ./apps/web run dev",
-    "preview": "pnpm --filter ./apps/web run preview",
-    "check": "pnpm --filter ./apps/web run check",
-    "fmt": "pnpm --filter ./apps/web run fmt"
-  },
-  "devDependencies": {
-    "wasm-pack": "^0.12.1"
+    "build": "pnpm run build:wasm-utils && pnpm run build:web",
+    "build:web": "pnpm --filter ./apps/notashelf.dev run build",
+    "build:wasm-utils": "cd packages/wasm-utils && wasm-pack build --target web --out-dir pkg --out-name wasm-utils",
+    "dev": "pnpm run build:wasm-utils && pnpm --filter ./apps/notashelf.dev run dev",
+    "preview": "pnpm --filter ./apps/notashelf.dev run preview",
+    "check": "pnpm --filter ./apps/notashelf.dev run check",
+    "fmt": "pnpm --filter ./apps/notashelf.dev run fmt"
   }
 }

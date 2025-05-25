@@ -87,8 +87,13 @@ export default defineConfig({
     plugins: [wasm(), topLevelAwait()],
     resolve: {
       alias: {
-        "wasm-utils": fileURLToPath(new URL("../../packages/wasm/pkg/wasm-utils.js", import.meta.url))
-      }
+        "wasm-utils": fileURLToPath(
+          new URL(
+            "../../packages/wasm-utils/pkg/wasm-utils.js",
+            import.meta.url,
+          ),
+        ),
+      },
     },
     define: {
       // Inject environment variables for static builds. This makes it possible to respect

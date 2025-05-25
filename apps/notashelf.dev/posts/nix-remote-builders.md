@@ -188,22 +188,26 @@ available, to avoid running my system out of resources.
 A very cool, but somewhat unrelated trick, is that you can use `--build-host` in
 `nixos-rebuild` to build on a remote host.
 
-[^1]: Nix, although most commonly referred to as a "Package Manager" is actually
+[^1]:
+    Nix, although most commonly referred to as a "Package Manager" is actually
     a build tool. Some find this definition pedantic, but package management is
     only a subset of what it is actually capable of. Calling it a package
     manager is fair, but also a bit reductive in a way that it does not
     communicate Nix's advantages over traditional package managers.
 
-[^2]: Hydra is a Nix-based continuous build system, tasked for evaluating and
+[^2]:
+    Hydra is a Nix-based continuous build system, tasked for evaluating and
     building derivations from a jobset such as but not limited to Nixpkgs. In
     the context of Nixpkgs, Hydra is what populates the cache, logs evaluation
     or build failures, and makes channels available.
 
-[^3]: _Some_ derivations are not built and therefore not available in the cache.
+[^3]:
+    _Some_ derivations are not built and therefore not available in the cache.
     There are a few different conditions for this, but it is the case especially
     when the derivation has been marked specifically not to be built by Hydra.
 
-[^4]: This should show you how fragile the Nix infrastructure is. As much as I
+[^4]:
+    This should show you how fragile the Nix infrastructure is. As much as I
     am a huge fan of Nix, Nixpkgs and NixOS, without the proper funding Nix's
     adoption would not be possible. _Nobody_ wants to build everything from
     source, all of the time. Even though content-addressed Nix would make

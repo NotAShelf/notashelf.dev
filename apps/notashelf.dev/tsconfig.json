@@ -14,27 +14,13 @@
     "incremental": true,
     "paths": {
       // https://docs.astro.build/en/guides/typescript/#import-aliases
-      "@/*": [
-        "src/*"
-      ],
-      "@components/*": [
-        "src/components/*"
-      ],
-      "@layouts/*": [
-        "src/layouts/*"
-      ],
-      "@styles/*": [
-        "src/styles/*"
-      ],
-      "@lib/*": [
-        "src/lib/*"
-      ],
-      "@data/*": [
-        "src/data/*"
-      ],
-      "@scripts/*": [
-        "src/scripts/*"
-      ],
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@styles/*": ["src/styles/*"],
+      "@lib/*": ["src/lib/*"],
+      "@data/*": ["src/data/*"],
+      "@scripts/*": ["src/scripts/*"],
       "wasm-utils": ["../../packages/wasm/pkg"]
     },
     "jsx": "react-jsx",

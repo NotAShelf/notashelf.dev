@@ -1,4 +1,3 @@
-
 {
   "title": "MicrOS",
   "description": "Experimental operating system based on Nixpkgs module system, bringing Runit to NixOS",

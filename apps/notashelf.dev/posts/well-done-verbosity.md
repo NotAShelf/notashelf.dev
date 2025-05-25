@@ -220,7 +220,8 @@ that you might've ran into. Cheers!
 [Pterodactyl]: https://pterodactyl.io/
 [provides helpful steps]: https://pterodactyl.io/panel/1.0/troubleshooting.html#reading-error-logs
 
-[^2]: There are cases where I am both the developer and the end user. Assume,
+[^2]:
+    There are cases where I am both the developer and the end user. Assume,
     for a moment, that I am working on _your_ codebase with minimal exposure.
     Most of your codebase is completely foreign to me. When you throw me a stack
     trace that is all over the place, I am immediately less inclined to

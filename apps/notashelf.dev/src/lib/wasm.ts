@@ -1,7 +1,4 @@
-import init, {
-  TextProcessor,
-  SearchEngine,
-} from "wasm-utils";
+import init, { TextProcessor, SearchEngine } from "wasm-utils";
 
 let wasmModule: TextProcessor | null = null;
 let searchEngine: SearchEngine | null = null;

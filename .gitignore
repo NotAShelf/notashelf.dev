@@ -5,8 +5,8 @@ result*
 /.direnv
 
 # WASM
-**/wasm/target*
-**/wasm/pkg*
+**/wasm-utils/target
+**/wasm-utils/pkg
 
 # Manual builds
 **/dist

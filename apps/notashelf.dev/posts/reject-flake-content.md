@@ -143,6 +143,7 @@ accepting the prompt (which defaults to true for some reason).
 This has been your ever-so-informative technical rant on Nix and its
 undocumented mess. Hope you learned something today. Cheers.
 
-[^1]: If you don't use Nix flakes or have no idea what they are, then this post
+[^1]:
+    If you don't use Nix flakes or have no idea what they are, then this post
     does not apply to you. In fact, I'm glad you're saving yourself the
     headache!
