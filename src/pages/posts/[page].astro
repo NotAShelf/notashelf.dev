@@ -130,6 +130,7 @@ const allTags = [
         <li
           class="post-dropdown-item"
           data-keywords={post.data.keywords?.join(",")}
+          data-post-id={post.id}
         >
           <a href={`/posts/${post.id}`} class="dropdown-link">
             <div class="post-content">
@@ -166,6 +167,7 @@ const allTags = [
         <li
           class="post-dropdown-item"
           data-keywords={post.data.keywords?.join(",")}
+          data-post-id={post.id}
         >
           <a href={`/posts/${post.id}`} class="dropdown-link">
             <div class="post-content">
@@ -214,250 +216,42 @@ const allTags = [
 </BaseLayout>
 
 <script>
-  import PostSearchState from "../../scripts/post-search-state";
+  import type { PostEntry } from "../../lib/types";
+  import { WasmPostSearchUI } from "../../scripts/wasm-post-search-ui";
 
-  document.addEventListener("DOMContentLoaded", () => {
-    // Get all DOM elements with proper type casting
-    const searchInput = document.getElementById(
-      "search-input",
-    ) as HTMLInputElement;
-    const searchForm = document.getElementById(
-      "search-form",
-    ) as HTMLFormElement;
-    const clearButton = document.getElementById(
-      "clear-search",
-    ) as HTMLButtonElement;
-    const resetButton = document.getElementById(
-      "reset-filters",
-    ) as HTMLButtonElement;
-    const tagButtons = document.querySelectorAll(
-      ".tag-filter",
-    ) as NodeListOf<HTMLButtonElement>;
-    const noResults = document.querySelector(".no-results") as HTMLDivElement;
-    const postList = document.querySelector(".post-list") as HTMLUListElement;
-    const postListAll = document.querySelector(
-      ".post-list-all",
-    ) as HTMLUListElement;
-    const paginationContainer = document.getElementById(
-      "pagination-container",
-    ) as HTMLDivElement;
-    const viewToggle = document.getElementById(
-      "view-toggle",
-    ) as HTMLButtonElement;
-    const paginationIcon = document.getElementById(
-      "pagination-icon",
-    ) as HTMLElement;
-    const allIcon = document.getElementById("all-icon") as HTMLElement;
-    const viewLabel = document.getElementById("view-label") as HTMLElement;
+  document.addEventListener("DOMContentLoaded", async () => {
+    // Pass all posts data to the WASM search UI
+    const allPosts: PostEntry[] = [];
 
-    if (
-      !searchInput ||
-      !searchForm ||
-      !clearButton ||
-      !resetButton ||
-      !noResults ||
-      !postList ||
-      !postListAll ||
-      !paginationContainer ||
-      !viewToggle ||
-      !paginationIcon ||
-      !allIcon ||
-      !viewLabel
-    ) {
-      return;
-    }
+    // Extract post data from DOM elements for WASM
+    document.querySelectorAll(".post-dropdown-item").forEach((el) => {
+      const element = el as HTMLElement;
+      const postId = element.getAttribute("data-post-id");
+      const title = element.querySelector(".post-title")?.textContent;
+      const description =
+        element.querySelector(".post-description")?.textContent;
+      const keywords = element.getAttribute("data-keywords")?.split(",") || [];
 
-    // Get saved state
-    const { searchTerm, activeTag, viewAll } = PostSearchState.getSearchState();
-    let isViewingAll = viewAll || false;
-    let currentActiveTag = activeTag || "";
-
-    // Initialize search field from saved state
-    if (searchTerm) {
-      searchInput.value = searchTerm;
-      clearButton.style.display = "";
-    }
-
-    // Initialize tag selection from saved state
-    if (currentActiveTag) {
-      tagButtons.forEach((btn) => {
-        if (btn.getAttribute("data-tag") === currentActiveTag) {
-          btn.classList.add("active");
-        } else {
-          btn.classList.remove("active");
-        }
-      });
-    } else {
-      // If no active tag, make "All" active
-      const allTagButton = Array.from(tagButtons).find(
-        (btn) => btn.getAttribute("data-tag") === "",
-      );
-      if (allTagButton) {
-        allTagButton.classList.add("active");
-      }
-    }
-
-    // Filter posts based on current search and tag
-    function filterPosts(): void {
-      const searchTerm = searchInput.value.toLowerCase();
-      let visibleCount = 0;
-
-      // Save search state
-      PostSearchState.setSearchState(
-        searchTerm,
-        currentActiveTag,
-        isViewingAll,
-      );
-
-      // Determine which list to display
-      const usingSearchResults = searchTerm !== "";
-      const displayingPaginated = !isViewingAll && !usingSearchResults;
-      const displayingAll = isViewingAll || usingSearchResults;
-
-      // Show/hide appropriate lists
-      postList.style.display = displayingPaginated ? "" : "none";
-      postListAll.style.display = displayingAll ? "" : "none";
-      paginationContainer.style.display = displayingPaginated ? "" : "none";
-
-      // Filter posts in the visible list
-      const itemsToFilter = displayingAll
-        ? postListAll.querySelectorAll<HTMLLIElement>(".post-dropdown-item")
-        : postList.querySelectorAll<HTMLLIElement>(".post-dropdown-item");
-
-      itemsToFilter.forEach((post) => {
-        const titleElement = post.querySelector(".post-title");
-        const descriptionElement = post.querySelector(".post-description");
-        if (!titleElement) return;
-
-        const title = titleElement.textContent?.toLowerCase() || "";
-        const description =
-          descriptionElement?.textContent?.toLowerCase() || "";
-        const keywordsText = post.getAttribute("data-keywords") || "";
-        const keywords = keywordsText
-          ? keywordsText.toLowerCase().split(",")
-          : [];
-
-        const matchesSearch =
-          !searchTerm ||
-          title.includes(searchTerm) ||
-          description.includes(searchTerm);
-        const matchesTag =
-          !currentActiveTag ||
-          keywords.includes(currentActiveTag.toLowerCase());
-
-        post.style.display = matchesSearch && matchesTag ? "" : "none";
-        if (matchesSearch && matchesTag) visibleCount++;
-      });
-
-      // Show/hide no results message
-      if (visibleCount === 0) {
-        if (displayingPaginated) postList.style.display = "none";
-        if (displayingAll) postListAll.style.display = "none";
-        noResults.style.display = "block";
-      } else {
-        noResults.style.display = "none";
-      }
-
-      clearButton.style.display = searchInput.value ? "" : "none";
-      document.documentElement.classList.remove("filtering-active");
-    }
-
-    // Toggle between paginated view and view all
-    function updateViewMode(viewAll: boolean): void {
-      isViewingAll = viewAll;
-
-      if (viewAll) {
-        postList.style.display = "none";
-        postListAll.style.display = "";
-        paginationContainer.style.display = "none";
-        paginationIcon.style.display = "none";
-        allIcon.style.display = "";
-        viewLabel.textContent = "Paginate";
-      } else {
-        postList.style.display = "";
-        postListAll.style.display = "none";
-        paginationContainer.style.display = "";
-        paginationIcon.style.display = "";
-        allIcon.style.display = "none";
-        viewLabel.textContent = "View All";
-      }
-
-      filterPosts();
-    }
-
-    // Set up event listeners
-    searchForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      filterPosts();
-    });
-
-    searchInput.addEventListener("input", () => {
-      clearButton.style.display = searchInput.value ? "" : "none";
-    });
-
-    clearButton.addEventListener("click", () => {
-      searchInput.value = "";
-      filterPosts();
-    });
-
-    tagButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const tagValue = btn.getAttribute("data-tag") || "";
-
-        tagButtons.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        currentActiveTag = tagValue;
-
-        // If a tag is selected (not "All"), automatically switch to view all posts
-        if (tagValue !== "" && !isViewingAll) {
-          isViewingAll = true;
-          updateViewMode(true);
-        } else {
-          filterPosts();
-        }
-      });
-    });
-
-    viewToggle.addEventListener("click", () => {
-      updateViewMode(!isViewingAll);
-      PostSearchState.setSearchState(
-        searchInput.value,
-        currentActiveTag,
-        isViewingAll,
-      );
-    });
-
-    resetButton.addEventListener("click", () => {
-      searchInput.value = "";
-      currentActiveTag = "";
-      tagButtons.forEach((btn) => {
-        btn.classList.remove("active");
-        if (btn.getAttribute("data-tag") === "") {
-          btn.classList.add("active");
-        }
-      });
-      PostSearchState.clearSearchState();
-      filterPosts();
-    });
-
-    // Save state when navigating with pagination
-    document
-      .querySelectorAll<HTMLAnchorElement>(".pagination-link")
-      .forEach((link) => {
-        link.addEventListener("click", () => {
-          PostSearchState.setSearchState(
-            searchInput.value,
-            currentActiveTag,
-            isViewingAll,
-          );
-          if (searchInput.value || currentActiveTag) {
-            document.documentElement.classList.add("filtering-active");
-          }
+      if (postId && title) {
+        allPosts.push({
+          id: postId,
+          data: {
+            title,
+            description: description || "",
+            keywords: keywords.filter((k) => k.trim() !== ""),
+            date: new Date(), // Will be extracted from DOM if needed
+            draft: false,
+            archived: false,
+          },
+          body: "",
+          collection: "posts",
         });
-      });
+      }
+    });
 
-    // Apply initial filter with saved state
-    updateViewMode(isViewingAll);
+    // Initialize WASM search UI
+    const searchUI = new WasmPostSearchUI(allPosts);
+    await searchUI.init();
   });
 </script>
 
