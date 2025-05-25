@@ -14,5 +14,6 @@ result*
 **/node_modules
 **/npm-debug.log*
 
-
+# Lighthouse Reports
+**/*.report.html
 
