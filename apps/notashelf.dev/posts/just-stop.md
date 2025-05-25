@@ -1,7 +1,7 @@
 ---
 title: "Please Just Stop!"
 description: "Picking the right tool for the job, Nix"
-date: 2024-06-2
+date: 2024-06-02
 archived: true
 ---
 
