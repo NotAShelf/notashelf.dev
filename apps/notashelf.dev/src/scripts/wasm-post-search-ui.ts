@@ -32,29 +32,41 @@ export class WasmPostSearchUI {
 
   private getDOMElements(): DOMElements {
     // Core search elements (required)
-    const searchInput = document.getElementById("search-input") as HTMLInputElement;
+    const searchInput = document.getElementById(
+      "search-input",
+    ) as HTMLInputElement;
     if (!searchInput) {
       throw new Error("Required element #search-input not found");
     }
 
-    const searchForm = document.getElementById("search-form") as HTMLFormElement;
+    const searchForm = document.getElementById(
+      "search-form",
+    ) as HTMLFormElement;
     if (!searchForm) {
       throw new Error("Required element #search-form not found");
     }
 
-    const clearButton = document.getElementById("clear-search") as HTMLButtonElement;
+    const clearButton = document.getElementById(
+      "clear-search",
+    ) as HTMLButtonElement;
     if (!clearButton) {
       throw new Error("Required element #clear-search not found");
     }
 
-    const resetButton = document.getElementById("reset-filters") as HTMLButtonElement;
+    const resetButton = document.getElementById(
+      "reset-filters",
+    ) as HTMLButtonElement;
     if (!resetButton) {
       throw new Error("Required element #reset-filters not found");
     }
 
-    const tagButtons = document.querySelectorAll(".tag-filter") as NodeListOf<HTMLButtonElement>;
+    const tagButtons = document.querySelectorAll(
+      ".tag-filter",
+    ) as NodeListOf<HTMLButtonElement>;
     if (tagButtons.length === 0) {
-      console.warn("No .tag-filter elements found - tag filtering will be disabled");
+      console.warn(
+        "No .tag-filter elements found - tag filtering will be disabled",
+      );
     }
 
     const noResults = document.querySelector(".no-results") as HTMLDivElement;
@@ -67,35 +79,51 @@ export class WasmPostSearchUI {
       throw new Error("Required element .post-list not found");
     }
 
-    const postListAll = document.querySelector(".post-list-all") as HTMLUListElement;
+    const postListAll = document.querySelector(
+      ".post-list-all",
+    ) as HTMLUListElement;
     if (!postListAll) {
       throw new Error("Required element .post-list-all not found");
     }
 
-    const paginationContainer = document.getElementById("pagination-container") as HTMLDivElement;
+    const paginationContainer = document.getElementById(
+      "pagination-container",
+    ) as HTMLDivElement;
     if (!paginationContainer) {
       throw new Error("Required element #pagination-container not found");
     }
 
     // Optional view toggle elements (graceful degradation)
-    const viewToggle = document.getElementById("view-toggle") as HTMLButtonElement;
+    const viewToggle = document.getElementById(
+      "view-toggle",
+    ) as HTMLButtonElement;
     if (!viewToggle) {
-      console.warn("Optional element #view-toggle not found - view toggle will be disabled");
+      console.warn(
+        "Optional element #view-toggle not found - view toggle will be disabled",
+      );
     }
 
-    const paginationIcon = document.getElementById("pagination-icon") as HTMLElement;
+    const paginationIcon = document.getElementById(
+      "pagination-icon",
+    ) as HTMLElement;
     if (!paginationIcon) {
-      console.warn("Optional element #pagination-icon not found - icon switching will be disabled");
+      console.warn(
+        "Optional element #pagination-icon not found - icon switching will be disabled",
+      );
     }
 
     const allIcon = document.getElementById("all-icon") as HTMLElement;
     if (!allIcon) {
-      console.warn("Optional element #all-icon not found - icon switching will be disabled");
+      console.warn(
+        "Optional element #all-icon not found - icon switching will be disabled",
+      );
     }
 
     const viewLabel = document.getElementById("view-label") as HTMLElement;
     if (!viewLabel) {
-      console.warn("Optional element #view-label not found - label switching will be disabled");
+      console.warn(
+        "Optional element #view-label not found - label switching will be disabled",
+      );
     }
 
     return {
