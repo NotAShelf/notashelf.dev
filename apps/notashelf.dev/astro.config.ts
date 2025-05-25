@@ -6,6 +6,7 @@ import remarkToc from "remark-toc";
 import rehypeExternalLinks from "rehype-external-links";
 import wasm from "vite-plugin-wasm";
 import topLevelAwait from "vite-plugin-top-level-await";
+import { copyrightYearPlugin } from "vite-copyright-replace";
 
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
@@ -84,7 +85,7 @@ export default defineConfig({
   },
 
   vite: {
-    plugins: [wasm(), topLevelAwait()],
+    plugins: [wasm(), topLevelAwait(), copyrightYearPlugin()],
     resolve: {
       alias: {
         "wasm-utils": fileURLToPath(

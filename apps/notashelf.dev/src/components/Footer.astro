@@ -8,8 +8,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const currentYear = new Date().getFullYear();
-const copyrightYear = currentYear === 2024 ? "2024" : `2024-${currentYear}`;
 const gitEnv = import.meta.env.GIT_ENV || "development";
 ---
 
@@ -74,7 +72,7 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
       <span>{gitEnv}</span>
     </div>
     <p class="copyright">
-      &copy; <span id="copyright">{copyrightYear}</span> NotAShelf
+      &copy; <span id="copyright">__COPYRIGHT_YEAR__</span> NotAShelf
     </p>
   </div>
 </footer>

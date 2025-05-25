@@ -1,0 +1,20 @@
+{
+  "name": "vite-copyright-replace",
+  "version": "1.0.2",
+  "description": "A Vite plugin that inserts the current year to the HTML file during build. Useful for adding a copyright year to the HTML file.",
+  "main": "index.ts",
+  "type": "module",
+  "types": "index.ts",
+  "exports": {
+    ".": {
+      "import": "./index.ts",
+      "types": "./index.ts"
+    }
+  },
+  "devDependencies": {
+    "typescript": "5.8.3"
+  },
+  "peerDependencies": {
+    "vite": "^6.0.0"
+  }
+}

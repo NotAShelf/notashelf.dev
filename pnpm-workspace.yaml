@@ -1,6 +1,7 @@
 packages:
   - apps/notashelf.dev
   - packages/wasm-utils/pkg
+  - packages/vite-copyright-replace
 onlyBuiltDependencies:
   - sharp
   - wasm-pack

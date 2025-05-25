@@ -109,6 +109,9 @@ importers:
       vfile:
         specifier: ^6.0.3
         version: 6.0.3
+      vite-copyright-replace:
+        specifier: link:../../packages/vite-copyright-replace
+        version: link:../../packages/vite-copyright-replace
       wasm-utils:
         specifier: link:../../packages/wasm-utils/pkg
         version: link:../../packages/wasm-utils/pkg
@@ -174,7 +177,11 @@ importers:
         specifier: ^3.4.1
         version: 3.4.1(vite@6.3.5(@types/node@22.15.21)(sass@1.89.0)(yaml@2.8.0))
 
-  packages/wasm-utils/pkg: {}
+  packages/vite-copyright-replace:
+    devDependencies:
+      typescript:
+        specifier: 5.8.3
+        version: 5.8.3
 
 packages:
 

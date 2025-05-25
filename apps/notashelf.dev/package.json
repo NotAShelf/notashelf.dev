@@ -45,7 +45,8 @@
     "unified": "^11.0.5",
     "unist-util-visit": "^5.0.0",
     "vfile": "^6.0.3",
-    "wasm-utils": "link:../../packages/wasm-utils/pkg"
+    "wasm-utils": "link:../../packages/wasm-utils/pkg",
+    "vite-copyright-replace": "link:../../packages/vite-copyright-replace"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
