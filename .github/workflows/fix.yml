@@ -46,7 +46,13 @@ jobs:
           hash="$(grep 'got:' /tmp/log | awk '{print $2}')"
           echo "hash=$hash"
 
-          sed -e "s#hash =.*\$#hash = \"$hash\";#g" -i flake.nix
+          if "$hash" != ""; then
+            echo "Updating hash in package.nix"
+            sed -e "s#hash =.*\$#hash = \"$hash\";#g" -i nix/package.nix
+          else
+            echo "No hash found, exiting"
+            exit 1
+          fi
 
           git diff
 
