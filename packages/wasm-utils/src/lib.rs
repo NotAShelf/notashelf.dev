@@ -94,8 +94,13 @@ impl SearchEngine {
         }
 
         serde_wasm_bindgen::to_value(&results)
-            .map(|v| js_sys::JSON::stringify(&v).unwrap().as_string().unwrap())
-            .unwrap_or_else(|_| "[]".to_string())
+            .map_err(|_| "[]".to_string())
+            .and_then(|v| {
+                js_sys::JSON::stringify(&v)
+                    .map_err(|_| "[]".to_string())
+                    .and_then(|json_str| json_str.as_string().ok_or_else(|| "[]".to_string()))
+            })
+            .unwrap_or_else(|fallback| fallback)
     }
 
     /// Search posts by tag with exact matching
@@ -120,8 +125,13 @@ impl SearchEngine {
         }
 
         serde_wasm_bindgen::to_value(&results)
-            .map(|v| js_sys::JSON::stringify(&v).unwrap().as_string().unwrap())
-            .unwrap_or_else(|_| "[]".to_string())
+            .map_err(|_| "[]".to_string())
+            .and_then(|v| {
+                js_sys::JSON::stringify(&v)
+                    .map_err(|_| "[]".to_string())
+                    .and_then(|json_str| json_str.as_string().ok_or_else(|| "[]".to_string()))
+            })
+            .unwrap_or_else(|fallback| fallback)
     }
 
     /// Get search engine statistics
@@ -134,8 +144,13 @@ impl SearchEngine {
         };
 
         serde_wasm_bindgen::to_value(&stats)
-            .map(|v| js_sys::JSON::stringify(&v).unwrap().as_string().unwrap())
-            .unwrap_or_else(|_| "{}".to_string())
+            .map_err(|_| "{}".to_string())
+            .and_then(|v| {
+                js_sys::JSON::stringify(&v)
+                    .map_err(|_| "{}".to_string())
+                    .and_then(|json_str| json_str.as_string().ok_or_else(|| "{}".to_string()))
+            })
+            .unwrap_or_else(|fallback| fallback)
     }
 
     /// Clear all indexed data
@@ -411,14 +426,14 @@ impl TextProcessor {
             .filter(|heading| !heading.is_empty())
             .collect();
 
-        format!(
-            "[{}]",
-            headings
-                .iter()
-                .map(|h| format!("\"{}\"", h.replace("\"", "\\\"")))
-                .collect::<Vec<_>>()
-                .join(",")
-        )
+        serde_wasm_bindgen::to_value(&headings)
+            .map_err(|_| "[]".to_string())
+            .and_then(|v| {
+                js_sys::JSON::stringify(&v)
+                    .map_err(|_| "[]".to_string())
+                    .and_then(|json_str| json_str.as_string().ok_or_else(|| "[]".to_string()))
+            })
+            .unwrap_or_else(|fallback| fallback)
     }
 
     fn count_words(&self, text: &str) -> u32 {
