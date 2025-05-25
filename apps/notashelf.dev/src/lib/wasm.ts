@@ -64,8 +64,13 @@ export class WasmSearchEngine {
    */
   search(query: string, maxResults: number = 50): SearchResult[] {
     if (!this.engine) throw new Error("Search engine not initialized");
-    const results = this.engine.search(query, maxResults);
-    return JSON.parse(results);
+    try {
+      const results = this.engine.search(query, maxResults);
+      return JSON.parse(results);
+    } catch (e) {
+      console.error("Failed to parse search results:", e);
+      return [];
+    }
   }
 
   /**
@@ -73,8 +78,13 @@ export class WasmSearchEngine {
    */
   searchByTag(tag: string): SearchResult[] {
     if (!this.engine) throw new Error("Search engine not initialized");
-    const results = this.engine.search_by_tag(tag);
-    return JSON.parse(results);
+    try {
+      const results = this.engine.search_by_tag(tag);
+      return JSON.parse(results);
+    } catch (e) {
+      console.error("Failed to parse tag search results:", e);
+      return [];
+    }
   }
 
   /**
@@ -82,8 +92,17 @@ export class WasmSearchEngine {
    */
   getStats(): SearchStats {
     if (!this.engine) throw new Error("Search engine not initialized");
-    const stats = this.engine.get_stats();
-    return JSON.parse(stats);
+    try {
+      const stats = this.engine.get_stats();
+      return JSON.parse(stats);
+    } catch (e) {
+      console.error("Failed to parse search stats:", e);
+      return {
+        total_posts: 0,
+        indexed_words: 0,
+        indexed_keywords: 0,
+      };
+    }
   }
 
   /**
@@ -116,8 +135,13 @@ export class WasmTextProcessor {
    */
   extractHeadings(markdown: string): string[] {
     if (!this.processor) throw new Error("WASM module not initialized");
-    const result = this.processor.extract_headings(markdown);
-    return JSON.parse(result);
+    try {
+      const result = this.processor.extract_headings(markdown);
+      return JSON.parse(result);
+    } catch (e) {
+      console.error("Failed to parse extracted headings:", e);
+      return [];
+    }
   }
 
   /**
