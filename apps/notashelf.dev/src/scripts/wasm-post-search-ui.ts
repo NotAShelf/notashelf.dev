@@ -177,6 +177,33 @@ export class WasmPostSearchUI {
       this.elements.searchInput.value = "";
       this.performBasicSearch();
     });
+
+    // Tag filtering
+    this.elements.tagButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tagValue = btn.getAttribute("data-tag") || "";
+        this.handleTagSelection(tagValue);
+      });
+    });
+
+    // View toggle
+    this.elements.viewToggle.addEventListener("click", () => {
+      this.updateViewMode(!this.isViewingAll);
+    });
+
+    // Reset filters
+    this.elements.resetButton.addEventListener("click", () => {
+      this.resetFilters();
+    });
+
+    // Save state when navigating with pagination
+    document
+      .querySelectorAll<HTMLAnchorElement>(".pagination-link")
+      .forEach((link) => {
+        link.addEventListener("click", () => {
+          this.saveCurrentState();
+        });
+      });
   }
 
   private async performSearch(): Promise<void> {
