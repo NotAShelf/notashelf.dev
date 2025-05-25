@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::cell::RefCell;
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 
@@ -33,7 +34,7 @@ pub struct SearchEngine {
     posts: Vec<PostData>,
     word_index: HashMap<String, Vec<(usize, f32)>>, // post_idx, weight
     keyword_index: HashMap<String, Vec<usize>>,
-    normalized_cache: HashMap<String, String>,
+    normalized_cache: RefCell<HashMap<String, String>>,
 }
 
 #[wasm_bindgen]
@@ -44,7 +45,7 @@ impl SearchEngine {
             posts: Vec::new(),
             word_index: HashMap::new(),
             keyword_index: HashMap::new(),
-            normalized_cache: HashMap::new(),
+            normalized_cache: RefCell::new(HashMap::new()),
         }
     }
 
@@ -94,13 +95,8 @@ impl SearchEngine {
         }
 
         serde_wasm_bindgen::to_value(&results)
-            .map_err(|_| "[]".to_string())
-            .and_then(|v| {
-                js_sys::JSON::stringify(&v)
-                    .map_err(|_| "[]".to_string())
-                    .and_then(|json_str| json_str.as_string().ok_or_else(|| "[]".to_string()))
-            })
-            .unwrap_or_else(|fallback| fallback)
+            .map(|v| js_sys::JSON::stringify(&v).unwrap().as_string().unwrap())
+            .unwrap_or_else(|_| "[]".to_string())
     }
 
     /// Search posts by tag with exact matching
@@ -125,13 +121,8 @@ impl SearchEngine {
         }
 
         serde_wasm_bindgen::to_value(&results)
-            .map_err(|_| "[]".to_string())
-            .and_then(|v| {
-                js_sys::JSON::stringify(&v)
-                    .map_err(|_| "[]".to_string())
-                    .and_then(|json_str| json_str.as_string().ok_or_else(|| "[]".to_string()))
-            })
-            .unwrap_or_else(|fallback| fallback)
+            .map(|v| js_sys::JSON::stringify(&v).unwrap().as_string().unwrap())
+            .unwrap_or_else(|_| "[]".to_string())
     }
 
     /// Get search engine statistics
@@ -144,13 +135,8 @@ impl SearchEngine {
         };
 
         serde_wasm_bindgen::to_value(&stats)
-            .map_err(|_| "{}".to_string())
-            .and_then(|v| {
-                js_sys::JSON::stringify(&v)
-                    .map_err(|_| "{}".to_string())
-                    .and_then(|json_str| json_str.as_string().ok_or_else(|| "{}".to_string()))
-            })
-            .unwrap_or_else(|fallback| fallback)
+            .map(|v| js_sys::JSON::stringify(&v).unwrap().as_string().unwrap())
+            .unwrap_or_else(|_| "{}".to_string())
     }
 
     /// Clear all indexed data
@@ -159,7 +145,7 @@ impl SearchEngine {
         self.posts.clear();
         self.word_index.clear();
         self.keyword_index.clear();
-        self.normalized_cache.clear();
+        self.normalized_cache.borrow_mut().clear();
     }
 }
 
@@ -337,7 +323,8 @@ impl SearchEngine {
 
     /// Normalize text for consistent searching
     fn normalize_text(&self, text: &str) -> String {
-        if let Some(cached) = self.normalized_cache.get(text) {
+        // Check cache first
+        if let Some(cached) = self.normalized_cache.borrow().get(text) {
             return cached.clone();
         }
 
@@ -350,7 +337,11 @@ impl SearchEngine {
             .collect::<Vec<_>>()
             .join(" ");
 
-        // XXX: We can't actually cache in an immutable method, but this shows the pattern
+        // Cache the result
+        self.normalized_cache
+            .borrow_mut()
+            .insert(text.to_string(), normalized.clone());
+
         normalized
     }
 
@@ -426,14 +417,14 @@ impl TextProcessor {
             .filter(|heading| !heading.is_empty())
             .collect();
 
-        serde_wasm_bindgen::to_value(&headings)
-            .map_err(|_| "[]".to_string())
-            .and_then(|v| {
-                js_sys::JSON::stringify(&v)
-                    .map_err(|_| "[]".to_string())
-                    .and_then(|json_str| json_str.as_string().ok_or_else(|| "[]".to_string()))
-            })
-            .unwrap_or_else(|fallback| fallback)
+        format!(
+            "[{}]",
+            headings
+                .iter()
+                .map(|h| format!("\"{}\"", h.replace("\"", "\\\"")))
+                .collect::<Vec<_>>()
+                .join(",")
+        )
     }
 
     fn count_words(&self, text: &str) -> u32 {
