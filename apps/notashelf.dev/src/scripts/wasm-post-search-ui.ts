@@ -12,10 +12,10 @@ interface DOMElements {
   postList: HTMLUListElement;
   postListAll: HTMLUListElement;
   paginationContainer: HTMLDivElement;
-  viewToggle: HTMLButtonElement;
-  paginationIcon: HTMLElement;
-  allIcon: HTMLElement;
-  viewLabel: HTMLElement;
+  viewToggle: HTMLButtonElement | null;
+  paginationIcon: HTMLElement | null;
+  allIcon: HTMLElement | null;
+  viewLabel: HTMLElement | null;
 }
 
 export class WasmPostSearchUI {
@@ -31,26 +31,87 @@ export class WasmPostSearchUI {
   }
 
   private getDOMElements(): DOMElements {
+    // Core search elements (required)
+    const searchInput = document.getElementById("search-input") as HTMLInputElement;
+    if (!searchInput) {
+      throw new Error("Required element #search-input not found");
+    }
+
+    const searchForm = document.getElementById("search-form") as HTMLFormElement;
+    if (!searchForm) {
+      throw new Error("Required element #search-form not found");
+    }
+
+    const clearButton = document.getElementById("clear-search") as HTMLButtonElement;
+    if (!clearButton) {
+      throw new Error("Required element #clear-search not found");
+    }
+
+    const resetButton = document.getElementById("reset-filters") as HTMLButtonElement;
+    if (!resetButton) {
+      throw new Error("Required element #reset-filters not found");
+    }
+
+    const tagButtons = document.querySelectorAll(".tag-filter") as NodeListOf<HTMLButtonElement>;
+    if (tagButtons.length === 0) {
+      console.warn("No .tag-filter elements found - tag filtering will be disabled");
+    }
+
+    const noResults = document.querySelector(".no-results") as HTMLDivElement;
+    if (!noResults) {
+      throw new Error("Required element .no-results not found");
+    }
+
+    const postList = document.querySelector(".post-list") as HTMLUListElement;
+    if (!postList) {
+      throw new Error("Required element .post-list not found");
+    }
+
+    const postListAll = document.querySelector(".post-list-all") as HTMLUListElement;
+    if (!postListAll) {
+      throw new Error("Required element .post-list-all not found");
+    }
+
+    const paginationContainer = document.getElementById("pagination-container") as HTMLDivElement;
+    if (!paginationContainer) {
+      throw new Error("Required element #pagination-container not found");
+    }
+
+    // Optional view toggle elements (graceful degradation)
+    const viewToggle = document.getElementById("view-toggle") as HTMLButtonElement;
+    if (!viewToggle) {
+      console.warn("Optional element #view-toggle not found - view toggle will be disabled");
+    }
+
+    const paginationIcon = document.getElementById("pagination-icon") as HTMLElement;
+    if (!paginationIcon) {
+      console.warn("Optional element #pagination-icon not found - icon switching will be disabled");
+    }
+
+    const allIcon = document.getElementById("all-icon") as HTMLElement;
+    if (!allIcon) {
+      console.warn("Optional element #all-icon not found - icon switching will be disabled");
+    }
+
+    const viewLabel = document.getElementById("view-label") as HTMLElement;
+    if (!viewLabel) {
+      console.warn("Optional element #view-label not found - label switching will be disabled");
+    }
+
     return {
-      searchInput: document.getElementById("search-input") as HTMLInputElement,
-      searchForm: document.getElementById("search-form") as HTMLFormElement,
-      clearButton: document.getElementById("clear-search") as HTMLButtonElement,
-      resetButton: document.getElementById(
-        "reset-filters",
-      ) as HTMLButtonElement,
-      tagButtons: document.querySelectorAll(
-        ".tag-filter",
-      ) as NodeListOf<HTMLButtonElement>,
-      noResults: document.querySelector(".no-results") as HTMLDivElement,
-      postList: document.querySelector(".post-list") as HTMLUListElement,
-      postListAll: document.querySelector(".post-list-all") as HTMLUListElement,
-      paginationContainer: document.getElementById(
-        "pagination-container",
-      ) as HTMLDivElement,
-      viewToggle: document.getElementById("view-toggle") as HTMLButtonElement,
-      paginationIcon: document.getElementById("pagination-icon") as HTMLElement,
-      allIcon: document.getElementById("all-icon") as HTMLElement,
-      viewLabel: document.getElementById("view-label") as HTMLElement,
+      searchInput,
+      searchForm,
+      clearButton,
+      resetButton,
+      tagButtons,
+      noResults,
+      postList,
+      postListAll,
+      paginationContainer,
+      viewToggle,
+      paginationIcon,
+      allIcon,
+      viewLabel,
     };
   }
 
@@ -138,10 +199,12 @@ export class WasmPostSearchUI {
       });
     });
 
-    // View toggle
-    this.elements.viewToggle.addEventListener("click", () => {
-      this.updateViewMode(!this.isViewingAll);
-    });
+    // View toggle (only if element exists)
+    if (this.elements.viewToggle) {
+      this.elements.viewToggle.addEventListener("click", () => {
+        this.updateViewMode(!this.isViewingAll);
+      });
+    }
 
     // Reset filters
     this.elements.resetButton.addEventListener("click", () => {
@@ -186,10 +249,12 @@ export class WasmPostSearchUI {
       });
     });
 
-    // View toggle
-    this.elements.viewToggle.addEventListener("click", () => {
-      this.updateViewMode(!this.isViewingAll);
-    });
+    // View toggle (only if element exists)
+    if (this.elements.viewToggle) {
+      this.elements.viewToggle.addEventListener("click", () => {
+        this.updateViewMode(!this.isViewingAll);
+      });
+    }
 
     // Reset filters
     this.elements.resetButton.addEventListener("click", () => {
@@ -357,16 +422,28 @@ export class WasmPostSearchUI {
       this.elements.postList.style.display = "none";
       this.elements.postListAll.style.display = "";
       this.elements.paginationContainer.style.display = "none";
-      this.elements.paginationIcon.style.display = "none";
-      this.elements.allIcon.style.display = "";
-      this.elements.viewLabel.textContent = "Paginate";
+      if (this.elements.paginationIcon) {
+        this.elements.paginationIcon.style.display = "none";
+      }
+      if (this.elements.allIcon) {
+        this.elements.allIcon.style.display = "";
+      }
+      if (this.elements.viewLabel) {
+        this.elements.viewLabel.textContent = "Paginate";
+      }
     } else {
       this.elements.postList.style.display = "";
       this.elements.postListAll.style.display = "none";
       this.elements.paginationContainer.style.display = "";
-      this.elements.paginationIcon.style.display = "";
-      this.elements.allIcon.style.display = "none";
-      this.elements.viewLabel.textContent = "View All";
+      if (this.elements.paginationIcon) {
+        this.elements.paginationIcon.style.display = "";
+      }
+      if (this.elements.allIcon) {
+        this.elements.allIcon.style.display = "none";
+      }
+      if (this.elements.viewLabel) {
+        this.elements.viewLabel.textContent = "View All";
+      }
     }
 
     this.performSearch();

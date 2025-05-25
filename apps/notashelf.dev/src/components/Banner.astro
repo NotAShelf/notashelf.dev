@@ -25,7 +25,7 @@ const {
   collapsible = false,
   closable = true,
   expanded = true,
-  id = `banner-${Math.random().toString(36).substr(2, 9)}`,
+  id = `banner-${Math.random().toString(36).substring(2, 11)}`,
   showIcon = true,
 } = Astro.props;
 
@@ -81,7 +81,7 @@ const getTypeIcon = () => {
   </div>
 </div>
 
-<script define:vars={{ id, collapsible }}>
+<script is:inline define:vars={{ id, collapsible }}>
   document.addEventListener("DOMContentLoaded", () => {
     const banner = document.getElementById(id);
     if (!banner) return;
