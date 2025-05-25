@@ -1,24 +1,25 @@
 {
   mkShell,
+  # Node
   nodejs-slim,
   pnpm,
-  typos,
+  # WASM
   cargo,
   rustc,
   rustfmt,
   wasm-pack,
   lld,
+  # Testing/Linting
+  typos,
+  google-lighthouse,
   ...
 }:
 mkShell {
   name = "blog-dev";
   packages = [
-    # Eslint_d
+    # Websitee
     nodejs-slim
     pnpm
-
-    # To run 'typos' on my content every once in a while
-    typos
 
     # WASM
     cargo
@@ -26,5 +27,11 @@ mkShell {
     rustfmt
     wasm-pack
     lld
+
+    # To run 'typos' on my content every once in a while
+    typos
+
+    # Analytics
+    google-lighthouse
   ];
 }
