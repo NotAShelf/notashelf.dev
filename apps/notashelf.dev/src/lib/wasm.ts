@@ -52,7 +52,11 @@ export class WasmSearchEngine {
    */
   addPost(post: PostData): void {
     if (!this.engine) throw new Error("Search engine not initialized");
-    this.engine.add_post(JSON.stringify(post));
+    try {
+      this.engine.add_post(JSON.stringify(post));
+    } catch (e) {
+      console.error("Failed to index post", e);
+    }
   }
 
   /**
