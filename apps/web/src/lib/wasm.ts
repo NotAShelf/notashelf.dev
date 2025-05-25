@@ -1,7 +1,7 @@
 import init, {
   TextProcessor,
   SearchEngine,
-} from "../wasm/pkg/notashelf_dev_wasm";
+} from "wasm-utils";
 
 let wasmModule: TextProcessor | null = null;
 let searchEngine: SearchEngine | null = null;

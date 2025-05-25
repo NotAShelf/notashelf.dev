@@ -63,12 +63,11 @@
               # are good to include, but linter/formatter configs are not necessary.
               fileset = fs.intersection (fs.fromSource (lib.sources.cleanSource sp)) (
                 fs.unions [
-                  ./src
-                  ./public
-                  ./posts
+                  ./apps/web
+                  ./packages/wasm
                   ./package.json
                   ./pnpm-lock.yaml
-                  ./astro.config.ts
+                  ./pnpm-workspace.yaml
                   ./tsconfig.json # for import aliases
                 ]
               );

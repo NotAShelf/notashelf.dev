@@ -1,4 +1,5 @@
 import { defineConfig } from "astro/config";
+import { fileURLToPath, URL } from "node:url";
 import { remarkEmDash } from "./src/lib";
 import remarkGfm from "remark-gfm";
 import remarkToc from "remark-toc";
@@ -84,6 +85,11 @@ export default defineConfig({
 
   vite: {
     plugins: [wasm(), topLevelAwait()],
+    resolve: {
+      alias: {
+        "wasm-utils": fileURLToPath(new URL("../../packages/wasm/pkg/wasm-utils.js", import.meta.url))
+      }
+    },
     define: {
       // Inject environment variables for static builds. This makes it possible to respect
       // variables from the Nix build environment in the static build.

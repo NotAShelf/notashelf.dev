@@ -1,0 +1,6 @@
+packages:
+  - apps/web
+  - packages/wasm/pkg
+onlyBuiltDependencies:
+  - sharp
+  - wasm-pack

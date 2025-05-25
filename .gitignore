@@ -1,18 +1,18 @@
 # Nix
+# Those only get created in the repository root, so no need to
+# use wildcard prefixes. Rest can be, well, virtually anywhere.
 result*
-.direnv
+/.direnv
 
 # WASM
-src/wasm/target*
+**/wasm/target*
+**/wasm/pkg*
 
 # Manual builds
-/dist
-/.astro
-/node_modules
-/npm-debug.log*
-
-# Doesn't need to be committed
-pnpm-workspace.yaml
+**/dist
+**/.astro
+**/node_modules
+**/npm-debug.log*
 
 
 

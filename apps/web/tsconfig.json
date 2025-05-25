@@ -34,7 +34,8 @@
       ],
       "@scripts/*": [
         "src/scripts/*"
-      ]
+      ],
+      "wasm-utils": ["../../packages/wasm/pkg"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react"

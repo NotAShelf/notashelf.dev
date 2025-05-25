@@ -1,5 +1,5 @@
 [package]
-name = "notashelf-dev-wasm"
+name = "wasm-utils"
 description = "WASM components for my personal website"
 version = "0.1.0"
 edition = "2024"
