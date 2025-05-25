@@ -359,7 +359,7 @@ export class WasmPostSearchUI {
       const description = descriptionElement?.textContent?.toLowerCase() || "";
       const keywordsText = post.getAttribute("data-keywords") || "";
       const keywords = keywordsText
-        ? keywordsText.toLowerCase().split(",")
+        ? keywordsText.toLowerCase().split(",").map(k => k.trim())
         : [];
 
       const matchesSearch =
