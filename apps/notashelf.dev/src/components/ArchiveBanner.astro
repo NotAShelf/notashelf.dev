@@ -5,10 +5,12 @@
   Thanks!
 </div>
 
-<style>
+<style lang="scss">
+  @use "../styles/variables" as *;
+  
   .archive-banner {
-    background: rgba(255, 165, 0, 0.1);
-    border-left: 4px solid rgba(255, 165, 0, 0.5);
+    background: $warning-bg;
+    border-left: 4px solid $warning-color;
     padding: 0.75rem 1rem;
     margin-bottom: 2rem;
     font-size: 0.9rem;

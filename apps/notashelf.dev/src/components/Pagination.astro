@@ -115,16 +115,16 @@ function getPageUrl(page: number) {
     text-decoration: none;
     color: $secondary;
     font-size: 0.9rem;
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: $button-bg;
     transition: all 0.2s ease;
 
     &:hover:not(.disabled, .active) {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: $button-bg-hover;
       transform: translateY(-1px);
     }
 
     &.active {
-      background-color: rgba(255, 255, 255, 0.15);
+      background-color: $border-light;
       font-weight: 500;
       pointer-events: none;
     }
@@ -152,7 +152,7 @@ function getPageUrl(page: number) {
     justify-content: center;
     min-width: 2rem;
     height: 2rem;
-    color: rgba(255, 255, 255, 0.6);
+    color: $text-muted;
     font-size: 0.9rem;
   }
 </style>

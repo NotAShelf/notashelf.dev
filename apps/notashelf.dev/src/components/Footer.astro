@@ -78,8 +78,10 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
 </footer>
 
 <style lang="scss">
+  @use "../styles/global" as *;
+
   footer {
-    color: white;
+    color: $secondary;
     padding: 20px 0;
     text-align: center;
     margin-top: auto;
@@ -97,7 +99,7 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
       transform: translateX(-50%);
       width: 20%;
       height: 1px;
-      background-color: white;
+      background-color: $secondary;
     }
 
     .footer-content {
@@ -125,7 +127,7 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
       margin: 2px 0;
 
       a {
-        color: white;
+        color: $secondary;
         text-decoration: none;
         margin: 0 3px;
         display: flex;
@@ -166,8 +168,8 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
           bottom: 26px;
           left: 50%;
           transform: translateX(-50%);
-          background: rgba(0, 0, 0, 0.85);
-          color: white;
+          background: $background-dark;
+          color: $secondary;
           padding: 4px 8px;
           border-radius: 3px;
           font-size: 0.75em;
@@ -183,7 +185,7 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
           line-height: 1.4;
 
           .webring-link {
-            color: #7ebae4;
+            color: $hover-color;
             text-decoration: none;
             white-space: nowrap;
             display: inline;
@@ -201,7 +203,7 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
             transform: translateX(-50%);
             border-width: 4px;
             border-style: solid;
-            border-color: rgba(0, 0, 0, 0.85) transparent transparent
+            border-color: $background-dark transparent transparent
               transparent;
           }
         }
@@ -219,7 +221,7 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
       margin: 2px 0;
 
       a {
-        color: white;
+        color: $secondary;
         text-decoration: none;
         margin: 0 8px;
         opacity: 0.8;
@@ -231,7 +233,7 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
     }
 
     .copyright {
-      color: white;
+      color: $secondary;
       font-size: 0.8em;
       margin: 4px 0 0 0;
       opacity: 0.75;

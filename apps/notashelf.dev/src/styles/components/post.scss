@@ -7,7 +7,7 @@ pre {
   padding: 1rem;
   border-radius: 8px;
   overflow-x: auto;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid $border-light;
   position: relative;
   background-color: color.scale($primary, $lightness: 3%) !important;
 
@@ -20,9 +20,9 @@ pre {
     height: 3px;
     background: linear-gradient(
       to right,
-      rgba(255, 255, 255, 0.1),
-      rgba(255, 255, 255, 0.2),
-      rgba(255, 255, 255, 0.1)
+      $border-light,
+      $text-subtle,
+      $border-light
     );
   }
 
@@ -37,7 +37,7 @@ pre {
 }
 
 code:not(pre code) {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: $border-light;
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
   font-size: 0.85em;
@@ -48,8 +48,8 @@ code:not(pre code) {
 blockquote:not(.admonition) {
   margin: 1.5rem 0;
   padding: 1rem 1.5rem;
-  border-left: 3px solid rgba(255, 255, 255, 0.15);
-  background-color: rgba(255, 255, 255, 0.05);
+  border-left: 3px solid $border-light;
+  background-color: $button-bg;
   border-radius: 0 4px 4px 0;
 
   p {
@@ -70,9 +70,9 @@ blockquote.admonition {
   margin: 1.5rem 0;
   padding: 0;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid $border-light;
   overflow: hidden;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: $button-bg;
   position: relative;
 
   .admonition-icon {
@@ -85,7 +85,7 @@ blockquote.admonition {
   .admonition-title {
     padding: 0.8rem 1rem 0.8rem 3rem;
     font-weight: 600;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid $border-light;
     margin-bottom: 0;
   }
 
@@ -223,9 +223,9 @@ blockquote.admonition {
 .footnotes {
   margin-top: 3rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid $border-light;
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: $text-muted;
 
   hr {
     display: none; // Hide the default horizontal rule
@@ -245,7 +245,7 @@ blockquote.admonition {
     margin-left: -0.5rem;
 
     &.footnote-highlight {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: $border-light;
     }
 
     p {
@@ -258,7 +258,7 @@ blockquote.admonition {
     margin-left: 0.5rem;
     text-decoration: none;
     font-size: 0.85rem;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: $border-light;
     width: 24px;
     height: 24px;
     display: inline-flex;
@@ -268,7 +268,7 @@ blockquote.admonition {
     transition: all 0.2s ease;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.2);
+      background-color: $button-bg-hover;
       transform: translateY(-1px);
     }
   }
@@ -281,14 +281,14 @@ a.footnote-ref {
   font-size: 0.8em;
   vertical-align: super;
   margin: 0 2px;
-  color: rgba(255, 255, 255, 0.8);
-  background-color: rgba(255, 255, 255, 0.1);
+  color: $text-muted;
+  background-color: $border-light;
   padding: 0 5px;
   border-radius: 3px;
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: $border-medium;
     transform: translateY(-1px);
   }
 }
@@ -296,9 +296,9 @@ a.footnote-ref {
 // Table of Contents
 .toc-container {
   margin: 2rem 0;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: $button-bg;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid $border-light;
 }
 
 .toc {
@@ -313,7 +313,7 @@ a.footnote-ref {
     }
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.03);
+      background-color: $button-bg;
     }
   }
 }
@@ -326,7 +326,7 @@ a.footnote-ref {
 }
 
 .toc-item {
-  color: rgba(255, 255, 255, 0.8);
+  color: $text-muted;
   text-decoration: none;
   padding: 0.3rem 0.5rem;
   border-radius: 4px;
@@ -334,12 +334,12 @@ a.footnote-ref {
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: $button-bg;
     color: white;
   }
 
   &.active {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: $border-light;
     color: white;
     font-weight: 500;
   }

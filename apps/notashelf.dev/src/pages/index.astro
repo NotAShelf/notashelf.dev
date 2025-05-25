@@ -240,19 +240,17 @@ const sidePosts = featuredPosts
     font-size: 0.95rem;
     transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
-    overflow: hidden;
-
-    &::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 0;
-      background: rgba(255, 255, 255, 0.1);
-      transition: height 0.2s ease;
-      z-index: -1;
-    }
+    overflow: hidden;      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 0;
+        background: $border-light;
+        transition: height 0.2s ease;
+        z-index: -1;
+      }
 
     &:hover::after {
       height: 100%;
@@ -273,13 +271,13 @@ const sidePosts = featuredPosts
     }
 
     &.secondary {
-      background-color: rgba(255, 255, 255, 0.08);
+      background-color: $button-bg;
       color: $secondary;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid $border-light;
 
       &:hover {
         transform: translateY(-2px);
-        background-color: rgba(255, 255, 255, 0.12);
+        background-color: $button-bg-hover;
       }
 
       &:active {
@@ -351,9 +349,9 @@ const sidePosts = featuredPosts
       height: 2px;
       background: linear-gradient(
         to right,
-        rgba(255, 255, 255, 0.05),
-        rgba(255, 255, 255, 0.2),
-        rgba(255, 255, 255, 0.05)
+        $button-bg,
+        $text-subtle,
+        $button-bg
       );
     }
   }
@@ -372,7 +370,7 @@ const sidePosts = featuredPosts
     font-weight: 500;
     padding: 0.5rem 1rem;
     border-radius: 4px;
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: $button-bg;
     transition: all 0.2s ease;
 
     svg {
@@ -381,7 +379,7 @@ const sidePosts = featuredPosts
     }
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: $border-light;
 
       svg {
         transform: translateX(3px);

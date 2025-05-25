@@ -137,7 +137,7 @@ const effectiveDate = "April 5, 2024";
   .policy-header h1 {
     margin: 0 0 0.75rem;
     font-size: 1.8rem;
-    background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.8));
+    background: linear-gradient(to right, #fff, $text-muted);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -151,7 +151,7 @@ const effectiveDate = "April 5, 2024";
   }
 
   .date-tag {
-    background: rgba(255, 255, 255, 0.05);
+    background: $button-bg;
     padding: 0.3rem 0.8rem;
     border-radius: 16px;
     font-size: 0.8rem;
@@ -160,8 +160,8 @@ const effectiveDate = "April 5, 2024";
   .policy-summary {
     background: linear-gradient(
       to right,
-      rgba(255, 255, 255, 0.05),
-      rgba(255, 255, 255, 0.08)
+      $button-bg,
+      $input-bg-focus
     );
     padding: 1rem;
     border-radius: 6px;
@@ -237,17 +237,17 @@ const effectiveDate = "April 5, 2024";
     content: "✓";
     position: absolute;
     left: 0;
-    color: rgba(255, 255, 255, 0.6);
+    color: $text-subtle;
     font-weight: bold;
   }
 
   .highlight {
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.95);
+    color: $secondary;
   }
 
   code {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: $border-light;
     padding: 0.15rem 0.3rem;
     border-radius: 3px;
     font-family: monospace;
@@ -257,21 +257,21 @@ const effectiveDate = "April 5, 2024";
   a {
     color: inherit;
     text-decoration: underline;
-    text-decoration-color: rgba(255, 255, 255, 0.3);
+    text-decoration-color: $border-light;
     text-decoration-thickness: 1px;
     text-underline-offset: 2px;
     transition: all 0.2s ease;
   }
 
   a:hover {
-    text-decoration-color: rgba(255, 255, 255, 0.8);
+    text-decoration-color: $text-muted;
   }
 
   .policy-footer {
     text-align: center;
     margin-top: 2rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid $border-light;
   }
 
   .github-link {
@@ -279,7 +279,7 @@ const effectiveDate = "April 5, 2024";
     align-items: center;
     gap: 0.5rem;
     padding: 0.4rem 1rem;
-    background: rgba(255, 255, 255, 0.05);
+    background: $button-bg;
     border-radius: 4px;
     text-decoration: none;
     font-size: 0.85rem;
@@ -287,7 +287,7 @@ const effectiveDate = "April 5, 2024";
   }
 
   .github-link:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: $button-bg-hover;
     transform: translateY(-2px);
   }
 

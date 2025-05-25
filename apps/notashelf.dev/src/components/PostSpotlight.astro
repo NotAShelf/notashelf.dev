@@ -115,9 +115,9 @@ const formatDate = (date: Date) => {
       height: 5px;
       background: linear-gradient(
         to right,
-        rgba(255, 255, 255, 0.1),
-        rgba(255, 255, 255, 0.3),
-        rgba(255, 255, 255, 0.1)
+        $border-light,
+        $text-subtle,
+        $border-light
       );
       transform: translateY(-100%);
       transition: transform 0.3s ease;
@@ -157,7 +157,7 @@ const formatDate = (date: Date) => {
       .reading-time {
         margin-left: 1rem;
         padding-left: 1rem;
-        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        border-left: 1px solid $border-light;
         color: color.scale($secondary, $lightness: -20%);
       }
     }
@@ -211,7 +211,7 @@ const formatDate = (date: Date) => {
       right: 0;
       width: 20px;
       height: 20px;
-      background: rgba(255, 255, 255, 0.05);
+      background: $button-bg;
       border-radius: 50%;
       transform: translate(50%, 50%) scale(0);
       transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
@@ -227,11 +227,11 @@ const formatDate = (date: Date) => {
     }
 
     &.first {
-      border-left: 3px solid rgba(255, 255, 255, 0.15);
+      border-left: 3px solid $border-light;
     }
 
     &.second {
-      border-left: 3px solid rgba(255, 255, 255, 0.08);
+      border-left: 3px solid $button-bg;
     }
 
     h3 {
@@ -257,7 +257,7 @@ const formatDate = (date: Date) => {
       .reading-time {
         margin-left: 0.8rem;
         padding-left: 0.8rem;
-        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        border-left: 1px solid $border-light;
         color: color.scale($secondary, $lightness: -20%);
       }
     }

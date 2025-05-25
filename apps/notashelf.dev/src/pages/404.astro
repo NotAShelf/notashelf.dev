@@ -74,8 +74,8 @@ import BaseLayout from "@layouts/BaseLayout.astro";
     margin: 0;
     background: linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.8),
-      rgba(255, 255, 255, 0.4)
+      $text-muted,
+      $text-subtle
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -87,7 +87,7 @@ import BaseLayout from "@layouts/BaseLayout.astro";
   .error-divider {
     width: 80px;
     height: 3px;
-    background: rgba(255, 255, 255, 0.1);
+    background: $border-light;
     margin: 1.5rem auto;
     border-radius: 3px;
   }
