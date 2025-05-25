@@ -178,10 +178,16 @@ importers:
         version: 3.4.1(vite@6.3.5(@types/node@22.15.21)(sass@1.89.0)(yaml@2.8.0))
 
   packages/vite-copyright-replace:
+    dependencies:
+      vite:
+        specifier: ^6.0.0
+        version: 6.3.5(@types/node@22.15.21)(sass@1.89.0)(yaml@2.8.0)
     devDependencies:
       typescript:
         specifier: 5.8.3
         version: 5.8.3
+
+  packages/wasm-utils/pkg: {}
 
 packages:
 
