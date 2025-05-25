@@ -9,7 +9,8 @@
     "build": "astro build",
     "check": "astro check",
     "preview": "astro preview",
-    "fmt": "prettier . --write"
+    "fmt": "prettier . --write",
+    "build-wasm": "cd src/wasm && wasm-pack build --target web --out-dir pkg --release"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.0",
