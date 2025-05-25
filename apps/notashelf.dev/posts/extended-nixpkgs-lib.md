@@ -60,8 +60,8 @@ definitions.
 ```nix
 # flake.nix
 flake = let
-  # Get the extended lib form ./lib/default.nix
-  lib = import ./lib {inherit nixpkgs;};
+  # Get the extended lib from ./lib/default.nix
+  lib = import ./lib {inherit inputs;};
 in {
   # Then you may pass it around, e.g. in imports by adding `lib`
   # to the argument set.
