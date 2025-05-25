@@ -35,7 +35,7 @@ tooling still leaves much to be desired.
 ## The Golang Chapter
 
 Go was... a compelling choice to say the least. Be it for its simplicity,
-powerful cocurrency model and rapid compilation times (which I miss to this day
+powerful concurrency model and rapid compilation times (which I miss to this day
 in Rust.) Its robust standard library and clean syntax allowed me to build
 distributed systems with ease. However, as projects grew in complexity, several
 limitations became apparent.
