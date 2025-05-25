@@ -2,6 +2,9 @@
 result*
 .direnv
 
+# WASM
+src/wasm/target*
+
 # Manual builds
 /dist
 /.astro
