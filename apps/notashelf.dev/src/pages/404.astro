@@ -23,21 +23,32 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 
       <div class="error-actions">
         <a href="/" class="action-button primary">
-          <FontAwesomeIcon icon={faHome} />
+          <FontAwesomeIcon icon={faHome} client:load />
           <span>Home</span>
         </a>
         <a href="/posts" class="action-button">
-          <FontAwesomeIcon icon={faSearch} />
+          <FontAwesomeIcon icon={faSearch} client:load />
           <span>Blog Posts</span>
         </a>
-        <button onclick="history.back()" class="action-button">
-          <FontAwesomeIcon icon={faArrowLeft} />
+        <button id="go-back-button" class="action-button">
+          <FontAwesomeIcon icon={faArrowLeft} client:load />
           <span>Go Back</span>
         </button>
       </div>
     </div>
   </div>
 </BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const goBackButton = document.getElementById('go-back-button');
+    if (goBackButton) {
+      goBackButton.addEventListener('click', () => {
+        history.back();
+      });
+    }
+  });
+</script>
 
 <style lang="scss">
   @use "../styles/global" as *;
