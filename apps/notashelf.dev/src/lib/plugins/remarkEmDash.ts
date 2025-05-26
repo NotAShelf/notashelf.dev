@@ -5,18 +5,20 @@ const remarkEmDash: RemarkPlugin = () => {
   return (tree, _file) => {
     visit(tree, "text", (node: { value: string }) => {
       // Replace --- with em dash (—), but avoid replacing frontmatter delimiters
-      // This regex looks for triple dashes with non-dash characters or spaces around them
-      node.value = node.value.replace(/([^-\s])---([^-\s])/g, "$1—$2");
-
-      // Handle cases where there might be spaces around the dashes
-      node.value = node.value.replace(/([^-\s])\s+---\s+([^-\s])/g, "$1 — $2");
-
+      // Uses negative lookahead/lookbehind to prevent matching ---- or longer sequences
+      node.value = node.value.replace(/(?<!-)-{3}(?!-)/g, "—");
+      
       // Replace -- with en dash (–), but avoid replacing frontmatter delimiters
-      // This regex looks for double dashes with non-dash characters or spaces around them
-      node.value = node.value.replace(/([^-\s])--([^-\s])/g, "$1–$2");
-
-      // Handle cases where there might be spaces around the dashes
-      node.value = node.value.replace(/([^-\s])\s+--\s+([^-\s])/g, "$1 – $2");
+      // Uses negative lookahead/lookbehind to prevent matching --- or longer sequences
+      node.value = node.value.replace(/(?<!-)-{2}(?!-)/g, "–");
+      
+      // Handle cases where there are spaces around triple dashes
+      // Preserves the spaces while replacing the dashes with em dash
+      node.value = node.value.replace(/\s+-{3}\s+/g, " — ");
+      
+      // Handle cases where there are spaces around double dashes
+      // Preserves the spaces while replacing the dashes with en dash
+      node.value = node.value.replace(/\s+-{2}\s+/g, " – ");
     });
   };
 };
