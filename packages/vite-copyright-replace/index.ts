@@ -24,10 +24,14 @@ export function copyrightYearPlugin(options: CopyrightYearOptions = {}): Plugin 
 
   const currentYear = new Date().getFullYear();
   const copyrightYear = currentYear === startYear ? startYear.toString() : `${startYear}-${currentYear}`;
+  let isProduction = false;
 
   return {
     name: 'copyright-year',
     enforce: 'pre',
+    configResolved(config) {
+      isProduction = config.command === 'build';
+    },
     transform(code: string, id: string) {
       // Only process relevant files (avoid processing node_modules and other irrelevant files)
       if (
@@ -39,9 +43,14 @@ export function copyrightYearPlugin(options: CopyrightYearOptions = {}): Plugin 
 
       // Replace the placeholder with the copyright year
       if (code.includes(placeholder)) {
-        console.log(`[copyright-year] Replacing ${placeholder} with ${copyrightYear} in ${id}`);
+        if (isProduction) {
+          const fileName = id.split('/').pop() || id;
+          this.info(`Replacing ${placeholder} with ${copyrightYear} in ${fileName}`);
+        }
+        // Escape special regex characters in the placeholder to treat it as a literal string
+        const escapedPlaceholder = placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         const transformedCode = code.replace(
-          new RegExp(placeholder, 'g'),
+          new RegExp(escapedPlaceholder, 'g'),
           copyrightYear
         );
 
