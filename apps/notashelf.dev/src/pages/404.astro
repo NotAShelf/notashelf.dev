@@ -44,7 +44,19 @@ import BaseLayout from "@layouts/BaseLayout.astro";
     const goBackButton = document.getElementById("go-back-button");
     if (goBackButton) {
       goBackButton.addEventListener("click", () => {
-        history.back();
+        // Verify history object and back method exist
+        if (window.history && typeof window.history.back === "function") {
+          try {
+            window.history.back();
+          } catch (error) {
+            console.error("Failed to navigate back:", error);
+            // Fallback: redirect to home page
+            window.location.href = "/";
+          }
+        } else {
+          console.warn("History API not available, redirecting to home page");
+          window.location.href = "/";
+        }
       });
     }
   });
