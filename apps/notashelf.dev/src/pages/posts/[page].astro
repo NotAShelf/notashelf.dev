@@ -49,14 +49,10 @@ const { page: currentPage, posts, totalPosts, allPosts } = Astro.props;
 const postsPerPage = 5;
 const totalPages = Math.ceil(totalPosts / postsPerPage);
 
-// Get all blog posts for extracting tags
-const allBlogPosts = await getCollection("posts");
-
-// Extract all unique tags from posts
+// Extract all unique tags from existing allPosts prop
 const allTags = [
   ...new Set(
-    allBlogPosts
-      .filter((post: PostEntry) => !post.data.draft && !post.data.archived)
+    allPosts
       .flatMap((post: PostEntry) => (post.data.keywords || []) as string[]),
   ),
 ].sort() as string[];
