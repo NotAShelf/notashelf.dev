@@ -105,7 +105,7 @@ options:
     ${email} namespaces="git" ${key}
   '';
 in {
-  xdg.configFile."git/allowed_signers".text = signersFile;
+  xdg.configFile."git/allowed_signers".source = signersFile;
 
   programs.git = {
     signing = {

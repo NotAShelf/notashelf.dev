@@ -94,7 +94,7 @@ This setup implies you are using channels, but similar instructions will apply
 on flakes. Regardless, acquire your development packages from nixpkgs and put
 them in your shell's `nativeBuildInputs`. If you are trying to put, e.g., a
 Python script available in [nixpkgs](https://github.com/NixOS/nixpkgs), simply
-place it in `nativeBuıldInputs`. If you want your own shell script to be in the
+ place it in `nativeBuildInputs`.
 shell, then you can write your script as follows:
 
 ```nix

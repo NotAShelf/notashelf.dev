@@ -9,7 +9,7 @@ keywords: ["nix", "programming"]
 
 If you have spent time in traditional programming languages, then you have
 probably relied on conditionals (`if-else`, `switch`, `case`) at least once in
-your life. In Nix, as a grace of lazy evaluation, many of those construct become
+ In Nix, as a result of lazy evaluation, many of those constructs become less relevant
 less relevant---or outright unnecessary. This post dives into _why_ this is the
 case, and hopes to save you from a few pitfalls that come with this.
 
