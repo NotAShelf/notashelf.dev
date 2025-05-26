@@ -94,9 +94,7 @@ impl SearchEngine {
             result.snippet = self.generate_snippet(&result.id, &query_terms);
         }
 
-        serde_wasm_bindgen::to_value(&results)
-            .map(|v| js_sys::JSON::stringify(&v).unwrap().as_string().unwrap())
-            .unwrap_or_else(|_| "[]".to_string())
+        self.safe_serialize_to_json(&results, "[]")
     }
 
     /// Search posts by tag with exact matching
@@ -120,9 +118,7 @@ impl SearchEngine {
             }
         }
 
-        serde_wasm_bindgen::to_value(&results)
-            .map(|v| js_sys::JSON::stringify(&v).unwrap().as_string().unwrap())
-            .unwrap_or_else(|_| "[]".to_string())
+        self.safe_serialize_to_json(&results, "[]")
     }
 
     /// Get search engine statistics
@@ -134,9 +130,7 @@ impl SearchEngine {
             indexed_keywords: self.keyword_index.len(),
         };
 
-        serde_wasm_bindgen::to_value(&stats)
-            .map(|v| js_sys::JSON::stringify(&v).unwrap().as_string().unwrap())
-            .unwrap_or_else(|_| "{}".to_string())
+        self.safe_serialize_to_json(&stats, "{}")
     }
 
     /// Clear all indexed data
@@ -146,6 +140,21 @@ impl SearchEngine {
         self.word_index.clear();
         self.keyword_index.clear();
         self.normalized_cache.borrow_mut().clear();
+    }
+
+    /// Safe JSON serialization helper to avoid panics
+    fn safe_serialize_to_json<T: serde::Serialize>(&self, data: &T, fallback: &str) -> String {
+        match serde_wasm_bindgen::to_value(data) {
+            Ok(js_value) => {
+                match js_sys::JSON::stringify(&js_value) {
+                    Ok(js_string) => {
+                        js_string.as_string().unwrap_or_else(|| fallback.to_string())
+                    }
+                    Err(_) => fallback.to_string(),
+                }
+            }
+            Err(_) => fallback.to_string(),
+        }
     }
 }
 
