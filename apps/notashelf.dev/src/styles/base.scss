@@ -81,6 +81,7 @@ main {
   font-family: $font-family-primary;
 
   a {
+
     &:hover,
     &:link,
     &:visited,
@@ -161,6 +162,13 @@ footer {
     opacity 0.6s ease-out,
     transform 0.6s ease-out;
   transition-delay: var(--delay, 0s);
+
+  // Support reduced motion also
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 .fade-in.visible {
