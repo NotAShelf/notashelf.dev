@@ -426,14 +426,8 @@ impl TextProcessor {
             .filter(|heading| !heading.is_empty())
             .collect();
 
-        format!(
-            "[{}]",
-            headings
-                .iter()
-                .map(|h| format!("\"{}\"", h.replace("\"", "\\\"")))
-                .collect::<Vec<_>>()
-                .join(",")
-        )
+        // Use serde_json for proper JSON serialization with correct escaping
+        serde_json::to_string(&headings).unwrap_or_else(|_| "[]".to_string())
     }
 
     fn count_words(&self, text: &str) -> u32 {
