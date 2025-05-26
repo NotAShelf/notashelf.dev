@@ -105,7 +105,7 @@ Nix to utilize certain builders on each build.
     {
       hostName = "ssh.example.tld";
       sshUser = "builder";
-      # 'ssn-ng' is faster if both machines are NixOS but falls flat if the
+      # 'ssh-ng' is faster if both machines are NixOS but falls flat if the
       # machine Nix will attempt a connection to is not NixOS. In such a case
       # you must use 'ssh' instead.
       protocol = "ssh-ng";
