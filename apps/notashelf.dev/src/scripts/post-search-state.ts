@@ -77,15 +77,18 @@ class PostSearchState {
    * Type guard to validate if an object conforms to SearchState interface
    */
   private static isValidSearchState(obj: unknown): obj is SearchState {
+    if (obj === null || typeof obj !== "object") {
+      return false;
+    }
+
+    const record = obj as Record<string, unknown>;
     return (
-      obj !== null &&
-      typeof obj === "object" &&
-      "searchTerm" in obj &&
-      typeof obj.searchTerm === "string" &&
-      "activeTag" in obj &&
-      typeof obj.activeTag === "string" &&
-      "viewAll" in obj &&
-      typeof obj.viewAll === "boolean"
+      "searchTerm" in record &&
+      typeof record.searchTerm === "string" &&
+      "activeTag" in record &&
+      typeof record.activeTag === "string" &&
+      "viewAll" in record &&
+      typeof record.viewAll === "boolean"
     );
   }
 
