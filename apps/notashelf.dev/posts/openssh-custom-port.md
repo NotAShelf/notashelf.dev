@@ -54,15 +54,19 @@ Assuming you already have a remote builder configured, you will only need to
 patch the `hostName` with the one on your `openssh.extraConfig`.
 
 ```nix
-nix.buildMachines = [{
-    hostName = "nix-builder-hostname";
-    sshUser = "nix-builder";
-    sshKey = "/path/to/key";
-    systems = ["x86_64-linux"];
-    maxJobs = 2;
-    speedFactor = 2;
-    supportedFeatures = ["kvm"];
-}];
+{
+  nix.buildMachines = [
+    {
+      hostName = "nix-builder-hostname";
+      sshUser = "nix-builder";
+      sshKey = "/path/to/key";
+      systems = ["x86_64-linux"];
+      maxJobs = 2;
+      speedFactor = 2;
+      supportedFeatures = ["kvm"];
+    }
+  ];
+}
 ```
 
 If you have added the correct `hostName` and `sshUser`, the builder will be
