@@ -47,7 +47,8 @@ class PageUtils {
           e.preventDefault();
           const targetId = anchor.getAttribute("href");
 
-          if (targetId) {
+          // Skip if targetId is undefined, just "#", or empty
+          if (targetId && targetId !== "#" && targetId.length > 1) {
             const targetElement = document.querySelector<HTMLElement>(targetId);
             if (targetElement) {
               targetElement.scrollIntoView({ behavior: "smooth" });
