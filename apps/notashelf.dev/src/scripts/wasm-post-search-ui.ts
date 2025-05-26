@@ -702,11 +702,15 @@ export class WasmPostSearchUI {
 }
 
 // Auto-initialize when DOM is ready
-document.addEventListener("DOMContentLoaded", () => {
-  // Get all posts data from the DOM
+/**
+ * Extracts post data from DOM elements
+ * This can be used by page templates to initialize the search UI
+ */
+export function extractPostsFromDOM(): PostEntry[] {
   const allPostElements =
     document.querySelectorAll<HTMLLIElement>("[data-post-id]");
-  const allPosts: PostEntry[] = Array.from(allPostElements).map((element) => {
+
+  return Array.from(allPostElements).map((element) => {
     const id = element.getAttribute("data-post-id") || "";
     const titleElement = element.querySelector(".post-title");
     const descriptionElement = element.querySelector(".post-description");
@@ -726,9 +730,25 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     } as PostEntry;
   });
+}
 
-  if (allPosts.length > 0) {
-    const searchUI = new WasmPostSearchUI(allPosts);
-    searchUI.init();
-  }
-});
+// Export a singleton instance tracking mechanism
+export const postSearchUIRegistry = {
+  instance: null as WasmPostSearchUI | null,
+
+  /**
+   * Initialize the post search UI if not already initialized
+   */
+  init(posts: PostEntry[]): WasmPostSearchUI {
+    if (this.instance) {
+      console.log(
+        "Post search UI already initialized, reusing existing instance",
+      );
+      return this.instance;
+    }
+
+    this.instance = new WasmPostSearchUI(posts);
+    this.instance.init();
+    return this.instance;
+  },
+};
