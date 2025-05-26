@@ -22,7 +22,7 @@
     pname = cargoToml.package.name;
     version = cargoToml.package.version;
   in
-    rustPlatform.buildRustPackage (finalAttrs: {
+    rustPlatform.buildRustPackage {
       inherit pname version;
       src = ../packages/wasm-utils;
 
@@ -51,7 +51,7 @@
         mkdir -p $out/lib
         wasm-pack build --target web --out-dir $out --out-name wasm-utils
       '';
-    });
+    };
 in
   stdenv.mkDerivation (finalAttrs: {
     pname = "build-site";
@@ -71,7 +71,6 @@ in
         fileset = fs.intersection (fs.fromSource (lib.sources.cleanSource sp)) (
           fs.unions [
             ../apps
-            ../packages
             ../packages
             ../package.json
             ../pnpm-lock.yaml
