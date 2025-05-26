@@ -11,7 +11,13 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props as { entry: PostEntry };
 const { Content } = await render(entry);
-const frontmatter = convertPostDates(entry.data);
+const convertedData = convertPostDates(entry.data, { throwOnError: false });
+// Fall back to raw data with stringified dates if conversion fails
+const frontmatter = convertedData || {
+  ...entry.data,
+  date: entry.data.date?.toString() || new Date().toISOString(),
+  updated: entry.data.updated?.toString(),
+};
 ---
 
 <PostLayout frontmatter={frontmatter}>
