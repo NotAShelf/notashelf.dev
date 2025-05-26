@@ -49,7 +49,7 @@
 
       postBuild = ''
         mkdir -p $out/lib
-        wasm-pack build --target web --out-dir $out --out-name wasm-utils
+        wasm-pack build --release --target web --out-dir $out --out-name wasm-utils
       '';
     };
 in
