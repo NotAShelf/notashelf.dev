@@ -24,7 +24,7 @@ export class WasmPostSearchUI {
   private isViewingAll = false;
   private currentActiveTag = "";
   private isInitialized = false;
-  private eventListenersAttached = false; // Flag to track event listener setup
+  private eventListenersAttached = false; // track event listener setup
 
   // Function that will be initialized properly in setupLazyWasmLoading
   private initWasmOnDemand: () => Promise<void | null> = async () => Promise.resolve(null);
@@ -35,36 +35,36 @@ export class WasmPostSearchUI {
     if (this.elements.searchForm) {
       this.elements.searchForm.removeEventListener("submit", this.handleSearchFormSubmit);
     }
-    
+
     if (this.elements.searchInput) {
       this.elements.searchInput.removeEventListener("input", this.handleSearchInputInput);
       this.elements.searchInput.removeEventListener("focus", this.handleSearchInputFocus);
     }
-    
+
     if (this.elements.clearButton) {
       this.elements.clearButton.removeEventListener("click", this.handleClearButtonClick);
     }
-    
+
     // Remove tag button listeners
     this.elements.tagButtons.forEach((btn) => {
       btn.removeEventListener("click", this.handleTagButtonClick);
     });
-    
+
     // Remove view toggle listener
     if (this.elements.viewToggle) {
       this.elements.viewToggle.removeEventListener("click", this.handleViewToggleClick);
     }
-    
+
     // Remove reset button listener
     if (this.elements.resetButton) {
       this.elements.resetButton.removeEventListener("click", this.handleResetButtonClick);
     }
-    
+
     // Remove pagination link listeners
     document.querySelectorAll<HTMLAnchorElement>(".pagination-link").forEach((link) => {
       link.removeEventListener("click", this.handlePaginationLinkClick);
     });
-    
+
     this.eventListenersAttached = false;
   }
 
@@ -122,7 +122,7 @@ export class WasmPostSearchUI {
       e.preventDefault();
       this.performSearch();
     },
-    
+
     searchInputInput: () => {
       this.elements.clearButton.style.display = this.elements.searchInput.value
         ? ""
@@ -139,23 +139,23 @@ export class WasmPostSearchUI {
         }
       }, 300);
     },
-    
+
     clearButtonClick: () => {
       this.elements.searchInput.value = "";
       this.elements.clearButton.style.display = "none";
       this.performSearch();
     },
-    
+
     searchInputFocus: () => {
       setTimeout(() => this.initWasmOnDemand(), 100);
     },
-    
+
     // Basic search handlers
     basicSearchFormSubmit: (e: Event) => {
       e.preventDefault();
       this.performBasicSearch();
     },
-    
+
     basicSearchInputInput: () => {
       this.elements.clearButton.style.display = this.elements.searchInput.value
         ? ""
@@ -166,26 +166,26 @@ export class WasmPostSearchUI {
         this.performBasicSearch();
       }, 300);
     },
-    
+
     basicClearButtonClick: () => {
       this.elements.searchInput.value = "";
       this.performBasicSearch();
     },
-    
+
     // Shared handlers
     tagButtonClick: (btn: HTMLButtonElement) => {
       const tagValue = btn.getAttribute("data-tag") || "";
       this.handleTagSelection(tagValue);
     },
-    
+
     viewToggleClick: () => {
       this.updateViewMode(!this.isViewingAll);
     },
-    
+
     resetButtonClick: () => {
       this.resetFilters();
     },
-    
+
     paginationLinkClick: () => {
       this.saveCurrentState();
     }
@@ -243,7 +243,7 @@ export class WasmPostSearchUI {
     try {
       // Clean up any existing event listeners before initializing
       this.cleanupEventListeners();
-      
+
       const hasSearchElements =
         this.elements.searchInput && this.elements.searchForm;
       if (!hasSearchElements) {
@@ -260,7 +260,7 @@ export class WasmPostSearchUI {
       this.setupLazyWasmLoading();
       this.setupNonSearchEventListeners();
       this.updateViewMode(this.isViewingAll);
-      
+
       this.eventListenersAttached = true;
     } catch (error) {
       console.error("Failed to initialize search UI:", error);
@@ -271,43 +271,43 @@ export class WasmPostSearchUI {
   // Clean up event listeners by cloning and replacing elements
   private cleanupEventListeners(): void {
     if (!this.eventListenersAttached) {
-      return; // No listeners to clean up
+      return; // means no listeners to clean up
     }
-    
+
     // Clone and replace primary interactive elements to remove all listeners
     if (this.elements.searchForm) {
       const newForm = this.elements.searchForm.cloneNode(true) as HTMLFormElement;
       this.elements.searchForm.replaceWith(newForm);
       this.elements.searchForm = newForm;
     }
-    
+
     if (this.elements.searchInput) {
       const newInput = this.elements.searchInput.cloneNode(true) as HTMLInputElement;
       this.elements.searchInput.replaceWith(newInput);
       this.elements.searchInput = newInput;
     }
-    
+
     if (this.elements.clearButton) {
       const newButton = this.elements.clearButton.cloneNode(true) as HTMLButtonElement;
       this.elements.clearButton.replaceWith(newButton);
       this.elements.clearButton = newButton;
     }
-    
+
     if (this.elements.resetButton) {
       const newResetButton = this.elements.resetButton.cloneNode(true) as HTMLButtonElement;
       this.elements.resetButton.replaceWith(newResetButton);
       this.elements.resetButton = newResetButton;
     }
-    
+
     if (this.elements.viewToggle) {
       const newViewToggle = this.elements.viewToggle.cloneNode(true) as HTMLButtonElement;
       this.elements.viewToggle.replaceWith(newViewToggle);
       this.elements.viewToggle = newViewToggle;
     }
-    
+
     // Update tag buttons NodeList after DOM changes
     this.elements.tagButtons = document.querySelectorAll(".tag-filter") as NodeListOf<HTMLButtonElement>;
-    
+
     this.eventListenersAttached = false;
   }
 

@@ -50,11 +50,32 @@ class PostSearchState {
 
     try {
       const state = sessionStorage.getItem(this.STORAGE_KEY);
-      return state ? JSON.parse(state) : defaultState;
+      if (!state) return defaultState;
+      
+      const parsedState = JSON.parse(state);
+      
+      // Validate the parsed state matches SearchState interface
+      if (!this.isValidSearchState(parsedState)) {
+        console.warn("Invalid search state format in sessionStorage");
+        return defaultState;
+      }
+      
+      return parsedState;
     } catch (e) {
       console.error("Failed to retrieve search state:", e);
       return defaultState;
     }
+  }
+  
+  /**
+   * Type guard to validate if an object conforms to SearchState interface
+   */
+  private static isValidSearchState(obj: unknown): obj is SearchState {
+    return obj !== null && 
+           typeof obj === 'object' &&
+           'searchTerm' in obj && typeof obj.searchTerm === 'string' &&
+           'activeTag' in obj && typeof obj.activeTag === 'string' &&
+           'viewAll' in obj && typeof obj.viewAll === 'boolean';
   }
 
   /**

@@ -2,12 +2,28 @@
 let searchEngine: any = null;
 let internalTextProcessor: any = null;
 let isInitialized = false;
+// Shared promise to track the initialization process
+let initializationPromise: Promise<{
+  textProcessor: any;
+  searchEngine: any;
+}> | null = null;
 
 export async function initWasm(): Promise<{
   textProcessor: any;
   searchEngine: any;
 }> {
-  if (!isInitialized) {
+  // If already initialized, return immediately
+  if (isInitialized) {
+    return { textProcessor: internalTextProcessor!, searchEngine: searchEngine! };
+  }
+
+  // If initialization is in progress, return the existing promise
+  if (initializationPromise) {
+    return initializationPromise;
+  }
+
+  // Start initialization and store the promise
+  initializationPromise = (async () => {
     try {
       console.log("Attempting to import wasm-utils module...");
       // Lazy load WASM module only when needed
@@ -25,7 +41,12 @@ export async function initWasm(): Promise<{
 
       isInitialized = true;
       console.log("WASM modules loaded successfully");
+      
+      return { textProcessor: internalTextProcessor!, searchEngine: searchEngine! };
     } catch (error) {
+      // Reset initialization promise on error to allow retry
+      initializationPromise = null;
+      
       console.error("Failed to load WASM modules:", error);
       console.error("Error details:", {
         name: error instanceof Error ? error.name : "Unknown",
@@ -34,8 +55,9 @@ export async function initWasm(): Promise<{
       });
       throw error;
     }
-  }
-  return { textProcessor: internalTextProcessor!, searchEngine: searchEngine! };
+  })();
+  
+  return initializationPromise;
 }
 
 // Check if WASM is supported
