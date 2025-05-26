@@ -1,14 +1,5 @@
 ---
-export interface PostWithReadingTime {
-  id: string;
-  data: {
-    title: string;
-    date: Date;
-    description?: string;
-    draft?: boolean;
-  };
-  readingTime: number;
-}
+import type { PostWithReadingTime } from "@lib/types";
 
 interface Props {
   spotlightPost: PostWithReadingTime | null;
