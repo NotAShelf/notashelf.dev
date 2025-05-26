@@ -18,6 +18,12 @@ export class WasmPostSearch {
   };
 
   async init(posts: PostEntry[]): Promise<void> {
+    // If already initialized, return early to prevent duplicate indexing
+    if (this.isInitialized) {
+      console.log("WASM search engine already initialized");
+      return;
+    }
+
     try {
       await this.searchEngine.init();
       this.allPosts = posts;
