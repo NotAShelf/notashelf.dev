@@ -389,8 +389,13 @@ impl TextProcessor {
     /// Calculate reading time for blog posts
     #[wasm_bindgen]
     pub fn calculate_reading_time(&self, text: &str, words_per_minute: u32) -> u32 {
+        // Handle division by zero - return default reading time
+        if words_per_minute == 0 {
+            return 1;
+        }
+
         let word_count = self.count_words(text);
-        ((word_count as f32 / words_per_minute as f32).ceil() as u32).max(1)
+      ((word_count as f32 / words_per_minute as f32).ceil() as u32).max(1)
     }
 
     /// Generate URL-friendly slug from text
