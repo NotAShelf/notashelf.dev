@@ -24,6 +24,172 @@ export class WasmPostSearchUI {
   private isViewingAll = false;
   private currentActiveTag = "";
   private isInitialized = false;
+  private eventListenersAttached = false; // Flag to track event listener setup
+
+  // Function that will be initialized properly in setupLazyWasmLoading
+  private initWasmOnDemand: () => Promise<void | null> = async () => Promise.resolve(null);
+
+  // Method to clean up any attached event listeners
+  public cleanup(): void {
+    // Remove search form listeners
+    if (this.elements.searchForm) {
+      this.elements.searchForm.removeEventListener("submit", this.handleSearchFormSubmit);
+    }
+    
+    if (this.elements.searchInput) {
+      this.elements.searchInput.removeEventListener("input", this.handleSearchInputInput);
+      this.elements.searchInput.removeEventListener("focus", this.handleSearchInputFocus);
+    }
+    
+    if (this.elements.clearButton) {
+      this.elements.clearButton.removeEventListener("click", this.handleClearButtonClick);
+    }
+    
+    // Remove tag button listeners
+    this.elements.tagButtons.forEach((btn) => {
+      btn.removeEventListener("click", this.handleTagButtonClick);
+    });
+    
+    // Remove view toggle listener
+    if (this.elements.viewToggle) {
+      this.elements.viewToggle.removeEventListener("click", this.handleViewToggleClick);
+    }
+    
+    // Remove reset button listener
+    if (this.elements.resetButton) {
+      this.elements.resetButton.removeEventListener("click", this.handleResetButtonClick);
+    }
+    
+    // Remove pagination link listeners
+    document.querySelectorAll<HTMLAnchorElement>(".pagination-link").forEach((link) => {
+      link.removeEventListener("click", this.handlePaginationLinkClick);
+    });
+    
+    this.eventListenersAttached = false;
+  }
+
+  // Event handler methods bound to this instance
+  private handleSearchFormSubmit = (e: Event): void => {
+    e.preventDefault();
+    this.performSearch();
+  };
+
+  private handleSearchInputInput = (): void => {
+    this.elements.clearButton.style.display = this.elements.searchInput.value ? "" : "none";
+    clearTimeout(this.debounceTimer);
+    this.debounceTimer = window.setTimeout(() => {
+      if (this.elements.searchInput.value.trim()) {
+        this.initWasmOnDemand().then(() => {
+          this.performSearch();
+        });
+      } else {
+        this.performSearch();
+      }
+    }, 300);
+  };
+
+  private handleClearButtonClick = (): void => {
+    this.elements.searchInput.value = "";
+    this.elements.clearButton.style.display = "none";
+    this.performSearch();
+  };
+
+  private handleSearchInputFocus = (): void => {
+    setTimeout(() => this.initWasmOnDemand(), 100);
+  };
+
+  private handleTagButtonClick = (e: Event): void => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const tagValue = btn.getAttribute("data-tag") || "";
+    this.handleTagSelection(tagValue);
+  };
+
+  private handleViewToggleClick = (): void => {
+    this.updateViewMode(!this.isViewingAll);
+  };
+
+  private handleResetButtonClick = (): void => {
+    this.resetFilters();
+  };
+
+  private handlePaginationLinkClick = (): void => {
+    this.saveCurrentState();
+  };
+
+  private eventHandlers = {
+    // Search form handlers
+    searchFormSubmit: (e: Event) => {
+      e.preventDefault();
+      this.performSearch();
+    },
+    
+    searchInputInput: () => {
+      this.elements.clearButton.style.display = this.elements.searchInput.value
+        ? ""
+        : "none";
+
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = window.setTimeout(() => {
+        if (this.elements.searchInput.value.trim()) {
+          this.initWasmOnDemand().then(() => {
+            this.performSearch();
+          });
+        } else {
+          this.performSearch();
+        }
+      }, 300);
+    },
+    
+    clearButtonClick: () => {
+      this.elements.searchInput.value = "";
+      this.elements.clearButton.style.display = "none";
+      this.performSearch();
+    },
+    
+    searchInputFocus: () => {
+      setTimeout(() => this.initWasmOnDemand(), 100);
+    },
+    
+    // Basic search handlers
+    basicSearchFormSubmit: (e: Event) => {
+      e.preventDefault();
+      this.performBasicSearch();
+    },
+    
+    basicSearchInputInput: () => {
+      this.elements.clearButton.style.display = this.elements.searchInput.value
+        ? ""
+        : "none";
+
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = window.setTimeout(() => {
+        this.performBasicSearch();
+      }, 300);
+    },
+    
+    basicClearButtonClick: () => {
+      this.elements.searchInput.value = "";
+      this.performBasicSearch();
+    },
+    
+    // Shared handlers
+    tagButtonClick: (btn: HTMLButtonElement) => {
+      const tagValue = btn.getAttribute("data-tag") || "";
+      this.handleTagSelection(tagValue);
+    },
+    
+    viewToggleClick: () => {
+      this.updateViewMode(!this.isViewingAll);
+    },
+    
+    resetButtonClick: () => {
+      this.resetFilters();
+    },
+    
+    paginationLinkClick: () => {
+      this.saveCurrentState();
+    }
+  };
 
   constructor(allPosts: PostEntry[]) {
     this.allPosts = allPosts;
@@ -31,49 +197,53 @@ export class WasmPostSearchUI {
   }
 
   private getDOMElements(): DOMElements {
-    const getElement = <T extends HTMLElement>(
-      id: string,
-      required = true,
-    ): T => {
-      const element = document.getElementById(id) as T;
-      if (!element && required) {
+    // Non-nullable version - throws error if element not found
+    const getRequiredElement = <T extends HTMLElement>(id: string): T => {
+      const element = document.getElementById(id) as T | null;
+      if (!element) {
         throw new Error(`Required element #${id} not found`);
       }
       return element;
     };
 
-    const getElementBySelector = <T extends HTMLElement>(
-      selector: string,
-      required = true,
-    ): T => {
-      const element = document.querySelector(selector) as T;
-      if (!element && required) {
+    // Nullable version, returns null if element not found
+    const getOptionalElement = <T extends HTMLElement>(id: string): T | null => {
+      return document.getElementById(id) as T | null;
+    };
+
+    // Non-nullable version, throws error if element not found
+    const getRequiredElementBySelector = <T extends HTMLElement>(selector: string): T => {
+      const element = document.querySelector(selector) as T | null;
+      if (!element) {
         throw new Error(`Required element ${selector} not found`);
       }
       return element;
     };
 
     return {
-      searchInput: getElement<HTMLInputElement>("search-input"),
-      searchForm: getElement<HTMLFormElement>("search-form"),
-      clearButton: getElement<HTMLButtonElement>("clear-search"),
-      resetButton: getElement<HTMLButtonElement>("reset-filters"),
+      searchInput: getRequiredElement<HTMLInputElement>("search-input"),
+      searchForm: getRequiredElement<HTMLFormElement>("search-form"),
+      clearButton: getRequiredElement<HTMLButtonElement>("clear-search"),
+      resetButton: getRequiredElement<HTMLButtonElement>("reset-filters"),
       tagButtons: document.querySelectorAll(
         ".tag-filter",
       ) as NodeListOf<HTMLButtonElement>,
-      noResults: getElementBySelector<HTMLDivElement>(".no-results"),
-      postList: getElementBySelector<HTMLUListElement>(".post-list"),
-      postListAll: getElementBySelector<HTMLUListElement>(".post-list-all"),
-      paginationContainer: getElement<HTMLDivElement>("pagination-container"),
-      viewToggle: getElement<HTMLButtonElement>("view-toggle", false),
-      paginationIcon: getElement<HTMLElement>("pagination-icon", false),
-      allIcon: getElement<HTMLElement>("all-icon", false),
-      viewLabel: getElement<HTMLElement>("view-label", false),
+      noResults: getRequiredElementBySelector<HTMLDivElement>(".no-results"),
+      postList: getRequiredElementBySelector<HTMLUListElement>(".post-list"),
+      postListAll: getRequiredElementBySelector<HTMLUListElement>(".post-list-all"),
+      paginationContainer: getRequiredElement<HTMLDivElement>("pagination-container"),
+      viewToggle: getOptionalElement<HTMLButtonElement>("view-toggle"),
+      paginationIcon: getOptionalElement<HTMLElement>("pagination-icon"),
+      allIcon: getOptionalElement<HTMLElement>("all-icon"),
+      viewLabel: getOptionalElement<HTMLElement>("view-label"),
     };
   }
 
   async init(): Promise<void> {
     try {
+      // Clean up any existing event listeners before initializing
+      this.cleanupEventListeners();
+      
       const hasSearchElements =
         this.elements.searchInput && this.elements.searchForm;
       if (!hasSearchElements) {
@@ -90,16 +260,62 @@ export class WasmPostSearchUI {
       this.setupLazyWasmLoading();
       this.setupNonSearchEventListeners();
       this.updateViewMode(this.isViewingAll);
+      
+      this.eventListenersAttached = true;
     } catch (error) {
       console.error("Failed to initialize search UI:", error);
       this.setupBasicEventListeners();
     }
   }
 
-  private setupLazyWasmLoading(): void {
-    let wasmInitPromise: Promise<void> | null = null;
+  // Clean up event listeners by cloning and replacing elements
+  private cleanupEventListeners(): void {
+    if (!this.eventListenersAttached) {
+      return; // No listeners to clean up
+    }
+    
+    // Clone and replace primary interactive elements to remove all listeners
+    if (this.elements.searchForm) {
+      const newForm = this.elements.searchForm.cloneNode(true) as HTMLFormElement;
+      this.elements.searchForm.replaceWith(newForm);
+      this.elements.searchForm = newForm;
+    }
+    
+    if (this.elements.searchInput) {
+      const newInput = this.elements.searchInput.cloneNode(true) as HTMLInputElement;
+      this.elements.searchInput.replaceWith(newInput);
+      this.elements.searchInput = newInput;
+    }
+    
+    if (this.elements.clearButton) {
+      const newButton = this.elements.clearButton.cloneNode(true) as HTMLButtonElement;
+      this.elements.clearButton.replaceWith(newButton);
+      this.elements.clearButton = newButton;
+    }
+    
+    if (this.elements.resetButton) {
+      const newResetButton = this.elements.resetButton.cloneNode(true) as HTMLButtonElement;
+      this.elements.resetButton.replaceWith(newResetButton);
+      this.elements.resetButton = newResetButton;
+    }
+    
+    if (this.elements.viewToggle) {
+      const newViewToggle = this.elements.viewToggle.cloneNode(true) as HTMLButtonElement;
+      this.elements.viewToggle.replaceWith(newViewToggle);
+      this.elements.viewToggle = newViewToggle;
+    }
+    
+    // Update tag buttons NodeList after DOM changes
+    this.elements.tagButtons = document.querySelectorAll(".tag-filter") as NodeListOf<HTMLButtonElement>;
+    
+    this.eventListenersAttached = false;
+  }
 
-    const initWasmOnDemand = async () => {
+  private setupLazyWasmLoading(): void {
+    let wasmInitPromise: Promise<void | null> | null = null;
+
+    // Assign to the class property
+    this.initWasmOnDemand = async () => {
       if (this.isInitialized || wasmInitPromise) {
         return wasmInitPromise;
       }
@@ -108,8 +324,10 @@ export class WasmPostSearchUI {
         try {
           await wasmPostSearch.init(this.allPosts);
           this.isInitialized = true;
+          return;
         } catch (error) {
           console.error("Failed to lazy-load WASM search engine");
+          return null;
         }
       })();
 
@@ -117,39 +335,15 @@ export class WasmPostSearchUI {
     };
 
     // Set up search form handler
-    this.elements.searchForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      this.performSearch();
-    });
+    this.elements.searchForm.addEventListener("submit", this.eventHandlers.searchFormSubmit);
 
-    this.elements.searchInput.addEventListener("input", () => {
-      this.elements.clearButton.style.display = this.elements.searchInput.value
-        ? ""
-        : "none";
-
-      clearTimeout(this.debounceTimer);
-      this.debounceTimer = window.setTimeout(() => {
-        if (this.elements.searchInput.value.trim()) {
-          initWasmOnDemand().then(() => {
-            this.performSearch();
-          });
-        } else {
-          this.performSearch();
-        }
-      }, 300);
-    });
+    this.elements.searchInput.addEventListener("input", this.eventHandlers.searchInputInput);
 
     // Set up clear button
-    this.elements.clearButton.addEventListener("click", () => {
-      this.elements.searchInput.value = "";
-      this.elements.clearButton.style.display = "none";
-      this.performSearch();
-    });
+    this.elements.clearButton.addEventListener("click", this.eventHandlers.clearButtonClick);
 
     // Also initialize WASM on focus (but with delay to avoid blocking)
-    this.elements.searchInput.addEventListener("focus", () => {
-      setTimeout(() => initWasmOnDemand(), 100);
-    });
+    this.elements.searchInput.addEventListener("focus", this.eventHandlers.searchInputFocus);
   }
 
   private debounceTimer: number = 0;
@@ -212,83 +406,12 @@ export class WasmPostSearchUI {
     }
   }
 
-  private setupEventListeners(): void {
-    // Search form submission
-    this.elements.searchForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      this.performSearch();
-    });
-
-    // Search input changes
-    this.elements.searchInput.addEventListener("input", () => {
-      this.elements.clearButton.style.display = this.elements.searchInput.value
-        ? ""
-        : "none";
-
-      // Perform search as user types (with debounce)
-      clearTimeout(this.debounceTimer);
-      this.debounceTimer = window.setTimeout(() => {
-        this.performSearch();
-      }, 300);
-    });
-
-    // Clear search
-    this.elements.clearButton.addEventListener("click", () => {
-      this.elements.searchInput.value = "";
-      this.performSearch();
-    });
-
-    // Tag filtering
-    this.elements.tagButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const tagValue = btn.getAttribute("data-tag") || "";
-        this.handleTagSelection(tagValue);
-      });
-    });
-
-    // View toggle (only if element exists)
-    if (this.elements.viewToggle) {
-      this.elements.viewToggle.addEventListener("click", () => {
-        this.updateViewMode(!this.isViewingAll);
-      });
-    }
-
-    // Reset filters
-    this.elements.resetButton.addEventListener("click", () => {
-      this.resetFilters();
-    });
-
-    // Save state when navigating with pagination
-    document
-      .querySelectorAll<HTMLAnchorElement>(".pagination-link")
-      .forEach((link) => {
-        link.addEventListener("click", () => {
-          this.saveCurrentState();
-        });
-      });
-  }
-
   private setupBasicEventListeners(): void {
-    this.elements.searchForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      this.performBasicSearch();
-    });
+    this.elements.searchForm.addEventListener("submit", this.eventHandlers.basicSearchFormSubmit);
 
-    this.elements.searchInput.addEventListener("input", () => {
-      this.elements.clearButton.style.display = this.elements.searchInput.value
-        ? ""
-        : "none";
+    this.elements.searchInput.addEventListener("input", this.eventHandlers.basicSearchInputInput);
 
-      clearTimeout(this.debounceTimer);
-      this.debounceTimer = window.setTimeout(() => {
-        this.performBasicSearch();
-      }, 300);
-    });
-
-    this.elements.clearButton.addEventListener("click", () => {
-      this.elements.searchInput.value = "";
-      this.performBasicSearch();
-    });
+    this.elements.clearButton.addEventListener("click", this.eventHandlers.basicClearButtonClick);
 
     // Tag filtering
     this.elements.tagButtons.forEach((btn) => {

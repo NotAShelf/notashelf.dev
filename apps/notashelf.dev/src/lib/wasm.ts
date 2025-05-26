@@ -1,5 +1,4 @@
 // Dynamic imports for better code splitting
-let wasmModule: any = null;
 let searchEngine: any = null;
 let internalTextProcessor: any = null;
 let isInitialized = false;
