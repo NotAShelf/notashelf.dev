@@ -1,9 +1,8 @@
 ---
 import FeaturedProjects from "@components/FeaturedProjects.astro";
+import FontAwesome from "@components/FontAwesome.astro";
 import PostSpotlight from "@components/PostSpotlight.astro";
 import ResponsiveImage from "@components/ResponsiveImage.astro";
-import { faArrowRight, faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
@@ -42,13 +41,16 @@ const sidePosts = featuredPosts
     <div class="hero-content">
       <div class="profile-image-wrapper">
         <ResponsiveImage
-          src="/images/avatar.png"
+          src="/images/avatar-120.webp"
           alt="Profile Picture"
           width={120}
           height={120}
           class="profile-picture"
           loading="lazy"
           decoding="async"
+          sizes="(max-width: 480px) 100px, 120px"
+          widths={[100, 120, 150, 180, 240]}
+          quality={90}
         />
       </div>
       <h1 class="reveal-text">Howdy! Welcome to my personal website.</h1>
@@ -67,7 +69,7 @@ const sidePosts = featuredPosts
     </div>
     <div class="scroll-arrow">
       <a href="#latest-notes" aria-label="Scroll to latest notes">
-        <FontAwesomeIcon icon={faChevronDown} size="2x" />
+        <FontAwesome icon="chevron-down" size="2x" loadingStrategy="idle" />
       </a>
     </div>
   </section>
@@ -82,7 +84,11 @@ const sidePosts = featuredPosts
         <div class="see-all">
           <a href="/posts" class="see-all-link">
             View all notes{" "}
-            <FontAwesomeIcon icon={faArrowRight} className="icon" />
+            <FontAwesome
+              icon="arrow-right"
+              class="icon"
+              loadingStrategy="visible"
+            />
           </a>
         </div>
       </section>
@@ -93,10 +99,7 @@ const sidePosts = featuredPosts
 </BaseLayout>
 
 <script>
-  import "../scripts/page-index.ts";
-</script>
-<script>
-  import "../scripts/anchor.ts";
+  import "../scripts/page-utils.ts";
 </script>
 
 <style lang="scss">
@@ -240,17 +243,18 @@ const sidePosts = featuredPosts
     font-size: 0.95rem;
     transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
-    overflow: hidden;      &::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 0;
-        background: $border-light;
-        transition: height 0.2s ease;
-        z-index: -1;
-      }
+    overflow: hidden;
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+      background: $border-light;
+      transition: height 0.2s ease;
+      z-index: -1;
+    }
 
     &:hover::after {
       height: 100%;

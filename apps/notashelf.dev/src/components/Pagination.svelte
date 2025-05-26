@@ -89,7 +89,7 @@
 
 <style lang="scss">
   @use "sass:color";
-  @use "../styles/global" as *;
+  @use "../styles/variables" as vars;
 
   .pagination {
     display: flex;
@@ -109,7 +109,7 @@
     padding: 0 0.5rem;
     border-radius: 4px;
     text-decoration: none;
-    color: $secondary;
+    color: vars.$secondary;
     font-size: 0.9rem;
     background-color: rgba(255, 255, 255, 0.05);
     transition: all 0.2s ease;
@@ -138,7 +138,7 @@
     :global(.chevron-icon) {
       width: 0.55rem !important;
       height: 0.55rem !important;
-      color: color.scale($secondary, $lightness: -20%);
+      color: color.scale(vars.$secondary, $lightness: -20%);
     }
   }
 

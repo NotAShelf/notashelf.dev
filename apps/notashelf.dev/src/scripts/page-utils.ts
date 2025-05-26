@@ -1,18 +1,15 @@
 /**
- * Handles various page initialization features:
+ * Unified page utilities for common functionality:
  * - Fade-in animations
  * - Smooth scrolling
  * - Scroll arrow animation
  */
-class PageIndex {
+class PageUtils {
   private static readonly FADE_CLASS = "fade-in";
   private static readonly VISIBLE_CLASS = "visible";
   private static readonly ANIMATE_CLASS = "animate";
   private static readonly THRESHOLD = 0.1;
 
-  /**
-   * Initialize the page with all interactive elements
-   */
   static init(): void {
     document.addEventListener("DOMContentLoaded", () => {
       this.initFadeElements();
@@ -21,13 +18,11 @@ class PageIndex {
     });
   }
 
-  /**
-   * Initialize fade-in animations for elements
-   */
-  private static initFadeElements(): void {
+  static initFadeElements(): void {
     const fadeElements = document.querySelectorAll<HTMLElement>(
       `.${this.FADE_CLASS}`,
     );
+    if (fadeElements.length === 0) return;
 
     const observer = new IntersectionObserver(
       (entries: IntersectionObserverEntry[]) => {
@@ -44,10 +39,7 @@ class PageIndex {
     fadeElements.forEach((el) => observer.observe(el));
   }
 
-  /**
-   * Initialize smooth scrolling for anchor links
-   */
-  private static initSmoothScroll(): void {
+  static initSmoothScroll(): void {
     document
       .querySelectorAll<HTMLAnchorElement>('a[href^="#"]')
       .forEach((anchor) => {
@@ -57,21 +49,15 @@ class PageIndex {
 
           if (targetId) {
             const targetElement = document.querySelector<HTMLElement>(targetId);
-
             if (targetElement) {
-              targetElement.scrollIntoView({
-                behavior: "smooth",
-              });
+              targetElement.scrollIntoView({ behavior: "smooth" });
             }
           }
         });
       });
   }
 
-  /**
-   * Initialize scroll arrow animation
-   */
-  private static initScrollArrow(): void {
+  static initScrollArrow(): void {
     const scrollArrow = document.querySelector<HTMLElement>(".scroll-arrow");
     if (scrollArrow) {
       scrollArrow.classList.add(this.ANIMATE_CLASS);
@@ -79,7 +65,6 @@ class PageIndex {
   }
 }
 
-// Initialize the page
-PageIndex.init();
+PageUtils.init();
 
-export default PageIndex;
+export default PageUtils;

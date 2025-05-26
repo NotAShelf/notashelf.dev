@@ -1,20 +1,60 @@
-import init, { TextProcessor, SearchEngine } from "wasm-utils";
-
-let wasmModule: TextProcessor | null = null;
-let searchEngine: SearchEngine | null = null;
+// Dynamic imports for better code splitting
+let wasmModule: any = null;
+let searchEngine: any = null;
+let internalTextProcessor: any = null;
 let isInitialized = false;
 
 export async function initWasm(): Promise<{
-  textProcessor: TextProcessor;
-  searchEngine: SearchEngine;
+  textProcessor: any;
+  searchEngine: any;
 }> {
   if (!isInitialized) {
-    await init();
-    wasmModule = new TextProcessor();
-    searchEngine = new SearchEngine();
-    isInitialized = true;
+    try {
+      console.log("Attempting to import wasm-utils module...");
+      // Lazy load WASM module only when needed
+      const wasmModule = await import("wasm-utils");
+      console.log("WASM module imported successfully:", wasmModule);
+
+      console.log("Initializing WASM module...");
+      await wasmModule.default();
+      console.log("WASM module initialized");
+
+      console.log("Creating TextProcessor and SearchEngine instances...");
+      internalTextProcessor = new wasmModule.TextProcessor();
+      searchEngine = new wasmModule.SearchEngine();
+      console.log("WASM instances created successfully");
+
+      isInitialized = true;
+      console.log("WASM modules loaded successfully");
+    } catch (error) {
+      console.error("Failed to load WASM modules:", error);
+      console.error("Error details:", {
+        name: error instanceof Error ? error.name : "Unknown",
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : "No stack trace",
+      });
+      throw error;
+    }
   }
-  return { textProcessor: wasmModule!, searchEngine: searchEngine! };
+  return { textProcessor: internalTextProcessor!, searchEngine: searchEngine! };
+}
+
+// Check if WASM is supported
+export function isWasmSupported(): boolean {
+  try {
+    if (
+      typeof WebAssembly === "object" &&
+      typeof WebAssembly.instantiate === "function"
+    ) {
+      const module = new WebAssembly.Module(
+        Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00),
+      );
+      return module instanceof WebAssembly.Module;
+    }
+  } catch (e) {
+    // Ignore
+  }
+  return false;
 }
 
 export interface PostData {
@@ -40,11 +80,25 @@ export interface SearchStats {
 }
 
 export class WasmSearchEngine {
-  private engine: SearchEngine | null = null;
+  private engine: any = null;
+  private initialized = false;
 
   async init(): Promise<void> {
-    const { searchEngine } = await initWasm();
-    this.engine = searchEngine;
+    if (this.initialized) return;
+
+    // Check WASM support before loading
+    if (!isWasmSupported()) {
+      throw new Error("WebAssembly not supported in this browser");
+    }
+
+    try {
+      const { searchEngine } = await initWasm();
+      this.engine = searchEngine;
+      this.initialized = true;
+    } catch (error) {
+      console.error("Failed to initialize WASM search engine:", error);
+      throw error;
+    }
   }
 
   /**
@@ -115,11 +169,25 @@ export class WasmSearchEngine {
 }
 
 export class WasmTextProcessor {
-  private processor: TextProcessor | null = null;
+  private processor: any = null;
+  private initialized = false;
 
   async init(): Promise<void> {
-    const { textProcessor } = await initWasm();
-    this.processor = textProcessor;
+    if (this.initialized) return;
+
+    // Check WASM support before loading
+    if (!isWasmSupported()) {
+      throw new Error("WebAssembly not supported in this browser");
+    }
+
+    try {
+      const { textProcessor } = await initWasm();
+      this.processor = textProcessor;
+      this.initialized = true;
+    } catch (error) {
+      console.error("Failed to initialize WASM text processor:", error);
+      throw error;
+    }
   }
 
   /**

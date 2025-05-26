@@ -3,3 +3,5 @@
 **/*.md
 **/*.json
 **/*.yaml
+apps/notashelf.dev/dist/*
+apps/notashelf.dev/.astro/*

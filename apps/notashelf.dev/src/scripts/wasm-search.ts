@@ -22,7 +22,6 @@ export class WasmPostSearch {
       await this.searchEngine.init();
       this.allPosts = posts;
 
-      // Index all posts for WASM search
       for (const post of posts) {
         const postData: PostData = {
           id: post.id,
@@ -34,74 +33,38 @@ export class WasmPostSearch {
       }
 
       this.isInitialized = true;
-      console.log("WASM search engine initialized with", posts.length, "posts");
     } catch (error) {
-      console.error("Failed to initialize WASM search engine:", error);
+      console.error("WASM search initialization failed");
       throw error;
     }
   }
 
-  /**
-   * Perform high-performance search using WASM
-   */
   search(query: string, maxResults: number = 50): SearchResult[] {
-    if (!this.isInitialized) {
-      console.warn("WASM search engine not initialized");
-      return [];
-    }
-
-    if (!query.trim()) {
-      return [];
-    }
+    if (!this.isInitialized || !query.trim()) return [];
 
     try {
       return this.searchEngine.search(query, maxResults);
-    } catch (error) {
-      console.error("WASM search failed:", error);
+    } catch {
       return [];
     }
   }
 
-  /**
-   * Search by tag using WASM
-   */
   searchByTag(tag: string): SearchResult[] {
-    if (!this.isInitialized) {
-      console.warn("WASM search engine not initialized");
-      return [];
-    }
-
-    if (!tag.trim()) {
-      return [];
-    }
+    if (!this.isInitialized || !tag.trim()) return [];
 
     try {
       return this.searchEngine.searchByTag(tag);
-    } catch (error) {
-      console.error("WASM tag search failed:", error);
+    } catch {
       return [];
     }
   }
 
-  /**
-   * Get posts that match search results
-   */
   getPostsFromResults(results: SearchResult[]): PostEntry[] {
-    const matchedPosts: PostEntry[] = [];
-
-    for (const result of results) {
-      const post = this.allPosts.find((p) => p.id === result.id);
-      if (post) {
-        matchedPosts.push(post);
-      }
-    }
-
-    return matchedPosts;
+    return results
+      .map((result) => this.allPosts.find((p) => p.id === result.id))
+      .filter(Boolean) as PostEntry[];
   }
 
-  /**
-   * Combined search that handles both text and tag filtering
-   */
   combinedSearch(
     searchTerm: string,
     activeTag: string,
@@ -109,11 +72,8 @@ export class WasmPostSearch {
   ): PostEntry[] {
     let results: SearchResult[] = [];
 
-    // If we have both search term and tag, prioritize search term
     if (searchTerm.trim()) {
       results = this.search(searchTerm, maxResults);
-
-      // Filter results by tag if tag is also specified
       if (activeTag.trim()) {
         results = results.filter((result) =>
           result.keyword_matches.some((keyword) =>
@@ -124,50 +84,34 @@ export class WasmPostSearch {
     } else if (activeTag.trim()) {
       results = this.searchByTag(activeTag);
     } else {
-      // No search criteria, return all posts
       return this.allPosts;
     }
 
     return this.getPostsFromResults(results);
   }
 
-  /**
-   * Get search engine statistics
-   */
   getStats() {
     if (!this.isInitialized) {
       return { total_posts: 0, indexed_words: 0, indexed_keywords: 0 };
     }
-
     try {
       return this.searchEngine.getStats();
-    } catch (error) {
-      console.error("Failed to get WASM search stats:", error);
+    } catch {
       return { total_posts: 0, indexed_words: 0, indexed_keywords: 0 };
     }
   }
 
-  /**
-   * Update search state
-   */
   setState(searchTerm: string, activeTag: string, viewAll: boolean): void {
     this.currentState = { searchTerm, activeTag, viewAll };
   }
 
-  /**
-   * Get current search state
-   */
   getState(): SearchState {
     return { ...this.currentState };
   }
 
-  /**
-   * Clear search state
-   */
   clearState(): void {
     this.currentState = { searchTerm: "", activeTag: "", viewAll: false };
   }
 }
 
-// Global instance
 export const wasmPostSearch = new WasmPostSearch();

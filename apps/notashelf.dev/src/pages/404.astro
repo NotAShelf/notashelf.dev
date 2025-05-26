@@ -40,10 +40,10 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 </BaseLayout>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const goBackButton = document.getElementById('go-back-button');
+  document.addEventListener("DOMContentLoaded", () => {
+    const goBackButton = document.getElementById("go-back-button");
     if (goBackButton) {
-      goBackButton.addEventListener('click', () => {
+      goBackButton.addEventListener("click", () => {
         history.back();
       });
     }
@@ -72,11 +72,7 @@ import BaseLayout from "@layouts/BaseLayout.astro";
     font-weight: 800;
     line-height: 1;
     margin: 0;
-    background: linear-gradient(
-      135deg,
-      $text-muted,
-      $text-subtle
-    );
+    background: linear-gradient(135deg, $text-muted, $text-subtle);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

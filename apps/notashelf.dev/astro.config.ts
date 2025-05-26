@@ -24,9 +24,19 @@ export default defineConfig({
   },
 
   image: {
+    remotePatterns: [{ protocol: "https" }],
     service: {
       entrypoint: "astro/assets/services/sharp",
     },
+  },
+
+  build: {
+    inlineStylesheets: "auto",
+    assets: "_astro",
+  },
+
+  experimental: {
+    clientPrerender: true,
   },
 
   // https://docs.astro.build/en/reference/configuration-reference/
@@ -78,9 +88,10 @@ export default defineConfig({
     },
   },
 
+  // Prefetch configuration
   // https://docs.astro.build/en/reference/configuration-reference/#prefetch-options
   prefetch: {
-    prefetchAll: true,
+    prefetchAll: false,
     defaultStrategy: "hover",
   },
 
@@ -89,12 +100,36 @@ export default defineConfig({
     resolve: {
       alias: {
         "wasm-utils": fileURLToPath(
-          new URL(
-            "../../packages/wasm-utils/pkg/wasm-utils.js",
-            import.meta.url,
-          ),
+          new URL("../../packages/wasm-utils/pkg", import.meta.url),
         ),
       },
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            react: ["react", "react-dom"],
+            fontawesome: [
+              "@fortawesome/react-fontawesome",
+              "@fortawesome/fontawesome-svg-core",
+            ],
+            wasm: ["wasm-utils"],
+          },
+        },
+      },
+      // Enable minification and source maps for better compression
+      // XXX: Terser is 10-20ms slower, but roughly 1% at compression.
+      // I don't quite know if this is worth the cost, but might as well.
+      minify: "terser",
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+        },
+      },
+    },
+    optimizeDeps: {
+      exclude: ["wasm-utils"],
     },
     define: {
       // Inject environment variables for static builds. This makes it possible to respect

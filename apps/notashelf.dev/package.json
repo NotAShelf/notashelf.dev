@@ -42,11 +42,12 @@
     "slugify": "^1.6.6",
     "svelte": "^5.33.1",
     "svelte-fa": "^4.0.4",
+    "terser": "^5.39.2",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.0.0",
     "vfile": "^6.0.3",
-    "wasm-utils": "link:../../packages/wasm-utils/pkg",
-    "vite-copyright-replace": "link:../../packages/vite-copyright-replace"
+    "vite-copyright-replace": "link:../../packages/vite-copyright-replace",
+    "wasm-utils": "link:../../packages/wasm-utils/pkg"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",

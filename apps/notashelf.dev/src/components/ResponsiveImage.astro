@@ -9,6 +9,9 @@ interface Props {
   class?: string;
   loading?: "lazy" | "eager";
   decoding?: "async" | "sync" | "auto";
+  sizes?: string;
+  quality?: number;
+  widths?: number[];
 }
 
 const {
@@ -19,13 +22,13 @@ const {
   class: className = "",
   loading = "lazy",
   decoding = "async",
+  sizes,
+  quality = 85,
+  widths = [width, Math.round(width * 1.5), Math.round(width * 2)],
 } = Astro.props;
 
 // Check if the source is a remote URL
 const isRemoteImage = src.startsWith("http://") || src.startsWith("https://");
-
-// For remote images we can't use the full Astro Image optimization
-// but for local images we can
 ---
 
 {
@@ -38,6 +41,7 @@ const isRemoteImage = src.startsWith("http://") || src.startsWith("https://");
       class={className}
       loading={loading}
       decoding={decoding}
+      sizes={sizes}
     />
   ) : (
     <Image
@@ -45,11 +49,13 @@ const isRemoteImage = src.startsWith("http://") || src.startsWith("https://");
       alt={alt}
       width={width}
       height={height}
+      widths={widths}
       class={className}
       loading={loading}
       decoding={decoding}
+      quality={quality}
+      sizes={sizes}
       format="webp"
-      quality={80}
     />
   )
 }

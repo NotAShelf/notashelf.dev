@@ -31,145 +31,158 @@ export class WasmPostSearchUI {
   }
 
   private getDOMElements(): DOMElements {
-    // Core search elements (required)
-    const searchInput = document.getElementById(
-      "search-input",
-    ) as HTMLInputElement;
-    if (!searchInput) {
-      throw new Error("Required element #search-input not found");
-    }
+    const getElement = <T extends HTMLElement>(
+      id: string,
+      required = true,
+    ): T => {
+      const element = document.getElementById(id) as T;
+      if (!element && required) {
+        throw new Error(`Required element #${id} not found`);
+      }
+      return element;
+    };
 
-    const searchForm = document.getElementById(
-      "search-form",
-    ) as HTMLFormElement;
-    if (!searchForm) {
-      throw new Error("Required element #search-form not found");
-    }
-
-    const clearButton = document.getElementById(
-      "clear-search",
-    ) as HTMLButtonElement;
-    if (!clearButton) {
-      throw new Error("Required element #clear-search not found");
-    }
-
-    const resetButton = document.getElementById(
-      "reset-filters",
-    ) as HTMLButtonElement;
-    if (!resetButton) {
-      throw new Error("Required element #reset-filters not found");
-    }
-
-    const tagButtons = document.querySelectorAll(
-      ".tag-filter",
-    ) as NodeListOf<HTMLButtonElement>;
-    if (tagButtons.length === 0) {
-      console.warn(
-        "No .tag-filter elements found - tag filtering will be disabled",
-      );
-    }
-
-    const noResults = document.querySelector(".no-results") as HTMLDivElement;
-    if (!noResults) {
-      throw new Error("Required element .no-results not found");
-    }
-
-    const postList = document.querySelector(".post-list") as HTMLUListElement;
-    if (!postList) {
-      throw new Error("Required element .post-list not found");
-    }
-
-    const postListAll = document.querySelector(
-      ".post-list-all",
-    ) as HTMLUListElement;
-    if (!postListAll) {
-      throw new Error("Required element .post-list-all not found");
-    }
-
-    const paginationContainer = document.getElementById(
-      "pagination-container",
-    ) as HTMLDivElement;
-    if (!paginationContainer) {
-      throw new Error("Required element #pagination-container not found");
-    }
-
-    // Optional view toggle elements (graceful degradation)
-    const viewToggle = document.getElementById(
-      "view-toggle",
-    ) as HTMLButtonElement;
-    if (!viewToggle) {
-      console.warn(
-        "Optional element #view-toggle not found - view toggle will be disabled",
-      );
-    }
-
-    const paginationIcon = document.getElementById(
-      "pagination-icon",
-    ) as HTMLElement;
-    if (!paginationIcon) {
-      console.warn(
-        "Optional element #pagination-icon not found - icon switching will be disabled",
-      );
-    }
-
-    const allIcon = document.getElementById("all-icon") as HTMLElement;
-    if (!allIcon) {
-      console.warn(
-        "Optional element #all-icon not found - icon switching will be disabled",
-      );
-    }
-
-    const viewLabel = document.getElementById("view-label") as HTMLElement;
-    if (!viewLabel) {
-      console.warn(
-        "Optional element #view-label not found - label switching will be disabled",
-      );
-    }
+    const getElementBySelector = <T extends HTMLElement>(
+      selector: string,
+      required = true,
+    ): T => {
+      const element = document.querySelector(selector) as T;
+      if (!element && required) {
+        throw new Error(`Required element ${selector} not found`);
+      }
+      return element;
+    };
 
     return {
-      searchInput,
-      searchForm,
-      clearButton,
-      resetButton,
-      tagButtons,
-      noResults,
-      postList,
-      postListAll,
-      paginationContainer,
-      viewToggle,
-      paginationIcon,
-      allIcon,
-      viewLabel,
+      searchInput: getElement<HTMLInputElement>("search-input"),
+      searchForm: getElement<HTMLFormElement>("search-form"),
+      clearButton: getElement<HTMLButtonElement>("clear-search"),
+      resetButton: getElement<HTMLButtonElement>("reset-filters"),
+      tagButtons: document.querySelectorAll(
+        ".tag-filter",
+      ) as NodeListOf<HTMLButtonElement>,
+      noResults: getElementBySelector<HTMLDivElement>(".no-results"),
+      postList: getElementBySelector<HTMLUListElement>(".post-list"),
+      postListAll: getElementBySelector<HTMLUListElement>(".post-list-all"),
+      paginationContainer: getElement<HTMLDivElement>("pagination-container"),
+      viewToggle: getElement<HTMLButtonElement>("view-toggle", false),
+      paginationIcon: getElement<HTMLElement>("pagination-icon", false),
+      allIcon: getElement<HTMLElement>("all-icon", false),
+      viewLabel: getElement<HTMLElement>("view-label", false),
     };
   }
 
   async init(): Promise<void> {
     try {
-      // Initialize WASM search engine
-      await wasmPostSearch.init(this.allPosts);
+      const hasSearchElements =
+        this.elements.searchInput && this.elements.searchForm;
+      if (!hasSearchElements) {
+        this.setupBasicEventListeners();
+        return;
+      }
 
-      // Restore search state
       const { searchTerm, activeTag, viewAll } =
         PostSearchState.getSearchState();
       this.isViewingAll = viewAll || false;
       this.currentActiveTag = activeTag || "";
 
-      // Initialize UI from saved state
       this.initializeFromState(searchTerm, activeTag);
-
-      // Set up event listeners
-      this.setupEventListeners();
-
-      // Apply initial filter with saved state
+      this.setupLazyWasmLoading();
+      this.setupNonSearchEventListeners();
       this.updateViewMode(this.isViewingAll);
-
-      this.isInitialized = true;
-      console.log("WASM post search UI initialized");
     } catch (error) {
-      console.error("Failed to initialize WASM search UI:", error);
-      // Fallback to basic functionality without WASM
+      console.error("Failed to initialize search UI:", error);
       this.setupBasicEventListeners();
     }
+  }
+
+  private setupLazyWasmLoading(): void {
+    let wasmInitPromise: Promise<void> | null = null;
+
+    const initWasmOnDemand = async () => {
+      if (this.isInitialized || wasmInitPromise) {
+        return wasmInitPromise;
+      }
+
+      wasmInitPromise = (async () => {
+        try {
+          await wasmPostSearch.init(this.allPosts);
+          this.isInitialized = true;
+        } catch (error) {
+          console.error("Failed to lazy-load WASM search engine");
+        }
+      })();
+
+      return wasmInitPromise;
+    };
+
+    // Set up search form handler
+    this.elements.searchForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      this.performSearch();
+    });
+
+    this.elements.searchInput.addEventListener("input", () => {
+      this.elements.clearButton.style.display = this.elements.searchInput.value
+        ? ""
+        : "none";
+
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = window.setTimeout(() => {
+        if (this.elements.searchInput.value.trim()) {
+          initWasmOnDemand().then(() => {
+            this.performSearch();
+          });
+        } else {
+          this.performSearch();
+        }
+      }, 300);
+    });
+
+    // Set up clear button
+    this.elements.clearButton.addEventListener("click", () => {
+      this.elements.searchInput.value = "";
+      this.elements.clearButton.style.display = "none";
+      this.performSearch();
+    });
+
+    // Also initialize WASM on focus (but with delay to avoid blocking)
+    this.elements.searchInput.addEventListener("focus", () => {
+      setTimeout(() => initWasmOnDemand(), 100);
+    });
+  }
+
+  private debounceTimer: number = 0;
+
+  private setupNonSearchEventListeners(): void {
+    // Tag filtering
+    this.elements.tagButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tagValue = btn.getAttribute("data-tag") || "";
+        this.handleTagSelection(tagValue);
+      });
+    });
+
+    // View toggle (only if element exists)
+    if (this.elements.viewToggle) {
+      this.elements.viewToggle.addEventListener("click", () => {
+        this.updateViewMode(!this.isViewingAll);
+      });
+    }
+
+    // Reset filters
+    this.elements.resetButton.addEventListener("click", () => {
+      this.resetFilters();
+    });
+
+    // Save state when navigating with pagination
+    document
+      .querySelectorAll<HTMLAnchorElement>(".pagination-link")
+      .forEach((link) => {
+        link.addEventListener("click", () => {
+          this.saveCurrentState();
+        });
+      });
   }
 
   private initializeFromState(searchTerm: string, activeTag: string): void {
@@ -211,6 +224,12 @@ export class WasmPostSearchUI {
       this.elements.clearButton.style.display = this.elements.searchInput.value
         ? ""
         : "none";
+
+      // Perform search as user types (with debounce)
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = window.setTimeout(() => {
+        this.performSearch();
+      }, 300);
     });
 
     // Clear search
@@ -250,9 +269,6 @@ export class WasmPostSearchUI {
   }
 
   private setupBasicEventListeners(): void {
-    // Fallback to basic DOM filtering if WASM fails
-    console.warn("Using fallback DOM-based search");
-
     this.elements.searchForm.addEventListener("submit", (e) => {
       e.preventDefault();
       this.performBasicSearch();
@@ -262,6 +278,11 @@ export class WasmPostSearchUI {
       this.elements.clearButton.style.display = this.elements.searchInput.value
         ? ""
         : "none";
+
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = window.setTimeout(() => {
+        this.performBasicSearch();
+      }, 300);
     });
 
     this.elements.clearButton.addEventListener("click", () => {
@@ -308,17 +329,12 @@ export class WasmPostSearchUI {
     const searchTerm = this.elements.searchInput.value.toLowerCase().trim();
 
     try {
-      // Use WASM search for better performance
       const matchedPosts = wasmPostSearch.combinedSearch(
         searchTerm,
         this.currentActiveTag,
         100,
       );
-
-      // Update UI with results
       this.updatePostsDisplay(matchedPosts, searchTerm);
-
-      // Save search state
       this.saveCurrentState();
     } catch (error) {
       console.error("WASM search failed, falling back to basic search:", error);
@@ -330,18 +346,15 @@ export class WasmPostSearchUI {
     const searchTerm = this.elements.searchInput.value.toLowerCase().trim();
     let visibleCount = 0;
 
-    // Determine which list to display
     const displayingPaginated = !this.isViewingAll && !searchTerm;
     const displayingAll = this.isViewingAll || searchTerm;
 
-    // Show/hide appropriate lists
     this.elements.postList.style.display = displayingPaginated ? "" : "none";
     this.elements.postListAll.style.display = displayingAll ? "" : "none";
     this.elements.paginationContainer.style.display = displayingPaginated
       ? ""
       : "none";
 
-    // Filter posts in the visible list
     const itemsToFilter = displayingAll
       ? this.elements.postListAll.querySelectorAll<HTMLLIElement>(
           ".post-dropdown-item",
@@ -359,7 +372,10 @@ export class WasmPostSearchUI {
       const description = descriptionElement?.textContent?.toLowerCase() || "";
       const keywordsText = post.getAttribute("data-keywords") || "";
       const keywords = keywordsText
-        ? keywordsText.toLowerCase().split(",").map(k => k.trim())
+        ? keywordsText
+            .toLowerCase()
+            .split(",")
+            .map((k) => k.trim())
         : [];
 
       const matchesSearch =
