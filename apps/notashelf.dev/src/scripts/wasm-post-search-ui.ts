@@ -27,22 +27,35 @@ export class WasmPostSearchUI {
   private eventListenersAttached = false; // track event listener setup
 
   // Function that will be initialized properly in setupLazyWasmLoading
-  private initWasmOnDemand: () => Promise<void | null> = async () => Promise.resolve(null);
+  private initWasmOnDemand: () => Promise<void | null> = async () =>
+    Promise.resolve(null);
 
   // Method to clean up any attached event listeners
   public cleanup(): void {
     // Remove search form listeners
     if (this.elements.searchForm) {
-      this.elements.searchForm.removeEventListener("submit", this.handleSearchFormSubmit);
+      this.elements.searchForm.removeEventListener(
+        "submit",
+        this.handleSearchFormSubmit,
+      );
     }
 
     if (this.elements.searchInput) {
-      this.elements.searchInput.removeEventListener("input", this.handleSearchInputInput);
-      this.elements.searchInput.removeEventListener("focus", this.handleSearchInputFocus);
+      this.elements.searchInput.removeEventListener(
+        "input",
+        this.handleSearchInputInput,
+      );
+      this.elements.searchInput.removeEventListener(
+        "focus",
+        this.handleSearchInputFocus,
+      );
     }
 
     if (this.elements.clearButton) {
-      this.elements.clearButton.removeEventListener("click", this.handleClearButtonClick);
+      this.elements.clearButton.removeEventListener(
+        "click",
+        this.handleClearButtonClick,
+      );
     }
 
     // Remove tag button listeners
@@ -52,18 +65,26 @@ export class WasmPostSearchUI {
 
     // Remove view toggle listener
     if (this.elements.viewToggle) {
-      this.elements.viewToggle.removeEventListener("click", this.handleViewToggleClick);
+      this.elements.viewToggle.removeEventListener(
+        "click",
+        this.handleViewToggleClick,
+      );
     }
 
     // Remove reset button listener
     if (this.elements.resetButton) {
-      this.elements.resetButton.removeEventListener("click", this.handleResetButtonClick);
+      this.elements.resetButton.removeEventListener(
+        "click",
+        this.handleResetButtonClick,
+      );
     }
 
     // Remove pagination link listeners
-    document.querySelectorAll<HTMLAnchorElement>(".pagination-link").forEach((link) => {
-      link.removeEventListener("click", this.handlePaginationLinkClick);
-    });
+    document
+      .querySelectorAll<HTMLAnchorElement>(".pagination-link")
+      .forEach((link) => {
+        link.removeEventListener("click", this.handlePaginationLinkClick);
+      });
 
     this.eventListenersAttached = false;
   }
@@ -75,7 +96,9 @@ export class WasmPostSearchUI {
   };
 
   private handleSearchInputInput = (): void => {
-    this.elements.clearButton.style.display = this.elements.searchInput.value ? "" : "none";
+    this.elements.clearButton.style.display = this.elements.searchInput.value
+      ? ""
+      : "none";
     clearTimeout(this.debounceTimer);
     this.debounceTimer = window.setTimeout(() => {
       if (this.elements.searchInput.value.trim()) {
@@ -188,7 +211,7 @@ export class WasmPostSearchUI {
 
     paginationLinkClick: () => {
       this.saveCurrentState();
-    }
+    },
   };
 
   constructor(allPosts: PostEntry[]) {
@@ -207,12 +230,16 @@ export class WasmPostSearchUI {
     };
 
     // Nullable version, returns null if element not found
-    const getOptionalElement = <T extends HTMLElement>(id: string): T | null => {
+    const getOptionalElement = <T extends HTMLElement>(
+      id: string,
+    ): T | null => {
       return document.getElementById(id) as T | null;
     };
 
     // Non-nullable version, throws error if element not found
-    const getRequiredElementBySelector = <T extends HTMLElement>(selector: string): T => {
+    const getRequiredElementBySelector = <T extends HTMLElement>(
+      selector: string,
+    ): T => {
       const element = document.querySelector(selector) as T | null;
       if (!element) {
         throw new Error(`Required element ${selector} not found`);
@@ -230,8 +257,11 @@ export class WasmPostSearchUI {
       ) as NodeListOf<HTMLButtonElement>,
       noResults: getRequiredElementBySelector<HTMLDivElement>(".no-results"),
       postList: getRequiredElementBySelector<HTMLUListElement>(".post-list"),
-      postListAll: getRequiredElementBySelector<HTMLUListElement>(".post-list-all"),
-      paginationContainer: getRequiredElement<HTMLDivElement>("pagination-container"),
+      postListAll:
+        getRequiredElementBySelector<HTMLUListElement>(".post-list-all"),
+      paginationContainer: getRequiredElement<HTMLDivElement>(
+        "pagination-container",
+      ),
       viewToggle: getOptionalElement<HTMLButtonElement>("view-toggle"),
       paginationIcon: getOptionalElement<HTMLElement>("pagination-icon"),
       allIcon: getOptionalElement<HTMLElement>("all-icon"),
@@ -276,37 +306,49 @@ export class WasmPostSearchUI {
 
     // Clone and replace primary interactive elements to remove all listeners
     if (this.elements.searchForm) {
-      const newForm = this.elements.searchForm.cloneNode(true) as HTMLFormElement;
+      const newForm = this.elements.searchForm.cloneNode(
+        true,
+      ) as HTMLFormElement;
       this.elements.searchForm.replaceWith(newForm);
       this.elements.searchForm = newForm;
     }
 
     if (this.elements.searchInput) {
-      const newInput = this.elements.searchInput.cloneNode(true) as HTMLInputElement;
+      const newInput = this.elements.searchInput.cloneNode(
+        true,
+      ) as HTMLInputElement;
       this.elements.searchInput.replaceWith(newInput);
       this.elements.searchInput = newInput;
     }
 
     if (this.elements.clearButton) {
-      const newButton = this.elements.clearButton.cloneNode(true) as HTMLButtonElement;
+      const newButton = this.elements.clearButton.cloneNode(
+        true,
+      ) as HTMLButtonElement;
       this.elements.clearButton.replaceWith(newButton);
       this.elements.clearButton = newButton;
     }
 
     if (this.elements.resetButton) {
-      const newResetButton = this.elements.resetButton.cloneNode(true) as HTMLButtonElement;
+      const newResetButton = this.elements.resetButton.cloneNode(
+        true,
+      ) as HTMLButtonElement;
       this.elements.resetButton.replaceWith(newResetButton);
       this.elements.resetButton = newResetButton;
     }
 
     if (this.elements.viewToggle) {
-      const newViewToggle = this.elements.viewToggle.cloneNode(true) as HTMLButtonElement;
+      const newViewToggle = this.elements.viewToggle.cloneNode(
+        true,
+      ) as HTMLButtonElement;
       this.elements.viewToggle.replaceWith(newViewToggle);
       this.elements.viewToggle = newViewToggle;
     }
 
     // Update tag buttons NodeList after DOM changes
-    this.elements.tagButtons = document.querySelectorAll(".tag-filter") as NodeListOf<HTMLButtonElement>;
+    this.elements.tagButtons = document.querySelectorAll(
+      ".tag-filter",
+    ) as NodeListOf<HTMLButtonElement>;
 
     this.eventListenersAttached = false;
   }
@@ -335,15 +377,27 @@ export class WasmPostSearchUI {
     };
 
     // Set up search form handler
-    this.elements.searchForm.addEventListener("submit", this.eventHandlers.searchFormSubmit);
+    this.elements.searchForm.addEventListener(
+      "submit",
+      this.eventHandlers.searchFormSubmit,
+    );
 
-    this.elements.searchInput.addEventListener("input", this.eventHandlers.searchInputInput);
+    this.elements.searchInput.addEventListener(
+      "input",
+      this.eventHandlers.searchInputInput,
+    );
 
     // Set up clear button
-    this.elements.clearButton.addEventListener("click", this.eventHandlers.clearButtonClick);
+    this.elements.clearButton.addEventListener(
+      "click",
+      this.eventHandlers.clearButtonClick,
+    );
 
     // Also initialize WASM on focus (but with delay to avoid blocking)
-    this.elements.searchInput.addEventListener("focus", this.eventHandlers.searchInputFocus);
+    this.elements.searchInput.addEventListener(
+      "focus",
+      this.eventHandlers.searchInputFocus,
+    );
   }
 
   private debounceTimer: number = 0;
@@ -407,11 +461,20 @@ export class WasmPostSearchUI {
   }
 
   private setupBasicEventListeners(): void {
-    this.elements.searchForm.addEventListener("submit", this.eventHandlers.basicSearchFormSubmit);
+    this.elements.searchForm.addEventListener(
+      "submit",
+      this.eventHandlers.basicSearchFormSubmit,
+    );
 
-    this.elements.searchInput.addEventListener("input", this.eventHandlers.basicSearchInputInput);
+    this.elements.searchInput.addEventListener(
+      "input",
+      this.eventHandlers.basicSearchInputInput,
+    );
 
-    this.elements.clearButton.addEventListener("click", this.eventHandlers.basicClearButtonClick);
+    this.elements.clearButton.addEventListener(
+      "click",
+      this.eventHandlers.basicClearButtonClick,
+    );
 
     // Tag filtering
     this.elements.tagButtons.forEach((btn) => {

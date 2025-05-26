@@ -106,7 +106,11 @@ const posts = filteredPosts.slice(0, postsPerPage);
 
   <PostList posts={posts} className="post-list" />
 
-  <PostList posts={filteredPosts} className="post-list-all" style="display: none;" />
+  <PostList
+    posts={filteredPosts}
+    className="post-list-all"
+    style="display: none;"
+  />
 
   <div class="no-results" style="display: none;">
     <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />

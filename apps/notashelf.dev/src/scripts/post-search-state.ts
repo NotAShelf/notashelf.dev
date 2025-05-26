@@ -14,8 +14,10 @@ class PostSearchState {
    * Check if we're running in a browser environment with sessionStorage support
    */
   private static isBrowser(): boolean {
-    return typeof window !== 'undefined' &&
-           typeof window.sessionStorage !== 'undefined';
+    return (
+      typeof window !== "undefined" &&
+      typeof window.sessionStorage !== "undefined"
+    );
   }
 
   /**
@@ -42,7 +44,11 @@ class PostSearchState {
    * Get the saved search state from `sessionStorage`
    */
   static getSearchState(): SearchState {
-    const defaultState: SearchState = { searchTerm: "", activeTag: "", viewAll: false };
+    const defaultState: SearchState = {
+      searchTerm: "",
+      activeTag: "",
+      viewAll: false,
+    };
 
     if (!this.isBrowser()) {
       return defaultState; // Return default state on server-side
@@ -51,31 +57,36 @@ class PostSearchState {
     try {
       const state = sessionStorage.getItem(this.STORAGE_KEY);
       if (!state) return defaultState;
-      
+
       const parsedState = JSON.parse(state);
-      
+
       // Validate the parsed state matches SearchState interface
       if (!this.isValidSearchState(parsedState)) {
         console.warn("Invalid search state format in sessionStorage");
         return defaultState;
       }
-      
+
       return parsedState;
     } catch (e) {
       console.error("Failed to retrieve search state:", e);
       return defaultState;
     }
   }
-  
+
   /**
    * Type guard to validate if an object conforms to SearchState interface
    */
   private static isValidSearchState(obj: unknown): obj is SearchState {
-    return obj !== null && 
-           typeof obj === 'object' &&
-           'searchTerm' in obj && typeof obj.searchTerm === 'string' &&
-           'activeTag' in obj && typeof obj.activeTag === 'string' &&
-           'viewAll' in obj && typeof obj.viewAll === 'boolean';
+    return (
+      obj !== null &&
+      typeof obj === "object" &&
+      "searchTerm" in obj &&
+      typeof obj.searchTerm === "string" &&
+      "activeTag" in obj &&
+      typeof obj.activeTag === "string" &&
+      "viewAll" in obj &&
+      typeof obj.viewAll === "boolean"
+    );
   }
 
   /**

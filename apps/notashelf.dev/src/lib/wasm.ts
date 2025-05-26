@@ -14,7 +14,10 @@ export async function initWasm(): Promise<{
 }> {
   // If already initialized, return immediately
   if (isInitialized) {
-    return { textProcessor: internalTextProcessor!, searchEngine: searchEngine! };
+    return {
+      textProcessor: internalTextProcessor!,
+      searchEngine: searchEngine!,
+    };
   }
 
   // If initialization is in progress, return the existing promise
@@ -41,12 +44,15 @@ export async function initWasm(): Promise<{
 
       isInitialized = true;
       console.log("WASM modules loaded successfully");
-      
-      return { textProcessor: internalTextProcessor!, searchEngine: searchEngine! };
+
+      return {
+        textProcessor: internalTextProcessor!,
+        searchEngine: searchEngine!,
+      };
     } catch (error) {
       // Reset initialization promise on error to allow retry
       initializationPromise = null;
-      
+
       console.error("Failed to load WASM modules:", error);
       console.error("Error details:", {
         name: error instanceof Error ? error.name : "Unknown",
@@ -56,7 +62,7 @@ export async function initWasm(): Promise<{
       throw error;
     }
   })();
-  
+
   return initializationPromise;
 }
 
