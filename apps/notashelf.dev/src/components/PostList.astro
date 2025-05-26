@@ -1,0 +1,48 @@
+---
+import type { PostEntry } from "@lib/types";
+
+interface Props {
+  posts: PostEntry[];
+  className: string;
+  style?: string;
+}
+
+const { posts, className, style } = Astro.props;
+---
+
+<ul class={className} style={style}>
+  {
+    posts.map((post: PostEntry) => (
+      <li
+        class="post-dropdown-item"
+        data-keywords={post.data.keywords?.join(",")}
+        data-post-id={post.id}
+      >
+        <a href={`/posts/${post.id}`} class="dropdown-link">
+          <div class="post-content">
+            <div class="post-header">
+              <h2 class="post-title">{post.data.title}</h2>
+              {post.data.keywords && post.data.keywords.length > 0 && (
+                <div class="post-tags">
+                  {post.data.keywords.map((tag: string) => (
+                    <span class="post-tag">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+            <time datetime={post.data.date.toISOString()} class="post-date">
+              {new Date(post.data.date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </time>
+            {post.data.description && (
+              <p class="post-description">{post.data.description}</p>
+            )}
+          </div>
+        </a>
+      </li>
+    ))
+  }
+</ul>
