@@ -79,6 +79,16 @@ impl SearchEngine {
 
         let mut results = self.execute_search(&query_terms);
 
+        // Filter out any results with NaN scores to prevent JSON serialization issues
+        results.retain(|result| !result.score.is_nan());
+
+        // Replace any remaining invalid scores with 0.0 as a safety measure
+        for result in &mut results {
+            if result.score.is_infinite() {
+                result.score = 0.0;
+            }
+        }
+
         // Sort by relevance score (descending)
         results.sort_by(|a, b| {
             b.score
