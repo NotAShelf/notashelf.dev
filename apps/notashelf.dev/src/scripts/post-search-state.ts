@@ -11,6 +11,14 @@ class PostSearchState {
   private static readonly STORAGE_KEY = "post-search-state";
 
   /**
+   * Check if we're running in a browser environment with sessionStorage support
+   */
+  private static isBrowser(): boolean {
+    return typeof window !== 'undefined' &&
+           typeof window.sessionStorage !== 'undefined';
+  }
+
+  /**
    * Save the current search state to `sessionStorage`
    */
   static setSearchState(
@@ -18,6 +26,10 @@ class PostSearchState {
     activeTag: string,
     viewAll: boolean,
   ): void {
+    if (!this.isBrowser()) {
+      return; // Skip on server-side
+    }
+
     const state: SearchState = { searchTerm, activeTag, viewAll };
     try {
       sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(state));
@@ -30,14 +42,18 @@ class PostSearchState {
    * Get the saved search state from `sessionStorage`
    */
   static getSearchState(): SearchState {
+    const defaultState: SearchState = { searchTerm: "", activeTag: "", viewAll: false };
+
+    if (!this.isBrowser()) {
+      return defaultState; // Return default state on server-side
+    }
+
     try {
       const state = sessionStorage.getItem(this.STORAGE_KEY);
-      return state
-        ? JSON.parse(state)
-        : { searchTerm: "", activeTag: "", viewAll: false };
+      return state ? JSON.parse(state) : defaultState;
     } catch (e) {
       console.error("Failed to retrieve search state:", e);
-      return { searchTerm: "", activeTag: "", viewAll: false };
+      return defaultState;
     }
   }
 
@@ -45,6 +61,10 @@ class PostSearchState {
    * Clear the saved search state
    */
   static clearSearchState(): void {
+    if (!this.isBrowser()) {
+      return; // Skip on server-side
+    }
+
     try {
       sessionStorage.removeItem(this.STORAGE_KEY);
     } catch (e) {
