@@ -12,6 +12,8 @@
     "moduleResolution": "Bundler",
     "isolatedModules": true,
     "incremental": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "paths": {
       // https://docs.astro.build/en/guides/typescript/#import-aliases
       "@/*": ["src/*"],
@@ -21,10 +23,9 @@
       "@lib/*": ["src/lib/*"],
       "@data/*": ["src/data/*"],
       "@scripts/*": ["src/scripts/*"],
-      "wasm-utils": ["../../packages/wasm/pkg"]
-    },
-    "jsx": "react-jsx",
-    "jsxImportSource": "react"
+      "wasm-utils": ["../../packages/wasm/pkg"],
+      "wasm-utils/*": ["../../packages/wasm/pkg/*"]
+    }
   },
   "mdx": {
     "checkMdx": true
