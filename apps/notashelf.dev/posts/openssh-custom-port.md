@@ -41,7 +41,7 @@ instead of the default **22**.
 programs.ssh.extraConfig = ''
     Host nix-builder
       HostName nix-builder-hostname # if you are using Tailscale, this can just be the hostname of a device on your Tailscale network
-	  Port 2222
+    Port 2222
 '';
 ```
 
