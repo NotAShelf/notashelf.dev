@@ -4,6 +4,16 @@ export interface Props {
   src?: string;
 }
 
+declare global {
+  interface Window {
+    plausible: {
+      q?: any[];
+      (...args: any[]): void;
+      [key: string]: any;
+    };
+  }
+}
+
 const {
   domain = "notashelf.dev",
   src = "https://pl.notashelf.dev/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js",
@@ -13,16 +23,6 @@ const {
 <script defer type="text/partytown" is:inline data-domain={domain} src={src}
 ></script>
 <script>
-  declare global {
-    interface Window {
-      plausible: {
-        q?: any[];
-        (...args: any[]): void;
-        [key: string]: any;
-      };
-    }
-  }
-
   const fallback = function (...args: any[]) {
     (window.plausible.q = window.plausible.q || []).push(args);
   };
