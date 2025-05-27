@@ -78,7 +78,7 @@ export function isWasmSupported(): boolean {
       );
       return module instanceof WebAssembly.Module;
     }
-  } catch (e) {
+  } catch {
     // Ignore
   }
   return false;

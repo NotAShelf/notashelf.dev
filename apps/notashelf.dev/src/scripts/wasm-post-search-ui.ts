@@ -367,7 +367,7 @@ export class WasmPostSearchUI {
           await wasmPostSearch.init(this.allPosts);
           this.isInitialized = true;
           return;
-        } catch (error) {
+        } catch {
           console.error("Failed to lazy-load WASM search engine");
           return null;
         }

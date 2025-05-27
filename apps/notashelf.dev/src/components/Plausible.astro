@@ -23,8 +23,8 @@ const {
     }
   }
 
-  const fallback = function () {
-    (window.plausible.q = window.plausible.q || []).push(arguments);
+  const fallback = function (...args: any[]) {
+    (window.plausible.q = window.plausible.q || []).push(args);
   };
   window.plausible = window.plausible || fallback;
 </script>

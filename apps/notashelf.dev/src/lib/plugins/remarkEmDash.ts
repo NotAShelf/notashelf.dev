@@ -2,7 +2,7 @@ import { visit } from "unist-util-visit";
 import type { RemarkPlugin } from "../types";
 
 const remarkEmDash: RemarkPlugin = () => {
-  return (tree, _file) => {
+  return (tree) => {
     visit(tree, "text", (node: { value: string }) => {
       // Replace --- with em dash (—), but avoid replacing frontmatter delimiters
       // Uses negative lookahead/lookbehind to prevent matching ---- or longer sequences

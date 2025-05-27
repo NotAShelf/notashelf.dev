@@ -4,13 +4,12 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 const config = tseslint.config(
-  // Astro
-  ...eslintPluginAstro.configs.recommended,
-
   // JavaScript
   eslint.configs.recommended,
   // TypeScript
   ...tseslint.configs.recommended,
+  // Astro
+  ...eslintPluginAstro.configs["flat/recommended"],
 
   {
     // Global config

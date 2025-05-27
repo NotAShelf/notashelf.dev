@@ -54,7 +54,7 @@ async function mdxToHtml(content: string): Promise<string> {
       .process(content);
 
     return result.toString();
-  } catch (e) {
+  } catch {
     // If MDX processing fails, fall back to regular markdown
     return markdownToHtml(content);
   }
