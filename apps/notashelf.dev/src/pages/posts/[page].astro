@@ -52,8 +52,9 @@ const totalPages = Math.ceil(totalPosts / postsPerPage);
 // Extract all unique tags from existing allPosts prop
 const allTags = [
   ...new Set(
-    allPosts
-      .flatMap((post: PostEntry) => (post.data.keywords || []) as string[]),
+    allPosts.flatMap(
+      (post: PostEntry) => (post.data.keywords || []) as string[],
+    ),
   ),
 ].sort() as string[];
 ---
