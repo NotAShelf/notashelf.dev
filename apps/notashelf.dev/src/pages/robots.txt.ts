@@ -26,8 +26,6 @@ export async function GET(): Promise<Response> {
     "facebookexternalhit",
     "facebot",
     "meta-externalagent",
-    "PerplexityBot",
-    "FacebookBot",
   ];
 
   const content = `
