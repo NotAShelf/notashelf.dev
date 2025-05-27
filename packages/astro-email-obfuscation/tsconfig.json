@@ -1,6 +1,4 @@
 {
-  "include": ["index.ts"],
-  "exclude": ["dist", "node_modules"],
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
@@ -10,5 +8,7 @@
     "strict": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true
-  }
+  },
+  "include": ["index.ts"],
+  "exclude": ["node_modules", "dist"]
 }
