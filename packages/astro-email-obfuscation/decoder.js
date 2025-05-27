@@ -1,5 +1,6 @@
 /**
- * Email Obfuscation Decoder - Client-side JavaScript
+ * Email Obfuscation Decoder - Client-side JavaScript for Astro Email
+ * Obfuscation integration.
  * Handles multiple obfuscation methods with accessibility and fallback support
  */
 
@@ -199,21 +200,23 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Handle Reverse emails - Moderate effectiveness, better UX when clickable
-  document.querySelectorAll(".reverse-email").forEach(function (element) {
-    element.addEventListener("click", function () {
-      const reversedEmail = this.getAttribute("data-reversed");
-      if (reversedEmail) {
-        const email = reversedEmail.split("").reverse().join("");
-        revealEmail(this, email);
-        this.classList.remove("reverse-email");
-        this.removeAttribute("data-reversed");
+  document
+    .querySelectorAll(".reverse-email, .reverse-email-data")
+    .forEach(function (element) {
+      element.addEventListener("click", function () {
+        const reversedEmail = this.getAttribute("data-reversed");
+        if (reversedEmail) {
+          const email = reversedEmail.split("").reverse().join("");
+          revealEmail(this, email);
+          this.classList.remove("reverse-email", "reverse-email-data");
+          this.removeAttribute("data-reversed");
+        }
+      });
+
+      if (element.getAttribute("data-reversed")) {
+        makeInteractive(element);
       }
     });
-
-    if (element.getAttribute("data-reversed")) {
-      makeInteractive(element);
-    }
-  });
 
   // Handle deconstructed emails - Moderate effectiveness
   document.querySelectorAll(".deconstructed-email").forEach(function (element) {
@@ -276,23 +279,23 @@ document.addEventListener("DOMContentLoaded", function () {
   // Add global styles for better UX
   const style = document.createElement("style");
   style.textContent = `
-    .rot18-email, .js-concat-email, .js-interaction-email, 
-    .css-hidden-email, .reverse-email[data-reversed], 
+    .rot18-email, .js-concat-email, .js-interaction-email,
+    .css-hidden-email, .reverse-email[data-reversed],
     .deconstructed-email, .b64-email {
       transition: opacity 0.15s ease-in-out;
     }
-    
+
     .css-hidden-email .hidden-char {
       transition: display 0.3s ease-in-out;
     }
-    
+
     .svg-email:hover {
       opacity: 0.8;
     }
-    
+
     @media (prefers-reduced-motion: reduce) {
-      .rot18-email, .js-concat-email, .js-interaction-email, 
-      .css-hidden-email, .reverse-email[data-reversed], 
+      .rot18-email, .js-concat-email, .js-interaction-email,
+      .css-hidden-email, .reverse-email[data-reversed],
       .deconstructed-email, .b64-email, .svg-email {
         transition: none !important;
       }
