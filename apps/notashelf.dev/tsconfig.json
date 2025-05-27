@@ -1,0 +1,33 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist", "result", "node_modules"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "declaration": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "esModuleInterop": true,
+    "moduleResolution": "Bundler",
+    "isolatedModules": true,
+    "incremental": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "paths": {
+      // https://docs.astro.build/en/guides/typescript/#import-aliases
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@styles/*": ["src/styles/*"],
+      "@lib/*": ["src/lib/*"],
+      "@data/*": ["src/data/*"],
+      "@scripts/*": ["src/scripts/*"],
+      "wasm-utils": ["../../packages/wasm/pkg"],
+      "wasm-utils/*": ["../../packages/wasm/pkg/*"]
+    }
+  },
+  "mdx": {
+    "checkMdx": true
+  }
+}

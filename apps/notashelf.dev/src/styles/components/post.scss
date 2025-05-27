@@ -1,0 +1,361 @@
+@use "../variables" as *;
+@use "sass:color";
+
+// Code syntax highlighting styles
+pre {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  border: 1px solid $border-light;
+  position: relative;
+  background-color: color.scale($primary, $lightness: 3%) !important;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(
+      to right,
+      $border-light,
+      $text-subtle,
+      $border-light
+    );
+  }
+
+  code {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+}
+
+code:not(pre code) {
+  background-color: $border-light;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+}
+
+// Blockquotes (non-admonition)
+blockquote:not(.admonition) {
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  border-left: 3px solid $border-light;
+  background-color: $button-bg;
+  border-radius: 0 4px 4px 0;
+
+  p {
+    margin: 0;
+  }
+
+  p + p {
+    margin-top: 0.5rem;
+  }
+
+  + p {
+    margin-top: 1rem;
+  }
+}
+
+// Admonitions (special blockquotes)
+blockquote.admonition {
+  margin: 1.5rem 0;
+  padding: 0;
+  border-radius: 8px;
+  border: 1px solid $border-light;
+  overflow: hidden;
+  background-color: $button-bg;
+  position: relative;
+
+  .admonition-icon {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .admonition-title {
+    padding: 0.8rem 1rem 0.8rem 3rem;
+    font-weight: 600;
+    border-bottom: 1px solid $border-light;
+    margin-bottom: 0;
+  }
+
+  p {
+    padding: 0.8rem 1.5rem;
+    margin: 0;
+  }
+
+  p:first-of-type {
+    padding-top: 0.8rem;
+  }
+
+  p:last-of-type {
+    padding-bottom: 0.8rem;
+  }
+
+  + p {
+    margin-top: 1rem;
+  }
+
+  // Variants
+  &.admonition-note {
+    border-left: 4px solid #3498db;
+
+    .admonition-title {
+      background-color: rgba(52, 152, 219, 0.1);
+      color: #3498db;
+    }
+
+    .admonition-icon {
+      color: #3498db;
+    }
+  }
+
+  &.admonition-tip {
+    border-left: 4px solid #2ecc71;
+
+    .admonition-title {
+      background-color: rgba(46, 204, 113, 0.1);
+      color: #2ecc71;
+    }
+
+    .admonition-icon {
+      color: #2ecc71;
+    }
+  }
+
+  &.admonition-important {
+    border-left: 4px solid #9b59b6;
+
+    .admonition-title {
+      background-color: rgba(155, 89, 182, 0.1);
+      color: #9b59b6;
+    }
+
+    .admonition-icon {
+      color: #9b59b6;
+    }
+  }
+
+  &.admonition-warning,
+  &.admonition-caution {
+    border-left: 4px solid #f39c12;
+
+    .admonition-title {
+      background-color: rgba(243, 156, 18, 0.1);
+      color: #f39c12;
+    }
+
+    .admonition-icon {
+      color: #f39c12;
+    }
+  }
+
+  &.admonition-danger {
+    border-left: 4px solid #e74c3c;
+
+    .admonition-title {
+      background-color: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+    }
+
+    .admonition-icon {
+      color: #e74c3c;
+    }
+  }
+
+  // Importance levels
+  &[data-level="2"] {
+    .admonition-title {
+      font-weight: 700;
+    }
+  }
+
+  &[data-level="3"] {
+    .admonition-title {
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+}
+
+// Make headings linkable
+.post-content {
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    position: relative;
+    scroll-margin-top: 80px;
+
+    &:hover::after {
+      content: "#";
+      position: absolute;
+      left: -1.2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.4;
+      font-weight: normal;
+      font-size: 0.9em;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+}
+
+// Enhanced footnotes
+// Default styles provided by marked-gfm are quite barebones
+// and look out of place with my own design. Lets fix that.
+.footnotes {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid $border-light;
+  font-size: 0.9rem;
+  color: $text-muted;
+
+  hr {
+    display: none; // Hide the default horizontal rule
+  }
+
+  ol {
+    padding-left: 1.5rem;
+    margin-top: 1.5rem; // Space after the heading
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+    position: relative;
+    transition: background-color 0.3s ease;
+    border-radius: 4px;
+    padding: 0.3rem 0.5rem;
+    margin-left: -0.5rem;
+
+    &.footnote-highlight {
+      background-color: $border-light;
+    }
+
+    p {
+      display: inline;
+      margin: 0;
+    }
+  }
+
+  .footnote-backref {
+    margin-left: 0.5rem;
+    text-decoration: none;
+    font-size: 0.85rem;
+    background-color: $border-light;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: $button-bg-hover;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+// Footnote references in text
+a.footnote-ref {
+  text-decoration: none;
+  position: relative;
+  font-size: 0.8em;
+  vertical-align: super;
+  margin: 0 2px;
+  color: $text-muted;
+  background-color: $border-light;
+  padding: 0 5px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: $border-medium;
+    transform: translateY(-1px);
+  }
+}
+
+// Table of Contents
+.toc-container {
+  margin: 2rem 0;
+  background-color: $button-bg;
+  border-radius: 8px;
+  border: 1px solid $border-light;
+}
+
+.toc {
+  summary {
+    padding: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    user-select: none;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:hover {
+      background-color: $button-bg;
+    }
+  }
+}
+
+.toc-list {
+  padding: 0 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toc-item {
+  color: $text-muted;
+  text-decoration: none;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: $button-bg;
+    color: white;
+  }
+
+  &.active {
+    background-color: $border-light;
+    color: white;
+    font-weight: 500;
+  }
+
+  &.level-2 {
+    font-weight: 500;
+  }
+
+  &.level-3 {
+    padding-left: 1.5rem;
+    font-size: 0.85rem;
+
+    &::before {
+      content: "→";
+      margin-right: 0.3rem;
+      opacity: 0.5;
+    }
+  }
+}

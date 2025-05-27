@@ -1,0 +1,152 @@
+---
+import type { PostEntry } from "@lib/types";
+
+interface Props {
+  posts: PostEntry[];
+  className: string;
+  style?: string;
+}
+
+const { posts, className, style } = Astro.props;
+---
+
+<ul class={className} style={style}>
+  {
+    posts.map((post: PostEntry) => (
+      <li
+        class="post-dropdown-item"
+        data-keywords={post.data.keywords?.join(",")}
+        data-post-id={post.id}
+      >
+        <a href={`/posts/${post.id}`} class="dropdown-link">
+          <div class="post-content">
+            <div class="post-header">
+              <h2 class="post-title">{post.data.title}</h2>
+              {post.data.keywords && post.data.keywords.length > 0 && (
+                <div class="post-tags">
+                  {post.data.keywords.map((tag: string) => (
+                    <span class="post-tag">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+            <time datetime={post.data.date.toISOString()} class="post-date">
+              {new Date(post.data.date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </time>
+            {post.data.description && (
+              <p class="post-description">{post.data.description}</p>
+            )}
+          </div>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style lang="scss">
+  @use "sass:color";
+  @use "../styles/global" as *;
+
+  /* Override any default browser ul styling */
+  :global(.post-list),
+  :global(.post-list-all) {
+    padding-left: 0;
+  }
+
+  .post-dropdown-item {
+    background-color: color.scale($primary, $lightness: 6%);
+    list-style: none;
+    padding: 12px 16px;
+    border: 1px solid color.scale($primary, $lightness: -1%);
+    border-radius: 6px;
+    margin: 12px 0;
+    width: 100%;
+    height: 140px;
+    display: flex;
+    overflow: hidden;
+    transition:
+      background-color 0.15s ease-out,
+      transform 0.1s ease-out;
+
+    &:hover {
+      cursor: pointer;
+      color: color.scale($secondary, $lightness: -4%);
+      background-color: color.scale($primary, $lightness: 9%);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .dropdown-link {
+    display: block;
+    text-decoration: none;
+    width: 100%;
+    color: $secondary;
+
+    &:visited {
+      color: $secondary;
+    }
+  }
+
+  .post-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    width: 100%;
+  }
+
+  .post-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+  }
+
+  .post-date {
+    font-size: 0.75em;
+    color: color.scale($secondary, $lightness: -20%);
+    margin: 0 0 8px 0;
+    display: block;
+  }
+
+  .post-description {
+    font-size: 0.85em;
+    color: color.scale($secondary, $lightness: -10%);
+    margin: 0;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-left: 12px;
+  }
+
+  .post-tag {
+    font-size: 0.7rem;
+    background: $border-light;
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+</style>

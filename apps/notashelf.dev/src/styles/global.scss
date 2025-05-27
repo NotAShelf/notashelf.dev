@@ -1,0 +1,20 @@
+// Deranged SASS replacement for @import. I don't like this.
+@forward "variables";
+@use "variables" as *;
+@use "base";
+@use "sass:color";
+
+// Individual components
+@use "components/post";
+@use "components/email-obfuscation";
+
+:root.filtering-active .post-list,
+:root.filtering-active .post-list-all {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.post-list,
+.post-list-all {
+  transition: opacity 0.1s ease;
+}

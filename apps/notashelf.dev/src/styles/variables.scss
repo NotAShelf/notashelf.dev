@@ -1,0 +1,56 @@
+// Theme colors
+$primary: #1a1a1a; // dark background
+$secondary: #f0f0f0; // light text
+$hover-color: #75b5aa; // teal accent for links
+
+// Extended color palette
+$text-muted: #b8b8b8; // muted text (better than rgba(255,255,255,0.7))
+$text-subtle: #999999; // very subtle text (better than rgba(255,255,255,0.5))
+$border-light: #2a2a2a; // light borders (better than rgba(255,255,255,0.1))
+$border-medium: #404040; // medium borders (better than rgba(255,255,255,0.2))
+$background-light: #222222; // light background variations
+$background-medium: #2d2d2d; // medium background variations
+$background-dark: #151515; // dark background variations
+
+$grid-pattern: rgba(255, 255, 255, 0.02); // subtle grid pattern
+
+// Semantic colors with proper contrast
+$success-color: #32cd64; // green for success states
+$warning-color: #ffa528; // orange for warning states
+$error-color: #e74c3c; // red for error states
+$info-color: #409cff; // blue for info states
+
+// Semantic color backgrounds (with alpha for overlays)
+$success-bg: rgba(50, 205, 100, 0.15);
+$warning-bg: rgba(255, 165, 40, 0.15);
+$error-bg: rgba(231, 76, 60, 0.15);
+$info-bg: rgba(64, 156, 255, 0.15);
+
+// Interactive elements
+$button-bg: rgba(255, 255, 255, 0.08);
+$button-bg-hover: rgba(255, 255, 255, 0.12);
+$input-bg: rgba(255, 255, 255, 0.05);
+$input-bg-focus: rgba(255, 255, 255, 0.08);
+$input-border: rgba(255, 255, 255, 0.1);
+$input-border-focus: rgba(255, 255, 255, 0.2);
+
+// Code and syntax highlighting
+$code-bg: rgba(255, 255, 255, 0.08);
+$code-border: rgba(255, 255, 255, 0.1);
+
+// Typography
+$font-family-primary:
+  -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto Slab", Roboto, Arial,
+  sans-serif, "Oxygen-Sans", Ubuntu, Cantarell, "Helvetica Neue", Helvetica,
+  "游ゴシック", "PingFang SC", STXihei, "华文细黑", "Microsoft Yahei", 微软雅黑,
+  SimSun, 宋体, Heiti, 黑体, sans-serif, serif;
+$font-family-secondary:
+  -apple-system, BlinkMacSystemFont, "Segoe UI", "Courier Prime", Roboto, Arial,
+  sans-serif, "Oxygen-Sans", Ubuntu, Cantarell, "Helvetica Neue", Helvetica,
+  "游ゴシック", "PingFang SC", STXihei, "华文细黑", "Microsoft Yahei", 微软雅黑,
+  SimSun, 宋体, Heiti, 黑体, sans-serif, serif;
+$font-family-pre: "Source Code Pro", "Lucida Console", monospace;
+
+// Breakpoints
+$content-width: 80ch;
+$screen-tablet: 768px;

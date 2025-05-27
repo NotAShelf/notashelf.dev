@@ -1,0 +1,761 @@
+---
+import FeaturedProjects from "@components/FeaturedProjects.astro";
+import ResponsiveImage from "@components/ResponsiveImage.astro";
+import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import {
+  faDiscord,
+  faGithub,
+  faGolang,
+  faLinux,
+  faRust,
+  faTwitter,
+} from "@fortawesome/free-brands-svg-icons";
+import {
+  faCode,
+  faEnvelope,
+  faLayerGroup,
+  faSnowflake,
+  faUser,
+  faUserGroup,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+// Get affiliations from collection
+const affiliationsEntries = await getCollection("affiliations");
+
+// Map the icon names to actual icon objects
+const getIconByName = (name: string): IconDefinition => {
+  const icons: Record<string, IconDefinition> = {
+    faGithub,
+    faTwitter,
+    faDiscord,
+    faRust,
+    faLinux,
+    faGolang,
+    faCode,
+    faEnvelope,
+    faLayerGroup,
+    faSnowflake,
+    faUser,
+    faUserGroup,
+  };
+  return icons[name] || faCode;
+};
+
+interface ProcessedAffiliation {
+  id: string;
+  logo: string | IconDefinition;
+  name: string;
+  description: string;
+  isIcon: boolean;
+}
+
+// Process affiliations to convert string icon names to actual icon objects
+const affiliations: ProcessedAffiliation[] = affiliationsEntries.map(
+  (entry) => {
+    const data = entry.data;
+    if (data.isIcon && data.logoIcon) {
+      return {
+        id: entry.id,
+        logo: getIconByName(data.logoIcon),
+        name: data.name,
+        description: data.description,
+        isIcon: data.isIcon,
+      };
+    }
+    return {
+      id: entry.id,
+      logo: data.logo || "",
+      name: data.name,
+      description: data.description,
+      isIcon: data.isIcon,
+    };
+  },
+);
+
+const techBadges = [
+  { icon: faSnowflake, tooltip: "NixOS" },
+  { icon: faLinux, tooltip: "Linux" },
+  { icon: faRust, tooltip: "Rust" },
+  { icon: faGolang, tooltip: "Go" },
+];
+
+const contactOptions = [
+  {
+    icon: faEnvelope,
+    text: "raf@notashelf.dev",
+    href: "mailto:raf@notashelf.dev",
+  },
+  {
+    icon: faDiscord,
+    text: "@notashelf",
+    href: "https://discord.com/users/419880181101232129",
+  },
+  {
+    icon: faCode,
+    text: "Matrix",
+    href: "https://matrix.to/#/@raf:notashelf.dev",
+  },
+  {
+    icon: faTwitter,
+    text: "Twitter",
+    href: "https://twitter.com/NotAShelf",
+  },
+];
+
+const skillCategories = [
+  {
+    title: "Languages",
+    skills: ["Go", "Rust", "C", "TypeScript", "Python", "Nix", "R"],
+  },
+  {
+    title: "Soft Skills",
+    skills: ["Linux", "Git", "CI/CD"],
+  },
+  {
+    title: "Systems",
+    skills: ["Linux", "Nix/OS", "Neovim"],
+  },
+  {
+    title: "Focus Areas",
+    skills: [
+      "System Administration",
+      "Backend Development",
+      "Application Security",
+      "DevSecOps",
+      "FOSS Contribution",
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="About | NotAShelf"
+  description="Software engineer, sailor, political scientist and FOSS contributor"
+  keywords={["about", "linux", "nix", "nixos", "open source", "hyprland"]}
+>
+  <section class="about-container">
+    <div class="about-header fade-in">
+      <div class="profile-image-container">
+        <div class="profile-image-wrapper">
+          <ResponsiveImage
+            src="https://avatars.githubusercontent.com/u/62766066?v=4"
+            alt="Profile Picture"
+            width={160}
+            height={160}
+            class="profile-image"
+          />
+        </div>
+        <div class="tech-badges">
+          {
+            techBadges.map((badge) => (
+              <span class="tech-badge" data-tooltip={badge.tooltip}>
+                <FontAwesomeIcon icon={badge.icon} />
+              </span>
+            ))
+          }
+        </div>
+      </div>
+      <div class="about-intro">
+        <h1>Hey, I'm raf</h1>
+        <p class="lead">
+          Sailor, political scientist, academic, FOSS contributor, and digital
+          artist. I'm passionate about operating systems, open-source software,
+          and system administration.
+        </p>
+        <div class="about-links">
+          <a
+            href="https://github.com/NotAShelf"
+            class="social-link"
+            target="_blank"
+            rel="noopener"
+          >
+            <FontAwesomeIcon icon={faGithub} /> GitHub
+          </a>
+          <a href="#contact" class="social-link highlight">
+            <FontAwesomeIcon icon={faEnvelope} /> Contact
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <section class="about-section fade-in" style="--delay: 0.1s">
+        <h2>Background <FontAwesomeIcon icon={faUser} /></h2>
+        <div class="section-content">
+          <p>
+            I've been programming since 2018, entering the world of Linux,
+            programming, and OSS through a lengthy misadventure involving a
+            Linux VPS, a large-scale Minecraft server, and an imminent crisis.
+          </p>
+          <p>
+            Currently, I'm focusing on backend applications, application
+            security, and system administration. I'm also interested in the role
+            of information system and data integrity/privacy within the
+            policymaking process in contemporary politics, which I've decided to
+            base my PhD thesis on.
+          </p>
+          <p>
+            I take part in the Hyprland community, playing an active role in
+            community management and acting as a supporting developer for Nix.
+          </p>
+        </div>
+      </section>
+
+      <section class="about-section fade-in" style="--delay: 0.2s">
+        <h2>Tech Stack <FontAwesomeIcon icon={faLayerGroup} /></h2>
+        <div class="section-content">
+          <div class="skills-container">
+            {
+              skillCategories.map((category) => (
+                <div class="skill-category">
+                  <h3>{category.title}</h3>
+                  <ul class="skill-list">
+                    {category.skills.map((skill) => (
+                      <li>{skill}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <section class="about-section fade-in" style="--delay: 0.25s">
+        <h2>Affiliations <FontAwesomeIcon icon={faUserGroup} /></h2>
+        <div class="section-content">
+          <p>
+            I'm actively involved with several open-source communities and
+            projects. These affiliations represent both my contributions and the
+            communities I help maintain and support.
+          </p>
+          <div class="affiliations-grid">
+            {
+              affiliations.map((affiliation) => (
+                <div class="affiliation-card">
+                  <div class="affiliation-logo">
+                    {affiliation.isIcon ? (
+                      <FontAwesomeIcon
+                        icon={affiliation.logo as IconDefinition}
+                      />
+                    ) : (
+                      <ResponsiveImage
+                        src={affiliation.logo as string}
+                        alt={`${affiliation.name} Logo`}
+                        width={40}
+                        height={40}
+                      />
+                    )}
+                  </div>
+                  <div class="affiliation-content">
+                    <h3>{affiliation.name}</h3>
+                    <p>{affiliation.description}</p>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <section class="about-section fade-in" style="--delay: 0.3s">
+        <FeaturedProjects mode="recent" title="Recently Updated Projects" />
+      </section>
+
+      <section id="contact" class="about-section fade-in" style="--delay: 0.5s">
+        <h2>Let's Connect <FontAwesomeIcon icon={faEnvelope} /></h2>
+        <div class="section-content">
+          <p class="contact-text">
+            Want to talk? Ask a question? Want to discuss NixOS, Hyprland, or
+            system administration? Feel free to reach out through any of the
+            following channels:
+          </p>
+          <div class="contact-options">
+            {
+              contactOptions.map((option) => (
+                <a
+                  href={option.href}
+                  class="contact-option"
+                  target={
+                    option.href.startsWith("mailto:") ? undefined : "_blank"
+                  }
+                  rel={
+                    option.href.startsWith("mailto:") ? undefined : "noopener"
+                  }
+                >
+                  <FontAwesomeIcon icon={option.icon} />
+                  <span>{option.text}</span>
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+
+    document.querySelectorAll(".fade-in").forEach((el) => observer.observe(el));
+
+    document.querySelectorAll(".tech-badge").forEach((badge) => {
+      badge.addEventListener("mouseenter", function (this: HTMLElement) {
+        const tooltip = this.getAttribute("data-tooltip");
+        if (tooltip) {
+          const tooltipEl = document.createElement("div");
+          tooltipEl.className = "tooltip";
+          tooltipEl.textContent = tooltip;
+          this.appendChild(tooltipEl);
+          setTimeout(() => tooltipEl.classList.add("visible"), 10);
+        }
+      });
+
+      badge.addEventListener("mouseleave", function (this: HTMLElement) {
+        const tooltipEl = this.querySelector(".tooltip");
+        if (tooltipEl) {
+          tooltipEl.classList.remove("visible");
+          setTimeout(() => tooltipEl.remove(), 200);
+        }
+      });
+    });
+  });
+</script>
+
+<style lang="scss">
+  @use "../styles/global" as *;
+  @use "sass:color";
+
+  .about-container {
+    width: 100%;
+    max-width: 80ch;
+    margin: 0 auto;
+    padding: 2rem 0 4rem;
+  }
+
+  .about-header {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .profile-image-container {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .profile-image-wrapper {
+    width: 160px;
+    height: 160px;
+    overflow: hidden;
+    border-radius: 50%;
+
+    :global(img) {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  }
+
+  .profile-image {
+    // Keeping this class for backward compatibility
+  }
+
+  .tech-badges {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    gap: 0.5rem;
+    transform: translateY(30%);
+  }
+
+  .tech-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: color.adjust(
+      color.scale($primary, $lightness: 10%),
+      $alpha: -0.7
+    );
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    color: $secondary;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+
+    &:hover {
+      transform: translateY(-3px);
+      background: color.adjust(
+        color.scale($primary, $lightness: 15%),
+        $alpha: -0.6
+      );
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .tooltip {
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+
+    &.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid rgba(0, 0, 0, 0.8);
+    }
+  }
+
+  .about-intro {
+    flex: 1;
+
+    h1 {
+      font-size: 1.8rem;
+      margin: 0 0 1rem;
+      line-height: 1.2;
+      background: linear-gradient(
+        to right,
+        $secondary,
+        color.scale($secondary, $lightness: -15%)
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      color: color.scale($secondary, $lightness: -10%);
+    }
+  }
+
+  .about-links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    background: $button-bg;
+    color: $secondary;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid $border-light;
+
+    &:hover {
+      background: $button-bg-hover;
+      transform: translateY(-2px);
+    }
+
+    &.highlight {
+      background: color.adjust(
+        color.scale($primary, $lightness: 10%),
+        $alpha: -0.7
+      );
+
+      &:hover {
+        background: color.adjust(
+          color.scale($primary, $lightness: 15%),
+          $alpha: -0.6
+        );
+      }
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .content-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .about-section {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 0.6s ease-out,
+      transform 0.6s ease-out;
+    transition-delay: var(--delay, 0s);
+
+    &.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid $border-light;
+
+      svg {
+        color: color.scale($primary, $lightness: 15%);
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    p {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+      color: color.scale($secondary, $lightness: -5%);
+    }
+  }
+
+  .section-content {
+    padding: 0 0.5rem;
+  }
+
+  .skills-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+  }
+
+  .skill-category {
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: color.scale($primary, $lightness: 15%);
+    }
+  }
+
+  .skill-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      padding: 0.4rem 0;
+      position: relative;
+      padding-left: 1.2rem;
+
+      &:before {
+        content: "•";
+        color: color.scale($primary, $lightness: 15%);
+        position: absolute;
+        left: 0;
+      }
+    }
+  }
+
+  .affiliations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .affiliation-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem;
+    background: $button-bg;
+    border: 1px solid $border-light;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      background: $button-bg-hover;
+      border-color: $border-medium;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .affiliation-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    color: color.scale($primary, $lightness: 15%);
+    background: $button-bg;
+    border-radius: 6px;
+    padding: 8px;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    :global(img) {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
+
+    svg {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  .affiliation-content {
+    h3 {
+      font-size: 1.1rem;
+      margin: 0 0 0.5rem;
+      color: $secondary;
+    }
+
+    p {
+      font-size: 0.9rem;
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+
+  .contact-text {
+    margin-bottom: 1.5rem;
+    font-size: 1.05rem;
+  }
+
+  .contact-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .contact-option {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.8rem 1.2rem;
+    background: $button-bg;
+    border: 1px solid $border-light;
+    border-radius: 8px;
+    color: $secondary;
+    text-decoration: none;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      background: $button-bg-hover;
+      border-color: $border-medium;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    svg {
+      width: 18px;
+      height: 18px;
+      color: color.scale($primary, $lightness: 15%);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .about-header {
+      flex-direction: column;
+      text-align: center;
+      gap: 2rem;
+    }
+
+    .profile-image-container {
+      margin: 0 auto;
+    }
+
+    .about-intro {
+      h1 {
+        font-size: 1.6rem;
+      }
+    }
+
+    .about-links {
+      justify-content: center;
+    }
+
+    .skills-container {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .affiliations-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .skills-container {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-options {
+      flex-direction: column;
+    }
+
+    .contact-option {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .social-link {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

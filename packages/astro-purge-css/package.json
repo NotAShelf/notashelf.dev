@@ -1,0 +1,42 @@
+{
+  "name": "astro-purge-css",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "astro": "^5.0.0"
+  },
+  "dependencies": {
+    "glob": "^11.0.2",
+    "purgecss": "^7.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "astro": "^5.8.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "astro",
+    "integration",
+    "css",
+    "purgecss",
+    "optimization"
+  ],
+  "license": "MPL2.0"
+}

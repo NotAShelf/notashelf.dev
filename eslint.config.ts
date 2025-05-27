@@ -4,23 +4,29 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 const config = tseslint.config(
-  // Astro
-  ...eslintPluginAstro.configs.recommended,
-
   // JavaScript
   eslint.configs.recommended,
   // TypeScript
   ...tseslint.configs.recommended,
+  // Astro
+  ...eslintPluginAstro.configs["flat/recommended"],
 
   {
-    // Global config
+    // Global ignores
     ignores: [
-      "**/dist",
-      "**/node_modules",
-      "**/.astro",
-      "**/.github",
-      "**/result",
+      "**/dist/", // built site
+      "**/node_modules/", // dependencies
+      "**/.astro/", // astro state
+      "**/.github/",
+      "**/result/", // nix build artifacts
+      "**/wasm-utils/**", // built WASM packages
+      "**/pkg/**", // WASM pkg outputs
+      "**/target/**", // Rust build artifacts
     ],
+  },
+
+  {
+    // Global rules
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
     },
@@ -39,6 +45,14 @@ const config = tseslint.config(
     files: ["src/scripts/**"],
     languageOptions: {
       globals: globals.node,
+    },
+  },
+
+  {
+    // Set globals for browser scripts (decoder files).
+    files: ["**/decoder.js", "**/decoder.ts"],
+    languageOptions: {
+      globals: globals.browser,
     },
   },
 );

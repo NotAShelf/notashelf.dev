@@ -1,51 +1,107 @@
 # notashelf.dev
 
-My personal website and blog, this time in Astro after countless hours spent
-revising and even more spent rewriting. This is iteration number 8, I think.
+This is a monorepository containing my website and blog, available under
+[notashelf.dev](https://notashelf.dev). This time it uses Astro as the
+underlying build tool, and explores the possibilities of components done in
+various languages or frameworks. Countless hours were spent rewriting this site
+time and time again. This is iteration number 8, I think.
+
+## Repository Structure
+
+```bash
+.
+├── apps
+├── nix
+├── outputs
+└── packages
+```
+
+The **apps** directory contains web applications, such as my website.
+**packages** directory contains packages required by the web applications, such
+as Vite plugins and WASM components. **nix** directory is for packaging and to
+keep Nix tooling out of repository root as much as possible.
+
+You can find the markdown sources of my writings in `apps/notashelf.dev/posts`.
+If you are planning to contribute to the Astro components, look into
+`apps/notashelf.dev/src`. Remark/Vite plugins and other components will always
+be located in the `packages` directory.
 
 ## Stack
 
-The "final" iteration of this website is built with Astro and Typescript, with
-Javascript on the side for DOM manipulation. This site has seen several NextJS
-setups, a Pandoc based templated Markdown setup and a pure-HTML build that I
+The (hopefully) final iteration of this website is built with Astro and Type
+script. Astro makes it _really_ easy to integrate Typescript into our stack, so
+I will be avoiding vanilla Javascript as much as possible. This does hurt
+portability a little, but I do not intend to switch. This also means that DOM
+manipulation is done by the Typescript utilities found in the `scripts`
+directory of my site.
+
+This site has seen several React/NextJS setups, a self-made templated Go
+program, a Pandoc based templated Markdown setup and a pure-HTML build that I
 have crossed the Pandoc build with. This revision leverages Astro's content
-collections to bring together my personal website and my blog collection as a
-single site that is built with Astro.
+collections and Vite's extensibility to bring together my personal website and
+my blog collection as a single site that is built with Astro.
 
 I think it's still pretty lightweight, but I've gone a bit more overboard this
 time around because of _how easy_ Astro made it to overengineer things. Using
 Pandoc, Bash and Makefiles was a great experiment, but comparatively this is
-much better to work with.
+much better to work with. That said, the user-facing side of the site _is_
+lightweight. Loads fast, and does not take a ton of resources just because I
+could do that.
 
 ### Features
 
-Main reasons I've chosen Astro
+Main reasons I've chosen the stack I did
 
-- Produces a static website
-- Accessible and responsive
-- Optimized images
-- Cheap, full page transitions
-- Wide coverage for my use-cases
-- Clientside Javascript (mostly) optional
-  - No need to use Lua filters for basic functionality
+- **Astro**
+  - Produces a static website
+  - Accessible and responsive
+  - Optimized images
+  - Cheap, full page transitions
+  - Wide coverage for my use-cases
+  - Clientside Javascript (mostly) optional
+    - No need to use Lua filters for basic functionality
+  - Vite under the hood
+    - Incredible plugin ecosystem and integration options
+    - Maximum control of the build tooling
+- **Svelte**
+  - Excellent clientside hydration performance
+- **WASM**
+  - Fast
+  - Fun to work with
+  - Allows writing not-web languages for the web [^1]
+
+[^1]: You still have to interface with this somehow, but it can be used to defer
+    the most resource intensive or cognitively complex operations to another
+    language or framework.
 
 ## Building
 
-The default dev shell provides everything you need to build the site; `nodejs`
-and `pnpm`. Use Direnv for your own sanity, and run `pnpm run build` to produce
-a static site. You may serve it locally with `pnpm run dev`, or via NGINX using
-the production build.
+The default dev shell provides everything required to build the site. For the
+web components, you will need `nodejs` and `pnpm`. For WASM, you will need
+`cargo`, `gcc` and `wasm-pack`. There are pnpm scripts exported in the
+repository root that you can use to build things. E.g., `pnpm run build:web`
+will build the web components. Without a specified, you will build everything.
+
+Use Direnv for your own sanity, and run `pnpm run build:web` to produce a static
+site. You may serve it locally with `pnpm run dev`, or via NGINX using the
+production build.
 
 Alternatively there is a Nix package provided as `build-site`, which can be
-built with `nix build .#build-site`.
+built with `nix build .`. The WASM component is not exposed as its own package.
 
 ### Contributing
 
-Make your changes, and open a pull request. Please make sure that any code is
-formatted with `prettier` before pushing your changes. An alias is provided in
-the `package.json` to invoke `prettier . --write`, as `pnpm run fmt`.
-Additionally it would be nice if you could avoid tripping the linter, which is
-very strict.
+Any kind of contributions are welcome. If you find a problem that you think you
+can fix, or just want to improve something (opinionated changes may be rejected,
+but performance improvements for example are welcome) then feel free to open a
+pull request.
+
+Make your changes, and open a pull request. Please make sure that any TS/Astro
+code is formatted with `prettier` before pushing your changes. Markdown must be
+formattedd with `deno fmt` An alias is provided in the `package.json` to invoke
+`prettier`, as `pnpm run fmt`. Additionally it would be nice if you could avoid
+tripping the linter, which is very strict. `pnpm run check` lets you view the
+linter results directly. Make sure that no new warnings are introduced.
 
 ## License
 

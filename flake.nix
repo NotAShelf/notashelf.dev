@@ -19,91 +19,15 @@
     devShells = forEachSystem (system: let
       pkgs = pkgsForEach.${system};
     in {
-      default = self.devShells.${system}.blog;
-      blog = pkgs.mkShellNoCC {
-        name = "blog-dev";
-        packages = with pkgs; [
-          # Eslint_d
-          nodejs-slim
-          pnpm
-
-          # To run 'typos' on my content every once in a while
-          typos
-        ];
-      };
+      default = self.devShells.${system}.site;
+      site = pkgs.callPackage ./nix/shell.nix {};
     });
 
     packages = forEachSystem (system: let
-      pkgs = pkgsForEach.${system};
+      pkgs = pkgsForEach."${system}";
     in {
-      build-site = let
-        fs = lib.fileset;
-      in
-        pkgs.stdenvNoCC.mkDerivation (finalAttrs: {
-          pname = "build-site";
-          version =
-            if (self ? rev)
-            then (builtins.substring 0 7 self.rev)
-            else "main";
-
-          src = let
-            sp = ./.;
-          in
-            fs.toSource {
-              root = sp;
-
-              # Filter everything outside of what's specified here. Configuration files
-              # are good to include, but linter/formatter configs are not necessary.
-              fileset = fs.intersection (fs.fromSource (lib.sources.cleanSource sp)) (
-                fs.unions [
-                  ./src
-                  ./public
-                  ./posts
-                  ./package.json
-                  ./pnpm-lock.yaml
-                  ./astro.config.ts
-                  ./tsconfig.json # for import aliases
-                ]
-              );
-            };
-
-          pnpmDeps = pkgs.pnpm_10.fetchDeps {
-            inherit (finalAttrs) pname src;
-            hash = "sha256-dgACOwM6D47OBenGcQFhNoC6yXR+SxsQqcE+wNb4QrA=";
-          };
-
-          nativeBuildInputs = with pkgs; [
-            nodejs
-            pnpm_10.configHook
-          ];
-
-          env = {
-            ASTRO_TELEMETRY_DISABLED = true;
-            GIT_REV = finalAttrs.version;
-            SITE_SRC = "https://github.com/notashelf/notashelf.dev";
-          };
-
-          buildPhase = ''
-            runHook preBuild
-
-            pnpm run build -- --standalone --disable-updater
-
-            runHook postBuild
-          '';
-
-          installPhase = ''
-            runHook preInstall
-
-            cp -rvf dist $out
-
-            runHook postInstall;
-          '';
-
-          meta = {
-            description = "Pure, reproducible builder for my blog";
-            maintainers = [lib.maintainers.NotAShelf];
-          };
-        });
+      default = self.packages.${system}.site;
+      site = pkgs.callPackage ./nix/build-site.nix {inherit self;};
     });
 
     # Make sure that the packages and devshells are valid.

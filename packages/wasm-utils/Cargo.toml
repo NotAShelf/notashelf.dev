@@ -1,0 +1,27 @@
+[package]
+name = "wasm-utils"
+description = "WASM components for my personal website"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = { version = "0.2", features = ["serde-serialize"] }
+js-sys = "0.3"
+lru = "0.14"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde-wasm-bindgen = "0.6"
+web-sys = { version = "0.3", features = ["console", "Performance", "Window"] }
+
+[profile.dev]
+opt-level = 1
+
+[profile.release]
+strip = true
+opt-level = "s"
+lto = "thin"
+codegen-units = 1
+panic = "abort"

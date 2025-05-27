@@ -1,0 +1,176 @@
+@use "variables" as *;
+@use "sass:color";
+
+// Reset and base elements
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 20px;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  background-color: $primary;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  scroll-behavior: smooth;
+
+  @media (max-width: $screen-tablet) {
+    font-size: 18px;
+  }
+}
+
+// Typography
+pre {
+  font-family: $font-family-pre;
+}
+
+// Layout components
+header {
+  background-color: $primary;
+  color: $secondary;
+  padding: 10px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 80ch;
+  width: 100%;
+  margin: 0 auto;
+
+  @media (max-width: $screen-tablet) {
+    font-size: 14px;
+    padding: 8px 4px;
+  }
+}
+
+nav {
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+
+    li {
+      a {
+        color: $secondary;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+main {
+  text-align: left;
+  color: $secondary;
+  padding: 10px 30px;
+  flex: 1;
+  margin: 0 auto;
+  max-width: Min(80ch, 100%);
+  font-family: $font-family-primary;
+
+  a {
+    &:hover,
+    &:link,
+    &:visited,
+    &:active {
+      color: $hover-color;
+      text-decoration: none;
+    }
+  }
+
+  @media (max-width: $screen-tablet) {
+    padding: 12px;
+  }
+}
+
+main aside {
+  overflow: auto;
+}
+
+footer {
+  color: $secondary;
+  text-align: center;
+  padding: 20px 0;
+  font-family: $font-family-primary;
+  font-size: 0.9rem;
+}
+
+// Common UI elements
+.dropbtn,
+.nav-button {
+  font-family: Lato, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 800;
+  background-color: $primary;
+  color: $secondary;
+  cursor: pointer;
+  border: none;
+  align-items: center;
+  margin: 0px 5px;
+
+  &:hover {
+    color: color.scale($secondary, $lightness: 5%);
+  }
+}
+
+.nav-border {
+  border: 0;
+  height: 1px;
+  background-color: $border-light;
+  margin: 0 auto;
+  max-width: 80ch;
+}
+
+.footer-divider {
+  border-top: 1px solid $border-light;
+  margin: 1rem 0;
+}
+
+.footer-icons {
+  font-size: 1.5rem;
+  margin-top: 0.5rem;
+
+  a {
+    color: $secondary;
+    margin: 0 5px;
+
+    &:hover {
+      color: $hover-color;
+    }
+  }
+}
+
+// Animation utilities
+.fade-in {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+  transition-delay: var(--delay, 0s);
+
+  // Support reduced motion also
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}

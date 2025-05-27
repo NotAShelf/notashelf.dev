@@ -1,0 +1,150 @@
+---
+import Footer from "@components/Footer.astro";
+import Navigation from "@components/Navigation.astro";
+import Plausible from "@components/Plausible.astro";
+import SEO from "@components/SEO.astro";
+
+export interface Props {
+  title: string;
+  description?: string;
+  keywords?: string[];
+  date?: string;
+  showBackgroundGrid?: boolean;
+}
+
+const {
+  title,
+  description,
+  keywords = [],
+  date,
+  showBackgroundGrid = true,
+} = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=yes"
+    />
+    <SEO
+      title={title}
+      description={description}
+      keywords={keywords}
+      date={date}
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="{title}"
+      href={new URL("rss.xml", Astro.site)}
+    />
+
+    <!-- Get the Plausible analytics component. This collects minimal, non-identifying analytics -->
+    <Plausible domain="notashelf.dev" />
+
+    <!-- Critical CSS inlined for fastest rendering -->
+    <style>
+      /* Critical above-the-fold styles */
+      :root {
+        --content-width: min(65ch, 100% - 2rem);
+        --primary: #7c3aed;
+        --secondary: #1f2937;
+        --background: #ffffff;
+        --text-subtle: #6b7280;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        line-height: 1.6;
+        color: var(--secondary);
+        background: var(--background);
+      }
+
+      .hero {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 60px);
+        padding: 1.5rem 0 6rem;
+      }
+    </style>
+
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//plausible.io" />
+
+    <!-- Preconnect to critical domains -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
+  <body>
+    {showBackgroundGrid && <div class="background-pattern" />}
+
+    <div class="page-container">
+      <Navigation />
+
+      <main class="content-wrapper">
+        <slot />
+      </main>
+
+      <Footer />
+    </div>
+
+    <!-- Load page utilities asynchronously -->
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        try {
+          await import("../scripts/page-utils.ts");
+        } catch (error) {
+          console.warn("Failed to load page utilities:", error);
+        }
+      });
+    </script>
+  </body>
+</html>
+
+<style lang="scss" is:global>
+  @use "../styles/global" as *;
+
+  .page-container {
+    width: $content-width;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1rem;
+    box-sizing: border-box;
+  }
+
+  .content-wrapper {
+    width: $content-width;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :global(.content-wrapper > *) {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  // Creates a grid pattern on the background.
+  .background-pattern {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+      linear-gradient(to right, $grid-pattern 1px, transparent 1px),
+      linear-gradient(to bottom, $grid-pattern 1px, transparent 1px);
+    background-size: 20px 20px;
+    z-index: -1;
+    pointer-events: none;
+  }
+</style>

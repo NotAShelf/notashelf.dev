@@ -1,0 +1,25 @@
+---
+import PostLayout from "@layouts/PostLayout.astro";
+import { convertPostDates, getPostStaticPaths } from "@lib/postUtils";
+import type { PostEntry } from "@lib/types";
+import { render } from "astro:content";
+
+export const prerender = true;
+export async function getStaticPaths() {
+  return getPostStaticPaths();
+}
+
+const { entry } = Astro.props as { entry: PostEntry };
+const { Content } = await render(entry);
+const convertedData = convertPostDates(entry.data, { throwOnError: false });
+// Fall back to raw data with stringified dates if conversion fails
+const frontmatter = convertedData || {
+  ...entry.data,
+  date: entry.data.date?.toString() || new Date().toISOString(),
+  updated: entry.data.updated?.toString(),
+};
+---
+
+<PostLayout frontmatter={frontmatter}>
+  <Content />
+</PostLayout>

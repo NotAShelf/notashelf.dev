@@ -1,0 +1,343 @@
+---
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import {
+  faExclamationCircle,
+  faInfoCircle,
+  faQuestion,
+  faShield,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+const lastUpdated = "February 16, 2025";
+const effectiveDate = "April 5, 2024";
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description="Privacy policy for notashelf.dev"
+>
+  <article class="privacy-policy">
+    <div class="policy-header">
+      <h1>Privacy Policy</h1>
+      <div class="policy-dates">
+        <div class="date-tag">Effective: {effectiveDate}</div>
+        <div class="date-tag">Updated: {lastUpdated}</div>
+      </div>
+    </div>
+
+    <div class="policy-summary">
+      <p>
+        This site collects <strong>no personal data</strong>, uses <strong
+          >no cookies</strong
+        >, and only runs minimal analytics to understand site traffic.
+      </p>
+    </div>
+
+    <div class="policy-grid">
+      <div class="policy-section">
+        <div class="section-icon">
+          <FontAwesomeIcon icon={faInfoCircle} client:load />
+        </div>
+        <div class="section-content">
+          <h2>Agreement</h2>
+          <p>
+            By visiting <code>notashelf.dev</code>, you agree to these terms.
+            They may change without prior notice. Any changes will be
+            communicated on this page.
+          </p>
+        </div>
+      </div>
+
+      <div class="policy-section">
+        <div class="section-icon">
+          <FontAwesomeIcon icon={faShield} client:load />
+        </div>
+        <div class="section-content">
+          <h2>Information Collection</h2>
+          <p>
+            This site doesn't collect personal information or use trackers or
+            ads. The source code is available on <a
+              href="https://github.com/notashelf/notashelf.dev"
+              target="_blank"
+              rel="noopener noreferrer">GitHub</a
+            >.
+          </p>
+
+          <ul class="policy-list">
+            <li><span class="highlight">Does not</span> set cookies</li>
+            <li>
+              <span class="highlight">Does not</span> store shared browser data
+            </li>
+            <li>
+              <span class="highlight">Does not</span> share information with third
+              parties
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="policy-section">
+        <div class="section-icon">
+          <FontAwesomeIcon icon={faExclamationCircle} client:load />
+        </div>
+        <div class="section-content">
+          <h2>Site Analytics</h2>
+          <p>
+            This site runs <a
+              href="https://plausible.io"
+              target="_blank"
+              rel="noopener noreferrer">Plausible Analytics</a
+            > to collect anonymous usage data. The goal is to track overall website
+            trends, not individual visitors. All data is aggregated with no personal
+            information collected.
+          </p>
+        </div>
+      </div>
+
+      <div class="policy-section">
+        <div class="section-icon">
+          <FontAwesomeIcon icon={faQuestion} client:load />
+        </div>
+        <div class="section-content">
+          <h2>Contact</h2>
+          <p>
+            For questions about this privacy policy, contact the site owner via
+            <a
+              href="https://github.com/notashelf"
+              target="_blank"
+              rel="noopener noreferrer">GitHub</a
+            > or by email at
+            <a href="mailto:raf@notashelf.dev">raf@notashelf.dev</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="policy-footer">
+      <a
+        href="https://github.com/notashelf/notashelf.dev"
+        class="github-link"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <FontAwesomeIcon icon={faGithub} client:load />
+        Source code
+      </a>
+    </div>
+  </article>
+</BaseLayout>
+
+<style lang="scss">
+  @use "../styles/global" as *;
+
+  .privacy-policy {
+    line-height: 1.5;
+    max-width: 80ch;
+    margin: 0 auto;
+    padding: 1.5rem 0;
+  }
+
+  .policy-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .policy-header h1 {
+    margin: 0 0 0.75rem;
+    font-size: 1.8rem;
+    background: linear-gradient(to right, #fff, $text-muted);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .policy-dates {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .date-tag {
+    background: $button-bg;
+    padding: 0.3rem 0.8rem;
+    border-radius: 16px;
+    font-size: 0.8rem;
+  }
+
+  .policy-summary {
+    background: linear-gradient(to right, $button-bg, $input-bg-focus);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    border-left: 3px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .policy-summary p {
+    text-align: center;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .policy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .policy-section {
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+  }
+
+  .section-icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.9);
+    margin-top: 0.25rem;
+  }
+
+  .section-icon :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+
+  .section-content {
+    flex: 1;
+  }
+
+  .section-content h2 {
+    margin: 0 0 0.6rem;
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .section-content p {
+    margin: 0 0 0.8rem;
+    font-size: 0.95rem;
+  }
+
+  .policy-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.8rem 0 0;
+  }
+
+  .policy-list li {
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+    font-size: 0.9rem;
+  }
+
+  .policy-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: $text-subtle;
+    font-weight: bold;
+  }
+
+  .highlight {
+    font-weight: 600;
+    color: $secondary;
+  }
+
+  code {
+    background-color: $border-light;
+    padding: 0.15rem 0.3rem;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.85em;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: $border-light;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    transition: all 0.2s ease;
+  }
+
+  a:hover {
+    text-decoration-color: $text-muted;
+  }
+
+  .policy-footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid $border-light;
+  }
+
+  .github-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    background: $button-bg;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+  }
+
+  .github-link:hover {
+    background: $button-bg-hover;
+    transform: translateY(-2px);
+  }
+
+  .github-link :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+
+  @media (max-width: 768px) {
+    .policy-grid {
+      grid-template-columns: 1fr;
+      gap: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .policy-header h1 {
+      font-size: 1.5rem;
+    }
+
+    .section-icon {
+      width: 28px;
+      height: 28px;
+    }
+
+    .section-content h2 {
+      font-size: 1.1rem;
+    }
+
+    .policy-dates {
+      flex-direction: row;
+    }
+
+    .privacy-policy {
+      padding: 1rem 0;
+    }
+  }
+
+  // HACK: add a hidden spacer to force consistent layout height
+  // Without this, navbar shifts a few pixels right when the page is loaded.
+  .privacy-policy::after {
+    content: "";
+    display: block;
+    height: 1px;
+    min-height: calc(100vh - 300px);
+    visibility: hidden;
+  }
+</style>
