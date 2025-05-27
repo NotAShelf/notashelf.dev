@@ -1,13 +1,71 @@
-import { PurgeCSS, UserDefinedOptions } from "purgecss";
+import { PurgeCSS } from "purgecss";
 import type { AstroIntegration } from "astro";
 import { fileURLToPath } from "url";
 import { readFile, writeFile } from "fs/promises";
 import { glob } from "glob";
 import path from "path";
+import cssnano from "cssnano";
+import postcss from "postcss";
+import type { ProcessOptions, Plugin, PluginCreator } from "postcss";
 
-export default function purgeCSSIntegration(
-  options: Partial<UserDefinedOptions> = {},
+interface CSSNanoOptions {
+  preset?: [string, Record<string, any>] | string;
+  plugins?: any[];
+  [key: string]: any;
+}
+
+interface PostCSSConfig {
+  plugins?: (
+    | Plugin
+    | PluginCreator<any>
+    | [Plugin | PluginCreator<any>, any]
+    | string
+    | [string, any]
+  )[];
+  options?: ProcessOptions;
+}
+
+interface PurgeCSSIntegrationOptions {
+  purgeCSS?: Partial<import("purgecss").UserDefinedOptions>;
+  cssnano?: boolean | CSSNanoOptions;
+  postcss?: PostCSSConfig;
+  safelist?: string[];
+  blocklist?: string[];
+  keyframes?: boolean;
+  fontFace?: boolean;
+}
+
+function normalizePlugin(plugin: any): Plugin | PluginCreator<any> {
+  if (Array.isArray(plugin)) {
+    const [pluginFn, options] = plugin;
+    return typeof pluginFn === "function" ? pluginFn(options) : pluginFn;
+  }
+  return typeof plugin === "function" ? plugin() : plugin;
+}
+
+function purgeCSSIntegration(
+  options: PurgeCSSIntegrationOptions = {},
 ): AstroIntegration {
+  const {
+    cssnano: cssnanoOptions,
+    postcss: postcssConfig,
+    purgeCSS: purgeOptions = {},
+    safelist,
+    blocklist,
+    keyframes,
+    fontFace,
+    ...restOptions
+  } = options;
+
+  const finalPurgeOptions = {
+    ...purgeOptions,
+    ...restOptions,
+    ...(safelist && { safelist }),
+    ...(blocklist && { blocklist }),
+    ...(keyframes !== undefined && { keyframes }),
+    ...(fontFace !== undefined && { fontFace }),
+  };
+
   return {
     name: "astro-purgecss",
     hooks: {
@@ -64,12 +122,38 @@ export default function purgeCSSIntegration(
                 content.match(/[^<>"'`\s.()]*[^<>"'`\s.():]/g) || [];
               return [...broadMatches, ...innerMatches];
             },
-            ...options,
+            ...finalPurgeOptions,
           });
 
-          await writeFile(cssPath, result.css);
+          let finalCSS = result.css;
 
-          const newSize = result.css.length;
+          const plugins: any[] = [];
+
+          if (postcssConfig?.plugins) {
+            for (const plugin of postcssConfig.plugins) {
+              plugins.push(normalizePlugin(plugin));
+            }
+          }
+
+          if (cssnanoOptions !== false) {
+            plugins.push(
+              cssnano(
+                typeof cssnanoOptions === "boolean" ? {} : cssnanoOptions,
+              ),
+            );
+          }
+
+          if (plugins.length > 0) {
+            const postcssResult = await postcss(plugins).process(finalCSS, {
+              from: undefined,
+              ...postcssConfig?.options,
+            });
+            finalCSS = postcssResult.css;
+          }
+
+          await writeFile(cssPath, finalCSS);
+
+          const newSize = finalCSS.length;
           const reduction = (
             ((originalSize - newSize) / originalSize) *
             100
@@ -85,3 +169,7 @@ export default function purgeCSSIntegration(
     },
   };
 }
+
+export default purgeCSSIntegration;
+export { purgeCSSIntegration };
+export type { PurgeCSSIntegrationOptions, CSSNanoOptions, PostCSSConfig };
