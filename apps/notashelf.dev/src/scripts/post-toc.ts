@@ -31,45 +31,47 @@ class PostTableOfContents {
   /**
    * Initialize the intersection observer for heading elements
    */
-  private static initScrollObserver(
-    headings: HTMLHeadingElement[],
-    tocItems: HTMLAnchorElement[],
-  ): void {
-    const observerOptions: IntersectionObserverInit = {
-      rootMargin: "-80px 0px -30% 0px",
-      threshold: 0,
-    };
+private static initScrollObserver(
+     headings: HTMLHeadingElement[],
+     tocItems: HTMLAnchorElement[],
+  ): IntersectionObserver {
+     const observerOptions: IntersectionObserverInit = {
+       rootMargin: "-80px 0px -30% 0px",
+       threshold: 0,
+     };
 
-    const observer = new IntersectionObserver(
-      (entries: IntersectionObserverEntry[]) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const headingElement = entry.target as HTMLHeadingElement;
-            const headingId = headingElement.id;
-            const tocItem = tocItems.find(
-              (item) => item.getAttribute("href") === `#${headingId}`,
-            );
+     const observer = new IntersectionObserver(
+       (entries: IntersectionObserverEntry[]) => {
+         entries.forEach((entry) => {
+           if (entry.isIntersecting) {
+             const headingElement = entry.target as HTMLHeadingElement;
+             const headingId = headingElement.id;
+             const tocItem = tocItems.find(
+               (item) => item.getAttribute("href") === `#${headingId}`,
+             );
 
-            if (tocItem) {
-              // Remove active class from all items
-              tocItems.forEach((item) =>
-                item.classList.remove(this.ACTIVE_CLASS),
-              );
+             if (tocItem) {
+               // Remove active class from all items
+               tocItems.forEach((item) =>
+                 item.classList.remove(this.ACTIVE_CLASS),
+               );
 
-              // Add active class to current item
-              tocItem.classList.add(this.ACTIVE_CLASS);
-            }
-          }
-        });
-      },
-      observerOptions,
-    );
+               // Add active class to current item
+               tocItem.classList.add(this.ACTIVE_CLASS);
+             }
+           }
+         });
+       },
+       observerOptions,
+     );
 
-    // Observe each heading
-    headings.forEach((heading) => {
-      observer.observe(heading);
-    });
-  }
+     // Observe each heading
+     headings.forEach((heading) => {
+       observer.observe(heading);
+     });
+
+    return observer;
+   }
 
   /**
    * Initialize smooth scrolling behavior for ToC links
