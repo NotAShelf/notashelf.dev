@@ -98,7 +98,10 @@ function obfuscateEmail(email: string, method: string): string {
       // Hide email in seemingly innocent text using CSS and data attributes
       const words = ["contact", "reach", "message", "write", "email"];
       const randomWord = words[Math.floor(Math.random() * words.length)];
-      const encodedEmail = Buffer.from(email).toString('base64').replace(/[+=]/g, "").substring(0, 12);
+      const encodedEmail = Buffer.from(email)
+        .toString("base64")
+        .replace(/[+=]/g, "")
+        .substring(0, 12);
       return `<span class="contact-hint" data-info="${encodedEmail}">${randomWord}</span>`;
     }
 
@@ -121,7 +124,7 @@ async function processHtmlFile(
     // Process mailto links first
     modifiedHtml = modifiedHtml.replace(MAILTO_REGEX, (match, email) => {
       // Remove the href entirely for security
-      return `data-obfuscated-email="${Buffer.from(email).toString('base64')}" title="Email address obfuscated for privacy"`;
+      return `data-obfuscated-email="${Buffer.from(email).toString("base64")}" title="Email address obfuscated for privacy"`;
     });
 
     // Process plain text emails
