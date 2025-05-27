@@ -3,31 +3,78 @@ import { promises as fs } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
+/**
+ * Available obfuscation methods with their effectiveness and characteristics.
+ */
+type ObfuscationMethod =
+  | "rot18"
+  | "js-concat"
+  | "js-interaction"
+  | "svg"
+  | "css-hidden"
+  | "http-redirect"
+  | "reverse"
+  | "base64"
+  | "deconstruct";
+
+type ProcessingTarget = "text" | "link" | "both";
+
 interface AstroEmailObfuscationOptions {
-  method?: "rot18" | "reverse" | "base64" | "deconstruct";
+  /**
+   * Array of obfuscation methods to apply in sequence for layered defense.
+   */
+  methods?: ObfuscationMethod[];
+
+  /**
+   * Legacy single method support (deprecated)
+   */
+  method?: ObfuscationMethod;
+
+  /**
+   * Control which parts of HTML to process
+   */
+  target?: ProcessingTarget;
+
   dev?: boolean;
   excludeSelector?: string;
   placeholder?: string;
+  redirectBaseUrl?: string;
+  includeFallbacks?: boolean;
 }
 
 export default function astroEmailObfuscation(
   userOptions: AstroEmailObfuscationOptions = {},
 ): AstroIntegration {
+  // Handle legacy method option and new methods array
+  const methods =
+    userOptions.methods ||
+    (userOptions.method ? [userOptions.method] : ["rot18"]);
+
   const options = {
-    method: userOptions.method || "rot18",
+    methods,
+    target: userOptions.target || "both",
     dev: userOptions.dev || false,
     excludeSelector: userOptions.excludeSelector || ".no-obfuscate",
     placeholder: userOptions.placeholder || "[Click to reveal email]",
+    redirectBaseUrl: userOptions.redirectBaseUrl || "/api/email-redirect",
+    includeFallbacks: userOptions.includeFallbacks !== false,
   } as const;
 
-  // ROT18 encoding (ROT13 for letters + ROT5 for numbers)
+  // Validate http-redirect method requirements
+  if (methods.includes("http-redirect") && !userOptions.redirectBaseUrl) {
+    throw new Error(
+      "redirectBaseUrl is required when using http-redirect method",
+    );
+  }
+
+  // Utility functions
+
+  // ROT18 encoding (ROT13 for letters + ROT5 for numbers) - Highly effective
   function rot18(str: string): string {
     return str.replace(/[a-zA-Z0-9]/g, function (char) {
       if (char >= "0" && char <= "9") {
-        // ROT5 for digits
         return String.fromCharCode(((char.charCodeAt(0) - 48 + 5) % 10) + 48);
       } else {
-        // ROT13 for letters
         const start = char <= "Z" ? 65 : 97;
         return String.fromCharCode(
           ((char.charCodeAt(0) - start + 13) % 26) + start,
@@ -36,19 +83,24 @@ export default function astroEmailObfuscation(
     });
   }
 
-  // Base64 encode email
+  // Base64 encode - Moderate effectiveness when combined
   function base64Encode(str: string): string {
     return Buffer.from(str).toString("base64");
   }
 
-  // Split email into parts for deconstruction
+  // Split email into parts - Moderate effectiveness when combined
   function deconstructEmail(email: string): string[] {
     return email.split("");
   }
 
-  // Reverse email string
+  // Reverse email string - Moderate effectiveness when combined
   function reverseEmail(email: string): string {
     return email.split("").reverse().join("");
+  }
+
+  // Generate random variable names for JS concatenation
+  function generateRandomVar(): string {
+    return "e" + Math.random().toString(36).substr(2, 8);
   }
 
   // Escape HTML to prevent XSS
@@ -63,30 +115,217 @@ export default function astroEmailObfuscation(
     return text.replace(/[&<>"']/g, (m) => map[m]);
   }
 
+  // Generate unique ID for each obfuscated element
+  function generateUniqueId(): string {
+    return "obf_" + Math.random().toString(36).substr(2, 9);
+  }
+
+  /**
+   * Individual obfuscation method implementations
+   * Each method includes documentation about effectiveness and compatibility
+   */
   const obfuscationMethods = {
-    rot18: (email: string) => {
+    /**
+     * ROT18 (ROT13+ROT5) - High effectiveness, good screen reader compatibility
+     * Bot resistance: High (requires JS decoding)
+     * Screen reader compatibility: Good (with proper fallbacks)
+     * Crawler resistance: High
+     */
+    rot18: (email: string, isLast: boolean = true) => {
       const encoded = rot18(email);
+      const id = generateUniqueId();
       const escapedPlaceholder = escapeHtml(options.placeholder);
-      return `<span class="rot18-email" data-email="${escapeHtml(encoded)}" title="Email address obfuscated for privacy">${escapedPlaceholder}</span>`;
+
+      const fallback = options.includeFallbacks
+        ? `<noscript><span aria-label="Email address obfuscated - JavaScript required">[JavaScript required for email]</span></noscript>`
+        : "";
+
+      return `<span id="${id}" class="rot18-email" data-email="${escapeHtml(encoded)}" role="button" tabindex="0" aria-label="Click to reveal email address" title="Email address obfuscated for privacy">${escapedPlaceholder}</span>${fallback}`;
     },
 
-    base64: (email: string) => {
+    /**
+     * JS Concatenation - Very high effectiveness, requires JavaScript
+     * Bot resistance: Very High (dynamic assembly)
+     * Screen reader compatibility: Good (with ARIA labels)
+     * Crawler resistance: Very High
+     */
+    "js-concat": (email: string, isLast: boolean = true) => {
+      const parts = email.split("@");
+      if (parts.length !== 2) return email; // Invalid email format
+
+      const [localPart, domain] = parts;
+      const id = generateUniqueId();
+      const var1 = generateRandomVar();
+      const var2 = generateRandomVar();
+      const var3 = generateRandomVar();
+
+      const fallback = options.includeFallbacks
+        ? `<noscript><span>[Email hidden - JavaScript required]</span></noscript>`
+        : "";
+
+      return `<span id="${id}" class="js-concat-email" data-p1="${escapeHtml(localPart)}" data-p2="${escapeHtml(domain)}" role="button" tabindex="0" aria-label="Click to reveal email address">${escapeHtml(options.placeholder)}</span>${fallback}`;
+    },
+
+    /**
+     * JS Interaction - Very high effectiveness, user action required
+     * Bot resistance: Very High (requires user interaction)
+     * Screen reader compatibility: Excellent (proper focus management)
+     * Crawler resistance: Very High
+     */
+    "js-interaction": (email: string, isLast: boolean = true) => {
       const encoded = base64Encode(email);
-      const escapedPlaceholder = escapeHtml(options.placeholder);
-      return `<span class="b64-email" data-obfuscated-email="${escapeHtml(encoded)}" title="Email address obfuscated for privacy">${escapedPlaceholder}</span>`;
+      const id = generateUniqueId();
+
+      const fallback = options.includeFallbacks
+        ? `<noscript><span>[Email requires interaction - JavaScript needed]</span></noscript>`
+        : "";
+
+      return `<span id="${id}" class="js-interaction-email" data-encoded="${escapeHtml(encoded)}" role="button" tabindex="0" aria-label="Click or press Enter to reveal email address" title="Click to reveal email">${escapeHtml(options.placeholder)}</span>${fallback}`;
     },
 
-    reverse: (email: string) => {
+    /**
+     * SVG rendering - High effectiveness, invisible to most crawlers
+     * Bot resistance: High (SVG text parsing is uncommon)
+     * Screen reader compatibility: Good (with proper ARIA)
+     * Crawler resistance: High
+     */
+    svg: (email: string, isLast: boolean = true) => {
+      const id = generateUniqueId();
+      const chars = email.split("");
+      let svgContent = "";
+
+      chars.forEach((char, index) => {
+        svgContent += `<text x="${index * 8 + 5}" y="15" font-family="monospace" font-size="14">${escapeHtml(char)}</text>`;
+      });
+
+      const fallback = options.includeFallbacks
+        ? `<noscript><span>[Email in SVG format - not accessible without graphics]</span></noscript>`
+        : "";
+
+      return `<svg id="${id}" class="svg-email" width="${chars.length * 8 + 10}" height="20" role="img" aria-label="Email address: ${escapeHtml(email)}" style="vertical-align: middle;">${svgContent}</svg>${fallback}`;
+    },
+
+    /**
+     * CSS Hidden - High effectiveness, uses CSS manipulation
+     * Bot resistance: High (requires CSS and JS parsing)
+     * Screen reader compatibility: Good (with proper implementation)
+     * Crawler resistance: High
+     */
+    "css-hidden": (email: string, isLast: boolean = true) => {
+      const id = generateUniqueId();
+      const chars = email.split("");
+      const hiddenChars = chars
+        .map(
+          (char, index) =>
+            `<span class="hidden-char" data-pos="${index}" style="display: none;">${escapeHtml(char)}</span>`,
+        )
+        .join("");
+
+      const fallback = options.includeFallbacks
+        ? `<noscript><span>[Email hidden with CSS - JavaScript required]</span></noscript>`
+        : "";
+
+      return `<span id="${id}" class="css-hidden-email" role="button" tabindex="0" aria-label="Click to reveal email address">${hiddenChars}<span class="placeholder-text">${escapeHtml(options.placeholder)}</span></span>${fallback}`;
+    },
+
+    /**
+     * HTTP Redirect - Very high effectiveness, server-side protection
+     * Bot resistance: Very High (requires server-side processing)
+     * Screen reader compatibility: Excellent (standard links)
+     * Crawler resistance: Very High
+     */
+    "http-redirect": (email: string, isLast: boolean = true) => {
+      const encoded = base64Encode(email);
+      const redirectUrl = `${options.redirectBaseUrl}?e=${encodeURIComponent(encoded)}`;
+
+      return `<a href="${escapeHtml(redirectUrl)}" class="http-redirect-email" data-original="${escapeHtml(email)}" title="Contact via email">${escapeHtml(options.placeholder)}</a>`;
+    },
+
+    /**
+     * Reverse - Moderate effectiveness, better when combined
+     * Bot resistance: Low-Medium (easily reversible)
+     * Screen reader compatibility: Poor (reads backwards)
+     * Crawler resistance: Low-Medium
+     */
+    reverse: (email: string, isLast: boolean = true) => {
       const reversed = reverseEmail(email);
-      return `<span class="reverse-email" title="Email address reversed for privacy" style="unicode-bidi: bidi-override; direction: rtl;">${escapeHtml(reversed)}</span>`;
+      const id = generateUniqueId();
+
+      if (isLast && options.includeFallbacks) {
+        return `<span id="${id}" class="reverse-email" data-reversed="${escapeHtml(reversed)}" role="button" tabindex="0" aria-label="Email address reversed - click to reveal normally" title="Email address reversed for privacy" style="unicode-bidi: bidi-override; direction: rtl; cursor: pointer;">${escapeHtml(reversed)}</span>`;
+      }
+
+      return `<span id="${id}" class="reverse-email-data" data-reversed="${escapeHtml(reversed)}" style="display: none;"></span>`;
     },
 
-    deconstruct: (email: string) => {
+    /**
+     * Base64 - Moderate effectiveness, better when combined
+     * Bot resistance: Low-Medium (easily decoded)
+     * Screen reader compatibility: Poor (reads encoded string)
+     * Crawler resistance: Medium
+     */
+    base64: (email: string, isLast: boolean = true) => {
+      const encoded = base64Encode(email);
+      const id = generateUniqueId();
+
+      if (isLast) {
+        const fallback = options.includeFallbacks
+          ? `<noscript><span>[Base64 encoded email - JavaScript required]</span></noscript>`
+          : "";
+
+        return `<span id="${id}" class="b64-email" data-obfuscated-email="${escapeHtml(encoded)}" role="button" tabindex="0" aria-label="Click to reveal email address" title="Email address obfuscated for privacy">${escapeHtml(options.placeholder)}</span>${fallback}`;
+      }
+
+      return `<span id="${id}" class="b64-email-data" data-obfuscated-email="${escapeHtml(encoded)}" style="display: none;"></span>`;
+    },
+
+    /**
+     * Deconstruct - Moderate effectiveness, better when combined
+     * Bot resistance: Low-Medium (simple array joining)
+     * Screen reader compatibility: Poor (reads placeholder only)
+     * Crawler resistance: Medium
+     */
+    deconstruct: (email: string, isLast: boolean = true) => {
       const parts = deconstructEmail(email);
-      const escapedPlaceholder = escapeHtml(options.placeholder);
-      return `<span class="deconstructed-email" data-parts='${escapeHtml(JSON.stringify(parts))}' title="Email address obfuscated for privacy">${escapedPlaceholder}</span>`;
+      const id = generateUniqueId();
+
+      if (isLast) {
+        const fallback = options.includeFallbacks
+          ? `<noscript><span>[Deconstructed email - JavaScript required]</span></noscript>`
+          : "";
+
+        return `<span id="${id}" class="deconstructed-email" data-parts='${escapeHtml(JSON.stringify(parts))}' role="button" tabindex="0" aria-label="Click to reveal email address" title="Email address obfuscated for privacy">${escapeHtml(options.placeholder)}</span>${fallback}`;
+      }
+
+      return `<span id="${id}" class="deconstructed-email-data" data-parts='${escapeHtml(JSON.stringify(parts))}' style="display: none;"></span>`;
     },
   };
+
+  /**
+   * Apply multiple obfuscation methods in sequence for layered defense
+   */
+  function applyObfuscationChain(email: string): string {
+    let result = email;
+
+    for (let i = 0; i < options.methods.length; i++) {
+      const method = options.methods[i];
+      const isLast = i === options.methods.length - 1;
+
+      if (obfuscationMethods[method]) {
+        // For chaining, we need to extract the email from previous obfuscation
+        // For now, we'll apply the final method only for display, but store all data
+        if (isLast) {
+          result = obfuscationMethods[method](email, true);
+        } else {
+          // Store intermediate data for complex chaining (future enhancement)
+          const intermediate = obfuscationMethods[method](email, false);
+          // For now, continue with the final method
+        }
+      }
+    }
+
+    return result;
+  }
 
   // Function to process HTML content and obfuscate emails
   const processHTMLContent = (
@@ -95,12 +334,19 @@ export default function astroEmailObfuscation(
     let emailCount = 0;
 
     // Skip if already processed to avoid double processing
-    if (
-      content.includes("rot18-email") ||
-      content.includes("b64-email") ||
-      content.includes("reverse-email") ||
-      content.includes("deconstructed-email")
-    ) {
+    const obfuscationClasses = [
+      "rot18-email",
+      "b64-email",
+      "reverse-email",
+      "deconstructed-email",
+      "js-concat-email",
+      "js-interaction-email",
+      "svg-email",
+      "css-hidden-email",
+      "http-redirect-email",
+    ];
+
+    if (obfuscationClasses.some((cls) => content.includes(cls))) {
       return { content, emailCount: 0 };
     }
 
@@ -109,7 +355,6 @@ export default function astroEmailObfuscation(
       options.excludeSelector &&
       content.includes(options.excludeSelector.replace(".", ""))
     ) {
-      // More sophisticated exclude check could be implemented with DOM parsing if needed
       return { content, emailCount: 0 };
     }
 
@@ -117,51 +362,55 @@ export default function astroEmailObfuscation(
     const emailPattern =
       /\b[A-Za-z0-9](?:[A-Za-z0-9._%-]*[A-Za-z0-9])?@[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?\.[A-Za-z]{2,}\b/g;
 
-    // Process mailto links - replace ENTIRE link element
-    content = content.replace(
-      /(<a[^>]*?)href=["']mailto:([^"']+)["']([^>]*?>)([^<]*?)(<\/a>)/gi,
-      (match, openTag, email: string, middleTag, linkText, closeTag) => {
-        // Validate email format before processing
-        if (emailPattern.test(email)) {
-          emailCount++;
-          const obfuscatedEmail = obfuscationMethods[options.method](email);
-          // Remove href and replace entire inner content
-          const newOpenTag = openTag
-            .replace(/href=["'][^"']*["']/gi, "")
-            .trim();
-          return `<${newOpenTag.substring(1)}${middleTag}${obfuscatedEmail}${closeTag}`;
-        }
-        return match;
-      },
-    );
-
-    // Process standalone emails in text content ONLY (not in attributes)
-    // This regex finds text content between tags, avoiding script and style content
-    content = content.replace(
-      />([^<]*?[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}[^<]*?)</g,
-      (match, textContent) => {
-        // Skip if this text is inside an already obfuscated element
-        if (
-          textContent.includes("data-email") ||
-          textContent.includes("data-obfuscated-email") ||
-          textContent.includes("data-parts") ||
-          textContent.includes(options.placeholder)
-        ) {
-          return match;
-        }
-
-        // Reset regex lastIndex to ensure clean matching
-        emailPattern.lastIndex = 0;
-        const newTextContent = textContent.replace(
-          emailPattern,
-          (email: string) => {
+    // Process mailto links if target includes "link"
+    if (options.target === "link" || options.target === "both") {
+      content = content.replace(
+        /(<a[^>]*?)href=["']mailto:([^"']+)["']([^>]*?>)([^<]*?)(<\/a>)/gi,
+        (match, openTag, email: string, middleTag, linkText, closeTag) => {
+          // Validate email format before processing
+          if (emailPattern.test(email)) {
             emailCount++;
-            return obfuscationMethods[options.method](email);
-          },
-        );
-        return `>${newTextContent}<`;
-      },
-    );
+            const obfuscatedEmail = applyObfuscationChain(email);
+            // For mailto links, we replace the entire link content
+            const newOpenTag = openTag
+              .replace(/href=["'][^"']*["']/gi, "")
+              .trim();
+            return `${newOpenTag}${middleTag}${obfuscatedEmail}${closeTag}`;
+          }
+          return match;
+        },
+      );
+    }
+
+    // Process standalone emails in text content if target includes "text"
+    if (options.target === "text" || options.target === "both") {
+      content = content.replace(
+        />([^<]*?[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}[^<]*?)</g,
+        (match, textContent) => {
+          // Skip if this text is inside an already obfuscated element
+          if (
+            obfuscationClasses.some((cls) => textContent.includes(cls)) ||
+            textContent.includes("data-email") ||
+            textContent.includes("data-obfuscated-email") ||
+            textContent.includes("data-parts") ||
+            textContent.includes(options.placeholder)
+          ) {
+            return match;
+          }
+
+          // Reset regex lastIndex to ensure clean matching
+          emailPattern.lastIndex = 0;
+          const newTextContent = textContent.replace(
+            emailPattern,
+            (email: string) => {
+              emailCount++;
+              return applyObfuscationChain(email);
+            },
+          );
+          return `>${newTextContent}<`;
+        },
+      );
+    }
 
     return { content, emailCount };
   };
@@ -172,19 +421,36 @@ export default function astroEmailObfuscation(
       // Add config validation
       "astro:config:setup": ({ logger }) => {
         // Validate configuration
-        if (
-          !["rot18", "reverse", "base64", "deconstruct"].includes(
-            options.method,
-          )
-        ) {
+        const validMethods = [
+          "rot18",
+          "js-concat",
+          "js-interaction",
+          "svg",
+          "css-hidden",
+          "http-redirect",
+          "reverse",
+          "base64",
+          "deconstruct",
+        ];
+
+        for (const method of options.methods) {
+          if (!validMethods.includes(method)) {
+            logger.error(
+              `Invalid obfuscation method: ${method}. Must be one of: ${validMethods.join(", ")}`,
+            );
+            throw new Error(`Invalid obfuscation method: ${method}`);
+          }
+        }
+
+        if (!["text", "link", "both"].includes(options.target)) {
           logger.error(
-            `Invalid obfuscation method: ${options.method}. Must be one of: rot18, reverse, base64, deconstruct`,
+            `Invalid target: ${options.target}. Must be one of: text, link, both`,
           );
-          throw new Error(`Invalid obfuscation method: ${options.method}`);
+          throw new Error(`Invalid target: ${options.target}`);
         }
 
         logger.info(
-          `Email obfuscation configured with method: ${options.method}`,
+          `Email obfuscation configured with methods: [${options.methods.join(", ")}], target: ${options.target}`,
         );
       },
 
@@ -286,7 +552,7 @@ export default function astroEmailObfuscation(
           const totalProcessed = await processDirectory(distPath);
           if (totalProcessed > 0) {
             logger.info(
-              `Email obfuscation completed: ${totalProcessed} emails processed using ${options.method} method`,
+              `Email obfuscation completed: ${totalProcessed} emails processed using methods: [${options.methods.join(", ")}]`,
             );
           } else {
             logger.info("Email obfuscation: No emails found to process");

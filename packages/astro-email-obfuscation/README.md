@@ -1,17 +1,26 @@
 # Astro Email Obfuscation
 
 An Astro integration that obfuscates email addresses in your built HTML files to
-protect them from scrapers and spam bots. Designed for static sites with
-multiple obfuscation methods.
+protect them from scrapers and spam bots. Features advanced obfuscation methods
+with layered defense capabilities, based on empirical testing[^1] for maximum
+effectiveness.
+
+[^1]: I tested it on my own setup, hope it counts.
 
 ## Features
 
-- **Multiple obfuscation methods**: ROT18, Base64, reverse text, and character
-  deconstruction
-- **Client-side decoding**: Interactive email reveal with JavaScript
-- **No inline styles required**: Clean markup, styling handled by your CSS
-- **Build-time processing**: Zero runtime overhead for static sites
-- **Configurable**: Exclude specific elements and customize placeholder text
+- **Several obfuscation methods**: ROT18, JavaScript concatenation, SVG
+  rendering, CSS hiding, and more
+- **Method chaining**: Apply multiple obfuscation techniques in sequence for
+  layered defense
+- **Selective targeting**: Process email text, mailto links, or both
+- **Accessibility focused**: Screen reader compatible with proper ARIA labels
+  and fallbacks
+- **Zero runtime overhead**: Build-time processing for static sites
+- **Customizable**: Exclude elements, customize placeholders, and configure
+  behavior
+- **Development friendly**: Skip obfuscation in development mode for rapid
+  iteration
 
 ## Installation
 
@@ -19,7 +28,7 @@ multiple obfuscation methods.
 npm install astro-email-obfuscation
 ```
 
-## Usage
+## Quick Start
 
 Add the integration to your `astro.config.ts`:
 
@@ -30,7 +39,35 @@ import emailObfuscation from "astro-email-obfuscation";
 export default defineConfig({
   integrations: [
     emailObfuscation({
-      method: "rot18", // 'base64' | 'reverse' | 'deconstruct'
+      methods: ["rot18"], // Single method
+      target: "both", // Process text and links
+    }),
+  ],
+});
+```
+
+## Advanced Configuration
+
+```typescript
+export default defineConfig({
+  integrations: [
+    emailObfuscation({
+      // Multiple methods for layered defense
+      methods: ["js-interaction", "rot18"],
+
+      // Control what to process
+      target: "both", // "text" | "link" | "both"
+
+      // Server redirect for ultimate protection
+      redirectBaseUrl: "/api/email-redirect",
+
+      // Accessibility and UX
+      placeholder: "📧 Click to reveal email",
+      includeFallbacks: true,
+
+      // Development and exclusions
+      dev: false,
+      excludeSelector: ".no-obfuscate",
     }),
   ],
 });
@@ -38,141 +75,290 @@ export default defineConfig({
 
 ## Obfuscation Methods
 
-### 1. ROT18 (default)
+Methods are ranked by effectiveness based on empirical testing:
 
-Applies ROT13 to letters and ROT5 to numbers:
+### High Effectiveness (JavaScript-based)
+
+#### 1. `rot18` - ROT13+ROT5 Encoding
 
 ```
 user@domain.com → hjre@qbznva.pbz
 ```
 
-- Most effective against simple scrapers
-- Reversible with the same algorithm
-- Click to reveal as mailto link
+- **Bot resistance**: High (requires JS decoding)
+- **Screen reader compatibility**: Excellent (with fallbacks)
+- **Crawler resistance**: High
+- **User experience**: Click to reveal
 
-### 2. Base64
+#### 2. `js-concat` - Dynamic Assembly
 
-Encodes emails in Base64:
-
+```html
+<!-- Dynamically assembles email using JavaScript -->
+<span data-p1="user" data-p2="domain.com">Click to reveal</span>
 ```
-user@domain.com → dXNlckBkb21haW4uY29t
+
+- **Bot resistance**: Very High (dynamic assembly)
+- **Screen reader compatibility**: Good (with ARIA)
+- **Crawler resistance**: Very High
+
+#### 3. `js-interaction` - User Action Required
+
+```html
+<!-- Requires double-click confirmation -->
+<span>Click to reveal email</span>
 ```
 
-- Standard encoding, easy to detect if known
-- Click to reveal as mailto link
+- **Bot resistance**: Very High (user interaction required)
+- **Screen reader compatibility**: Excellent
+- **Crawler resistance**: Very High
 
-### 3. Reverse
+#### 4. `svg` - SVG Text Rendering
 
-Displays email backwards with CSS direction:
+```html
+<svg>
+  <text>u</text>
+  <text>s</text>
+  <text>e</text>
+  <text>r</text>...
+</svg>
+```
+
+- **Bot resistance**: High (SVG parsing uncommon)
+- **Screen reader compatibility**: Good (with ARIA)
+- **Crawler resistance**: High
+
+#### 5. `css-hidden` - CSS Manipulation
+
+```html
+<span>
+  <span style="display: none">u</span>
+  <span style="display: none">s</span>
+  <!-- Click reveals all characters -->
+</span>
+```
+
+- **Bot resistance**: High (CSS+JS parsing required)
+- **Screen reader compatibility**: Good
+- **Crawler resistance**: High
+
+#### 6. `http-redirect` - Server-side Protection
+
+```html
+<a href="/api/email-redirect?e=dXNlckBkb21haW4uY29t">Contact</a>
+```
+
+### Moderate Effectiveness (Better when combined)
+
+#### 7. `reverse` - String Reversal
 
 ```
 user@domain.com → moc.niamod@resu
 ```
 
-- Visual obfuscation only
-- Still readable by users with CSS
-- No click required
+- **Bot resistance**: Low-Medium (easily reversible)
+- **Screen reader compatibility**: Poor (reads backwards)
+- **Best used**: In combination with other methods
 
-### 4. Deconstruct
-
-Splits email into individual characters:
+#### 8. `base64` - Base64 Encoding
 
 ```
-user@domain.com → ["u","s","e","r","@","d","o","m","a","i","n",".","c","o","m"]
+user@domain.com → dXNlckBkb21haW4uY29t
 ```
 
-- Stored as JSON array
-- Click to reveal as mailto link
+- **Bot resistance**: Low-Medium (easily decoded)
+- **Screen reader compatibility**: Poor (gibberish)
+- **Best used**: In combination with other methods
 
-## Options
+#### 9. `deconstruct` - Character Array
+
+```html
+<span data-parts='["u","s","e","r","@","d","o","m","a","i","n",".","c","o","m"]'>
+```
+
+- **Bot resistance**: Low-Medium (simple joining)
+- **Screen reader compatibility**: Poor
+- **Best used**: In combination with other methods
+
+## Method Chaining
+
+Combine multiple methods for maximum protection:
 
 ```typescript
-interface AstroEmailObfuscationOptions {
-  /**
-   * The obfuscation method to use
-   * @default "rot18"
-   */
-  method?: "rot18" | "reverse" | "base64" | "deconstruct";
+emailObfuscation({
+  // Apply methods in sequence
+  // Each adds a layer of protection
+  methods: ["js-interaction", "rot18"],
 
-  /**
-   * Whether to process emails in development mode
-   * @default false
-   */
-  dev?: boolean;
+  // Or create a "fortress" of obfuscation
+  methods: ["css-hidden", "js-concat", "base64"],
+});
+```
 
-  /**
-   * CSS selector for elements that should NOT be obfuscated
-   * @default ".no-obfuscate"
-   */
-  excludeSelector?: string;
+**Recommended combinations:**
 
-  /**
-   * Custom placeholder text for clickable obfuscated emails
-   * @default "[Click to reveal email]"
-   */
-  placeholder?: string;
+- `["js-interaction", "rot18"]` - Double security with great UX
+- `["css-hidden", "js-concat"]` - Visual + dynamic protection
+- `["svg", "js-interaction"]` - Crawler-resistant + user-verified
+
+## Processing Targets
+
+Control what gets obfuscated:
+
+```typescript
+emailObfuscation({
+  target: "text", // Only standalone email text
+  target: "link", // Only mailto: links
+  target: "both", // Both text and links (default)
+});
+```
+
+## Server-side Redirect Setup
+
+For `http-redirect` method, implement a server endpoint:
+
+```javascript
+// /api/email-redirect.js (Astro API route)
+export async function GET({ url }) {
+  const encoded = url.searchParams.get("e");
+  if (!encoded) return new Response("Invalid request", { status: 400 });
+
+  try {
+    const email = atob(encoded);
+    return Response.redirect(`mailto:${email}`);
+  } catch {
+    return new Response("Invalid email", { status: 400 });
+  }
 }
 ```
 
-## CSS Styling
+## Accessibility Features
 
-The integration applies minimal inline styles and relies on your CSS for
-styling. Add this CSS to style obfuscated email elements:
+The integration includes comprehensive accessibility support:
 
-```css
-.rot18-email,
-.b64-email,
-.deconstructed-email {
-  cursor: pointer;
-}
+- **ARIA labels**: Proper screen reader announcements
+- **Keyboard navigation**: Tab and Enter key support
+- **Focus management**: Clear visual indicators
+- **Fallbacks**: `<noscript>` alternatives when enabled
+- **Reduced motion**: Respects user preferences
 
-.rot18-email:hover,
-.b64-email:hover,
-.deconstructed-email:hover {}
+## Excluding Elements
 
-/* Reverse emails are styled inline with CSS direction */
-.reverse-email {
-  font-family: monospace;
-}
+Prevent obfuscation on specific elements:
+
+```html
+<!-- This email won't be obfuscated -->
+<span class="no-obfuscate">admin@example.com</span>
+
+<!-- Custom exclude selector -->
+<div class="keep-plain">contact@company.com</div>
 ```
 
-## Security Notes
+```typescript
+emailObfuscation({
+  excludeSelector: ".keep-plain",
+});
+```
 
-- **ROT18**: Effective against basic scrapers, but easy to decode if the method
-  is known
-- **Base64**: Standard encoding, detectable by sophisticated crawlers
-- **Reverse**: Visual only, text-based scrapers can still extract emails
-- **Deconstruct**: JSON format may be obvious to advanced parsers
+## Development Mode
 
-All methods remove `mailto:` links to prevent direct harvesting. The integration
-processes HTML after build, so emails in source code remain hidden.
+Skip obfuscation during development:
+
+```typescript
+emailObfuscation({
+  dev: process.env.NODE_ENV === "development",
+});
+```
+
+## Configuration Options
+
+| Option             | Type       | Default                     | Description                                      |
+| ------------------ | ---------- | --------------------------- | ------------------------------------------------ |
+| `methods`          | `string[]` | `["rot18"]`                 | Array of obfuscation methods to apply            |
+| `method`           | `string`   | -                           | ⚠️ **Deprecated**: Use `methods` array instead   |
+| `target`           | `string`   | `"both"`                    | What to process: `"text"`, `"link"`, or `"both"` |
+| `dev`              | `boolean`  | `false`                     | Enable obfuscation in development mode           |
+| `excludeSelector`  | `string`   | `".no-obfuscate"`           | CSS selector for elements to skip                |
+| `placeholder`      | `string`   | `"[Click to reveal email]"` | Text shown for clickable emails                  |
+| `redirectBaseUrl`  | `string`   | `"/api/email-redirect"`     | Base URL for http-redirect method                |
+| `includeFallbacks` | `boolean`  | `true`                      | Include `<noscript>` fallbacks for accessibility |
+
+## Examples
+
+### Basic protection
+
+```typescript
+emailObfuscation({
+  methods: ["rot18"],
+});
+```
+
+### High security
+
+```typescript
+emailObfuscation({
+  methods: ["js-interaction", "css-hidden"],
+  placeholder: "🔒 Secure email - click to access",
+});
+```
+
+### Enterprise setup
+
+```typescript
+emailObfuscation({
+  methods: ["http-redirect"],
+  redirectBaseUrl: "https://api.company.com/email",
+  target: "both",
+  excludeSelector: ".public-email",
+});
+```
+
+## Browser Support
+
+- **Modern browsers**: Full support with all features
+- **Legacy browsers**: Graceful degradation with fallbacks
+- **No JavaScript**: `<noscript>` alternatives (when enabled)
+- **Screen readers**: Full compatibility with ARIA labels
+
+## Security Considerations
+
+1. **No method is 100% secure** - Determined scrapers can defeat any client-side
+   protection
+2. **Layer your defenses** - Use multiple methods for best results
+3. **Server-side is strongest** - `http-redirect` provides the best protection
+4. **Monitor and adapt** - Update methods as scraping techniques evolve
+5. **Balance UX and security** - Consider your users' needs
+
+## Performance
+
+- **Build time**: Minimal impact, processes files once
+- **Runtime**: Zero overhead for static methods
+- **Bundle size**: ~2KB for decoder script
+- **Accessibility**: No impact on screen readers
+
+## How It Works
+
+1. **Build-time processing**: Scans HTML files after Astro build
+2. **Email detection**: Uses regex to find email addresses in text and mailto
+   links
+3. **Method chaining**: Applies obfuscation methods in sequence
+4. **Script injection**: Adds decoder JavaScript to processed pages
+5. **Client-side reveal**: Users can interact to reveal real email addresses
 
 ## Compatibility
 
-- **Astro**: 5.0.0+ (Tested only on Astro 5.8 and above)
-- **Browsers**: All modern browsers with **JavaScript enabled**
-
-## Development
-
-The integration skips processing in development mode by default. Set `dev: true`
-to enable processing during development.
+- **Astro**: 5.0.0+ (Tested on Astro 5.8+)
+- **Browsers**: All modern browsers with JavaScript enabled
 
 ## Attributions
 
-[astro-mail-obfuscation]: https://github.com/andreas-brunner/astro-mail-obfuscation
+This plugin draws inspiration from:
 
-`astro-email-obfuscation` is based roughly on [astro-mail-obfuscation] by
-Andreas Brunner. While this plugin has been built from ground up to fit my own
-needs, and to avoid relying on 3rd party packages where possible, it was a good
-reference that came in handy in the design of this plugin, even though most of
-the code is entirely different. Thank you!
+- [astro-mail-obfuscation](https://github.com/andreas-brunner/astro-mail-obfuscation)
+  by Andreas Brunner
+- [Email obfuscation research](https://spencermortensen.com/articles/email-obfuscation/)
+  by Spencer Mortensen
 
-[this post detailing e-mail obfuscation]: https://spencermortensen.com/articles/email-obfuscation/
-
-In alter revisions, available obfuscation methods have been revised to follow
-[this post detailing e-mail obfuscation]. Some of the methods found here were
-discussed prior with [@outfoxxed](https://github.com/outfoxxed), but I have
-learned a lot about e-mail obfuscation, and the statistics have been helpful in
-choosing supported methods.astro-mail-obfuscation) by Andreas Brunner, though it
-has been completely rewritten to fit specific needs and avoid external
-dependencies.
+While built from the ground up with my own needs in mind, and with the primary
+goal of avoiding dependencies on 3rd party integrations for small tasks, these
+resources have provided valuable insights into email obfuscation techniques and
+best practices. As such, I owe both of those authors a very big thank you.

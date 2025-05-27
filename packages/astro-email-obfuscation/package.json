@@ -1,8 +1,8 @@
 {
   "name": "astro-email-obfuscation",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "type": "module",
-  "description": "An Astro integration that obfuscates email addresses in built HTML files",
+  "description": "An Astro integration for email obfuscation with multiple methods",
   "author": "NotAShelf",
   "license": "MPL-2.0",
   "main": "index.ts",
