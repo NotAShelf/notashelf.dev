@@ -7,6 +7,7 @@ import rehypeExternalLinks from "rehype-external-links";
 import wasm from "vite-plugin-wasm";
 import topLevelAwait from "vite-plugin-top-level-await";
 import { copyrightYearPlugin } from "vite-copyright-replace";
+import purgeCss from "astro-purge-css";
 import emailObfuscation from "astro-email-obfuscation";
 
 import mdx from "@astrojs/mdx";
@@ -46,7 +47,6 @@ export default defineConfig({
     sitemap(),
     partytown(),
     svelte(),
-    emailObfuscation({ method: "entities" }),
     mdx({
       gfm: true,
       smartypants: true,
@@ -64,6 +64,13 @@ export default defineConfig({
           },
         ],
       ],
+    }),
+
+    // Home-Baked Integrations
+    emailObfuscation({ method: "rot13" }),
+    purgeCss({
+      safelist: ["safe-class"],
+      blocklist: ["blocked-class"],
     }),
   ],
   markdown: {
@@ -127,6 +134,25 @@ export default defineConfig({
         compress: {
           drop_console: true,
           drop_debugger: true,
+          pure_funcs: [
+            "console.log",
+            "console.info",
+            "console.debug",
+            "console.warn",
+          ],
+          passes: 2,
+          unsafe_arrows: true,
+          unsafe_methods: true,
+          unsafe_proto: true,
+          unsafe_regexp: true,
+        },
+        mangle: {
+          properties: {
+            regex: /^_/, // Mangle properties starting with underscore
+          },
+        },
+        format: {
+          comments: false,
         },
       },
     },
