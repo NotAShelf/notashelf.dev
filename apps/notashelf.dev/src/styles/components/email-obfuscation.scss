@@ -4,16 +4,17 @@
   display: none !important;
 }
 
-/* Style obfuscated email elements */
 .email-obf,
-.contact-hint {
+.contact-hint,
+.rot18-email,
+.b64-email,
+.deconstructed-email {
   cursor: pointer;
-  text-decoration: underline;
   color: inherit;
   transition: color 0.2s ease;
 
   &:hover {
-    color: var(--accent-color, #0066cc);
+    color: var(--hover-color, #75b5aa);
   }
 }
 
@@ -25,19 +26,10 @@
 /* Style for elements with data-obfuscated-email attribute */
 [data-obfuscated-email] {
   cursor: pointer;
-  text-decoration: underline;
   color: inherit;
   transition: color 0.2s ease;
 
   &:hover {
-    color: var(--accent-color, #0066cc);
-  }
-
-  /* Add a subtle indicator that email is clickable */
-  &::after {
-    content: " 📧";
-    font-size: 0.8em;
-    opacity: 0.6;
-    margin-left: 0.2em;
+    color: var(--hover-color, #75b5aa);
   }
 }
