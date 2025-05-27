@@ -45,7 +45,7 @@ $font-family-primary:
   "游ゴシック", "PingFang SC", STXihei, "华文细黑", "Microsoft Yahei", 微软雅黑,
   SimSun, 宋体, Heiti, 黑体, sans-serif, serif;
 $font-family-secondary:
-  -apple-system, BlinkMacSystemFont, "Segoe UI", "Courier Prime", Roboto, Arial,
+  -apple-system, BlinkMacSystemFont, "Segue UI", "Courier Prime", Roboto, Arial,
   sans-serif, "Oxygen-Sans", Ubuntu, Cantarell, "Helvetica Neue", Helvetica,
   "游ゴシック", "PingFang SC", STXihei, "华文细黑", "Microsoft Yahei", 微软雅黑,
   SimSun, 宋体, Heiti, 黑体, sans-serif, serif;
@@ -54,3 +54,101 @@ $font-family-pre: "Source Code Pro", "Lucida Console", monospace;
 // Breakpoints
 $content-width: 80ch;
 $screen-tablet: 768px;
+
+// Common mixins to reduce duplication
+@mixin button-base {
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  background-color: $button-bg;
+  color: $secondary;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: $button-bg-hover;
+  }
+}
+
+@mixin interactive-link {
+  color: $secondary;
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: $hover-color;
+  }
+}
+
+@mixin input-base {
+  padding: 0.6rem 0.8rem;
+  border-radius: 4px;
+  background-color: $input-bg;
+  border: 1px solid $input-border;
+  color: $secondary;
+  font-family: inherit;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    background-color: $input-bg-focus;
+    border-color: $input-border-focus;
+  }
+}
+
+@mixin card-hover {
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@mixin icon-size($size: 0.9rem) {
+  :global(svg) {
+    width: $size !important;
+    height: $size !important;
+  }
+}
+
+// Additional mixins for common patterns
+@mixin rounded-border($radius: 4px) {
+  border-radius: $radius;
+}
+
+@mixin soft-shadow($elevation: "light") {
+  @if $elevation == "light" {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  } @else if $elevation == "medium" {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  } @else if $elevation == "high" {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  } @else if $elevation == "project" {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@mixin smooth-transition($properties: all, $duration: 0.2s, $easing: ease) {
+  transition: $properties $duration $easing;
+}
+
+@mixin card-base {
+  @include rounded-border();
+  @include soft-shadow("light");
+  @include smooth-transition();
+  padding: 1rem;
+  background: $primary;
+}
+
+@mixin interactive-card {
+  @include card-base;
+  cursor: pointer;
+
+  &:hover {
+    @include soft-shadow("medium");
+    transform: translateY(-2px);
+  }
+}

@@ -37,9 +37,9 @@ pre {
 }
 
 code:not(pre code) {
+  @include rounded-border;
   background-color: $border-light;
   padding: 0.2rem 0.4rem;
-  border-radius: 4px;
   font-size: 0.85em;
   font-family: "JetBrains Mono", "Fira Code", monospace;
 }
@@ -237,10 +237,10 @@ blockquote.admonition {
   }
 
   li {
+    @include rounded-border;
+    @include smooth-transition(background-color, 0.3s);
     margin-bottom: 0.5rem;
     position: relative;
-    transition: background-color 0.3s ease;
-    border-radius: 4px;
     padding: 0.3rem 0.5rem;
     margin-left: -0.5rem;
 
@@ -326,12 +326,12 @@ a.footnote-ref {
 }
 
 .toc-item {
+  @include rounded-border;
+  @include smooth-transition;
   color: $text-muted;
   text-decoration: none;
   padding: 0.3rem 0.5rem;
-  border-radius: 4px;
   font-size: 0.9rem;
-  transition: all 0.2s ease;
 
   &:hover {
     background-color: $button-bg;
