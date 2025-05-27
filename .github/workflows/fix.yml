@@ -39,7 +39,7 @@ jobs:
       - name: "Update Dependency Hash"
         if: steps.changed-files.outputs.files == 'true'
         run: |
-          if nix build --print-build-logs .#build-site 2> /tmp/log; then
+          if nix build --print-build-logs .#site 2> /tmp/log; then
             exit 0
           fi
 
@@ -48,7 +48,7 @@ jobs:
           if [ -n "$hash" ]; then
              echo "hash=$hash"
              echo "Updating hash in package.nix"
-             sed -e "s#hash =.*\$#hash = \"$hash\";#g" -i nix/package.nix
+             sed -e "s#hash =.*\$#hash = \"$hash\";#g" -i nix/site.nix
            else
              echo "No hash found, exiting"
              exit 0 # exit with success, this is not error worthy
