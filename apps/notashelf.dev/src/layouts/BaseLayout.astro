@@ -50,10 +50,10 @@ const {
       /* Critical above-the-fold styles */
       :root {
         --content-width: min(65ch, 100% - 2rem);
-        --primary: #7c3aed;
-        --secondary: #1f2937;
-        --background: #ffffff;
-        --text-subtle: #6b7280;
+        --primary: #1a1a1a;
+        --secondary: #f0f0f0;
+        --background: #1a1a1a;
+        --text-subtle: #999999;
       }
 
       body {
@@ -74,13 +74,6 @@ const {
         padding: 1.5rem 0 6rem;
       }
     </style>
-
-    <!-- DNS prefetch for external resources -->
-    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="//plausible.io" />
-
-    <!-- Preconnect to critical domains -->
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   </head>
   <body>
     {showBackgroundGrid && <div class="background-pattern" />}
