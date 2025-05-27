@@ -31,6 +31,5 @@
     "css",
     "purgecss",
     "optimization"
-  ],
-  "license": "MPL2.0"
+  ]
 }
