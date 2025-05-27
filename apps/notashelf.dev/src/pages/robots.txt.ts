@@ -23,6 +23,11 @@ export async function GET(): Promise<Response> {
     "SeekportBot",
     "Exabot",
     "Mail.RU_Bot",
+    "facebookexternalhit",
+    "facebot",
+    "meta-externalagent",
+    "PerplexityBot",
+    "FacebookBot",
   ];
 
   const content = `
