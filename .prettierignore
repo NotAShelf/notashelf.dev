@@ -3,5 +3,20 @@
 **/*.md
 **/*.json
 **/*.yaml
-apps/notashelf.dev/dist/*
-apps/notashelf.dev/.astro/*
+**/*.rs
+
+# Build artifacts and cache directories
+**/dist/
+**/.astro/
+**/node_modules/
+**/target/
+**/result/
+
+# Lock files
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+
+# Reports and logs
+**/*.report.html
+**/*.log
