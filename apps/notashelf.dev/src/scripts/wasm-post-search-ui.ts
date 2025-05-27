@@ -759,9 +759,23 @@ export function extractPostsFromDOM(): PostEntry[] {
     const id = element.getAttribute("data-post-id") || "";
     const titleElement = element.querySelector(".post-title");
     const descriptionElement = element.querySelector(".post-description");
+    const timeElement = element.querySelector(".post-date");
     const keywords = (element.getAttribute("data-keywords") || "")
       .split(",")
       .filter((k) => k.trim());
+
+    // Extract actual date from the datetime attribute or fallback gracefully
+    let postDate = new Date();
+    if (timeElement) {
+      const datetimeAttr = timeElement.getAttribute("datetime");
+      if (datetimeAttr) {
+        const parsedDate = new Date(datetimeAttr);
+        // Only use parsed date if it's valid
+        if (!isNaN(parsedDate.getTime())) {
+          postDate = parsedDate;
+        }
+      }
+    }
 
     return {
       id,
@@ -769,7 +783,7 @@ export function extractPostsFromDOM(): PostEntry[] {
         title: titleElement?.textContent || "",
         description: descriptionElement?.textContent || undefined,
         keywords,
-        date: new Date(), // we don't need the actual date for search
+        date: postDate,
         draft: false,
         archived: false,
       },
