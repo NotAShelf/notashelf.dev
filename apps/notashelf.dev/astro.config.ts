@@ -9,6 +9,9 @@ import topLevelAwait from "vite-plugin-top-level-await";
 import { copyrightYearPlugin } from "vite-copyright-replace";
 import purgeCss from "astro-purge-css";
 import emailObfuscation from "astro-email-obfuscation";
+import autoprefixer from "autoprefixer";
+import postcssNormalize from "postcss-normalize";
+import postcssPresetEnv from "postcss-preset-env";
 
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
@@ -71,9 +74,57 @@ export default defineConfig({
       methods: ["js-interaction", "rot18"],
       placeholder: "me @ domain",
     }),
+
     purgeCss({
       safelist: ["safe-class"],
       blocklist: ["blocked-class"],
+      postcss: {
+        plugins: [
+          autoprefixer({
+            overrideBrowserslist: ["> 1%", "last 2 versions"],
+          }),
+          postcssNormalize,
+          [
+            postcssPresetEnv,
+            {
+              stage: 3,
+              features: {
+                "nesting-rules": true,
+                "custom-media-queries": true,
+                "media-query-ranges": true,
+              },
+            },
+          ],
+        ],
+        options: {
+          from: undefined,
+          to: undefined,
+        },
+      },
+      cssnano: {
+        preset: [
+          "default",
+          {
+            discardComments: {
+              removeAll: true,
+            },
+            normalizeWhitespace: true,
+            mergeLonghand: true,
+            mergeRules: true,
+            minifySelectors: true,
+            minifyParams: true,
+            minifyFontValues: true,
+            colormin: true,
+            convertValues: true,
+            discardDuplicates: true,
+            discardEmpty: true,
+            discardOverridden: true,
+            normalizeUrl: true,
+            reduceIdents: false,
+            zindex: false,
+          },
+        ],
+      },
     }),
   ],
   markdown: {
@@ -129,9 +180,6 @@ export default defineConfig({
           },
         },
       },
-      // Enable minification and source maps for better compression
-      // XXX: Terser is 10-20ms slower, but roughly 1% at compression.
-      // I don't quite know if this is worth the cost, but might as well.
       minify: "terser",
       terserOptions: {
         compress: {
@@ -151,7 +199,7 @@ export default defineConfig({
         },
         mangle: {
           properties: {
-            regex: /^_/, // Mangle properties starting with underscore
+            regex: /^_/,
           },
         },
         format: {
@@ -163,8 +211,6 @@ export default defineConfig({
       exclude: ["wasm-utils"],
     },
     define: {
-      // Inject environment variables for static builds. This makes it possible to respect
-      // variables from the Nix build environment in the static build.
       "import.meta.env.GIT_REV": JSON.stringify(process.env.GIT_REV || "main"),
       "import.meta.env.SITE_SRC": JSON.stringify(
         process.env.SITE_SRC || "https://github.com/notashelf/notashelf.dev",

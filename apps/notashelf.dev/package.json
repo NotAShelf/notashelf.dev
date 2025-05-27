@@ -24,7 +24,12 @@
     "astro": "^5.8.0",
     "astro-email-obfuscation": "link:../../packages/astro-email-obfuscation",
     "astro-purge-css": "link:../../packages/astro-purge-css",
+    "autoprefixer": "^10.4.21",
+    "glob": "^11.0.2",
     "hast-util-to-string": "^3.0.1",
+    "postcss": "^8.5.3",
+    "postcss-cli": "^11.0.1",
+    "postcss-normalize": "^13.0.1",
     "purgecss": "^7.0.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -45,8 +50,7 @@
     "unist-util-visit": "^5.0.0",
     "vfile": "^6.0.3",
     "vite-copyright-replace": "link:../../packages/vite-copyright-replace",
-    "wasm-utils": "link:../../packages/wasm-utils/pkg",
-    "glob": "^11.0.2"
+    "wasm-utils": "link:../../packages/wasm-utils/pkg"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
