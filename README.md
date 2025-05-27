@@ -1,10 +1,12 @@
 # notashelf.dev
 
-This is a monorepository containing my website and blog, available under
-[notashelf.dev](https://notashelf.dev). This time it uses Astro as the
-underlying build tool, and explores the possibilities of components done in
-various languages or frameworks. Countless hours were spent rewriting this site
-time and time again. This is iteration number 8, I think.
+This is a monorepository containing my website and blog as well as its
+dependencies. The rendered site is available under
+[notashelf.dev](https://notashelf.dev), and this time it uses Astro as the
+underlying build tool, while also explores the possibilities of components done
+in various languages or frameworks. Countless hours were spent rewriting this
+site time and time again. This is iteration number 8, I think. Maybe 9, who
+knows?
 
 ## Repository Structure
 
@@ -12,7 +14,6 @@ time and time again. This is iteration number 8, I think.
 .
 ├── apps
 ├── nix
-├── outputs
 └── packages
 ```
 
@@ -26,14 +27,32 @@ If you are planning to contribute to the Astro components, look into
 `apps/notashelf.dev/src`. Remark/Vite plugins and other components will always
 be located in the `packages` directory.
 
+### Packages
+
+All in-house dependencies created for my personal website have been stored in
+the `packages` directory, which is where new dependencies will be added. For the
+time being, it contains three distinct packages.
+
+- [astro-email-obfuscation](./packages/astro-email-obfuscation/) is a home-made
+  Astro integration with advanced e-mail obfuscation capabilities, designed to
+  fend off scrapers to the best of my ability.
+- [astro-purge-css](./packages/astro-purge-css/) is a small Astro integration
+  that purges unused styles using PurgeCSS.
+- [wasm-utils](./packages/wasm-utils/) contains my personal WASM utilities that
+  are leveraged in [apps/notashelf.dev](./apps/notashelf.dev/) to offload
+  compute-heavy operations to smaller, faster WebAssembly modules. This is an
+  experiment more than anything, but there _have_ been performance gains.
+
 ## Stack
 
-The (hopefully) final iteration of this website is built with Astro and Type
-script. Astro makes it _really_ easy to integrate Typescript into our stack, so
-I will be avoiding vanilla Javascript as much as possible. This does hurt
+The (hopefully) final iteration of this website is built with Astro and
+Typescript. Astro makes it _really_ easy to integrate Typescript into our stack,
+so I will be avoiding vanilla Javascript as much as possible. This does hurt
 portability a little, but I do not intend to switch. This also means that DOM
 manipulation is done by the Typescript utilities found in the `scripts`
-directory of my site.
+directory of my site. Svelte and WASM (built with wasm-pack) have been added to
+the stack as experiments, but they provide microscopic performance gains in very
+specific circumstances.
 
 This site has seen several React/NextJS setups, a self-made templated Go
 program, a Pandoc based templated Markdown setup and a pure-HTML build that I
