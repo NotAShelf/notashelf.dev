@@ -16,7 +16,7 @@ clearing useless state some programs have left behind.
 This general setup concept utilizes NixOS' ability to boot off of a disk that
 contains only `/nix` and `/boot`, linking appropriate devices and blocks during
 the boot process and deleting all state that programs may have left over my
-system. The end result, for me, was a fully encrypted that uses BTRFS snapshots
+system. The end result, for me, was a fully encrypted system that uses BTRFS snapshots
 to restore `/` to its original state on each boot.
 
 ## Resources
@@ -335,10 +335,10 @@ will not available.
 
 > You may opt in for `boot.initrd.postDeviceCommands = lib.mkBefore ''` as
 > [this blog post](https://mt-caret.github.io/blog/posts/2020-06-29-optin-state.html)
-> suggests. I opt-in for a Systemd service as a servicee is a more powerful
+> suggests. I opt-in for a Systemd service as a service is a more powerful
 > option of handling service dependencies. With postDeviceCommands, we would be
 > sticking some bash code haphazardly in the stage-1 script, with a systemd
-> service we will be holding granular control over the service ordedr.
+> service we will be holding granular control over the service order.
 
 ### Implications & Workarounds
 
@@ -390,7 +390,7 @@ could never. May they bask in their supreme glory.
 ## Closing Notes
 
 As interesting as Impermanence is, it is also a little risky. The constant new
-changes Nixpkgs receives on a daily basis might that a service may suddenly stop
+changes Nixpkgs receives on a daily basis might mean that a service may suddenly stop
 using the state directory that you have configured it to use, and move to a
 directory that you have not yet persisted. While running such a set up, you must
 make sure to pay close attention to your system and back up everything
