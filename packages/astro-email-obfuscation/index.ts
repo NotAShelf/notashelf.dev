@@ -98,11 +98,6 @@ export default function astroEmailObfuscation(
     return email.split("").reverse().join("");
   }
 
-  // Generate random variable names for JS concatenation
-  function generateRandomVar(): string {
-    return "e" + Math.random().toString(36).substr(2, 8);
-  }
-
   // Escape HTML to prevent XSS
   function escapeHtml(text: string): string {
     const map: { [key: string]: string } = {
@@ -131,7 +126,7 @@ export default function astroEmailObfuscation(
      * Screen reader compatibility: Good (with proper fallbacks)
      * Crawler resistance: High
      */
-    rot18: (email: string, isLast: boolean = true) => {
+    rot18: (email: string) => {
       const encoded = rot18(email);
       const id = generateUniqueId();
       const escapedPlaceholder = escapeHtml(options.placeholder);
@@ -149,15 +144,12 @@ export default function astroEmailObfuscation(
      * Screen reader compatibility: Good (with ARIA labels)
      * Crawler resistance: Very High
      */
-    "js-concat": (email: string, isLast: boolean = true) => {
+    "js-concat": (email: string) => {
       const parts = email.split("@");
       if (parts.length !== 2) return email; // Invalid email format
 
       const [localPart, domain] = parts;
       const id = generateUniqueId();
-      const var1 = generateRandomVar();
-      const var2 = generateRandomVar();
-      const var3 = generateRandomVar();
 
       const fallback = options.includeFallbacks
         ? `<noscript><span>[Email hidden - JavaScript required]</span></noscript>`
@@ -172,7 +164,7 @@ export default function astroEmailObfuscation(
      * Screen reader compatibility: Excellent (proper focus management)
      * Crawler resistance: Very High
      */
-    "js-interaction": (email: string, isLast: boolean = true) => {
+    "js-interaction": (email: string) => {
       const encoded = base64Encode(email);
       const id = generateUniqueId();
 
@@ -189,7 +181,7 @@ export default function astroEmailObfuscation(
      * Screen reader compatibility: Good (with proper ARIA)
      * Crawler resistance: High
      */
-    svg: (email: string, isLast: boolean = true) => {
+    svg: (email: string) => {
       const id = generateUniqueId();
       const chars = email.split("");
       let svgContent = "";
@@ -211,7 +203,7 @@ export default function astroEmailObfuscation(
      * Screen reader compatibility: Good (with proper implementation)
      * Crawler resistance: High
      */
-    "css-hidden": (email: string, isLast: boolean = true) => {
+    "css-hidden": (email: string) => {
       const id = generateUniqueId();
       const chars = email.split("");
       const hiddenChars = chars
@@ -234,7 +226,7 @@ export default function astroEmailObfuscation(
      * Screen reader compatibility: Excellent (standard links)
      * Crawler resistance: Very High
      */
-    "http-redirect": (email: string, isLast: boolean = true) => {
+    "http-redirect": (email: string) => {
       const encoded = base64Encode(email);
       const redirectUrl = `${options.redirectBaseUrl}?e=${encodeURIComponent(encoded)}`;
 
@@ -247,11 +239,11 @@ export default function astroEmailObfuscation(
      * Screen reader compatibility: Poor (reads backwards)
      * Crawler resistance: Low-Medium
      */
-    reverse: (email: string, isLast: boolean = true) => {
+    reverse: (email: string) => {
       const reversed = reverseEmail(email);
       const id = generateUniqueId();
 
-      if (isLast && options.includeFallbacks) {
+      if (options.includeFallbacks) {
         return `<span id="${id}" class="reverse-email" data-reversed="${escapeHtml(reversed)}" role="button" tabindex="0" aria-label="Email address reversed - click to reveal normally" title="Email address reversed for privacy" style="unicode-bidi: bidi-override; direction: rtl; cursor: pointer;">${escapeHtml(reversed)}</span>`;
       }
 
@@ -264,19 +256,15 @@ export default function astroEmailObfuscation(
      * Screen reader compatibility: Poor (reads encoded string)
      * Crawler resistance: Medium
      */
-    base64: (email: string, isLast: boolean = true) => {
+    base64: (email: string) => {
       const encoded = base64Encode(email);
       const id = generateUniqueId();
 
-      if (isLast) {
-        const fallback = options.includeFallbacks
-          ? `<noscript><span>[Base64 encoded email - JavaScript required]</span></noscript>`
-          : "";
+      const fallback = options.includeFallbacks
+        ? `<noscript><span>[Base64 encoded email - JavaScript required]</span></noscript>`
+        : "";
 
-        return `<span id="${id}" class="b64-email" data-obfuscated-email="${escapeHtml(encoded)}" role="button" tabindex="0" aria-label="Click to reveal email address" title="Email address obfuscated for privacy">${escapeHtml(options.placeholder)}</span>${fallback}`;
-      }
-
-      return `<span id="${id}" class="b64-email-data" data-obfuscated-email="${escapeHtml(encoded)}" style="display: none;"></span>`;
+      return `<span id="${id}" class="b64-email" data-obfuscated-email="${escapeHtml(encoded)}" role="button" tabindex="0" aria-label="Click to reveal email address" title="Email address obfuscated for privacy">${escapeHtml(options.placeholder)}</span>${fallback}`;
     },
 
     /**
@@ -285,19 +273,15 @@ export default function astroEmailObfuscation(
      * Screen reader compatibility: Poor (reads placeholder only)
      * Crawler resistance: Medium
      */
-    deconstruct: (email: string, isLast: boolean = true) => {
+    deconstruct: (email: string) => {
       const parts = deconstructEmail(email);
       const id = generateUniqueId();
 
-      if (isLast) {
-        const fallback = options.includeFallbacks
-          ? `<noscript><span>[Deconstructed email - JavaScript required]</span></noscript>`
-          : "";
+      const fallback = options.includeFallbacks
+        ? `<noscript><span>[Deconstructed email - JavaScript required]</span></noscript>`
+        : "";
 
-        return `<span id="${id}" class="deconstructed-email" data-parts='${escapeHtml(JSON.stringify(parts))}' role="button" tabindex="0" aria-label="Click to reveal email address" title="Email address obfuscated for privacy">${escapeHtml(options.placeholder)}</span>${fallback}`;
-      }
-
-      return `<span id="${id}" class="deconstructed-email-data" data-parts='${escapeHtml(JSON.stringify(parts))}' style="display: none;"></span>`;
+      return `<span id="${id}" class="deconstructed-email" data-parts='${escapeHtml(JSON.stringify(parts))}' role="button" tabindex="0" aria-label="Click to reveal email address" title="Email address obfuscated for privacy">${escapeHtml(options.placeholder)}</span>${fallback}`;
     },
   };
 
@@ -307,21 +291,11 @@ export default function astroEmailObfuscation(
   function applyObfuscationChain(email: string): string {
     let result = email;
 
-    for (let i = 0; i < options.methods.length; i++) {
-      const method = options.methods[i];
-      const isLast = i === options.methods.length - 1;
+    // Use the last method in the chain for the final output
+    const method = options.methods[options.methods.length - 1];
 
-      if (obfuscationMethods[method]) {
-        // For chaining, we need to extract the email from previous obfuscation
-        // For now, we'll apply the final method only for display, but store all data
-        if (isLast) {
-          result = obfuscationMethods[method](email, true);
-        } else {
-          // Store intermediate data for complex chaining (future enhancement)
-          const intermediate = obfuscationMethods[method](email, false);
-          // For now, continue with the final method
-        }
-      }
+    if (obfuscationMethods[method]) {
+      result = obfuscationMethods[method](email);
     }
 
     return result;
@@ -507,7 +481,7 @@ export default function astroEmailObfuscation(
                   totalProcessed += await processHTMLFile(fullPath);
                 }
               }
-            } catch (error) {
+            } catch {
               logger.warn(`Could not read directory: ${dirPath}`);
             }
 
@@ -516,7 +490,7 @@ export default function astroEmailObfuscation(
 
           const processHTMLFile = async (filePath: string): Promise<number> => {
             try {
-              let content = await fs.readFile(filePath, "utf-8");
+              const content = await fs.readFile(filePath, "utf-8");
               const { content: processedContent, emailCount } =
                 processHTMLContent(content);
 
@@ -542,9 +516,8 @@ export default function astroEmailObfuscation(
               }
 
               return emailCount;
-            } catch (error) {
+            } catch {
               logger.error(`Error processing ${filePath}:`);
-              console.error(error);
               return 0;
             }
           };

@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Handle HTTP Redirect emails - Very high effectiveness
   // These are handled server-side, but we can enhance the UX
   document.querySelectorAll(".http-redirect-email").forEach(function (element) {
-    element.addEventListener("click", function (event) {
+    element.addEventListener("click", function () {
       // Add a small delay to show interaction feedback
       this.style.opacity = "0.7";
       setTimeout(() => {
