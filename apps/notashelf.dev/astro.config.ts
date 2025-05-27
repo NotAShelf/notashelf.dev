@@ -67,7 +67,10 @@ export default defineConfig({
     }),
 
     // Home-Baked Integrations
-    emailObfuscation({ method: "rot13" }),
+    emailObfuscation({
+      methods: ["js-interaction", "rot18"],
+      placeholder: "me @ domain",
+    }),
     purgeCss({
       safelist: ["safe-class"],
       blocklist: ["blocked-class"],
