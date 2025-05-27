@@ -1,6 +1,8 @@
+use lru::LruCache;
 use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
 use std::collections::HashMap;
+use std::num::NonZeroUsize;
 use wasm_bindgen::prelude::*;
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -34,7 +36,7 @@ pub struct SearchEngine {
     posts: Vec<PostData>,
     word_index: HashMap<String, Vec<(usize, f32)>>, // post_idx, weight
     keyword_index: HashMap<String, Vec<usize>>,
-    normalized_cache: RefCell<HashMap<String, String>>,
+    normalized_cache: RefCell<LruCache<String, String>>,
 }
 
 #[wasm_bindgen]
@@ -45,7 +47,7 @@ impl SearchEngine {
             posts: Vec::new(),
             word_index: HashMap::new(),
             keyword_index: HashMap::new(),
-            normalized_cache: RefCell::new(HashMap::new()),
+            normalized_cache: RefCell::new(LruCache::new(NonZeroUsize::new(1000).unwrap())),
         }
     }
 
@@ -343,7 +345,7 @@ impl SearchEngine {
     /// Normalize text for consistent searching
     fn normalize_text(&self, text: &str) -> String {
         // Check cache first
-        if let Some(cached) = self.normalized_cache.borrow().get(text) {
+        if let Some(cached) = self.normalized_cache.borrow_mut().get(text) {
             return cached.clone();
         }
 
@@ -356,10 +358,10 @@ impl SearchEngine {
             .collect::<Vec<_>>()
             .join(" ");
 
-        // Cache the result
+        // Cache the result (LRU will evict old entries automatically)
         self.normalized_cache
             .borrow_mut()
-            .insert(text.to_string(), normalized.clone());
+            .put(text.to_string(), normalized.clone());
 
         normalized
     }
