@@ -1,8 +1,10 @@
 packages:
   - apps/notashelf.dev
   - packages/wasm-utils/pkg
-  - packages/vite-copyright-replace
   - packages/astro-email-obfuscation
+  - packages/vite-copyright-replace
+  - packages/vite-purge-css
+
 onlyBuiltDependencies:
   - sharp
   - wasm-pack
