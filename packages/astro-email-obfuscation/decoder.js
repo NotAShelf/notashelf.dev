@@ -16,12 +16,12 @@ document.addEventListener("DOMContentLoaded", function () {
       const encodedEmail = this.getAttribute("data-email");
       if (encodedEmail) {
         const decodedEmail = rot13(encodedEmail);
-        
+
         // Create anchor element safely
         const anchor = document.createElement("a");
         anchor.href = "mailto:" + decodedEmail;
         anchor.textContent = decodedEmail;
-        
+
         // Replace element content safely
         this.innerHTML = "";
         this.appendChild(anchor);
@@ -49,12 +49,12 @@ document.addEventListener("DOMContentLoaded", function () {
         if (encodedEmail) {
           try {
             const decodedEmail = atob(encodedEmail);
-            
+
             // Create anchor element safely
             const anchor = document.createElement("a");
             anchor.href = "mailto:" + decodedEmail;
             anchor.textContent = decodedEmail;
-            
+
             // Replace element content safely
             this.innerHTML = "";
             this.appendChild(anchor);
