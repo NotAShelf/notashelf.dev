@@ -26,6 +26,15 @@ export class WasmPostSearchUI {
   private isInitialized = false;
   private eventListenersAttached = false; // track event listener setup
 
+  // Cache DOM queries for performance
+  private cachedPostElements: {
+    paginated: NodeListOf<HTMLLIElement> | null;
+    all: NodeListOf<HTMLLIElement> | null;
+  } = {
+    paginated: null,
+    all: null,
+  };
+
   // Function that will be initialized properly in setupLazyWasmLoading
   private initWasmOnDemand: () => Promise<void | null> = async () =>
     Promise.resolve(null);
@@ -220,11 +229,18 @@ export class WasmPostSearchUI {
   }
 
   private getDOMElements(): DOMElements {
-    // Non-nullable version - throws error if element not found
+    // Non-nullable version - provides fallback if element not found
     const getRequiredElement = <T extends HTMLElement>(id: string): T => {
       const element = document.getElementById(id) as T | null;
       if (!element) {
-        throw new Error(`Required element #${id} not found`);
+        console.warn(
+          `Required element #${id} not found - creating fallback element`,
+        );
+        // Create a fallback element to prevent breaking functionality
+        const fallback = document.createElement("div") as unknown as T;
+        fallback.id = id;
+        fallback.hidden = true;
+        return fallback;
       }
       return element;
     };
@@ -236,13 +252,19 @@ export class WasmPostSearchUI {
       return document.getElementById(id) as T | null;
     };
 
-    // Non-nullable version, throws error if element not found
+    // Non-nullable version - provides fallback if element not found
     const getRequiredElementBySelector = <T extends HTMLElement>(
       selector: string,
     ): T => {
       const element = document.querySelector(selector) as T | null;
       if (!element) {
-        throw new Error(`Required element ${selector} not found`);
+        console.warn(
+          `Required element ${selector} not found - creating fallback element`,
+        );
+        // Create a fallback element to prevent breaking functionality
+        const fallback = document.createElement("div") as unknown as T;
+        fallback.hidden = true;
+        return fallback;
       }
       return element;
     };
@@ -291,11 +313,31 @@ export class WasmPostSearchUI {
       this.setupNonSearchEventListeners();
       this.updateViewMode(this.isViewingAll);
 
+      // Cache DOM queries for performance optimization
+      this.initializeCachedElements();
+
       this.eventListenersAttached = true;
     } catch (error) {
       console.error("Failed to initialize search UI:", error);
       this.setupBasicEventListeners();
     }
+  }
+
+  // Initialize cached DOM elements for performance optimization
+  private initializeCachedElements(): void {
+    this.cachedPostElements.paginated =
+      this.elements.postList.querySelectorAll<HTMLLIElement>(
+        ".post-dropdown-item",
+      );
+    this.cachedPostElements.all =
+      this.elements.postListAll.querySelectorAll<HTMLLIElement>(
+        ".post-dropdown-item",
+      );
+  }
+
+  // Refresh cached elements if DOM structure changes (currently unused but kept for future extensibility)
+  private refreshCachedElements(): void {
+    this.initializeCachedElements();
   }
 
   // Clean up event listeners by cloning and replacing elements
@@ -541,11 +583,14 @@ export class WasmPostSearchUI {
       ? ""
       : "none";
 
+    // Use cached DOM elements instead of querying every time for performance
     const itemsToFilter = displayingAll
-      ? this.elements.postListAll.querySelectorAll<HTMLLIElement>(
+      ? this.cachedPostElements.all ||
+        this.elements.postListAll.querySelectorAll<HTMLLIElement>(
           ".post-dropdown-item",
         )
-      : this.elements.postList.querySelectorAll<HTMLLIElement>(
+      : this.cachedPostElements.paginated ||
+        this.elements.postList.querySelectorAll<HTMLLIElement>(
           ".post-dropdown-item",
         );
 
