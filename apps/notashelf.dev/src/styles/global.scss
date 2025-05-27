@@ -6,6 +6,7 @@
 
 // Individual components
 @use "components/post";
+@use "components/email-obfuscation";
 
 :root.filtering-active .post-list,
 :root.filtering-active .post-list-all {

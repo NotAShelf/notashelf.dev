@@ -1,0 +1,43 @@
+/* Hide decoy elements */
+.email-decoy,
+.email-noise {
+  display: none !important;
+}
+
+/* Style obfuscated email elements */
+.email-obf,
+.contact-hint {
+  cursor: pointer;
+  text-decoration: underline;
+  color: inherit;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--accent-color, #0066cc);
+  }
+}
+
+/* Ensure fragments display inline */
+.email-frag {
+  display: inline;
+}
+
+/* Style for elements with data-obfuscated-email attribute */
+[data-obfuscated-email] {
+  cursor: pointer;
+  text-decoration: underline;
+  color: inherit;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--accent-color, #0066cc);
+  }
+
+  /* Add a subtle indicator that email is clickable */
+  &::after {
+    content: " 📧";
+    font-size: 0.8em;
+    opacity: 0.6;
+    margin-left: 0.2em;
+  }
+}

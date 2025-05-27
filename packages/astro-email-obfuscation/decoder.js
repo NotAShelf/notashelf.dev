@@ -16,7 +16,15 @@ document.addEventListener("DOMContentLoaded", function () {
       const encodedEmail = this.getAttribute("data-email");
       if (encodedEmail) {
         const decodedEmail = rot13(encodedEmail);
-        this.innerHTML = `<a href="mailto:${decodedEmail}">${decodedEmail}</a>`;
+        
+        // Create anchor element safely
+        const anchor = document.createElement("a");
+        anchor.href = "mailto:" + decodedEmail;
+        anchor.textContent = decodedEmail;
+        
+        // Replace element content safely
+        this.innerHTML = "";
+        this.appendChild(anchor);
         this.classList.remove("rot13-email");
       }
     });
@@ -41,7 +49,15 @@ document.addEventListener("DOMContentLoaded", function () {
         if (encodedEmail) {
           try {
             const decodedEmail = atob(encodedEmail);
-            this.innerHTML = `<a href="mailto:${decodedEmail}">${decodedEmail}</a>`;
+            
+            // Create anchor element safely
+            const anchor = document.createElement("a");
+            anchor.href = "mailto:" + decodedEmail;
+            anchor.textContent = decodedEmail;
+            
+            // Replace element content safely
+            this.innerHTML = "";
+            this.appendChild(anchor);
             this.removeAttribute("data-obfuscated-email");
           } catch (e) {
             console.error("Failed to decode email:", e);
