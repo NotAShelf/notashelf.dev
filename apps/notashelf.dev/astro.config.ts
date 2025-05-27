@@ -7,6 +7,7 @@ import rehypeExternalLinks from "rehype-external-links";
 import wasm from "vite-plugin-wasm";
 import topLevelAwait from "vite-plugin-top-level-await";
 import { copyrightYearPlugin } from "vite-copyright-replace";
+import emailObfuscation from "astro-email-obfuscation";
 
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
@@ -45,6 +46,7 @@ export default defineConfig({
     sitemap(),
     partytown(),
     svelte(),
+    emailObfuscation({ method: "entities" }),
     mdx({
       gfm: true,
       smartypants: true,
