@@ -12,8 +12,8 @@ const secondaryNavItems = [
   </div>
   <div class="nav-right">
     {
-      secondaryNavItems.map((item) => (
-        <a class="nav-button" href={item.url}>
+      secondaryNavItems.map((item, index) => (
+        <a class="nav-button" href={item.url} data-key={`nav-${index}`}>
           {item.title}
         </a>
       ))
