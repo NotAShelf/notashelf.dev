@@ -1,15 +1,23 @@
 # Astro Email Obfuscation
 
-Home-made Astro integration that obfuscates email addresses in your built HTML
-files to protect them from scrapers and spam bots. Designed for static sites.
+An Astro integration that obfuscates email addresses in your built HTML files to
+protect them from scrapers and spam bots. Designed for static sites with
+multiple obfuscation methods.
 
 ## Features
 
-- **Multiple obfuscation methods**: HTML entities, visual CSS tricks,
-  fragmentation, and steganography
-- **No inline styles**: Clean markup, styling handled by your CSS
-- **Automation resistant**: Techniques designed to defeat sophisticated scrapers
-- **Zero configuration**: Works out of the box with sensible defaults
+- **Multiple obfuscation methods**: ROT18, Base64, reverse text, and character
+  deconstruction
+- **Client-side decoding**: Interactive email reveal with JavaScript
+- **No inline styles required**: Clean markup, styling handled by your CSS
+- **Build-time processing**: Zero runtime overhead for static sites
+- **Configurable**: Exclude specific elements and customize placeholder text
+
+## Installation
+
+```bash
+npm install astro-email-obfuscation
+```
 
 ## Usage
 
@@ -22,7 +30,7 @@ import emailObfuscation from "astro-email-obfuscation";
 export default defineConfig({
   integrations: [
     emailObfuscation({
-      method: "entities", // 'visual' | 'fragment' | 'steganography'
+      method: "rot18", // 'base64' | 'reverse' | 'deconstruct'
     }),
   ],
 });
@@ -30,91 +38,124 @@ export default defineConfig({
 
 ## Obfuscation Methods
 
-Several obfuscation methods are provided for you to choose from.
+### 1. ROT18 (default)
 
-### 1. HTML Entities (default)
-
-Converts characters to mixed decimal/hex HTML entities:
+Applies ROT13 to letters and ROT5 to numbers:
 
 ```
-user@domain.com → &#117;&#x73;&#101;&#x72;&#64;&#100;&#x6f;&#x6d;&#97;&#x69;&#110;&#46;&#x63;&#x6f;&#x6d;
+user@domain.com → hjre@qbznva.pbz
 ```
 
-This will be enough to bypass most crawlers, but more sophisticated crawlers may
-account for this.
+- Most effective against simple scrapers
+- Reversible with the same algorithm
+- Click to reveal as mailto link
 
-### 2. Visual
+### 2. Base64
 
-Uses CSS to hide decoy text mixed within the email:
-
-```
-user@domain.com → <span class="email-obf">user<span class="email-decoy">xyz7</span>@<span class="email-decoy">abc3</span>domain.com</span>
-```
-
-### 3. Fragment
-
-Splits email into fragments with noise that CSS hides:
+Encodes emails in Base64:
 
 ```
-user@domain.com → <span class="email-frag">user</span><span class="email-noise">fake</span><span class="email-frag">@</span><span class="email-noise">text</span><span class="email-frag">domain.com</span>
+user@domain.com → dXNlckBkb21haW4uY29t
 ```
 
-### 4. Steganography
+- Standard encoding, easy to detect if known
+- Click to reveal as mailto link
 
-Replaces email with innocent words containing hidden data:
+### 3. Reverse
+
+Displays email backwards with CSS direction:
 
 ```
-user@domain.com → <span class="contact-hint" data-info="dXNlckBkb21h">contact</span>
+user@domain.com → moc.niamod@resu
 ```
 
-## CSS Styling
+- Visual obfuscation only
+- Still readable by users with CSS
+- No click required
 
-Add this CSS to your site to handle the obfuscated elements:
+### 4. Deconstruct
 
-```css
-/* Hide decoy elements */
-.email-decoy,
-.email-noise {
-  display: none !important;
-}
+Splits email into individual characters:
 
-/* Style obfuscated email elements */
-.email-obf,
-.contact-hint {
-  cursor: pointer;
-  text-decoration: underline;
-  color: inherit;
-}
-
-/* Ensure fragments display inline */
-.email-frag {
-  display: inline;
-}
 ```
+user@domain.com → ["u","s","e","r","@","d","o","m","a","i","n",".","c","o","m"]
+```
+
+- Stored as JSON array
+- Click to reveal as mailto link
 
 ## Options
 
 ```typescript
 interface AstroEmailObfuscationOptions {
   /**
-   * Obfuscation method to use
-   * @default 'entities'
+   * The obfuscation method to use
+   * @default "rot18"
    */
-  method?: "entities" | "visual" | "fragment" | "steganography";
+  method?: "rot18" | "reverse" | "base64" | "deconstruct";
+
+  /**
+   * Whether to process emails in development mode
+   * @default false
+   */
+  dev?: boolean;
+
+  /**
+   * CSS selector for elements that should NOT be obfuscated
+   * @default ".no-obfuscate"
+   */
+  excludeSelector?: string;
+
+  /**
+   * Custom placeholder text for clickable obfuscated emails
+   * @default "[Click to reveal email]"
+   */
+  placeholder?: string;
+}
+```
+
+## CSS Styling
+
+The integration applies minimal inline styles and relies on your CSS for
+styling. Add this CSS to style obfuscated email elements:
+
+```css
+.rot18-email,
+.b64-email,
+.deconstructed-email {
+  cursor: pointer;
+}
+
+.rot18-email:hover,
+.b64-email:hover,
+.deconstructed-email:hover {}
+
+/* Reverse emails are styled inline with CSS direction */
+.reverse-email {
+  font-family: monospace;
 }
 ```
 
 ## Security Notes
 
-- **HTML Entities**: Most effective against simple scrapers, still readable by
-  browsers
-- **Visual**: Uses CSS to hide decoy text, resistant to text-based scraping
-- **Fragment**: Splits emails across elements with noise, confuses pattern
-  matching
-- **Steganography**: Hides actual email data, replaces with innocent text
+- **ROT18**: Effective against basic scrapers, but easy to decode if the method
+  is known
+- **Base64**: Standard encoding, detectable by sophisticated crawlers
+- **Reverse**: Visual only, text-based scrapers can still extract emails
+- **Deconstruct**: JSON format may be obvious to advanced parsers
 
-All methods remove `mailto:` links to prevent direct harvesting. Choose based on
-your security vs. your own usability requirements.
+All methods remove `mailto:` links to prevent direct harvesting. The integration
+processes HTML after build, so emails in source code remain hidden.
+
+## Compatibility
+
+- **Astro**: 5.0.0+ (Tested only on Astro 5.8 and above)
+- **Browsers**: All modern browsers with **JavaScript enabled**
+
+## Development
+
+The integration skips processing in development mode by default. Set `dev: true`
+to enable processing during development.
 
 ## Attributions
 
@@ -125,3 +166,13 @@ Andreas Brunner. While this plugin has been built from ground up to fit my own
 needs, and to avoid relying on 3rd party packages where possible, it was a good
 reference that came in handy in the design of this plugin, even though most of
 the code is entirely different. Thank you!
+
+[this post detailing e-mail obfuscation]: https://spencermortensen.com/articles/email-obfuscation/
+
+In alter revisions, available obfuscation methods have been revised to follow
+[this post detailing e-mail obfuscation]. Some of the methods found here were
+discussed prior with [@outfoxxed](https://github.com/outfoxxed), but I have
+learned a lot about e-mail obfuscation, and the statistics have been helpful in
+choosing supported methods.astro-mail-obfuscation) by Andreas Brunner, though it
+has been completely rewritten to fit specific needs and avoid external
+dependencies.

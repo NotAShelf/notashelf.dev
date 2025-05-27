@@ -1,0 +1,9 @@
+*.ts
+!*.d.ts
+tsconfig.json
+src/
+tests/
+.git
+.gitignore
+*.md
+!README.md

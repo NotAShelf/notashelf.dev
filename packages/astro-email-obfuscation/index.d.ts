@@ -5,22 +5,16 @@ import type { AstroIntegration } from "astro";
  */
 interface AstroEmailObfuscationOptions {
   /**
-   * Custom format for obfuscated emails. Use {user} and {domain} as placeholders.
-   * @default "{user} @ {domain}"
+   * The obfuscation method to use
+   * @default "rot18"
    */
-  format?: string;
+  method?: "rot18" | "reverse" | "base64" | "deconstruct";
 
   /**
-   * Whether to obfuscate email addresses in href attributes
-   * @default true
+   * Whether to process emails in development mode
+   * @default false
    */
-  obfuscateHrefs?: boolean;
-
-  /**
-   * Whether to obfuscate email addresses in text content
-   * @default true
-   */
-  obfuscateText?: boolean;
+  dev?: boolean;
 
   /**
    * CSS selector for elements that should NOT be obfuscated
@@ -29,17 +23,17 @@ interface AstroEmailObfuscationOptions {
   excludeSelector?: string;
 
   /**
-   * Maximum number of files to process concurrently
-   * @default 5
+   * Custom placeholder text for clickable obfuscated emails
+   * @default "[Click to reveal email]"
    */
-  concurrencyLimit?: number;
+  placeholder?: string;
 }
 
 /**
  * Astro integration function to obfuscate email addresses in the HTML output.
  */
 declare function astroEmailObfuscation(
-  userOptions?: Partial<AstroEmailObfuscationOptions>,
+  userOptions?: AstroEmailObfuscationOptions,
 ): AstroIntegration;
 
 export default astroEmailObfuscation;

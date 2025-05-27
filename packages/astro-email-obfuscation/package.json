@@ -1,24 +1,34 @@
 {
   "name": "astro-email-obfuscation",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
-  "description": "An Astro integration that obfuscates email addresses",
+  "description": "An Astro integration that obfuscates email addresses in built HTML files",
+  "author": "NotAShelf",
+  "license": "MPL-2.0",
   "main": "index.ts",
+  "types": "index.d.ts",
   "exports": {
-    ".": "./index.ts"
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.ts"
+    }
   },
+  "files": [
+    "index.ts",
+    "index.d.ts",
+    "decoder.js",
+    "README.md",
+    "LICENSE"
+  ],
   "keywords": [
     "astro",
-    "integration",
+    "astro-integration",
     "email",
     "obfuscation",
-    "privacy"
+    "privacy",
+    "spam-protection",
+    "static-site"
   ],
-  "dependencies": {
-    "globby": "^14.1.0",
-    "rehype": "^13.0.2",
-    "unist-util-visit": "^5.0.0"
-  },
   "peerDependencies": {
     "astro": "^5.0.0"
   },
