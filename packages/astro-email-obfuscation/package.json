@@ -15,7 +15,9 @@
     "privacy"
   ],
   "dependencies": {
-    "globby": "^14.1.0"
+    "globby": "^14.1.0",
+    "rehype": "^13.0.2",
+    "unist-util-visit": "^5.0.0"
   },
   "peerDependencies": {
     "astro": "^5.0.0"

@@ -1,46 +1,22 @@
 import type { AstroIntegration } from "astro";
+import { readFileSync, writeFileSync, readdirSync, statSync } from "fs";
+import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-import { globby } from "globby";
-import { promises as fs } from "node:fs";
 
-/**
- * Interface defining the options for the Astro Email Obfuscation integration.
- */
 interface AstroEmailObfuscationOptions {
-  /**
-   * Obfuscation method to use
-   * - 'entities': HTML entity encoding
-   * - 'visual': Visual obfuscation with CSS
-   * - 'fragment': Split into fragments with noise
-   * - 'steganography': Hide in plain sight
-   * @default 'entities'
-   */
-  method?: "entities" | "visual" | "fragment" | "steganography";
+  method?:
+    | "entities"
+    | "visual"
+    | "fragment"
+    | "steganography"
+    | "rot13"
+    | "reverse"
+    | "base64";
 }
 
-/**
- * Regular expression to match email addresses
- */
 const EMAIL_REGEX = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
-
-/**
- * Regular expression to match mailto links
- */
 const MAILTO_REGEX = /href="mailto:([^"]+)"/g;
 
-/**
- * Convert string to HTML entities
- */
-function toHtmlEntities(str: string): string {
-  return str
-    .split("")
-    .map((char) => `&#${char.charCodeAt(0)};`)
-    .join("");
-}
-
-/**
- * Generate a random string of decoy characters
- */
 function generateDecoyText(length: number = 6): string {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
   return Array.from(
@@ -49,19 +25,32 @@ function generateDecoyText(length: number = 6): string {
   ).join("");
 }
 
-/**
- * Generate obfuscated email based on method
- */
+function rot13(str: string): string {
+  return str.replace(/[a-zA-Z]/g, (char) => {
+    const start = char <= "Z" ? 65 : 97;
+    return String.fromCharCode(
+      ((char.charCodeAt(0) - start + 13) % 26) + start,
+    );
+  });
+}
+
 function obfuscateEmail(email: string, method: string): string {
   const [user, domain] = email.split("@");
 
   switch (method) {
+    case "rot13":
+      return `<span class="rot13-email" data-email="${rot13(email)}">[Click to reveal email]</span>`;
+
+    case "reverse":
+      return `<span class="reverse-email" style="unicode-bidi: bidi-override; direction: rtl;">${email.split("").reverse().join("")}</span>`;
+
+    case "base64":
+      return `<span data-obfuscated-email="${Buffer.from(email).toString("base64")}">[Click to reveal email]</span>`;
+
     case "entities": {
-      // Convert to HTML entities with random mixed encoding
       return email
         .split("")
         .map((char) => {
-          // Mix between decimal and hex entities randomly
           if (Math.random() > 0.5) {
             return `&#${char.charCodeAt(0)};`;
           } else {
@@ -72,30 +61,26 @@ function obfuscateEmail(email: string, method: string): string {
     }
 
     case "visual": {
-      // Visual obfuscation using CSS and hidden elements
       const visualDecoy = generateDecoyText(4);
       return `<span class="email-obf">${user}<span class="email-decoy">${visualDecoy}</span>@<span class="email-decoy">${visualDecoy}</span>${domain}</span>`;
     }
 
     case "fragment": {
-      // Fragment the email across multiple spans with noise
-      const fragments = [];
       const noise1 = generateDecoyText(3);
       const noise2 = generateDecoyText(3);
       const noise3 = generateDecoyText(3);
 
-      fragments.push(`<span class="email-frag" data-pos="1">${user}</span>`);
-      fragments.push(`<span class="email-noise">${noise1}</span>`);
-      fragments.push(`<span class="email-frag" data-pos="2">@</span>`);
-      fragments.push(`<span class="email-noise">${noise2}</span>`);
-      fragments.push(`<span class="email-frag" data-pos="3">${domain}</span>`);
-      fragments.push(`<span class="email-noise">${noise3}</span>`);
-
-      return fragments.join("");
+      return [
+        `<span class="email-frag" data-pos="1">${user}</span>`,
+        `<span class="email-noise">${noise1}</span>`,
+        `<span class="email-frag" data-pos="2">@</span>`,
+        `<span class="email-noise">${noise2}</span>`,
+        `<span class="email-frag" data-pos="3">${domain}</span>`,
+        `<span class="email-noise">${noise3}</span>`,
+      ].join("");
     }
 
     case "steganography": {
-      // Hide email in seemingly innocent text using CSS and data attributes
       const words = ["contact", "reach", "message", "write", "email"];
       const randomWord = words[Math.floor(Math.random() * words.length)];
       const encodedEmail = Buffer.from(email)
@@ -106,47 +91,57 @@ function obfuscateEmail(email: string, method: string): string {
     }
 
     default:
-      return toHtmlEntities(email);
+      return email
+        .split("")
+        .map((char) => `&#${char.charCodeAt(0)};`)
+        .join("");
   }
 }
 
-/**
- * Processes an individual HTML file to obfuscate email addresses
- */
-async function processHtmlFile(
-  filePath: string,
+function processHTML(
+  html: string,
   method: string,
-): Promise<boolean> {
-  try {
-    const html = await fs.readFile(filePath, "utf-8");
-    let modifiedHtml = html;
+): { content: string; count: number } {
+  let modifiedHTML = html;
+  let count = 0;
 
-    // Process mailto links first
-    modifiedHtml = modifiedHtml.replace(MAILTO_REGEX, (match, email) => {
-      // Remove the href entirely for security
-      return `data-obfuscated-email="${Buffer.from(email).toString("base64")}" title="Email address obfuscated for privacy"`;
-    });
+  modifiedHTML = modifiedHTML.replace(MAILTO_REGEX, (match, email) => {
+    count++;
+    return `data-obfuscated-email="${Buffer.from(email).toString("base64")}" title="Email address obfuscated for privacy"`;
+  });
 
-    // Process plain text emails
-    modifiedHtml = modifiedHtml.replace(EMAIL_REGEX, (email) => {
-      return obfuscateEmail(email, method);
-    });
+  modifiedHTML = modifiedHTML.replace(EMAIL_REGEX, (email) => {
+    count++;
+    return obfuscateEmail(email, method);
+  });
 
-    // Only write back if content changed
-    if (modifiedHtml !== html) {
-      await fs.writeFile(filePath, modifiedHtml, "utf-8");
-      return true;
-    }
-    return false;
-  } catch {
-    // Error will be handled by the caller with proper logger
-    return false;
-  }
+  return { content: modifiedHTML, count };
 }
 
-/**
- * Astro integration function to obfuscate email addresses in the HTML output.
- */
+function processDirectory(dirPath: string, method: string): number {
+  let totalProcessed = 0;
+  const files = readdirSync(dirPath);
+
+  for (const file of files) {
+    const filePath = join(dirPath, file);
+    const stat = statSync(filePath);
+
+    if (stat.isDirectory()) {
+      totalProcessed += processDirectory(filePath, method);
+    } else if (file.endsWith(".html")) {
+      const content = readFileSync(filePath, "utf-8");
+      const { content: processed, count } = processHTML(content, method);
+
+      if (count > 0) {
+        writeFileSync(filePath, processed, "utf-8");
+        totalProcessed += count;
+      }
+    }
+  }
+
+  return totalProcessed;
+}
+
 export default function astroEmailObfuscation(
   userOptions: AstroEmailObfuscationOptions = {},
 ): AstroIntegration {
@@ -155,34 +150,42 @@ export default function astroEmailObfuscation(
   return {
     name: "astro-email-obfuscation",
     hooks: {
-      /**
-       * After the build is done, processes all HTML files to obfuscate email addresses.
-       */
-      "astro:build:done": async ({ dir, logger }) => {
-        try {
-          const outDir = fileURLToPath(dir);
-          const htmlFiles = await globby("**/*.html", {
-            cwd: outDir,
-            absolute: true,
-          });
+      "astro:config:setup": ({ injectScript, addWatchFile, updateConfig }) => {
+        const decoderPath = join(
+          dirname(fileURLToPath(import.meta.url)),
+          "decoder.js",
+        );
+        const decoderContent = readFileSync(decoderPath, "utf-8");
 
-          let processedCount = 0;
+        addWatchFile(decoderPath);
 
-          // Process all files
-          const results = await Promise.all(
-            htmlFiles.map((file) => processHtmlFile(file, method)),
-          );
+        updateConfig({
+          vite: {
+            plugins: [
+              {
+                name: "email-decoder-plugin",
+                resolveId(id) {
+                  if (id === "virtual:email-decoder") {
+                    return id;
+                  }
+                },
+                load(id) {
+                  if (id === "virtual:email-decoder") {
+                    return decoderContent;
+                  }
+                },
+              },
+            ],
+          },
+        });
 
-          processedCount = results.filter(Boolean).length;
-
-          if (processedCount > 0) {
-            logger.info(
-              `Processed ${processedCount} file(s) using ${method} method`,
-            );
-          }
-        } catch (err) {
-          logger.error(`Error during processing - ${err}`);
-        }
+        injectScript("page", `import 'virtual:email-decoder';`);
+      },
+      "astro:build:done": ({ dir, logger }) => {
+        const totalProcessed = processDirectory(dir.pathname, method);
+        logger.info(
+          `Obfuscated ${totalProcessed} emails using ${method} method`,
+        );
       },
     },
   };
