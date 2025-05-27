@@ -27,7 +27,7 @@
       pkgs = pkgsForEach."${system}";
     in {
       default = self.packages.${system}.site;
-      site = pkgs.callPackage ./nix/build-site.nix {inherit self;};
+      site = pkgs.callPackage ./nix/site.nix {inherit self;};
     });
 
     # Make sure that the packages and devshells are valid.
