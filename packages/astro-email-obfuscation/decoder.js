@@ -29,11 +29,9 @@ function createEmailLink(email) {
   return anchor;
 }
 
-// Apply interactive styles to an element
+// Apply interactive styles to an element using CSS classes
 function makeInteractive(element) {
-  element.style.cursor = "pointer";
-  element.style.textDecoration = "underline";
-  element.style.color = "inherit";
+  element.classList.add("email-obfuscation-interactive");
 
   // Add keyboard support
   element.addEventListener("keydown", function (event) {
@@ -44,24 +42,32 @@ function makeInteractive(element) {
   });
 }
 
-// Enhanced email reveal with animation
+// Email reveal with animations
 function revealEmail(element, email, animated = true) {
   const anchor = createEmailLink(email);
 
   if (animated) {
-    element.style.opacity = "0.5";
+    element.classList.add("email-obfuscation-revealing");
     setTimeout(() => {
-      element.innerHTML = "";
+      // Safely clear content and append new element
+      while (element.firstChild) {
+        element.removeChild(element.firstChild);
+      }
       element.appendChild(anchor);
-      element.style.opacity = "1";
-      element.style.cursor = "default";
-      element.style.textDecoration = "none";
+      element.classList.remove(
+        "email-obfuscation-revealing",
+        "email-obfuscation-interactive",
+      );
+      element.classList.add("email-obfuscation-revealed");
     }, 150);
   } else {
-    element.innerHTML = "";
+    // Safely clear content and append new element
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
+    }
     element.appendChild(anchor);
-    element.style.cursor = "default";
-    element.style.textDecoration = "none";
+    element.classList.remove("email-obfuscation-interactive");
+    element.classList.add("email-obfuscation-revealed");
   }
 }
 
@@ -107,13 +113,13 @@ document.addEventListener("DOMContentLoaded", function () {
         if (clickCount === 1) {
           // First click: show confirmation
           this.textContent = "Click again to confirm";
-          this.style.fontStyle = "italic";
+          this.classList.add("email-obfuscation-confirming");
           setTimeout(() => {
             if (clickCount === 1) {
               this.textContent =
                 this.getAttribute("data-original-text") ||
                 "[Click to reveal email]";
-              this.style.fontStyle = "normal";
+              this.classList.remove("email-obfuscation-confirming");
               clickCount = 0;
             }
           }, 3000);
@@ -156,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     });
-    element.style.cursor = "pointer";
+    element.classList.add("email-obfuscation-copyable");
     element.setAttribute("title", "Click to copy email to clipboard");
   });
 
@@ -170,11 +176,11 @@ document.addEventListener("DOMContentLoaded", function () {
         let email = "";
         hiddenChars.forEach((char) => {
           email += char.textContent;
-          char.style.display = "inline";
+          char.classList.add("email-obfuscation-char-visible");
         });
 
         if (placeholder) {
-          placeholder.style.display = "none";
+          placeholder.classList.add("email-obfuscation-hidden");
         }
 
         // After a brief moment, replace with proper email link
@@ -191,10 +197,10 @@ document.addEventListener("DOMContentLoaded", function () {
   // These are handled server-side, but we can enhance the UX
   document.querySelectorAll(".http-redirect-email").forEach(function (element) {
     element.addEventListener("click", function () {
-      // Add a small delay to show interaction feedback
-      this.style.opacity = "0.7";
+      // Add a small delay to show interaction feedback using CSS class
+      this.classList.add("email-obfuscation-clicking");
       setTimeout(() => {
-        this.style.opacity = "1";
+        this.classList.remove("email-obfuscation-clicking");
       }, 100);
     });
   });
@@ -276,30 +282,95 @@ document.addEventListener("DOMContentLoaded", function () {
       makeInteractive(element);
     });
 
-  // Add global styles for better UX
-  const style = document.createElement("style");
-  style.textContent = `
-    .rot18-email, .js-concat-email, .js-interaction-email,
-    .css-hidden-email, .reverse-email[data-reversed],
-    .deconstructed-email, .b64-email {
-      transition: opacity 0.15s ease-in-out;
-    }
+  // Add global styles for better UX using CSP-safe method
+  const cssId = "email-obfuscation-styles";
+  if (!document.getElementById(cssId)) {
+    const style = document.createElement("style");
+    style.id = cssId;
+    style.type = "text/css";
 
-    .css-hidden-email .hidden-char {
-      transition: display 0.3s ease-in-out;
-    }
+    // Define all CSS rules as an object
+    const cssRules = {
+      // Interactive state styles
+      ".email-obfuscation-interactive": {
+        cursor: "pointer",
+        "text-decoration": "underline",
+        color: "inherit",
+      },
 
-    .svg-email:hover {
-      opacity: 0.8;
-    }
+      // Revealing animation styles
+      ".email-obfuscation-revealing": {
+        opacity: "0.5",
+      },
 
-    @media (prefers-reduced-motion: reduce) {
-      .rot18-email, .js-concat-email, .js-interaction-email,
-      .css-hidden-email, .reverse-email[data-reversed],
-      .deconstructed-email, .b64-email, .svg-email {
-        transition: none !important;
+      // Revealed state styles
+      ".email-obfuscation-revealed": {
+        cursor: "default",
+        "text-decoration": "none",
+      },
+
+      // Confirmation state styles
+      ".email-obfuscation-confirming": {
+        "font-style": "italic",
+      },
+
+      // Copyable cursor
+      ".email-obfuscation-copyable": {
+        cursor: "pointer",
+      },
+
+      // Character visibility
+      ".email-obfuscation-char-visible": {
+        display: "inline !important",
+      },
+
+      // Hidden elements
+      ".email-obfuscation-hidden": {
+        display: "none !important",
+      },
+
+      // Click feedback
+      ".email-obfuscation-clicking": {
+        opacity: "0.7",
+      },
+
+      // Transition styles for smooth animations
+      ".rot18-email, .js-concat-email, .js-interaction-email, .css-hidden-email, .reverse-email[data-reversed], .deconstructed-email, .b64-email":
+        {
+          transition: "opacity 0.15s ease-in-out",
+        },
+
+      ".css-hidden-email .hidden-char": {
+        transition: "display 0.3s ease-in-out",
+      },
+
+      ".svg-email:hover": {
+        opacity: "0.8",
+      },
+    };
+
+    // Build CSS text from rules object
+    let cssText = "";
+    for (const [selector, rules] of Object.entries(cssRules)) {
+      cssText += `${selector} { `;
+      for (const [property, value] of Object.entries(rules)) {
+        cssText += `${property}: ${value}; `;
       }
+      cssText += "} ";
     }
-  `;
-  document.head.appendChild(style);
+
+    // Add reduced motion media query
+    cssText += `
+      @media (prefers-reduced-motion: reduce) {
+        .rot18-email, .js-concat-email, .js-interaction-email,
+        .css-hidden-email, .reverse-email[data-reversed],
+        .deconstructed-email, .b64-email, .svg-email {
+          transition: none !important;
+        }
+      }
+    `;
+
+    style.textContent = cssText;
+    document.head.appendChild(style);
+  }
 });
