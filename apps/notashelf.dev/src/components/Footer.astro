@@ -3,10 +3,10 @@ import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import {
   faChevronLeft,
   faChevronRight,
-  faCodeBranch,
   faRss,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import FontAwesome from "./FontAwesome.astro";
 
 const gitEnv = import.meta.env.GIT_ENV || "development";
 ---
@@ -64,8 +64,8 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
       </a>
     </div>
     <div class="built-from">
-      <FontAwesomeIcon
-        icon={faCodeBranch}
+      <FontAwesome
+        icon="code-branch"
         title="Git Branch"
         className="icon"
       />
