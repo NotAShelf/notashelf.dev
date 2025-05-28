@@ -81,7 +81,7 @@ in
 
     pnpmDeps = pnpm.fetchDeps {
       inherit (finalAttrs) pname src;
-      hash = "sha256-y6X59mpMU5pYk2XkZJygb+st1XpeqFG5Gaj1nfbCBgw=";
+      hash = "sha256-ZCLNRf0eo8RtvSlLbLRXLaMaKpMFGCDYxJ8X8DkbwRA=";
     };
 
     nativeBuildInputs = [
