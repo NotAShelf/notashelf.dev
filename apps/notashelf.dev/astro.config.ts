@@ -1,23 +1,30 @@
+// @ts-check
 import { defineConfig } from "astro/config";
-import { fileURLToPath, URL } from "node:url";
-import { remarkEmDash } from "./src/lib";
-import remarkGfm from "remark-gfm";
-import remarkToc from "remark-toc";
-import rehypeExternalLinks from "rehype-external-links";
-import wasm from "vite-plugin-wasm";
-import topLevelAwait from "vite-plugin-top-level-await";
-import { copyrightYearPlugin } from "vite-copyright-replace";
-import purgeCss from "astro-purge-css";
-import emailObfuscation from "astro-email-obfuscation";
-import autoprefixer from "autoprefixer";
-import postcssNormalize from "postcss-normalize";
-import postcssPresetEnv from "postcss-preset-env";
 
+// First party integrations
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import partytown from "@astrojs/partytown";
 import svelte from "@astrojs/svelte";
+
+// Personal integrations or plugins
+import purgeCss from "astro-purge-css";
+import emailObfuscation from "astro-email-obfuscation";
+import copyrightYearPlugin from "vite-copyright-replace";
+import remarkEmDash from "remark-em-dash";
+
+// Third Party integrations or plugins
+import postcssNormalize from "postcss-normalize";
+import postcssPresetEnv from "postcss-preset-env";
+import autoprefixer from "autoprefixer";
+
+import remarkGfm from "remark-gfm";
+import remarkToc from "remark-toc";
+import rehypeExternalLinks from "rehype-external-links";
+
+import wasm from "vite-plugin-wasm";
+import topLevelAwait from "vite-plugin-top-level-await";
 
 // https://astro.build/config
 export default defineConfig({
@@ -79,11 +86,17 @@ export default defineConfig({
       safelist: ["safe-class"],
       blocklist: ["blocked-class"],
       postcss: {
+        options: {
+          from: undefined,
+          to: undefined,
+        },
         plugins: [
           postcssNormalize() as any, // yuck
           autoprefixer({
             overrideBrowserslist: ["> 1%", "last 2 versions"],
           }),
+
+          postcssNormalize as any,
           [
             postcssPresetEnv,
             {
@@ -96,10 +109,6 @@ export default defineConfig({
             },
           ],
         ],
-        options: {
-          from: undefined,
-          to: undefined,
-        },
       },
 
       cssnano: {
@@ -137,6 +146,7 @@ export default defineConfig({
       remarkGfm,
       [remarkToc, { heading: "contents" }],
     ],
+
     rehypePlugins: [
       [
         rehypeExternalLinks,
@@ -146,6 +156,7 @@ export default defineConfig({
         },
       ],
     ],
+
     shikiConfig: {
       theme: "one-dark-pro",
       langs: [],
@@ -162,14 +173,6 @@ export default defineConfig({
 
   vite: {
     plugins: [wasm(), topLevelAwait(), copyrightYearPlugin()],
-    resolve: {
-      alias: {
-        "wasm-utils": fileURLToPath(
-          new URL("../../packages/wasm-utils/pkg", import.meta.url),
-        ),
-      },
-    },
-
     build: {
       rollupOptions: {
         output: {
