@@ -12,16 +12,6 @@ interface Props {
 const { mode, title } = Astro.props;
 const MAX_TAGS_TO_SHOW = 3;
 
-// Fisher-Yates shuffle algorithm for proper randomization
-function shuffleProjects<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
-
 // Get all projects
 const allProjects = (await getCollection("projects")) as ProjectEntry[];
 const activeProjects = allProjects.filter((project) => project.data.active);
@@ -31,14 +21,17 @@ const inactiveProjects = allProjects.filter((project) => !project.data.active);
 let displayProjects: ProjectEntry[] = [];
 
 if (mode === "featured") {
-  // For featured mode: Get up to 3 projects (prioritize active ones)
-  const shuffledActive = shuffleProjects(activeProjects);
-  const neededInactive = Math.max(0, 3 - shuffledActive.length);
+  // For featured mode: Get ALL projects available for client-side selection
+  // The client will pick 3 random ones from this larger pool
+  // Use deterministic sorting by id for consistent build output
+  const sortedActive = activeProjects.sort((a, b) => a.id.localeCompare(b.id));
+  const sortedInactive = inactiveProjects.sort((a, b) =>
+    a.id.localeCompare(b.id),
+  );
 
-  displayProjects = [
-    ...shuffledActive,
-    ...shuffleProjects(inactiveProjects).slice(0, neededInactive),
-  ].slice(0, 3);
+  // Provide all projects to client for random selection
+  // Client will pick 3 from this pool and hide the rest
+  displayProjects = [...sortedActive, ...sortedInactive];
 } else {
   // For recent mode: Get 5 most recent active projects
   displayProjects = activeProjects
@@ -255,6 +248,10 @@ const formatDate = (date?: Date) => {
     </a>
   </div>
 </section>
+
+<script>
+  import "../scripts/client-project-shuffle.ts";
+</script>
 
 <style lang="scss">
   @use "sass:color";

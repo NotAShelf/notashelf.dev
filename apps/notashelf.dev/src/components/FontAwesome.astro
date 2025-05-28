@@ -19,6 +19,28 @@ const {
 
 const finalClassName = [className, cssClass].filter(Boolean).join(" ");
 
+// Convert FontAwesome sizes to CSS sizes
+const getSizeValue = (size: string): string => {
+  const sizeMap: Record<string, string> = {
+    xs: "0.75em",
+    sm: "0.875em",
+    lg: "1.33em",
+    xl: "1.5em",
+    "2x": "2em",
+    "3x": "3em",
+    "4x": "4em",
+    "5x": "5em",
+    "6x": "6em",
+    "7x": "7em",
+    "8x": "8em",
+    "9x": "9em",
+    "10x": "10em",
+  };
+  return sizeMap[size] || size;
+};
+
+const finalSize = getSizeValue(size);
+
 // Simple SVG fallbacks for common icons
 const iconPaths: Record<string, { viewBox: string; path: string }> = {
   "chevron-down": {
@@ -56,8 +78,8 @@ const svgData = iconPaths[icon] || iconPaths["chevron-down"]; // Fallback to che
 
 <svg
   class={`fa-icon ${finalClassName}`}
-  width={size}
-  height={size}
+  width={finalSize}
+  height={finalSize}
   viewBox={svgData.viewBox}
   fill="currentColor"
   role="img"

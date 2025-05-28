@@ -13,7 +13,7 @@ const sortedPosts = allPosts
   .sort(
     (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
   )
-  .slice(0, 3);
+  .slice(0, 6); // Get more posts to have options for randomization
 
 // Calculate reading time and create properly typed objects
 const featuredPosts = sortedPosts.map((post) => {
@@ -24,13 +24,32 @@ const featuredPosts = sortedPosts.map((post) => {
   };
 });
 
-// Always use the most recent post for spotlight
-const spotlightPost = featuredPosts.length > 0 ? featuredPosts[0] : null;
+// Simple shuffle function for server-side randomization
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
 
-// Get side posts (excluding spotlight post)
-const sidePosts = featuredPosts
-  .filter((post) => post.id !== spotlightPost?.id)
-  .slice(0, 2);
+// Randomly select posts for spotlight (fallback to deterministic if not enough posts)
+let spotlightPost = null;
+let sidePosts: typeof featuredPosts = [];
+
+if (featuredPosts.length > 0) {
+  if (featuredPosts.length >= 3) {
+    // If we have enough posts, shuffle and select randomly
+    const shuffledPosts = shuffleArray(featuredPosts);
+    spotlightPost = shuffledPosts[0];
+    sidePosts = shuffledPosts.slice(1, 3);
+  } else {
+    // If we have few posts, use deterministic selection
+    spotlightPost = featuredPosts[0];
+    sidePosts = featuredPosts.slice(1);
+  }
+}
 ---
 
 <BaseLayout
@@ -99,6 +118,7 @@ const sidePosts = featuredPosts
 </BaseLayout>
 
 <script>
+  import "../scripts/client-post-spotlight.ts";
   import "../scripts/page-utils.ts";
 </script>
 

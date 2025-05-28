@@ -25,9 +25,25 @@ const {
   collapsible = false,
   closable = true,
   expanded = true,
-  id = `banner-${Math.random().toString(36).substring(2, 11)}`,
+  id,
   showIcon = true,
 } = Astro.props;
+
+// Generate deterministic ID if not provided
+const generateDeterministicId = (content: string): string => {
+  let hash = 0;
+  for (let i = 0; i < content.length; i++) {
+    const char = content.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  const positiveHash = Math.abs(hash).toString(36);
+  return `banner-${positiveHash.substring(0, 9).padEnd(9, "0")}`;
+};
+
+const bannerId =
+  id ||
+  generateDeterministicId(`${type}-${title || ""}-${collapsible}-${closable}`);
 
 // Determine which icon to show based on type
 const getTypeIcon = () => {
@@ -42,7 +58,7 @@ const getTypeIcon = () => {
 };
 ---
 
-<div class={`banner ${type}`} id={id} data-expanded={expanded}>
+<div class={`banner ${type}`} id={bannerId} data-expanded={expanded}>
   <div class="banner-header">
     <div class="banner-title">
       {
@@ -81,7 +97,7 @@ const getTypeIcon = () => {
   </div>
 </div>
 
-<script is:inline define:vars={{ id, collapsible }}>
+<script is:inline define:vars={{ id: bannerId, collapsible }}>
   document.addEventListener("DOMContentLoaded", () => {
     const banner = document.getElementById(id);
     if (!banner) return;
