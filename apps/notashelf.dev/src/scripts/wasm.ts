@@ -95,8 +95,11 @@ export class WasmPostSearch {
   }
 
   getPostsFromResults(results: SearchResult[]): PostEntry[] {
+    // XXX: Map for O(1) lookups instead of O(n) find operations
+    const postsMap = new Map(this.allPosts.map((post) => [post.id, post]));
+
     return results
-      .map((result) => this.allPosts.find((p) => p.id === result.id))
+      .map((result) => postsMap.get(result.id))
       .filter(Boolean) as PostEntry[];
   }
 
