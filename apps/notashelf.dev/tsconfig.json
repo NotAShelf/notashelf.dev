@@ -14,6 +14,7 @@
     "incremental": true,
     "jsx": "react-jsx",
     "jsxImportSource": "react",
+    "verbatimModuleSyntax": true,
     "paths": {
       // https://docs.astro.build/en/guides/typescript/#import-aliases
       "@/*": ["src/*"],
@@ -25,7 +26,12 @@
       "@scripts/*": ["src/scripts/*"],
       "wasm-utils": ["../../packages/wasm-utils/pkg"],
       "wasm-utils/*": ["../../packages/wasm-utils/pkg/*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "@astrojs/ts-plugin"
+      }
+    ]
   },
   "mdx": {
     "checkMdx": true
