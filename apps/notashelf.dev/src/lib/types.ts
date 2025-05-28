@@ -17,6 +17,3 @@ export interface PostWithReadingTime {
   };
   readingTime: number;
 }
-
-// Satisfy eslint type checks for Remark plugins.
-export type RemarkPlugin = () => (tree: any, file: any) => void;
