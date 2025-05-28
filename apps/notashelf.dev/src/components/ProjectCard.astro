@@ -6,9 +6,10 @@ import type { ProjectEntry } from "@lib/types";
 interface Props {
   project: ProjectEntry;
   maxTagsToShow?: number;
+  "data-project-id"?: string;
 }
 
-const { project, maxTagsToShow = 3 } = Astro.props;
+const { project, maxTagsToShow = 3, ...rest } = Astro.props;
 
 // Format project date
 const formatDate = (date?: Date) => {
@@ -17,7 +18,7 @@ const formatDate = (date?: Date) => {
 };
 ---
 
-<div class={`project-card ${!project.data.active ? "inactive" : ""}`}>
+<div class={`project-card ${!project.data.active ? "inactive" : ""}`} {...rest}>
   <div class="project-content">
     <h3 class="project-title">
       <a

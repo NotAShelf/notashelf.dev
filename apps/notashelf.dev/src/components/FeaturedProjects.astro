@@ -56,20 +56,20 @@ const bottomRowProjects = displayProjects.slice(3);
       <div class="recent-projects-container">
         <div class="top-row">
           {topRowProjects.map((project) => (
-            <ProjectCard project={project} />
+            <ProjectCard project={project} data-project-id={project.id} />
           ))}
         </div>
 
         <div class="bottom-row">
           {bottomRowProjects.map((project) => (
-            <ProjectCard project={project} />
+            <ProjectCard project={project} data-project-id={project.id} />
           ))}
         </div>
       </div>
     ) : (
       <div class="projects-grid">
         {displayProjects.map((project) => (
-          <ProjectCard project={project} />
+          <ProjectCard project={project} data-project-id={project.id} />
         ))}
       </div>
     )
