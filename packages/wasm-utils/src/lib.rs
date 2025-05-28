@@ -471,16 +471,32 @@ impl ProjectUtils {
         indices
     }
 
-    pub fn shuffle_json_array(&self, json_array: &str) -> Result<String, JsValue> {
-        let parsed: Value = serde_json::from_str(json_array)
-            .map_err(|_| JsValue::from_str("Invalid JSON array"))?;
+    pub fn shuffle_json_array(&self, json_array: &str) -> String {
+        // Try to parse the JSON array
+        let parsed = match serde_json::from_str::<Value>(json_array) {
+            Ok(value) => value,
+            Err(_) => {
+                // Return original input on parse error
+                return json_array.to_string();
+            }
+        };
 
+        // Check if it's actually an array
         if let Value::Array(mut array) = parsed {
+            // Shuffle the array
             fisher_yates_shuffle(&mut array);
-            serde_json::to_string(&array)
-                .map_err(|_| JsValue::from_str("Failed to serialize shuffled array"))
+
+            // Try to serialize back to string
+            match serde_json::to_string(&array) {
+                Ok(result) => result,
+                Err(_) => {
+                    // Return original input on serialization error
+                    json_array.to_string()
+                }
+            }
         } else {
-            Err(JsValue::from_str("Input is not a JSON array"))
+            // Return original input if not an array
+            json_array.to_string()
         }
     }
 
@@ -489,12 +505,19 @@ impl ProjectUtils {
         low + ((Math::random() * ((high - low + 1) as f64)).floor() as i32)
     }
 
-    pub fn random_sample(&self, json_array: &str, count: usize) -> Result<String, JsValue> {
-        let parsed: Value = serde_json::from_str(json_array)
-            .map_err(|_| JsValue::from_str("Invalid JSON array"))?;
+    pub fn random_sample(&self, json_array: &str, count: usize) -> String {
+        // Try to parse the JSON array
+        let parsed = match serde_json::from_str::<Value>(json_array) {
+            Ok(value) => value,
+            Err(_) => {
+                // Return original input on parse error instead of throwing
+                return json_array.to_string();
+            }
+        };
 
         if let Value::Array(array) = parsed {
             if count >= array.len() {
+                // If requesting more items than available, shuffle the entire array
                 return self.shuffle_json_array(json_array);
             }
 
@@ -507,10 +530,17 @@ impl ProjectUtils {
                 selected.push(array[selected_idx].clone());
             }
 
-            serde_json::to_string(&selected)
-                .map_err(|_| JsValue::from_str("Failed to serialize sample"))
+            // Try to serialize the result
+            match serde_json::to_string(&selected) {
+                Ok(result) => result,
+                Err(_) => {
+                    // Return original input on serialization error
+                    json_array.to_string()
+                }
+            }
         } else {
-            Err(JsValue::from_str("Input is not a JSON array"))
+            // Return original input if not an array
+            json_array.to_string()
         }
     }
 }
