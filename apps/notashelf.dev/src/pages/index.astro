@@ -236,8 +236,8 @@ const sidePosts = featuredPosts
   }
 
   .cta-button {
+    @include rounded-border;
     padding: 0.6rem 1.2rem;
-    border-radius: 4px;
     text-decoration: none;
     font-weight: 600;
     font-size: 0.95rem;
@@ -366,20 +366,16 @@ const sidePosts = featuredPosts
   }
 
   .see-all-link {
+    @include button-base;
     display: inline-flex;
     align-items: center;
-    color: $secondary;
-    text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
     padding: 0.5rem 1rem;
-    border-radius: 4px;
-    background-color: $button-bg;
-    transition: all 0.2s ease;
 
     svg {
       margin-left: 0.4rem;
-      transition: transform 0.2s ease;
+      @include smooth-transition(transform);
     }
 
     &:hover {

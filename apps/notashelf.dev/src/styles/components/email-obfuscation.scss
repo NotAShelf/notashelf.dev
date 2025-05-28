@@ -1,3 +1,5 @@
+@use "../variables" as *;
+
 /* Hide decoy elements */
 .email-decoy,
 .email-noise {
@@ -14,7 +16,7 @@
   transition: color 0.2s ease;
 
   &:hover {
-    color: var(--hover-color, #75b5aa);
+    color: var(--hover-color, #{$hover-color});
   }
 }
 
@@ -30,6 +32,6 @@
   transition: color 0.2s ease;
 
   &:hover {
-    color: var(--hover-color, #75b5aa);
+    color: var(--hover-color, #{$hover-color});
   }
 }

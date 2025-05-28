@@ -145,7 +145,21 @@ const posts = filteredPosts.slice(0, postsPerPage);
       const title = element.querySelector(".post-title")?.textContent;
       const description =
         element.querySelector(".post-description")?.textContent;
+      const timeElement = element.querySelector(".post-date");
       const keywords = element.getAttribute("data-keywords")?.split(",") || [];
+
+      // Extract actual date from the datetime attribute or fallback gracefully
+      let postDate = new Date();
+      if (timeElement) {
+        const datetimeAttr = timeElement.getAttribute("datetime");
+        if (datetimeAttr) {
+          const parsedDate = new Date(datetimeAttr);
+          // Only use parsed date if it's valid
+          if (!isNaN(parsedDate.getTime())) {
+            postDate = parsedDate;
+          }
+        }
+      }
 
       if (postId && title) {
         allPosts.push({
@@ -154,7 +168,7 @@ const posts = filteredPosts.slice(0, postsPerPage);
             title,
             description: description || "",
             keywords: keywords.filter((k) => k.trim() !== ""),
-            date: new Date(), // Will be extracted from DOM if needed
+            date: postDate,
             draft: false,
             archived: false,
           },
@@ -192,28 +206,18 @@ const posts = filteredPosts.slice(0, postsPerPage);
 
   .archive-link,
   .view-toggle {
+    @include button-base;
+    @include icon-size(0.9rem);
     display: flex;
     align-items: center;
     gap: 0.5rem;
     font-size: 0.9rem;
     color: color.scale($secondary, $lightness: -20%);
-    text-decoration: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 4px;
-    transition: all 0.2s ease;
     background-color: transparent;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
 
     &:hover {
       background-color: $button-bg;
       color: $secondary;
-    }
-
-    :global(svg) {
-      width: 0.9rem;
-      height: 0.9rem;
     }
   }
 
@@ -230,22 +234,11 @@ const posts = filteredPosts.slice(0, postsPerPage);
     }
 
     #search-input {
+      @include input-base;
       flex: 1;
-      padding: 0.6rem 0.8rem;
       padding-right: 2.5rem;
-      border-radius: 4px;
-      background-color: $button-bg;
-      border: 1px solid $border-light;
-      color: $secondary;
       font-size: 0.95rem;
-      transition: all 0.2s ease;
       width: 100%;
-
-      &:focus {
-        outline: none;
-        background-color: $input-bg-focus;
-        border-color: $border-medium;
-      }
 
       &::placeholder {
         color: $text-muted;
@@ -283,7 +276,7 @@ const posts = filteredPosts.slice(0, postsPerPage);
       padding: 0 0.5rem;
       background: none;
       border: none;
-      color: rgba(255, 255, 255, 0.7);
+      color: $text-muted;
       cursor: pointer;
       text-decoration: none;
 
@@ -313,8 +306,8 @@ const posts = filteredPosts.slice(0, postsPerPage);
     display: inline-block;
     padding: 0.3rem 0.8rem;
     border-radius: 4px;
-    background-color: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.7);
+    background-color: $button-bg;
+    color: $text-muted;
     font-size: 0.85rem;
     text-decoration: none;
     transition: all 0.2s ease;
@@ -324,12 +317,12 @@ const posts = filteredPosts.slice(0, postsPerPage);
     font-family: inherit;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: $button-bg-hover;
       color: $secondary;
     }
 
     &.active {
-      background-color: rgba(255, 255, 255, 0.15);
+      background-color: $border-medium;
       color: $secondary;
       font-weight: 500;
     }
@@ -346,7 +339,7 @@ const posts = filteredPosts.slice(0, postsPerPage);
   .no-results {
     text-align: center;
     padding: 3rem 2rem;
-    background-color: rgba(255, 255, 255, 0.03);
+    background-color: $button-bg;
     border-radius: 6px;
 
     :global(.search-icon) {
@@ -367,7 +360,7 @@ const posts = filteredPosts.slice(0, postsPerPage);
     .reset-filters {
       display: inline-block;
       padding: 0.5rem 1rem;
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: $button-bg;
       color: $secondary;
       text-decoration: none;
       border-radius: 4px;
@@ -378,7 +371,7 @@ const posts = filteredPosts.slice(0, postsPerPage);
       font-size: 1rem;
 
       &:hover {
-        background-color: rgba(255, 255, 255, 0.15);
+        background-color: $button-bg-hover;
         transform: translateY(-1px);
       }
     }

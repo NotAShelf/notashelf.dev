@@ -354,7 +354,7 @@ const skillCategories = [
     gap: 2.5rem;
     margin-bottom: 3rem;
     padding-bottom: 2rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid $border-light;
   }
 
   .profile-image-container {
@@ -421,6 +421,8 @@ const skillCategories = [
   }
 
   .tooltip {
+    @include rounded-border;
+    @include smooth-transition;
     position: absolute;
     top: -35px;
     left: 50%;
@@ -428,12 +430,10 @@ const skillCategories = [
     background: rgba(0, 0, 0, 0.8);
     color: white;
     padding: 0.4rem 0.8rem;
-    border-radius: 4px;
     font-size: 0.75rem;
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
-    transition: all 0.2s ease;
 
     &.visible {
       opacity: 1;
@@ -487,16 +487,12 @@ const skillCategories = [
   }
 
   .social-link {
+    @include button-base;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    border-radius: 4px;
-    background: $button-bg;
-    color: $secondary;
-    text-decoration: none;
     font-weight: 500;
-    transition: all 0.2s ease;
     border: 1px solid $border-light;
 
     &:hover {

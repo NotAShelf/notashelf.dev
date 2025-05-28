@@ -146,7 +146,7 @@ const effectiveDate = "April 5, 2024";
   .policy-header h1 {
     margin: 0 0 0.75rem;
     font-size: 1.8rem;
-    background: linear-gradient(to right, #fff, $text-muted);
+    background: linear-gradient(to right, $secondary, $text-muted);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -171,7 +171,7 @@ const effectiveDate = "April 5, 2024";
     padding: 1rem;
     border-radius: 6px;
     margin-bottom: 1.5rem;
-    border-left: 3px solid rgba(255, 255, 255, 0.2);
+    border-left: 3px solid $border-medium;
   }
 
   .policy-summary p {
@@ -196,12 +196,12 @@ const effectiveDate = "April 5, 2024";
     flex-shrink: 0;
     width: 32px;
     height: 32px;
-    background: rgba(255, 255, 255, 0.05);
+    background: $button-bg;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(255, 255, 255, 0.9);
+    color: $text-muted;
     margin-top: 0.25rem;
   }
 
@@ -217,7 +217,7 @@ const effectiveDate = "April 5, 2024";
   .section-content h2 {
     margin: 0 0 0.6rem;
     font-size: 1.2rem;
-    color: rgba(255, 255, 255, 0.95);
+    color: $secondary;
   }
 
   .section-content p {
@@ -280,15 +280,12 @@ const effectiveDate = "April 5, 2024";
   }
 
   .github-link {
+    @include button-base;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.4rem 1rem;
-    background: $button-bg;
-    border-radius: 4px;
-    text-decoration: none;
     font-size: 0.85rem;
-    transition: all 0.2s ease;
   }
 
   .github-link:hover {

@@ -245,18 +245,18 @@ const getTypeIcon = () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;
-    transition: all 0.2s ease;
+    @include rounded-border;
+    @include smooth-transition;
 
     &:hover {
       background-color: $button-bg;
       color: $secondary;
     }
 
+    @include icon-size(0.9rem);
+
     :global(svg) {
-      width: 0.9rem !important;
-      height: 0.9rem !important;
-      transition: transform 0.3s ease;
+      @include smooth-transition(transform, 0.3s);
     }
   }
 

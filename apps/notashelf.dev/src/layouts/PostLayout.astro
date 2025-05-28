@@ -147,7 +147,7 @@ const postSrc =
     display: flex;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid $border-light;
     justify-content: space-between;
     align-items: center;
 
@@ -159,15 +159,15 @@ const postSrc =
   }
 
   .post-meta time {
-    color: #aaa;
+    color: $text-subtle;
     font-size: 0.9rem;
   }
 
   .reading-time {
-    color: #aaa;
+    color: $text-subtle;
     font-size: 0.9rem;
     padding-left: 1rem;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 1px solid $border-light;
   }
 
   .source-link {
@@ -175,8 +175,8 @@ const postSrc =
     align-items: center;
     gap: 0.4rem;
     padding-left: 1rem;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
-    color: #aaa;
+    border-left: 1px solid $border-light;
+    color: $text-subtle;
     font-size: 0.9rem;
     text-decoration: none;
     transition: color 0.2s ease;
@@ -198,16 +198,16 @@ const postSrc =
   }
 
   .tag {
+    @include rounded-border;
+    @include smooth-transition(background-color);
     display: inline-block;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background-color: $button-bg;
+    color: $secondary;
     padding: 0.25rem 0.75rem;
-    border-radius: 4px;
     font-size: 0.8rem;
-    transition: background-color 0.2s ease;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.15);
+      background-color: $button-bg-hover;
     }
   }
 
@@ -228,7 +228,7 @@ const postSrc =
         left: 0;
         width: 2rem;
         height: 2px;
-        background-color: rgba(255, 255, 255, 0.2);
+        background-color: $border-medium;
       }
     }
 
@@ -271,29 +271,29 @@ const postSrc =
   .post-footer {
     margin-top: 3rem;
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid $border-light;
   }
 
   .back-to-posts {
+    @include rounded-border;
+    @include smooth-transition;
     display: inline-flex;
     align-items: center;
-    color: rgba(255, 255, 255, 0.7);
+    color: $text-muted;
     text-decoration: none;
     font-size: 0.9rem;
     padding: 0.5rem 1rem;
-    border-radius: 4px;
-    background-color: rgba(255, 255, 255, 0.05);
-    transition: all 0.2s ease;
+    background-color: $button-bg;
     gap: 0.5rem;
 
+    @include icon-size(0.9rem);
+
     :global(svg) {
-      transition: transform 0.2s ease;
-      width: 0.9rem !important;
-      height: 0.9rem !important;
+      @include smooth-transition(transform);
     }
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: $button-bg-hover;
 
       :global(svg) {
         transform: translateX(-3px);

@@ -285,9 +285,9 @@ const formatDate = (date?: Date) => {
       height: 2px;
       background: linear-gradient(
         to right,
-        rgba(255, 255, 255, 0.05),
-        rgba(255, 255, 255, 0.2),
-        rgba(255, 255, 255, 0.05)
+        $button-bg,
+        $border-medium,
+        $button-bg
       );
     }
   }
@@ -421,8 +421,8 @@ const formatDate = (date?: Date) => {
   }
 
   .status-badge {
+    @include rounded-border;
     padding: 0.25rem 0.5rem;
-    border-radius: 4px;
     font-size: 0.7rem;
     font-weight: 500;
 
@@ -463,10 +463,10 @@ const formatDate = (date?: Date) => {
   }
 
   .project-tag {
+    @include rounded-border;
     background-color: color.scale($primary, $lightness: 4%);
     color: color.scale($secondary, $lightness: -5%);
     padding: 0.2rem 0.5rem;
-    border-radius: 4px;
     font-size: 0.7rem;
 
     &.more {
@@ -476,12 +476,10 @@ const formatDate = (date?: Date) => {
   }
 
   .view-project {
+    @include interactive-link;
     margin-top: auto;
-    color: $secondary;
-    text-decoration: none;
     font-weight: 600;
     font-size: 0.85rem;
-    transition: color 0.2s ease;
     align-self: flex-start;
     display: inline-flex;
     align-items: center;
@@ -496,7 +494,7 @@ const formatDate = (date?: Date) => {
     }
 
     .arrow-icon {
-      transition: transform 0.2s ease;
+      @include smooth-transition(transform);
     }
   }
 
@@ -506,26 +504,22 @@ const formatDate = (date?: Date) => {
   }
 
   .see-all-link {
+    @include interactive-card;
     display: inline-flex;
     align-items: center;
     color: $secondary;
-    text-decoration: none;
     font-size: 0.9rem;
     font-weight: 600;
     padding: 0.5rem 1rem;
-    border-radius: 4px;
     background-color: color.scale($primary, $lightness: 8%);
-    transition: all 0.2s ease;
 
     .arrow-icon {
       margin-left: 0.3rem;
-      transition: transform 0.2s ease;
+      @include smooth-transition(transform);
     }
 
     &:hover {
       background-color: color.scale($primary, $lightness: 12%);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
       .arrow-icon {
         transform: translateX(4px);

@@ -198,8 +198,8 @@ const formatDate = (date: Date | undefined) => {
   }
 
   .status-badge {
+    @include rounded-border;
     padding: 0.25rem 0.5rem;
-    border-radius: 4px;
     font-size: 0.75rem;
     font-weight: 500;
 
@@ -222,20 +222,18 @@ const formatDate = (date: Date | undefined) => {
   }
 
   .project-tag {
+    @include rounded-border;
     background-color: color.scale($primary, $lightness: 4%);
     color: color.scale($secondary, $lightness: -5%);
     padding: 0.25rem 0.6rem;
-    border-radius: 4px;
     font-size: 0.75rem;
   }
 
   .view-project {
+    @include interactive-link;
     margin-top: auto;
-    color: $secondary;
-    text-decoration: none;
     font-weight: 600;
     font-size: 0.9rem;
-    transition: color 0.2s ease;
     align-self: flex-start;
 
     &:hover {

@@ -105,18 +105,14 @@ function getPageUrl(page: number) {
   }
 
   .pagination-link {
+    @include button-base;
     display: flex;
     align-items: center;
     justify-content: center;
     min-width: 2rem;
     height: 2rem;
     padding: 0 0.5rem;
-    border-radius: 4px;
-    text-decoration: none;
-    color: $secondary;
     font-size: 0.9rem;
-    background-color: $button-bg;
-    transition: all 0.2s ease;
 
     &:hover:not(.disabled, .active) {
       background-color: $button-bg-hover;

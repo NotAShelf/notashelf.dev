@@ -108,68 +108,68 @@ blockquote.admonition {
 
   // Variants
   &.admonition-note {
-    border-left: 4px solid #3498db;
+    border-left: 4px solid $info-color;
 
     .admonition-title {
-      background-color: rgba(52, 152, 219, 0.1);
-      color: #3498db;
+      background-color: $info-bg;
+      color: $info-color;
     }
 
     .admonition-icon {
-      color: #3498db;
+      color: $info-color;
     }
   }
 
   &.admonition-tip {
-    border-left: 4px solid #2ecc71;
+    border-left: 4px solid $success-color;
 
     .admonition-title {
-      background-color: rgba(46, 204, 113, 0.1);
-      color: #2ecc71;
+      background-color: $success-bg;
+      color: $success-color;
     }
 
     .admonition-icon {
-      color: #2ecc71;
+      color: $success-color;
     }
   }
 
   &.admonition-important {
-    border-left: 4px solid #9b59b6;
+    border-left: 4px solid $important-color;
 
     .admonition-title {
-      background-color: rgba(155, 89, 182, 0.1);
-      color: #9b59b6;
+      background-color: $important-bg;
+      color: $important-color;
     }
 
     .admonition-icon {
-      color: #9b59b6;
+      color: $important-color;
     }
   }
 
   &.admonition-warning,
   &.admonition-caution {
-    border-left: 4px solid #f39c12;
+    border-left: 4px solid $warning-color;
 
     .admonition-title {
-      background-color: rgba(243, 156, 18, 0.1);
-      color: #f39c12;
+      background-color: $warning-bg;
+      color: $warning-color;
     }
 
     .admonition-icon {
-      color: #f39c12;
+      color: $warning-color;
     }
   }
 
   &.admonition-danger {
-    border-left: 4px solid #e74c3c;
+    border-left: 4px solid $error-color;
 
     .admonition-title {
-      background-color: rgba(231, 76, 60, 0.1);
-      color: #e74c3c;
+      background-color: $error-bg;
+      color: $error-color;
     }
 
     .admonition-icon {
-      color: #e74c3c;
+      color: $error-color;
     }
   }
 

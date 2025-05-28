@@ -158,7 +158,21 @@ const allTags = [
       const title = element.querySelector(".post-title")?.textContent;
       const description =
         element.querySelector(".post-description")?.textContent;
+      const timeElement = element.querySelector(".post-date");
       const keywords = element.getAttribute("data-keywords")?.split(",") || [];
+
+      // Extract actual date from the datetime attribute or fallback gracefully
+      let postDate = new Date();
+      if (timeElement) {
+        const datetimeAttr = timeElement.getAttribute("datetime");
+        if (datetimeAttr) {
+          const parsedDate = new Date(datetimeAttr);
+          // Only use parsed date if it's valid
+          if (!isNaN(parsedDate.getTime())) {
+            postDate = parsedDate;
+          }
+        }
+      }
 
       if (postId && title) {
         allPosts.push({
@@ -167,7 +181,7 @@ const allTags = [
             title,
             description: description || "",
             keywords: keywords.filter((k) => k.trim() !== ""),
-            date: new Date(), // Will be extracted from DOM if needed
+            date: postDate,
             draft: false,
             archived: false,
           },
@@ -206,29 +220,20 @@ const allTags = [
 
   .archive-link,
   .view-toggle {
+    @include button-base;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     font-size: 0.9rem;
     color: color.scale($secondary, $lightness: -20%);
-    text-decoration: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 4px;
-    transition: all 0.2s ease;
     background-color: transparent;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.05);
+      background-color: $button-bg;
       color: $secondary;
     }
 
-    :global(svg) {
-      width: 0.9rem;
-      height: 0.9rem;
-    }
+    @include icon-size(0.9rem);
   }
 
   .filters-container {
@@ -244,22 +249,11 @@ const allTags = [
     }
 
     #search-input {
+      @include input-base;
       flex: 1;
-      padding: 0.6rem 0.8rem;
       padding-right: 2.5rem;
-      border-radius: 4px;
-      background-color: $button-bg;
-      border: 1px solid $border-light;
-      color: $secondary;
       font-size: 0.95rem;
-      transition: all 0.2s ease;
       width: 100%;
-
-      &:focus {
-        outline: none;
-        background-color: $input-bg-focus;
-        border-color: $border-medium;
-      }
 
       &::placeholder {
         color: $text-muted;
@@ -281,10 +275,7 @@ const allTags = [
         color: $secondary;
       }
 
-      :global(svg) {
-        width: 0.9rem;
-        height: 0.9rem;
-      }
+      @include icon-size(0.9rem);
     }
 
     .clear-search {
@@ -297,7 +288,7 @@ const allTags = [
       padding: 0 0.5rem;
       background: none;
       border: none;
-      color: rgba(255, 255, 255, 0.7);
+      color: $text-muted;
       cursor: pointer;
       text-decoration: none;
 
@@ -305,10 +296,7 @@ const allTags = [
         color: $secondary;
       }
 
-      :global(svg) {
-        width: 0.9rem;
-        height: 0.9rem;
-      }
+      @include icon-size(0.9rem);
     }
   }
 
@@ -324,18 +312,13 @@ const allTags = [
   }
 
   .tag-filter {
+    @include button-base;
     display: inline-block;
     padding: 0.3rem 0.8rem;
-    border-radius: 4px;
-    background-color: $button-bg;
     color: $text-muted;
     font-size: 0.85rem;
-    text-decoration: none;
-    transition: all 0.2s ease;
     margin-bottom: 0.5rem;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
+    background-color: $button-bg;
 
     &:hover {
       background-color: $border-light;
@@ -358,6 +341,7 @@ const allTags = [
   }
 
   .post-dropdown-item {
+    @include interactive-card;
     background-color: color.scale($primary, $lightness: 6%);
     list-style: none;
     padding: 12px 16px;
@@ -368,16 +352,11 @@ const allTags = [
     height: 140px;
     display: flex;
     overflow: hidden;
-    transition:
-      background-color 0.15s ease-out,
-      transform 0.1s ease-out;
 
     &:hover {
       cursor: pointer;
       color: color.scale($secondary, $lightness: -4%);
       background-color: color.scale($primary, $lightness: 9%);
-      transform: translateY(-1px);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
   }
 
@@ -474,7 +453,7 @@ const allTags = [
     .reset-filters {
       display: inline-block;
       padding: 0.5rem 1rem;
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: $button-bg;
       color: $secondary;
       text-decoration: none;
       border-radius: 4px;
@@ -485,7 +464,7 @@ const allTags = [
       font-size: 1rem;
 
       &:hover {
-        background-color: rgba(255, 255, 255, 0.15);
+        background-color: $button-bg-hover;
         transform: translateY(-1px);
       }
     }
