@@ -1,22 +1,41 @@
 // Dynamic imports for better code splitting
 let searchEngine: any = null;
 let internalTextProcessor: any = null;
+let projectUtils: any = null;
 let isInitialized = false;
+
+// Use a global flag to persist across page navigation
+declare global {
+  interface Window {
+    __WASM_INITIALIZED__?: boolean;
+  }
+}
+
 // Shared promise to track the initialization process
 let initializationPromise: Promise<{
   textProcessor: any;
   searchEngine: any;
+  projectUtils: any;
 }> | null = null;
 
 export async function initWasm(): Promise<{
   textProcessor: any;
   searchEngine: any;
+  projectUtils: any;
 }> {
-  // If already initialized, return immediately
-  if (isInitialized) {
+  // Check both local and global initialization state
+  if (
+    isInitialized ||
+    (typeof window !== "undefined" && window.__WASM_INITIALIZED__)
+  ) {
+    if (!isInitialized) {
+      console.log("WASM modules already initialized globally");
+      isInitialized = true;
+    }
     return {
       textProcessor: internalTextProcessor!,
       searchEngine: searchEngine!,
+      projectUtils: projectUtils!,
     };
   }
 
@@ -37,17 +56,25 @@ export async function initWasm(): Promise<{
       await wasmModule.default();
       console.log("WASM module initialized");
 
-      console.log("Creating TextProcessor and SearchEngine instances...");
+      console.log(
+        "Creating TextProcessor, SearchEngine, and ProjectUtils instances...",
+      );
       internalTextProcessor = new wasmModule.TextProcessor();
       searchEngine = new wasmModule.SearchEngine();
+      projectUtils = new wasmModule.ProjectUtils();
       console.log("WASM instances created successfully");
 
       isInitialized = true;
+      // Set global flag to persist across page navigation
+      if (typeof window !== "undefined") {
+        window.__WASM_INITIALIZED__ = true;
+      }
       console.log("WASM modules loaded successfully");
 
       return {
         textProcessor: internalTextProcessor!,
         searchEngine: searchEngine!,
+        projectUtils: projectUtils!,
       };
     } catch (error) {
       // Reset initialization promise on error to allow retry
@@ -248,6 +275,62 @@ export class WasmTextProcessor {
   }
 }
 
+export class WasmProjectUtils {
+  private projectUtils: any = null;
+  private initialized = false;
+
+  async init(): Promise<void> {
+    if (this.initialized) return;
+
+    // Check WASM support before loading
+    if (!isWasmSupported()) {
+      throw new Error("WebAssembly not supported in this browser");
+    }
+
+    try {
+      const { projectUtils } = await initWasm();
+      this.projectUtils = projectUtils;
+      this.initialized = true;
+    } catch (error) {
+      console.error("Failed to initialize WASM project utils:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Shuffle an array of indices using Fisher-Yates algorithm
+   */
+  shuffleIndices(length: number): number[] {
+    if (!this.projectUtils) throw new Error("WASM module not initialized");
+    return this.projectUtils.shuffle_indices(length);
+  }
+
+  /**
+   * Shuffle a JSON array and return the shuffled array
+   */
+  shuffleJsonArray(jsonArray: string): string {
+    if (!this.projectUtils) throw new Error("WASM module not initialized");
+    return this.projectUtils.shuffle_json_array(jsonArray);
+  }
+
+  /**
+   * Generate random number between min and max (inclusive)
+   */
+  randomRange(min: number, max: number): number {
+    if (!this.projectUtils) throw new Error("WASM module not initialized");
+    return this.projectUtils.random_range(min, max);
+  }
+
+  /**
+   * Pick random elements from an array without replacement
+   */
+  randomSample(jsonArray: string, count: number): string {
+    if (!this.projectUtils) throw new Error("WASM module not initialized");
+    return this.projectUtils.random_sample(jsonArray, count);
+  }
+}
+
 // Singleton instances for global use
 export const textProcessor = new WasmTextProcessor();
 export const wasmSearchEngine = new WasmSearchEngine();
+export const wasmProjectUtils = new WasmProjectUtils();
