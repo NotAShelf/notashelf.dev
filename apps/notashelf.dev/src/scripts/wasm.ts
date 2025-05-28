@@ -12,7 +12,11 @@ import type { PostEntry } from "@lib/types";
 // Global interface for WASM initialization state
 declare global {
   interface Window {
-    __WASM_INITIALIZED__?: boolean;
+    __WASM_SUBSYSTEMS__?: {
+      search?: boolean;
+      projects?: boolean;
+      textProcessing?: boolean;
+    };
   }
 }
 
@@ -43,10 +47,10 @@ export class WasmPostSearch {
   };
 
   async init(posts: PostEntry[]): Promise<void> {
-    // Check global initialization state first
+    // Check module-specific initialization state first
     if (
       typeof window !== "undefined" &&
-      window.__WASM_INITIALIZED__ &&
+      window.__WASM_SUBSYSTEMS__?.search &&
       this.isInitialized
     ) {
       console.log("WASM search engine already initialized");
@@ -69,9 +73,12 @@ export class WasmPostSearch {
 
       this.isInitialized = true;
 
-      // Set global flag to prevent re-initialization
+      // Set module-specific flag to prevent re-initialization
       if (typeof window !== "undefined") {
-        window.__WASM_INITIALIZED__ = true;
+        if (!window.__WASM_SUBSYSTEMS__) {
+          window.__WASM_SUBSYSTEMS__ = {};
+        }
+        window.__WASM_SUBSYSTEMS__.search = true;
       }
 
       console.log("WASM search engine initialized successfully");
@@ -179,15 +186,21 @@ export class WasmFeaturedProjects {
       await this.projectUtils.init();
       this.isInitialized = true;
 
-      // Check global initialization state and log appropriately
-      if (typeof window !== "undefined" && window.__WASM_INITIALIZED__) {
+      // Check module-specific initialization state and log appropriately
+      if (
+        typeof window !== "undefined" &&
+        window.__WASM_SUBSYSTEMS__?.projects
+      ) {
         console.log(
-          "WASM featured projects using existing global initialization",
+          "WASM featured projects using existing module initialization",
         );
       } else {
-        // Set global flag to prevent re-initialization in other instances
+        // Set module-specific flag to prevent re-initialization in other instances
         if (typeof window !== "undefined") {
-          window.__WASM_INITIALIZED__ = true;
+          if (!window.__WASM_SUBSYSTEMS__) {
+            window.__WASM_SUBSYSTEMS__ = {};
+          }
+          window.__WASM_SUBSYSTEMS__.projects = true;
         }
         console.log("WASM featured projects initialized successfully");
       }
@@ -367,10 +380,10 @@ export class WasmTextProcessing {
   private isInitialized = false;
 
   async init(): Promise<void> {
-    // Check global initialization state first
+    // Check module-specific initialization state first
     if (
       typeof window !== "undefined" &&
-      window.__WASM_INITIALIZED__ &&
+      window.__WASM_SUBSYSTEMS__?.textProcessing &&
       this.isInitialized
     ) {
       console.log("WASM text processing already initialized globally");
@@ -382,6 +395,16 @@ export class WasmTextProcessing {
     try {
       await this.textProcessor.init();
       this.isInitialized = true;
+
+      // Set module-specific flag to prevent re-initialization
+      if (typeof window !== "undefined") {
+        if (!window.__WASM_SUBSYSTEMS__) {
+          window.__WASM_SUBSYSTEMS__ = {};
+        }
+        window.__WASM_SUBSYSTEMS__.textProcessing = true;
+      }
+
+      console.log("WASM text processing initialized successfully");
     } catch (error) {
       console.error("Failed to initialize WASM text processor:", error);
       throw error;
