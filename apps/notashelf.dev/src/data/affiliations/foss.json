@@ -1,6 +1,6 @@
 {
-  "logoIcon": "faGithub",
+  "logo": "/images/git-logo.svg",
   "name": "FOSS Projects",
   "description": "Contributor to and creator of various open-source projects, with a focus on system utilities and configuration tools.",
-  "isIcon": true
+  "isIcon": false
 }

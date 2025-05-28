@@ -25,6 +25,11 @@ import { getCollection } from "astro:content";
 // Get affiliations from collection
 const affiliationsEntries = await getCollection("affiliations");
 
+// Sort affiliations deterministically by id
+const sortedAffiliationsEntries = affiliationsEntries.sort((a, b) =>
+  a.id.localeCompare(b.id),
+);
+
 // Map the icon names to actual icon objects
 const getIconByName = (name: string): IconDefinition => {
   const icons: Record<string, IconDefinition> = {
@@ -53,7 +58,7 @@ interface ProcessedAffiliation {
 }
 
 // Process affiliations to convert string icon names to actual icon objects
-const affiliations: ProcessedAffiliation[] = affiliationsEntries.map(
+const affiliations: ProcessedAffiliation[] = sortedAffiliationsEntries.map(
   (entry) => {
     const data = entry.data;
     if (data.isIcon && data.logoIcon) {

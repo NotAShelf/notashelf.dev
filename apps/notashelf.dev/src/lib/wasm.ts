@@ -1,23 +1,46 @@
 // Dynamic imports for better code splitting
 let searchEngine: any = null;
 let internalTextProcessor: any = null;
+let projectUtils: any = null;
 let isInitialized = false;
+
+// Use module-specific flags to track subsystem initialization
+declare global {
+  interface Window {
+    __WASM_SUBSYSTEMS__?: {
+      search?: boolean;
+      projects?: boolean;
+      textProcessing?: boolean;
+    };
+  }
+}
+
 // Shared promise to track the initialization process
 let initializationPromise: Promise<{
   textProcessor: any;
   searchEngine: any;
+  projectUtils: any;
 }> | null = null;
 
 export async function initWasm(): Promise<{
   textProcessor: any;
   searchEngine: any;
+  projectUtils: any;
 }> {
-  // If already initialized, return immediately
+  // Check local initialization state
   if (isInitialized) {
-    return {
-      textProcessor: internalTextProcessor!,
-      searchEngine: searchEngine!,
-    };
+    // Ensure static variables are actually initialized before returning them
+    if (internalTextProcessor && searchEngine && projectUtils) {
+      return {
+        textProcessor: internalTextProcessor,
+        searchEngine: searchEngine,
+        projectUtils: projectUtils,
+      };
+    } else {
+      // Reset if static variables are null to force proper initialization
+      isInitialized = false;
+      initializationPromise = null;
+    }
   }
 
   // If initialization is in progress, return the existing promise
@@ -37,17 +60,30 @@ export async function initWasm(): Promise<{
       await wasmModule.default();
       console.log("WASM module initialized");
 
-      console.log("Creating TextProcessor and SearchEngine instances...");
+      console.log(
+        "Creating TextProcessor, SearchEngine, and ProjectUtils instances...",
+      );
       internalTextProcessor = new wasmModule.TextProcessor();
       searchEngine = new wasmModule.SearchEngine();
+      projectUtils = new wasmModule.ProjectUtils();
       console.log("WASM instances created successfully");
 
       isInitialized = true;
+      // Set module-specific flags for consistency
+      if (typeof window !== "undefined") {
+        if (!window.__WASM_SUBSYSTEMS__) {
+          window.__WASM_SUBSYSTEMS__ = {};
+        }
+        window.__WASM_SUBSYSTEMS__.search = true;
+        window.__WASM_SUBSYSTEMS__.projects = true;
+        window.__WASM_SUBSYSTEMS__.textProcessing = true;
+      }
       console.log("WASM modules loaded successfully");
 
       return {
         textProcessor: internalTextProcessor!,
         searchEngine: searchEngine!,
+        projectUtils: projectUtils!,
       };
     } catch (error) {
       // Reset initialization promise on error to allow retry
@@ -248,6 +284,74 @@ export class WasmTextProcessor {
   }
 }
 
+export class WasmProjectUtils {
+  private projectUtils: any = null;
+  private initialized = false;
+
+  async init(): Promise<void> {
+    if (this.initialized) return;
+
+    // Check WASM support before loading
+    if (!isWasmSupported()) {
+      throw new Error("WebAssembly not supported in this browser");
+    }
+
+    try {
+      const { projectUtils } = await initWasm();
+      this.projectUtils = projectUtils;
+      this.initialized = true;
+    } catch (error) {
+      console.error("Failed to initialize WASM project utils:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Shuffle an array of indices using Fisher-Yates algorithm
+   */
+  shuffleIndices(length: number): number[] {
+    if (!this.projectUtils) throw new Error("WASM module not initialized");
+    return this.projectUtils.shuffle_indices(length);
+  }
+
+  /**
+   * Shuffle a JSON array and return the shuffled array
+   * Returns the original input if an error occurs
+   */
+  shuffleJsonArray(jsonArray: string): string {
+    if (!this.projectUtils) throw new Error("WASM module not initialized");
+    try {
+      return this.projectUtils.shuffle_json_array(jsonArray);
+    } catch (e) {
+      console.warn("Failed to shuffle JSON array:", e);
+      return jsonArray; // Return original input on error
+    }
+  }
+
+  /**
+   * Generate random number between min and max (inclusive)
+   */
+  randomRange(min: number, max: number): number {
+    if (!this.projectUtils) throw new Error("WASM module not initialized");
+    return this.projectUtils.random_range(min, max);
+  }
+
+  /**
+   * Pick random elements from an array without replacement
+   * Returns the original input if an error occurs
+   */
+  randomSample(jsonArray: string, count: number): string {
+    if (!this.projectUtils) throw new Error("WASM module not initialized");
+    try {
+      return this.projectUtils.random_sample(jsonArray, count);
+    } catch (e) {
+      console.warn("Failed to sample from JSON array:", e);
+      return jsonArray; // Return original input on error
+    }
+  }
+}
+
 // Singleton instances for global use
 export const textProcessor = new WasmTextProcessor();
 export const wasmSearchEngine = new WasmSearchEngine();
+export const wasmProjectUtils = new WasmProjectUtils();

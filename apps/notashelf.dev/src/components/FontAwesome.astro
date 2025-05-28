@@ -19,6 +19,28 @@ const {
 
 const finalClassName = [className, cssClass].filter(Boolean).join(" ");
 
+// Convert FontAwesome sizes to CSS sizes
+const getSizeValue = (size: string): string => {
+  const sizeMap: Record<string, string> = {
+    xs: "0.75em",
+    sm: "0.875em",
+    lg: "1.33em",
+    xl: "1.5em",
+    "2x": "2em",
+    "3x": "3em",
+    "4x": "4em",
+    "5x": "5em",
+    "6x": "6em",
+    "7x": "7em",
+    "8x": "8em",
+    "9x": "9em",
+    "10x": "10em",
+  };
+  return sizeMap[size] || size;
+};
+
+const finalSize = getSizeValue(size);
+
 // Simple SVG fallbacks for common icons
 const iconPaths: Record<string, { viewBox: string; path: string }> = {
   "chevron-down": {
@@ -45,6 +67,10 @@ const iconPaths: Record<string, { viewBox: string; path: string }> = {
     viewBox: "0 0 512 512",
     path: "M32 32H480c17.7 0 32 14.3 32 32V96c0 17.7-14.3 32-32 32H32C14.3 128 0 113.7 0 96V64C0 46.3 14.3 32 32 32zm0 128H480V416c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V160zm128 80c0 8.8 7.2 16 16 16H336c8.8 0 16-7.2 16-16s-7.2-16-16-16H176c-8.8 0-16 7.2-16 16z",
   },
+  "code-branch": {
+    viewBox: "0 0 448 512",
+    path: "M160 80C160 112.8 140.3 140.1 112 153.3V241.1C130.8 230.2 152.7 224 176 224H272C307.3 224 336 195.3 336 160V153.3C307.7 140.1 288 112.8 288 80C288 35.82 323.8 0 368 0C412.2 0 448 35.82 448 80C448 112.8 428.3 140.1 400 153.3V160C400 230.7 342.7 288 272 288H176C140.7 288 112 316.7 112 352V358.7C140.3 371 160 399.2 160 432C160 476.2 124.2 512 80 512C35.82 512 0 476.2 0 432C0 399.2 19.75 371 48 358.7V153.3C19.75 140.1 0 112.8 0 80C0 35.82 35.82 0 80 0C124.2 0 160 35.82 160 80V80zM80 104C93.25 104 104 93.25 104 80C104 66.75 93.25 56 80 56C66.75 56 56 66.75 56 80C56 93.25 66.75 104 80 104zM368 56C354.7 56 344 66.75 344 80C344 93.25 354.7 104 368 104C381.3 104 392 93.25 392 80C392 66.75 381.3 56 368 56zM80 456C93.25 456 104 445.3 104 432C104 418.7 93.25 408 80 408C66.75 408 56 418.7 56 432C56 445.3 66.75 456 80 456z",
+  },
 };
 
 const svgData = iconPaths[icon] || iconPaths["chevron-down"]; // Fallback to chevron-down
@@ -52,8 +78,8 @@ const svgData = iconPaths[icon] || iconPaths["chevron-down"]; // Fallback to che
 
 <svg
   class={`fa-icon ${finalClassName}`}
-  width={size}
-  height={size}
+  width={finalSize}
+  height={finalSize}
   viewBox={svgData.viewBox}
   fill="currentColor"
   role="img"

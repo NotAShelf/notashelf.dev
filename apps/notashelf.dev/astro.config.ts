@@ -80,10 +80,10 @@ export default defineConfig({
       blocklist: ["blocked-class"],
       postcss: {
         plugins: [
+          postcssNormalize() as any, // yuck
           autoprefixer({
             overrideBrowserslist: ["> 1%", "last 2 versions"],
           }),
-          postcssNormalize,
           [
             postcssPresetEnv,
             {
@@ -101,6 +101,7 @@ export default defineConfig({
           to: undefined,
         },
       },
+
       cssnano: {
         preset: [
           "default",
@@ -127,6 +128,7 @@ export default defineConfig({
       },
     }),
   ],
+
   markdown: {
     gfm: true,
     smartypants: true,
@@ -167,6 +169,7 @@ export default defineConfig({
         ),
       },
     },
+
     build: {
       rollupOptions: {
         output: {
@@ -203,7 +206,7 @@ export default defineConfig({
           },
         },
         format: {
-          comments: false,
+          comments: true,
         },
       },
     },

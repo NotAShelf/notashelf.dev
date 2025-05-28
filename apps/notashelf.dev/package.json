@@ -16,6 +16,7 @@
     "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.4.0",
     "@astrojs/svelte": "^7.1.0",
+    "@astrojs/ts-plugin": "^1.10.4",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
@@ -60,5 +61,6 @@
     "vite-plugin-purgecss": "^0.2.13",
     "vite-plugin-top-level-await": "^1.5.0",
     "vite-plugin-wasm": "^3.4.1"
-  }
+  },
+  "browserslist": "last 2 versions"
 }

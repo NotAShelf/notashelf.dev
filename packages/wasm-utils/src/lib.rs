@@ -1,9 +1,13 @@
 use lru::LruCache;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::num::NonZeroUsize;
 use wasm_bindgen::prelude::*;
+
+// Add random number generation
+use js_sys::Math;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct PostData {
@@ -157,14 +161,12 @@ impl SearchEngine {
     /// Safe JSON serialization helper to avoid panics
     fn safe_serialize_to_json<T: serde::Serialize>(&self, data: &T, fallback: &str) -> String {
         match serde_wasm_bindgen::to_value(data) {
-            Ok(js_value) => {
-                match js_sys::JSON::stringify(&js_value) {
-                    Ok(js_string) => {
-                        js_string.as_string().unwrap_or_else(|| fallback.to_string())
-                    }
-                    Err(_) => fallback.to_string(),
-                }
-            }
+            Ok(js_value) => match js_sys::JSON::stringify(&js_value) {
+                Ok(js_string) => js_string
+                    .as_string()
+                    .unwrap_or_else(|| fallback.to_string()),
+                Err(_) => fallback.to_string(),
+            },
             Err(_) => fallback.to_string(),
         }
     }
@@ -397,7 +399,7 @@ impl TextProcessor {
         }
 
         let word_count = self.count_words(text);
-      ((word_count as f32 / words_per_minute as f32).ceil() as u32).max(1)
+        ((word_count as f32 / words_per_minute as f32).ceil() as u32).max(1)
     }
 
     /// Generate URL-friendly slug from text
@@ -449,5 +451,116 @@ impl TextProcessor {
 
     fn count_words(&self, text: &str) -> u32 {
         text.split_whitespace().count() as u32
+    }
+}
+
+/// Project randomization and utility functions
+#[wasm_bindgen]
+pub struct ProjectUtils;
+
+#[wasm_bindgen]
+impl ProjectUtils {
+    #[wasm_bindgen(constructor)]
+    pub fn new() -> ProjectUtils {
+        ProjectUtils
+    }
+
+    /// Generate shuffled indices for a given length
+    #[wasm_bindgen]
+    pub fn shuffle_indices(&self, length: usize) -> String {
+        let mut indices: Vec<usize> = (0..length).collect();
+        fisher_yates_shuffle(&mut indices);
+        serde_json::to_string(&indices).unwrap_or_else(|_| "[]".to_string())
+    }
+
+    /// Shuffle a JSON array and return the shuffled array
+    #[wasm_bindgen]
+    pub fn shuffle_json_array(&self, json_array: &str) -> String {
+        // Try to parse the JSON array
+        let parsed = match serde_json::from_str::<Value>(json_array) {
+            Ok(value) => value,
+            Err(_) => {
+                // Return original input on parse error
+                return json_array.to_string();
+            }
+        };
+
+        // Check if it's actually an array
+        if let Value::Array(mut array) = parsed {
+            // Shuffle the array
+            fisher_yates_shuffle(&mut array);
+
+            // Try to serialize back to string
+            match serde_json::to_string(&array) {
+                Ok(result) => result,
+                Err(_) => {
+                    // Return original input on serialization error
+                    json_array.to_string()
+                }
+            }
+        } else {
+            // Return original input if not an array
+            json_array.to_string()
+        }
+    }
+
+    /// Generate random number between min and max (inclusive)
+    #[wasm_bindgen]
+    pub fn random_range(&self, min: i32, max: i32) -> i32 {
+        if min == max {
+            return min;
+        }
+
+        let (low, high) = if min <= max { (min, max) } else { (max, min) };
+        let range = (high - low) as i64 + 1;
+        low + ((Math::random() * range as f64).floor() as i32)
+    }
+
+    /// Pick random elements from an array without replacement
+    #[wasm_bindgen]
+    pub fn random_sample(&self, json_array: &str, count: usize) -> String {
+        // Try to parse the JSON array
+        let parsed = match serde_json::from_str::<Value>(json_array) {
+            Ok(value) => value,
+            Err(_) => {
+                // Return original input on parse error instead of throwing
+                return json_array.to_string();
+            }
+        };
+
+        if let Value::Array(array) = parsed {
+            if count >= array.len() {
+                // If requesting more items than available, shuffle the entire array
+                return self.shuffle_json_array(json_array);
+            }
+
+            let mut indices: Vec<usize> = (0..array.len()).collect();
+            let mut selected = Vec::with_capacity(count);
+
+            for _ in 0..count {
+                let random_idx = (Math::random() * indices.len() as f64) as usize;
+                let selected_idx = indices.swap_remove(random_idx);
+                selected.push(array[selected_idx].clone());
+            }
+
+            // Try to serialize the result
+            match serde_json::to_string(&selected) {
+                Ok(result) => result,
+                Err(_) => {
+                    // Return original input on serialization error
+                    json_array.to_string()
+                }
+            }
+        } else {
+            // Return original input if not an array
+            json_array.to_string()
+        }
+    }
+}
+
+fn fisher_yates_shuffle<T>(slice: &mut [T]) {
+    for i in (1..slice.len()).rev() {
+        let j = (Math::random() * ((i + 1) as f64)) as usize;
+        slice.swap(i, j);
     }
 }

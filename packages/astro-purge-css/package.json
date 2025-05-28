@@ -1,6 +1,6 @@
 {
   "name": "astro-purge-css",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "description": "An Astro integration to purge unused CSS using PurgeCSS during the build",
   "author": "NotAShelf",
