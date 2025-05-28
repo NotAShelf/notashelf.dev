@@ -47,11 +47,10 @@ export class WasmPostSearch {
   };
 
   async init(posts: PostEntry[]): Promise<void> {
-    // Check module-specific initialization state first
+    // Check if either this instance or the global flag indicates initialization
     if (
-      typeof window !== "undefined" &&
-      window.__WASM_SUBSYSTEMS__?.search &&
-      this.isInitialized
+      this.isInitialized ||
+      (typeof window !== "undefined" && window.__WASM_SUBSYSTEMS__?.search)
     ) {
       console.log("WASM search engine already initialized");
       return;
@@ -59,6 +58,10 @@ export class WasmPostSearch {
 
     try {
       await this.searchEngine.init();
+
+      // Clear existing index to prevent duplicates if re-initializing
+      this.searchEngine.clear();
+
       this.allPosts = posts;
 
       for (const post of posts) {
