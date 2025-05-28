@@ -267,7 +267,7 @@ export class WasmFeaturedProjects {
       });
 
       // Show only the selected cards and move them to the front
-      selectedCards.forEach((card, index) => {
+      selectedCards.forEach((card) => {
         (card as HTMLElement).style.display = "";
         // Move selected cards to the beginning of the grid
         if (projectsGrid.firstChild) {
