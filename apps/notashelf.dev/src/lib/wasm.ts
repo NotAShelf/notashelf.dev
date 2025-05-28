@@ -28,15 +28,24 @@ export async function initWasm(): Promise<{
     isInitialized ||
     (typeof window !== "undefined" && window.__WASM_INITIALIZED__)
   ) {
-    if (!isInitialized) {
-      console.log("WASM modules already initialized globally");
-      isInitialized = true;
+    // Ensure static variables are actually initialized before returning them
+    if (internalTextProcessor && searchEngine && projectUtils) {
+      if (!isInitialized) {
+        console.log("WASM modules already initialized globally");
+        isInitialized = true;
+      }
+      return {
+        textProcessor: internalTextProcessor,
+        searchEngine: searchEngine,
+        projectUtils: projectUtils,
+      };
+    } else {
+      // Reset global flag if static variables are null to force proper initialization
+      if (typeof window !== "undefined") {
+        window.__WASM_INITIALIZED__ = false;
+      }
+      isInitialized = false;
     }
-    return {
-      textProcessor: internalTextProcessor!,
-      searchEngine: searchEngine!,
-      projectUtils: projectUtils!,
-    };
   }
 
   // If initialization is in progress, return the existing promise
