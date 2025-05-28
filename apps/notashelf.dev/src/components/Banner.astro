@@ -126,7 +126,9 @@ const getTypeIcon = () => {
           content.style.height = "0";
           content.style.opacity = "0";
           content.style.visibility = "hidden";
-          toggleIcon.style.transform = "rotate(180deg)";
+          if (toggleIcon) {
+            toggleIcon.style.transform = "rotate(180deg)";
+          }
         }
       }
     }
