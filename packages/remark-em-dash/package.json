@@ -1,0 +1,44 @@
+{
+  "name": "remark-em-dash",
+  "version": "1.0.0",
+  "description": "Remark plugin to convert double and triple dashes to en and em dashes",
+  "main": "index.ts",
+  "types": "index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "remark",
+    "remark-plugin",
+    "markdown",
+    "typography",
+    "em-dash",
+    "en-dash"
+  ],
+  "author": "NotAShelf",
+  "license": "MPL-2.0",
+  "peerDependencies": {
+    "remark": "^14.0.0 || ^15.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.0.0",
+    "jest": "^29.5.0",
+    "remark": "^15.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-stringify": "^11.0.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.0",
+    "unified": "^11.0.0",
+    "unist-util-visit": "^5.0.0"
+  },
+  "dependencies": {
+    "@types/mdast": "^4.0.4",
+    "unist-util-visit": "^5.0.0"
+  }
+}
