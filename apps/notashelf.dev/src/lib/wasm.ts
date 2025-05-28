@@ -39,6 +39,7 @@ export async function initWasm(): Promise<{
     } else {
       // Reset if static variables are null to force proper initialization
       isInitialized = false;
+      initializationPromise = null;
     }
   }
 
