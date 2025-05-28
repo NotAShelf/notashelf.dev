@@ -1,9 +1,13 @@
 use lru::LruCache;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::num::NonZeroUsize;
 use wasm_bindgen::prelude::*;
+
+// Add random number generation
+use js_sys::Math;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct PostData {
@@ -157,14 +161,12 @@ impl SearchEngine {
     /// Safe JSON serialization helper to avoid panics
     fn safe_serialize_to_json<T: serde::Serialize>(&self, data: &T, fallback: &str) -> String {
         match serde_wasm_bindgen::to_value(data) {
-            Ok(js_value) => {
-                match js_sys::JSON::stringify(&js_value) {
-                    Ok(js_string) => {
-                        js_string.as_string().unwrap_or_else(|| fallback.to_string())
-                    }
-                    Err(_) => fallback.to_string(),
-                }
-            }
+            Ok(js_value) => match js_sys::JSON::stringify(&js_value) {
+                Ok(js_string) => js_string
+                    .as_string()
+                    .unwrap_or_else(|| fallback.to_string()),
+                Err(_) => fallback.to_string(),
+            },
             Err(_) => fallback.to_string(),
         }
     }
@@ -397,7 +399,7 @@ impl TextProcessor {
         }
 
         let word_count = self.count_words(text);
-      ((word_count as f32 / words_per_minute as f32).ceil() as u32).max(1)
+        ((word_count as f32 / words_per_minute as f32).ceil() as u32).max(1)
     }
 
     /// Generate URL-friendly slug from text
@@ -449,5 +451,73 @@ impl TextProcessor {
 
     fn count_words(&self, text: &str) -> u32 {
         text.split_whitespace().count() as u32
+    }
+}
+
+/// Project randomization and utility functions
+#[wasm_bindgen]
+pub struct ProjectUtils;
+
+#[wasm_bindgen]
+impl ProjectUtils {
+    #[wasm_bindgen(constructor)]
+    pub fn new() -> ProjectUtils {
+        ProjectUtils
+    }
+
+    pub fn shuffle_indices(&self, length: usize) -> Vec<usize> {
+        let mut indices: Vec<usize> = (0..length).collect();
+        fisher_yates_shuffle(&mut indices);
+        indices
+    }
+
+    pub fn shuffle_json_array(&self, json_array: &str) -> Result<String, JsValue> {
+        let parsed: Value = serde_json::from_str(json_array)
+            .map_err(|_| JsValue::from_str("Invalid JSON array"))?;
+
+        if let Value::Array(mut array) = parsed {
+            fisher_yates_shuffle(&mut array);
+            serde_json::to_string(&array)
+                .map_err(|_| JsValue::from_str("Failed to serialize shuffled array"))
+        } else {
+            Err(JsValue::from_str("Input is not a JSON array"))
+        }
+    }
+
+    pub fn random_range(&self, min: i32, max: i32) -> i32 {
+        let (low, high) = if min <= max { (min, max) } else { (max, min) };
+        low + (Math::random() * ((high - low + 1) as f64)) as i32
+    }
+
+    pub fn random_sample(&self, json_array: &str, count: usize) -> Result<String, JsValue> {
+        let parsed: Value = serde_json::from_str(json_array)
+            .map_err(|_| JsValue::from_str("Invalid JSON array"))?;
+
+        if let Value::Array(array) = parsed {
+            if count >= array.len() {
+                return self.shuffle_json_array(json_array);
+            }
+
+            let mut indices: Vec<usize> = (0..array.len()).collect();
+            let mut selected = Vec::with_capacity(count);
+
+            for _ in 0..count {
+                let random_idx = (Math::random() * indices.len() as f64) as usize;
+                let selected_idx = indices.remove(random_idx);
+                selected.push(array[selected_idx].clone());
+            }
+
+            serde_json::to_string(&selected)
+                .map_err(|_| JsValue::from_str("Failed to serialize sample"))
+        } else {
+            Err(JsValue::from_str("Input is not a JSON array"))
+        }
+    }
+}
+
+fn fisher_yates_shuffle<T>(slice: &mut [T]) {
+    for i in (1..slice.len()).rev() {
+        let j = (Math::random() * ((i + 1) as f64)) as usize;
+        slice.swap(i, j);
     }
 }
