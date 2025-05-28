@@ -26,7 +26,7 @@ export async function initWasm(): Promise<{
   // Check both local and global initialization state
   if (
     isInitialized ||
- if (typeof window !== "undefined" && window.__WASM_INITIALIZED__ && this.isInitialized) {
+    (typeof window !== "undefined" && window.__WASM_INITIALIZED__)
   ) {
     // Ensure static variables are actually initialized before returning them
     if (internalTextProcessor && searchEngine && projectUtils) {
