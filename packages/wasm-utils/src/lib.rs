@@ -486,7 +486,7 @@ impl ProjectUtils {
 
     pub fn random_range(&self, min: i32, max: i32) -> i32 {
         let (low, high) = if min <= max { (min, max) } else { (max, min) };
-        low + (Math::random() * ((high - low + 1) as f64)) as i32
+        low + ((Math::random() * ((high - low + 1) as f64)).floor() as i32)
     }
 
     pub fn random_sample(&self, json_array: &str, count: usize) -> Result<String, JsValue> {
