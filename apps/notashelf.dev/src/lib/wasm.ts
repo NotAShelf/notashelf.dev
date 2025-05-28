@@ -4,10 +4,14 @@ let internalTextProcessor: any = null;
 let projectUtils: any = null;
 let isInitialized = false;
 
-// Use a global flag to persist across page navigation
+// Use module-specific flags to track subsystem initialization
 declare global {
   interface Window {
-    __WASM_INITIALIZED__?: boolean;
+    __WASM_SUBSYSTEMS__?: {
+      search?: boolean;
+      projects?: boolean;
+      textProcessing?: boolean;
+    };
   }
 }
 
@@ -23,27 +27,17 @@ export async function initWasm(): Promise<{
   searchEngine: any;
   projectUtils: any;
 }> {
-  // Check both local and global initialization state
-  if (
-    isInitialized ||
-    (typeof window !== "undefined" && window.__WASM_INITIALIZED__)
-  ) {
+  // Check local initialization state
+  if (isInitialized) {
     // Ensure static variables are actually initialized before returning them
     if (internalTextProcessor && searchEngine && projectUtils) {
-      if (!isInitialized) {
-        console.log("WASM modules already initialized globally");
-        isInitialized = true;
-      }
       return {
         textProcessor: internalTextProcessor,
         searchEngine: searchEngine,
         projectUtils: projectUtils,
       };
     } else {
-      // Reset global flag if static variables are null to force proper initialization
-      if (typeof window !== "undefined") {
-        window.__WASM_INITIALIZED__ = false;
-      }
+      // Reset if static variables are null to force proper initialization
       isInitialized = false;
     }
   }
@@ -74,9 +68,14 @@ export async function initWasm(): Promise<{
       console.log("WASM instances created successfully");
 
       isInitialized = true;
-      // Set global flag to persist across page navigation
+      // Set module-specific flags for consistency
       if (typeof window !== "undefined") {
-        window.__WASM_INITIALIZED__ = true;
+        if (!window.__WASM_SUBSYSTEMS__) {
+          window.__WASM_SUBSYSTEMS__ = {};
+        }
+        window.__WASM_SUBSYSTEMS__.search = true;
+        window.__WASM_SUBSYSTEMS__.projects = true;
+        window.__WASM_SUBSYSTEMS__.textProcessing = true;
       }
       console.log("WASM modules loaded successfully");
 

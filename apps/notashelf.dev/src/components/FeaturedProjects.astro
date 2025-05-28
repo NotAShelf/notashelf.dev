@@ -3,6 +3,7 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ProjectEntry } from "@lib/types";
 import { getCollection } from "astro:content";
+import ProjectCard from "./ProjectCard.astro";
 
 interface Props {
   mode: "featured" | "recent";
@@ -10,7 +11,6 @@ interface Props {
 }
 
 const { mode, title } = Astro.props;
-const MAX_TAGS_TO_SHOW = 3;
 
 // Get all projects
 const allProjects = (await getCollection("projects")) as ProjectEntry[];
@@ -46,12 +46,6 @@ if (mode === "featured") {
 // Split projects for the recent mode layout
 const topRowProjects = displayProjects.slice(0, 3);
 const bottomRowProjects = displayProjects.slice(3);
-
-// Format project date
-const formatDate = (date?: Date) => {
-  if (!date) return "Date Unknown";
-  return date.toLocaleDateString("en-US", { year: "numeric", month: "short" });
-};
 ---
 
 <section id="projects-display" class="projects-display fade-in">
@@ -62,178 +56,20 @@ const formatDate = (date?: Date) => {
       <div class="recent-projects-container">
         <div class="top-row">
           {topRowProjects.map((project) => (
-            <div
-              class={`project-card ${!project.data.active ? "inactive" : ""}`}
-            >
-              <div class="project-content">
-                <h3 class="project-title">
-                  <a
-                    href={project.data.sourceUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {project.data.title}
-                  </a>
-                </h3>
-
-                <div class="project-meta">
-                  <span class="project-date">
-                    {formatDate(project.data.startDate)}
-                  </span>
-                  <span
-                    class={`status-badge ${project.data.active ? "active" : "inactive"}`}
-                  >
-                    {project.data.active ? "Active" : "Inactive"}
-                  </span>
-                </div>
-
-                {project.data.description && (
-                  <div class="description-container">
-                    <p class="project-description">
-                      {project.data.description}
-                    </p>
-                  </div>
-                )}
-
-                <div class="project-tags">
-                  {project.data.tags.slice(0, MAX_TAGS_TO_SHOW).map((tag) => (
-                    <span class="project-tag">{tag}</span>
-                  ))}
-                  {project.data.tags.length > MAX_TAGS_TO_SHOW && (
-                    <span class="project-tag more">
-                      +{project.data.tags.length - MAX_TAGS_TO_SHOW}
-                    </span>
-                  )}
-                </div>
-
-                <a
-                  href={project.data.sourceUrl}
-                  class="view-project"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View Project{" "}
-                  <FontAwesomeIcon icon={faArrowRight} className="arrow-icon" />
-                </a>
-              </div>
-            </div>
+            <ProjectCard project={project} />
           ))}
         </div>
 
         <div class="bottom-row">
           {bottomRowProjects.map((project) => (
-            <div
-              class={`project-card ${!project.data.active ? "inactive" : ""}`}
-            >
-              <div class="project-content">
-                <h3 class="project-title">
-                  <a
-                    href={project.data.sourceUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {project.data.title}
-                  </a>
-                </h3>
-
-                <div class="project-meta">
-                  <span class="project-date">
-                    {formatDate(project.data.startDate)}
-                  </span>
-                  <span
-                    class={`status-badge ${project.data.active ? "active" : "inactive"}`}
-                  >
-                    {project.data.active ? "Active" : "Inactive"}
-                  </span>
-                </div>
-
-                {project.data.description && (
-                  <div class="description-container">
-                    <p class="project-description">
-                      {project.data.description}
-                    </p>
-                  </div>
-                )}
-
-                <div class="project-tags">
-                  {project.data.tags.slice(0, MAX_TAGS_TO_SHOW).map((tag) => (
-                    <span class="project-tag">{tag}</span>
-                  ))}
-                  {project.data.tags.length > MAX_TAGS_TO_SHOW && (
-                    <span class="project-tag more">
-                      +{project.data.tags.length - MAX_TAGS_TO_SHOW}
-                    </span>
-                  )}
-                </div>
-
-                <a
-                  href={project.data.sourceUrl}
-                  class="view-project"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View Project{" "}
-                  <FontAwesomeIcon icon={faArrowRight} className="arrow-icon" />
-                </a>
-              </div>
-            </div>
+            <ProjectCard project={project} />
           ))}
         </div>
       </div>
     ) : (
       <div class="projects-grid">
         {displayProjects.map((project) => (
-          <div class={`project-card ${!project.data.active ? "inactive" : ""}`}>
-            <div class="project-content">
-              <h3 class="project-title">
-                <a
-                  href={project.data.sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {project.data.title}
-                </a>
-              </h3>
-
-              <div class="project-meta">
-                <span class="project-date">
-                  {formatDate(project.data.startDate)}
-                </span>
-                <span
-                  class={`status-badge ${project.data.active ? "active" : "inactive"}`}
-                >
-                  {project.data.active ? "Active" : "Inactive"}
-                </span>
-              </div>
-
-              {project.data.description && (
-                <div class="description-container">
-                  <p class="project-description">{project.data.description}</p>
-                </div>
-              )}
-
-              <div class="project-tags">
-                {project.data.tags.slice(0, MAX_TAGS_TO_SHOW).map((tag) => (
-                  <span class="project-tag">{tag}</span>
-                ))}
-                {project.data.tags.length > MAX_TAGS_TO_SHOW && (
-                  <span class="project-tag more">
-                    +{project.data.tags.length - MAX_TAGS_TO_SHOW}
-                  </span>
-                )}
-              </div>
-
-              <a
-                href={project.data.sourceUrl}
-                class="view-project"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View Project{" "}
-                <FontAwesomeIcon icon={faArrowRight} className="arrow-icon" />
-              </a>
-            </div>
-          </div>
+          <ProjectCard project={project} />
         ))}
       </div>
     )
