@@ -44,29 +44,48 @@ function normalizePlugin(plugin: any): Plugin | PluginCreator<any> {
 }
 
 function normalizeContentForPurgeCSS(content: string): string {
-  // Normalize FontAwesome SVG title IDs to be deterministic
-  // Replace random IDs like "svg-inline--fa-title-N59RJRn1tdZm" with stable ones
+  // Create a mapping from original IDs to stable unique IDs
+  const idMapping = new Map<string, string>();
+  let idCounter = 0;
+
+  // Gets or creates a stable ID for an original ID
+  const getStableId = (originalId: string): string => {
+    if (!idMapping.has(originalId)) {
+      idMapping.set(originalId, `svg-inline--fa-title-stable-${idCounter++}`);
+    }
+    return idMapping.get(originalId)!;
+  };
+
+  // First pass: collect all FontAwesome title IDs to build the mapping
+  const faIdPattern = /svg-inline--fa-title-[a-zA-Z0-9]+/g;
+  let match;
+  while ((match = faIdPattern.exec(content)) !== null) {
+    getStableId(match[0]);
+  }
+
+  // Reset regex lastIndex for subsequent replacements
+  faIdPattern.lastIndex = 0;
+
   return (
     content
       // Normalize all FontAwesome title ID references
-      .replace(
-        /svg-inline--fa-title-[a-zA-Z0-9]+/g,
-        "svg-inline--fa-title-stable",
+      .replace(/svg-inline--fa-title-[a-zA-Z0-9]+/g, (match) =>
+        getStableId(match),
       )
       // Normalize id attributes
       .replace(
-        /id="svg-inline--fa-title-[a-zA-Z0-9]+"/g,
-        'id="svg-inline--fa-title-stable"',
+        /id="(svg-inline--fa-title-[a-zA-Z0-9]+)"/g,
+        (match, originalId) => `id="${getStableId(originalId)}"`,
       )
       // Normalize aria-labelledby attributes
       .replace(
-        /aria-labelledby="svg-inline--fa-title-[a-zA-Z0-9]+"/g,
-        'aria-labelledby="svg-inline--fa-title-stable"',
+        /aria-labelledby="(svg-inline--fa-title-[a-zA-Z0-9]+)"/g,
+        (match, originalId) => `aria-labelledby="${getStableId(originalId)}"`,
       )
-      // Normalize any other dynamic IDs that might appear
+      // Normalize any other dynamic IDs that might appear in title tags
       .replace(
-        /<title id="svg-inline--fa-title-[a-zA-Z0-9]+">/g,
-        '<title id="svg-inline--fa-title-stable">',
+        /<title id="(svg-inline--fa-title-[a-zA-Z0-9]+)">/g,
+        (match, originalId) => `<title id="${getStableId(originalId)}">`,
       )
       // Normalize potential other random identifiers (preserve attribute name, normalize value)
       .replace(/(data-fa-[a-z]+-id)="[a-zA-Z0-9]+"/g, '$1="stable"')
@@ -75,7 +94,9 @@ function normalizeContentForPurgeCSS(content: string): string {
         if (!classes || !classes.trim()) {
           return `class=""`;
         }
-        const uniqueSortedClasses = [...new Set(classes.trim().split(/\s+/))].sort().join(" ");
+        const uniqueSortedClasses = [...new Set(classes.trim().split(/\s+/))]
+          .sort()
+          .join(" ");
         return `class="${uniqueSortedClasses}"`;
       })
   );
