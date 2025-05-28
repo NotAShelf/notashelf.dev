@@ -33,7 +33,7 @@
     "astro": "^5.0.0"
   },
   "devDependencies": {
-    "@types/node": "^22.15.21",
+    "@types/node": "^22.15.23",
     "typescript": "^5.8.3"
   }
 }

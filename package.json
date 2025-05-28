@@ -38,6 +38,8 @@
   },
   "dependencies": {
     "glob": "^11.0.2",
-    "purgecss": "^7.0.2"
+    "purgecss": "^7.0.2",
+    "cssnano": "^7.0.7",
+    "postcss": "^8.5.3"
   }
 }
