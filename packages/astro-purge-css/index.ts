@@ -46,22 +46,36 @@ function normalizePlugin(plugin: any): Plugin | PluginCreator<any> {
 function normalizeContentForPurgeCSS(content: string): string {
   // Normalize FontAwesome SVG title IDs to be deterministic
   // Replace random IDs like "svg-inline--fa-title-N59RJRn1tdZm" with stable ones
-  return content
-    // Normalize all FontAwesome title ID references
-    .replace(/svg-inline--fa-title-[a-zA-Z0-9]+/g, 'svg-inline--fa-title-stable')
-    // Normalize id attributes
-    .replace(/id="svg-inline--fa-title-[a-zA-Z0-9]+"/g, 'id="svg-inline--fa-title-stable"')
-    // Normalize aria-labelledby attributes
-    .replace(/aria-labelledby="svg-inline--fa-title-[a-zA-Z0-9]+"/g, 'aria-labelledby="svg-inline--fa-title-stable"')
-    // Normalize any other dynamic IDs that might appear
-    .replace(/<title id="svg-inline--fa-title-[a-zA-Z0-9]+">/g, '<title id="svg-inline--fa-title-stable">')
-    // Normalize potential other random identifiers
-    .replace(/data-fa-[a-z]+-id="[a-zA-Z0-9]+"/g, 'data-fa-id="stable"')
-    // Sort any space-separated attribute values for consistency
-    .replace(/class="([^"]*?)"/g, (match, classes) => {
-      const sortedClasses = classes.trim().split(/\s+/).sort().join(' ');
-      return `class="${sortedClasses}"`;
-    });
+  return (
+    content
+      // Normalize all FontAwesome title ID references
+      .replace(
+        /svg-inline--fa-title-[a-zA-Z0-9]+/g,
+        "svg-inline--fa-title-stable",
+      )
+      // Normalize id attributes
+      .replace(
+        /id="svg-inline--fa-title-[a-zA-Z0-9]+"/g,
+        'id="svg-inline--fa-title-stable"',
+      )
+      // Normalize aria-labelledby attributes
+      .replace(
+        /aria-labelledby="svg-inline--fa-title-[a-zA-Z0-9]+"/g,
+        'aria-labelledby="svg-inline--fa-title-stable"',
+      )
+      // Normalize any other dynamic IDs that might appear
+      .replace(
+        /<title id="svg-inline--fa-title-[a-zA-Z0-9]+">/g,
+        '<title id="svg-inline--fa-title-stable">',
+      )
+      // Normalize potential other random identifiers
+      .replace(/data-fa-[a-z]+-id="[a-zA-Z0-9]+"/g, 'data-fa-id="stable"')
+      // Sort any space-separated attribute values for consistency
+      .replace(/class="([^"]*?)"/g, (match, classes) => {
+        const sortedClasses = classes.trim().split(/\s+/).sort().join(" ");
+        return `class="${sortedClasses}"`;
+      })
+  );
 }
 
 function purgeCSSIntegration(
@@ -111,11 +125,12 @@ function purgeCSSIntegration(
         for (const htmlFile of htmlFiles) {
           const htmlPath = path.join(distPath, htmlFile);
           const htmlContent = await readFile(htmlPath, "utf-8");
-          const normalizedHtmlContent = normalizeContentForPurgeCSS(htmlContent);
-          
+          const normalizedHtmlContent =
+            normalizeContentForPurgeCSS(htmlContent);
+
           // Write back the normalized HTML to ensure deterministic output
           await writeFile(htmlPath, normalizedHtmlContent);
-          
+
           content.push(normalizedHtmlContent);
         }
 
@@ -166,27 +181,31 @@ function purgeCSSIntegration(
           }
 
           if (cssnanoOptions !== false) {
-            const cssnanoConfig = typeof cssnanoOptions === "boolean" ? {} : (cssnanoOptions || {});
+            const cssnanoConfig =
+              typeof cssnanoOptions === "boolean" ? {} : cssnanoOptions || {};
             // Ensure deterministic cssnano configuration
             const deterministicConfig = {
               ...cssnanoConfig,
-              preset: cssnanoConfig.preset || ["default", {
-                // Ensure deterministic property sorting
-                mergeRules: false, // Disable rule merging that could cause order issues
-                normalizeWhitespace: true,
-                discardComments: { removeAll: true },
-                // Disable optimizations that might affect rule order
-                mergeLonghand: false,
-                minifySelectors: true,
-                colormin: true,
-                convertValues: true,
-                discardDuplicates: true,
-                discardEmpty: true,
-                discardOverridden: true,
-                normalizeUrl: true,
-                reduceIdents: false,
-                zindex: false,
-              }]
+              preset: cssnanoConfig.preset || [
+                "default",
+                {
+                  // Ensure deterministic property sorting
+                  mergeRules: false, // Disable rule merging that could cause order issues
+                  normalizeWhitespace: true,
+                  discardComments: { removeAll: true },
+                  // Disable optimizations that might affect rule order
+                  mergeLonghand: false,
+                  minifySelectors: true,
+                  colormin: true,
+                  convertValues: true,
+                  discardDuplicates: true,
+                  discardEmpty: true,
+                  discardOverridden: true,
+                  normalizeUrl: true,
+                  reduceIdents: false,
+                  zindex: false,
+                },
+              ],
             };
             plugins.push(cssnano(deterministicConfig));
           }

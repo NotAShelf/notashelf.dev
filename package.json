@@ -18,6 +18,7 @@
   "devDependencies": {
     "@eslint/js": "^9.27.0",
     "@types/eslint": "^9.6.1",
+    "@types/postcss-normalize": "^9.0.4",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
     "@types/unist": "^3.0.3",
@@ -37,9 +38,9 @@
     "typescript-eslint": "^8.33.0"
   },
   "dependencies": {
-    "glob": "^11.0.2",
-    "purgecss": "^7.0.2",
     "cssnano": "^7.0.7",
-    "postcss": "^8.5.3"
+    "glob": "^11.0.2",
+    "postcss": "^8.5.3",
+    "purgecss": "^7.0.2"
   }
 }
