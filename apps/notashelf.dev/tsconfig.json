@@ -23,8 +23,8 @@
       "@lib/*": ["src/lib/*"],
       "@data/*": ["src/data/*"],
       "@scripts/*": ["src/scripts/*"],
-      "wasm-utils": ["../../packages/wasm/pkg"],
-      "wasm-utils/*": ["../../packages/wasm/pkg/*"]
+      "wasm-utils": ["../../packages/wasm-utils/pkg"],
+      "wasm-utils/*": ["../../packages/wasm-utils/pkg/*"]
     }
   },
   "mdx": {
