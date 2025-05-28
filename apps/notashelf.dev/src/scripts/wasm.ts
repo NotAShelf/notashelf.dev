@@ -68,6 +68,13 @@ export class WasmPostSearch {
       }
 
       this.isInitialized = true;
+
+      // Set global flag to prevent re-initialization
+      if (typeof window !== "undefined") {
+        window.__WASM_INITIALIZED__ = true;
+      }
+
+      console.log("WASM search engine initialized successfully");
     } catch (error) {
       console.error("WASM search initialization failed");
       throw error;
