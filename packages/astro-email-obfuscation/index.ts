@@ -112,13 +112,14 @@ export default function astroEmailObfuscation(
 
   // Generate deterministic unique ID based on content hash
   // This ensures IDs are stable across builds for the same content
-  function generateUniqueId(content: string): string {
+  function generateUniqueId(email: string, method: string): string {
     // Simple hash function for deterministic IDs
+    const content = `${email}|${method}`;
     let hash = 0;
     for (let i = 0; i < content.length; i++) {
       const char = content.charCodeAt(i);
       hash = (hash << 5) - hash + char;
-      hash = hash & hash; // Convert to 32-bit integer
+      hash |= 0; // Convert to 32-bit integer
     }
     // Convert to positive number and base36
     const positiveHash = Math.abs(hash).toString(36);
@@ -138,7 +139,7 @@ export default function astroEmailObfuscation(
      */
     rot18: (email: string) => {
       const encoded = rot18(email);
-      const id = generateUniqueId(email + "rot18");
+      const id = generateUniqueId(email, "rot18");
       const escapedPlaceholder = escapeHtml(options.placeholder);
 
       const fallback = options.includeFallbacks
@@ -159,7 +160,7 @@ export default function astroEmailObfuscation(
       if (parts.length !== 2) return email; // Invalid email format
 
       const [localPart, domain] = parts;
-      const id = generateUniqueId(email + "jsconcat");
+      const id = generateUniqueId(email, "js-concat");
 
       const fallback = options.includeFallbacks
         ? `<noscript><span>[Email hidden - JavaScript required]</span></noscript>`
@@ -176,7 +177,7 @@ export default function astroEmailObfuscation(
      */
     "js-interaction": (email: string) => {
       const encoded = base64Encode(email);
-      const id = generateUniqueId(email + "jsinteraction");
+      const id = generateUniqueId(email, "js-interaction");
 
       const fallback = options.includeFallbacks
         ? `<noscript><span>[Email requires interaction - JavaScript needed]</span></noscript>`
@@ -192,7 +193,7 @@ export default function astroEmailObfuscation(
      * Crawler resistance: High
      */
     svg: (email: string) => {
-      const id = generateUniqueId(email + "svg");
+      const id = generateUniqueId(email, "svg");
       const chars = email.split("");
       let svgContent = "";
 
@@ -214,7 +215,7 @@ export default function astroEmailObfuscation(
      * Crawler resistance: High
      */
     "css-hidden": (email: string) => {
-      const id = generateUniqueId(email + "csshidden");
+      const id = generateUniqueId(email, "css-hidden");
       const chars = email.split("");
       const hiddenChars = chars
         .map(
@@ -251,7 +252,7 @@ export default function astroEmailObfuscation(
      */
     reverse: (email: string) => {
       const reversed = reverseEmail(email);
-      const id = generateUniqueId(email + "reverse");
+      const id = generateUniqueId(email, "reverse");
 
       if (options.includeFallbacks) {
         return `<span id="${id}" class="reverse-email" data-reversed="${escapeHtml(reversed)}" role="button" tabindex="0" aria-label="Email address reversed - click to reveal normally" title="Email address reversed for privacy" style="unicode-bidi: bidi-override; direction: rtl; cursor: pointer;">${escapeHtml(reversed)}</span>`;
@@ -268,7 +269,7 @@ export default function astroEmailObfuscation(
      */
     base64: (email: string) => {
       const encoded = base64Encode(email);
-      const id = generateUniqueId(email + "base64");
+      const id = generateUniqueId(email, "base64");
 
       const fallback = options.includeFallbacks
         ? `<noscript><span>[Base64 encoded email - JavaScript required]</span></noscript>`
@@ -285,7 +286,7 @@ export default function astroEmailObfuscation(
      */
     deconstruct: (email: string) => {
       const parts = deconstructEmail(email);
-      const id = generateUniqueId(email + "deconstruct");
+      const id = generateUniqueId(email, "deconstruct");
 
       const fallback = options.includeFallbacks
         ? `<noscript><span>[Deconstructed email - JavaScript required]</span></noscript>`
