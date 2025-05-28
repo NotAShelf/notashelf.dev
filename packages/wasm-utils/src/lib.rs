@@ -465,13 +465,16 @@ impl ProjectUtils {
         ProjectUtils
     }
 
+    /// Generate shuffled indices for a given length
     #[wasm_bindgen]
-     pub fn shuffle_indices(&self, length: usize) -> Vec<usize> {
+    pub fn shuffle_indices(&self, length: usize) -> String {
         let mut indices: Vec<usize> = (0..length).collect();
         fisher_yates_shuffle(&mut indices);
-        indices
+        serde_json::to_string(&indices).unwrap_or_else(|_| "[]".to_string())
     }
 
+    /// Shuffle a JSON array and return the shuffled array
+    #[wasm_bindgen]
     pub fn shuffle_json_array(&self, json_array: &str) -> String {
         // Try to parse the JSON array
         let parsed = match serde_json::from_str::<Value>(json_array) {
@@ -501,15 +504,20 @@ impl ProjectUtils {
         }
     }
 
-pub fn random_range(&self, min: i32, max: i32) -> i32 {
-    if min == max {
-        return min;
-    }
-     let (low, high) = if min <= max { (min, max) } else { (max, min) };
-    let range = (high - low) as i64 + 1;
-    low + ((Math::random() * range as f64).floor() as i32)
- }
+    /// Generate random number between min and max (inclusive)
+    #[wasm_bindgen]
+    pub fn random_range(&self, min: i32, max: i32) -> i32 {
+        if min == max {
+            return min;
+        }
 
+        let (low, high) = if min <= max { (min, max) } else { (max, min) };
+        let range = (high - low) as i64 + 1;
+        low + ((Math::random() * range as f64).floor() as i32)
+    }
+
+    /// Pick random elements from an array without replacement
+    #[wasm_bindgen]
     pub fn random_sample(&self, json_array: &str, count: usize) -> String {
         // Try to parse the JSON array
         let parsed = match serde_json::from_str::<Value>(json_array) {
