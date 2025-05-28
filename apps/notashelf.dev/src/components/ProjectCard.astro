@@ -50,9 +50,9 @@ const formatDate = (date?: Date) => {
 
     <div class="project-tags">
       {
-        project.data.tags.slice(0, maxTagsToShow).map((tag) => (
-          <span class="project-tag">{tag}</span>
-        ))
+        project.data.tags
+          .slice(0, maxTagsToShow)
+          .map((tag) => <span class="project-tag">{tag}</span>)
       }
       {
         project.data.tags.length > maxTagsToShow && (
