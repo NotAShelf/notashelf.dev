@@ -465,7 +465,8 @@ impl ProjectUtils {
         ProjectUtils
     }
 
-    pub fn shuffle_indices(&self, length: usize) -> Vec<usize> {
+    #[wasm_bindgen]
+     pub fn shuffle_indices(&self, length: usize) -> Vec<usize> {
         let mut indices: Vec<usize> = (0..length).collect();
         fisher_yates_shuffle(&mut indices);
         indices
