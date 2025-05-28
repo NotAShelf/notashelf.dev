@@ -68,12 +68,15 @@ function normalizeContentForPurgeCSS(content: string): string {
         /<title id="svg-inline--fa-title-[a-zA-Z0-9]+">/g,
         '<title id="svg-inline--fa-title-stable">',
       )
-      // Normalize potential other random identifiers
-      .replace(/data-fa-[a-z]+-id="[a-zA-Z0-9]+"/g, 'data-fa-id="stable"')
-      // Sort any space-separated attribute values for consistency
+      // Normalize potential other random identifiers (preserve attribute name, normalize value)
+      .replace(/(data-fa-[a-z]+-id)="[a-zA-Z0-9]+"/g, '$1="stable"')
+      // Sort any space-separated attribute values for consistency and remove duplicates
       .replace(/class="([^"]*?)"/g, (match, classes) => {
-        const sortedClasses = classes.trim().split(/\s+/).sort().join(" ");
-        return `class="${sortedClasses}"`;
+        if (!classes || !classes.trim()) {
+          return `class=""`;
+        }
+        const uniqueSortedClasses = [...new Set(classes.trim().split(/\s+/))].sort().join(" ");
+        return `class="${uniqueSortedClasses}"`;
       })
   );
 }
