@@ -1,4 +1,4 @@
-import { wasmPostSearch } from "./wasm-search";
+import { wasmPostSearch } from "./wasm";
 import PostSearchState from "./post-search-state";
 import type { PostEntry } from "@lib/types";
 
@@ -333,11 +333,6 @@ export class WasmPostSearchUI {
       this.elements.postListAll.querySelectorAll<HTMLLIElement>(
         ".post-dropdown-item",
       );
-  }
-
-  // Refresh cached elements if DOM structure changes (currently unused but kept for future extensibility)
-  private refreshCachedElements(): void {
-    this.initializeCachedElements();
   }
 
   // Clean up event listeners by cloning and replacing elements
