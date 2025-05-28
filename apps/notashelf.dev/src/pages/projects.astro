@@ -16,6 +16,9 @@ const sortedProjects = allProjects.sort((a, b) => {
   return dateB - dateA;
 });
 
+// Count of active projects
+const activeProjectsCount = sortedProjects.filter((p) => p.data.active).length;
+
 // Format project start date. I'll try to define the date for each project
 // that gets added, but there *might* be projects of which I forgot the
 // creation date. In content config, date is optional and this handles
@@ -31,10 +34,15 @@ const formatDate = (date: Date | undefined) => {
 
 <BaseLayout title="Projects" description="Projects by NotAShelf">
   <div class="projects-container">
-    <h1 class="page-title">Projects</h1>
-    <p class="page-description">
-      A collection of personal and open source projects I've worked on.
-    </p>
+    <div class="projects-header">
+      <h1 class="page-title">Projects</h1>
+      <p class="page-description">
+        A collection of personal and open source projects I've worked on.
+        <span class="projects-stats"
+          >Currently maintaining {activeProjectsCount} active projects.</span
+        >
+      </p>
+    </div>
 
     <div class="projects-grid">
       {
@@ -95,9 +103,14 @@ const formatDate = (date: Date | undefined) => {
   @use "../styles/global" as *;
 
   .projects-container {
-    max-width: 1200px;
+    max-width: var(--container-width, 1200px);
     margin: 0 auto;
-    padding: 2rem 1rem 4rem;
+    padding: 2rem 0 4rem;
+  }
+
+  .projects-header {
+    margin-bottom: 2rem;
+    position: relative;
   }
 
   .page-title {
@@ -108,9 +121,17 @@ const formatDate = (date: Date | undefined) => {
 
   .page-description {
     color: color.scale($secondary, $lightness: -10%);
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
     font-size: 1.1rem;
     max-width: 60ch;
+    line-height: 1.5;
+  }
+
+  .projects-stats {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-weight: 500;
+    color: color.scale($secondary, $lightness: 10%);
   }
 
   .projects-grid {
@@ -128,11 +149,14 @@ const formatDate = (date: Date | undefined) => {
     height: 100%;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    position: relative;
 
     &:hover {
       transform: translateY(-4px);
       background-color: color.scale($primary, $lightness: 9%);
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      border-color: color.scale($primary, $lightness: 20%);
     }
 
     &.inactive {
@@ -160,9 +184,25 @@ const formatDate = (date: Date | undefined) => {
       color: $secondary;
       text-decoration: none;
       transition: color 0.2s ease;
+      position: relative;
+
+      &:after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: color.scale($primary, $lightness: 40%);
+        transition: width 0.3s ease;
+      }
 
       &:hover {
         color: color.scale($primary, $lightness: 40%);
+
+        &:after {
+          width: 100%;
+        }
       }
     }
   }
@@ -206,11 +246,13 @@ const formatDate = (date: Date | undefined) => {
     &.active {
       background-color: color.scale($primary, $lightness: 10%);
       color: $secondary;
+      border: 1px solid color.scale($primary, $lightness: 15%);
     }
 
     &.inactive {
       background-color: color.scale($primary, $lightness: -2%);
       color: color.scale($secondary, $lightness: -15%);
+      border: 1px solid color.scale($primary, $lightness: 0%);
     }
   }
 
@@ -227,18 +269,30 @@ const formatDate = (date: Date | undefined) => {
     color: color.scale($secondary, $lightness: -5%);
     padding: 0.25rem 0.6rem;
     font-size: 0.75rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: color.scale($primary, $lightness: 8%);
+      transform: translateY(-1px);
+    }
   }
 
   .view-project {
     @include interactive-link;
     margin-top: auto;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 0.9rem;
     align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition:
+      transform 0.2s ease,
+      color 0.2s ease;
 
     &:hover {
-      color: color.scale($secondary, $lightness: 20%);
-      text-decoration: underline;
+      color: color.scale($secondary, $lightness: 15%);
+      transform: translateX(3px);
     }
   }
 </style>
