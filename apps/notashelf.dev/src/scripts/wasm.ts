@@ -168,17 +168,6 @@ export class WasmFeaturedProjects {
   private isInitialized = false;
 
   async init(): Promise<void> {
-    // Check global initialization state first
-    if (typeof window !== "undefined" && window.__WASM_INITIALIZED__) {
-      if (!this.isInitialized) {
-        console.log(
-          "WASM featured projects using existing global initialization",
-        );
-        this.isInitialized = true;
-      }
-      return;
-    }
-
     // If already initialized, return early
     if (this.isInitialized) {
       console.log("WASM featured projects already initialized");
@@ -186,15 +175,22 @@ export class WasmFeaturedProjects {
     }
 
     try {
+      // Always ensure projectUtils is initialized for this instance
       await this.projectUtils.init();
       this.isInitialized = true;
 
-      // Set global flag to prevent re-initialization
-      if (typeof window !== "undefined") {
-        window.__WASM_INITIALIZED__ = true;
+      // Check global initialization state and log appropriately
+      if (typeof window !== "undefined" && window.__WASM_INITIALIZED__) {
+        console.log(
+          "WASM featured projects using existing global initialization",
+        );
+      } else {
+        // Set global flag to prevent re-initialization in other instances
+        if (typeof window !== "undefined") {
+          window.__WASM_INITIALIZED__ = true;
+        }
+        console.log("WASM featured projects initialized successfully");
       }
-
-      console.log("WASM featured projects initialized successfully");
     } catch (error) {
       console.error("Failed to initialize WASM featured projects:", error);
       throw error;
@@ -260,18 +256,25 @@ export class WasmFeaturedProjects {
         return titleElement ? titleElement.textContent : "Unknown";
       });
 
-      // Get the selected cards
+      // Get the selected cards (existing nodes, not clones)
       const selectedCards = parsedIndices
-        .map((index) => {
-          const card = projectCards[index];
-          return card ? (card.cloneNode(true) as Element) : null;
-        })
+        .map((index) => projectCards[index])
         .filter(Boolean) as Element[];
 
-      // Clear the grid and add only the selected cards
-      projectsGrid.innerHTML = "";
-      selectedCards.forEach((card) => {
-        projectsGrid.appendChild(card);
+      // Hide all cards first
+      projectCards.forEach((card) => {
+        (card as HTMLElement).style.display = "none";
+      });
+
+      // Show only the selected cards and move them to the front
+      selectedCards.forEach((card, index) => {
+        (card as HTMLElement).style.display = "";
+        // Move selected cards to the beginning of the grid
+        if (projectsGrid.firstChild) {
+          projectsGrid.insertBefore(card, projectsGrid.firstChild);
+        } else {
+          projectsGrid.appendChild(card);
+        }
       });
 
       // Force reflow to ensure changes are applied
