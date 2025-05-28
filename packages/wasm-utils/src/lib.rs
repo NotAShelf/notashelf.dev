@@ -526,7 +526,7 @@ impl ProjectUtils {
 
             for _ in 0..count {
                 let random_idx = (Math::random() * indices.len() as f64) as usize;
-                let selected_idx = indices.remove(random_idx);
+                let selected_idx = indices.swap_remove(random_idx);
                 selected.push(array[selected_idx].clone());
             }
 
