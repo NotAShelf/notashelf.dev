@@ -501,10 +501,14 @@ impl ProjectUtils {
         }
     }
 
-    pub fn random_range(&self, min: i32, max: i32) -> i32 {
-        let (low, high) = if min <= max { (min, max) } else { (max, min) };
-        low + ((Math::random() * ((high - low + 1) as f64)).floor() as i32)
+pub fn random_range(&self, min: i32, max: i32) -> i32 {
+    if min == max {
+        return min;
     }
+     let (low, high) = if min <= max { (min, max) } else { (max, min) };
+    let range = (high - low) as i64 + 1;
+    low + ((Math::random() * range as f64).floor() as i32)
+ }
 
     pub fn random_sample(&self, json_array: &str, count: usize) -> String {
         // Try to parse the JSON array
