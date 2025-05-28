@@ -324,22 +324,34 @@ export class WasmFeaturedProjects {
 
   /**
    * Shuffle a JSON array and return the shuffled array
+   * Returns the original input if an error occurs
    */
   async shuffleJsonArray(jsonArray: string): Promise<string> {
     if (!this.isInitialized) {
       await this.init();
     }
-    return this.projectUtils.shuffleJsonArray(jsonArray);
+    try {
+      return this.projectUtils.shuffleJsonArray(jsonArray);
+    } catch (e) {
+      console.warn("Failed to shuffle JSON array:", e);
+      return jsonArray; // Return original input on error
+    }
   }
 
   /**
    * Pick random elements from an array without replacement
+   * Returns the original input if an error occurs
    */
   async randomSample(jsonArray: string, count: number): Promise<string> {
     if (!this.isInitialized) {
       await this.init();
     }
-    return this.projectUtils.randomSample(jsonArray, count);
+    try {
+      return this.projectUtils.randomSample(jsonArray, count);
+    } catch (e) {
+      console.warn("Failed to sample from JSON array:", e);
+      return jsonArray; // Return original input on error
+    }
   }
 }
 

@@ -26,7 +26,7 @@ export async function initWasm(): Promise<{
   // Check both local and global initialization state
   if (
     isInitialized ||
-    (typeof window !== "undefined" && window.__WASM_INITIALIZED__)
+ if (typeof window !== "undefined" && window.__WASM_INITIALIZED__ && this.isInitialized) {
   ) {
     // Ensure static variables are actually initialized before returning them
     if (internalTextProcessor && searchEngine && projectUtils) {
@@ -316,10 +316,16 @@ export class WasmProjectUtils {
 
   /**
    * Shuffle a JSON array and return the shuffled array
+   * Returns the original input if an error occurs
    */
   shuffleJsonArray(jsonArray: string): string {
     if (!this.projectUtils) throw new Error("WASM module not initialized");
-    return this.projectUtils.shuffle_json_array(jsonArray);
+    try {
+      return this.projectUtils.shuffle_json_array(jsonArray);
+    } catch (e) {
+      console.warn("Failed to shuffle JSON array:", e);
+      return jsonArray; // Return original input on error
+    }
   }
 
   /**
@@ -332,10 +338,16 @@ export class WasmProjectUtils {
 
   /**
    * Pick random elements from an array without replacement
+   * Returns the original input if an error occurs
    */
   randomSample(jsonArray: string, count: number): string {
     if (!this.projectUtils) throw new Error("WASM module not initialized");
-    return this.projectUtils.random_sample(jsonArray, count);
+    try {
+      return this.projectUtils.random_sample(jsonArray, count);
+    } catch (e) {
+      console.warn("Failed to sample from JSON array:", e);
+      return jsonArray; // Return original input on error
+    }
   }
 }
 
