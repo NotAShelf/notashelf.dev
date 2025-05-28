@@ -43,6 +43,27 @@ function normalizePlugin(plugin: any): Plugin | PluginCreator<any> {
   return typeof plugin === "function" ? plugin() : plugin;
 }
 
+function normalizeContentForPurgeCSS(content: string): string {
+  // Normalize FontAwesome SVG title IDs to be deterministic
+  // Replace random IDs like "svg-inline--fa-title-N59RJRn1tdZm" with stable ones
+  return content
+    // Normalize all FontAwesome title ID references
+    .replace(/svg-inline--fa-title-[a-zA-Z0-9]+/g, 'svg-inline--fa-title-stable')
+    // Normalize id attributes
+    .replace(/id="svg-inline--fa-title-[a-zA-Z0-9]+"/g, 'id="svg-inline--fa-title-stable"')
+    // Normalize aria-labelledby attributes
+    .replace(/aria-labelledby="svg-inline--fa-title-[a-zA-Z0-9]+"/g, 'aria-labelledby="svg-inline--fa-title-stable"')
+    // Normalize any other dynamic IDs that might appear
+    .replace(/<title id="svg-inline--fa-title-[a-zA-Z0-9]+">/g, '<title id="svg-inline--fa-title-stable">')
+    // Normalize potential other random identifiers
+    .replace(/data-fa-[a-z]+-id="[a-zA-Z0-9]+"/g, 'data-fa-id="stable"')
+    // Sort any space-separated attribute values for consistency
+    .replace(/class="([^"]*?)"/g, (match, classes) => {
+      const sortedClasses = classes.trim().split(/\s+/).sort().join(' ');
+      return `class="${sortedClasses}"`;
+    });
+}
+
 function purgeCSSIntegration(
   options: PurgeCSSIntegrationOptions = {},
 ): AstroIntegration {
@@ -72,7 +93,7 @@ function purgeCSSIntegration(
       "astro:build:done": async ({ dir, logger }) => {
         const distPath = fileURLToPath(dir);
 
-        const cssFiles = await glob("**/*.css", { cwd: distPath });
+        const cssFiles = (await glob("**/*.css", { cwd: distPath })).sort();
 
         if (cssFiles.length === 0) {
           logger.info("No CSS files found to purge");
@@ -81,19 +102,24 @@ function purgeCSSIntegration(
 
         logger.info(`Found ${cssFiles.length} CSS files to purge`);
 
-        const htmlFiles = await glob("**/*.html", { cwd: distPath });
-        const jsFiles = await glob("**/*.js", { cwd: distPath });
+        const htmlFiles = (await glob("**/*.html", { cwd: distPath })).sort();
+        const jsFiles = (await glob("**/*.js", { cwd: distPath })).sort();
 
         const content: string[] = [];
 
+        // Process HTML files in sorted order and normalize them
         for (const htmlFile of htmlFiles) {
-          const htmlContent = await readFile(
-            path.join(distPath, htmlFile),
-            "utf-8",
-          );
-          content.push(htmlContent);
+          const htmlPath = path.join(distPath, htmlFile);
+          const htmlContent = await readFile(htmlPath, "utf-8");
+          const normalizedHtmlContent = normalizeContentForPurgeCSS(htmlContent);
+          
+          // Write back the normalized HTML to ensure deterministic output
+          await writeFile(htmlPath, normalizedHtmlContent);
+          
+          content.push(normalizedHtmlContent);
         }
 
+        // Process JS files in sorted order
         for (const jsFile of jsFiles) {
           const jsContent = await readFile(
             path.join(distPath, jsFile),
@@ -101,6 +127,9 @@ function purgeCSSIntegration(
           );
           content.push(jsContent);
         }
+
+        // Content is already normalized from the HTML processing above
+        const normalizedContent = content;
 
         const purgeCSS = new PurgeCSS();
 
@@ -110,7 +139,7 @@ function purgeCSSIntegration(
           const originalSize = cssContent.length;
 
           const [result] = await purgeCSS.purge({
-            content: content.map((c) => ({
+            content: normalizedContent.map((c) => ({
               raw: c,
               extension: "html" as const,
             })),
@@ -120,7 +149,8 @@ function purgeCSSIntegration(
                 content.match(/[^<>"'`\s]*[^<>"'`\s:]/g) || [];
               const innerMatches =
                 content.match(/[^<>"'`\s.()]*[^<>"'`\s.():]/g) || [];
-              return [...broadMatches, ...innerMatches];
+              // Sort matches to ensure deterministic output
+              return [...new Set([...broadMatches, ...innerMatches])].sort();
             },
             ...finalPurgeOptions,
           });
@@ -136,11 +166,29 @@ function purgeCSSIntegration(
           }
 
           if (cssnanoOptions !== false) {
-            plugins.push(
-              cssnano(
-                typeof cssnanoOptions === "boolean" ? {} : cssnanoOptions,
-              ),
-            );
+            const cssnanoConfig = typeof cssnanoOptions === "boolean" ? {} : (cssnanoOptions || {});
+            // Ensure deterministic cssnano configuration
+            const deterministicConfig = {
+              ...cssnanoConfig,
+              preset: cssnanoConfig.preset || ["default", {
+                // Ensure deterministic property sorting
+                mergeRules: false, // Disable rule merging that could cause order issues
+                normalizeWhitespace: true,
+                discardComments: { removeAll: true },
+                // Disable optimizations that might affect rule order
+                mergeLonghand: false,
+                minifySelectors: true,
+                colormin: true,
+                convertValues: true,
+                discardDuplicates: true,
+                discardEmpty: true,
+                discardOverridden: true,
+                normalizeUrl: true,
+                reduceIdents: false,
+                zindex: false,
+              }]
+            };
+            plugins.push(cssnano(deterministicConfig));
           }
 
           if (plugins.length > 0) {
