@@ -4,6 +4,7 @@ packages:
   - packages/astro-email-obfuscation
   - packages/vite-copyright-replace
   - packages/vite-purge-css
+  - packages/remark-em-dash
 
 onlyBuiltDependencies:
   - sharp
