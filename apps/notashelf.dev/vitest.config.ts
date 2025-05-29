@@ -32,6 +32,8 @@ export default getViteConfig({
       reporter: ["text", "json", "html"],
       reportsDirectory: "./coverage",
       exclude: [
+        "astro.config.ts",
+        "svlte.config.js",
         "node_modules/",
         "**/*.d.ts",
         "**/*.config.{js,ts}",
