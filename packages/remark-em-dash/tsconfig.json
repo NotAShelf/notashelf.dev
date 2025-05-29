@@ -5,7 +5,6 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "declaration": true,
     "rootDir": ".",
     "outDir": "dist",
     "strict": true,
