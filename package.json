@@ -13,10 +13,18 @@
     "preview": "pnpm --filter ./apps/notashelf.dev run preview",
     "check": "pnpm --filter ./apps/notashelf.dev run check",
     "fmt": "prettier . --write",
-    "lint": "eslint **/*.{ts,js,astro}"
+    "lint": "eslint **/*.{ts,js,astro}",
+    "test": "vitest",
+    "test:run": "vitest runs",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
+    "test:web": "vitest run --project notashelf.dev",
+    "test:packages": "vitest run --project vite-copyright-replace",
+    "test:ci": "vitest run --coverage"
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
+    "@testing-library/jest-dom": "^6.6.3",
     "@types/eslint": "^9.6.1",
     "@types/postcss-normalize": "^9.0.4",
     "@types/react": "^19.1.6",
@@ -25,17 +33,21 @@
     "@typescript-eslint/eslint-plugin": "^8.33.0",
     "@typescript-eslint/parser": "^8.33.0",
     "@typescript-eslint/utils": "^8.33.0",
+    "@vitest/coverage-v8": "^3.1.4",
+    "@vitest/ui": "^3.1.4",
     "eslint": "^9.27.0",
     "eslint-plugin-astro": "^1.3.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "fs-extra": "^11.3.0",
     "globals": "^16.2.0",
     "jiti": "^2.4.2",
+    "jsdom": "^26.1.0",
     "prettier": "3.5.3",
     "prettier-plugin-astro": "0.14.1",
     "prettier-plugin-astro-organize-imports": "^0.4.11",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.33.0"
+    "typescript-eslint": "^8.33.0",
+    "vitest": "^3.1.4"
   },
   "dependencies": {
     "cssnano": "^7.0.7",
