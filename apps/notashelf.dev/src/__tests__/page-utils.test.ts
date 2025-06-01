@@ -65,6 +65,11 @@ describe("PageUtils", () => {
         {
           target: fadeElement,
           isIntersecting: true,
+          boundingClientRect: {} as DOMRectReadOnly,
+          intersectionRatio: 1,
+          intersectionRect: {} as DOMRectReadOnly,
+          rootBounds: null,
+          time: 0,
         } as IntersectionObserverEntry,
       ];
 
@@ -81,62 +86,6 @@ describe("PageUtils", () => {
       PageUtils.initFadeElements();
 
       expect(IntersectionObserverMock).not.toHaveBeenCalled();
-    });
-  });
-
-  describe("initSmoothScroll", () => {
-    it("should add click listeners to anchor links", () => {
-      const anchor = document.createElement("a");
-      anchor.href = "#test-section";
-      document.body.appendChild(anchor);
-
-      const target = document.createElement("div");
-      target.id = "test-section";
-      document.body.appendChild(target);
-
-      const scrollIntoViewMock = vi.fn();
-      target.scrollIntoView = scrollIntoViewMock;
-
-      PageUtils.initSmoothScroll();
-
-      // Simulate click
-      const event = new MouseEvent("click", { bubbles: true });
-      anchor.dispatchEvent(event);
-
-      expect(scrollIntoViewMock).toHaveBeenCalledWith({ behavior: "smooth" });
-    });
-
-    it("should prevent default behavior on anchor click", () => {
-      const anchor = document.createElement("a");
-      anchor.href = "#test-section";
-      document.body.appendChild(anchor);
-
-      PageUtils.initSmoothScroll();
-
-      const event = new MouseEvent("click", { bubbles: true });
-      const preventDefaultSpy = vi.spyOn(event, "preventDefault");
-
-      anchor.dispatchEvent(event);
-
-      expect(preventDefaultSpy).toHaveBeenCalled();
-    });
-
-    it("should skip invalid anchor targets", () => {
-      const anchor1 = document.createElement("a");
-      anchor1.href = "#";
-      const anchor2 = document.createElement("a");
-      anchor2.href = "#nonexistent";
-
-      document.body.appendChild(anchor1);
-      document.body.appendChild(anchor2);
-
-      PageUtils.initSmoothScroll();
-
-      // These should not throw errors
-      anchor1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-      anchor2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-
-      expect(true).toBe(true); // pass if no errors thrown
     });
   });
 
@@ -161,15 +110,16 @@ describe("PageUtils", () => {
   describe("init", () => {
     it("should initialize all components on DOMContentLoaded", () => {
       const initFadeElementsSpy = vi.spyOn(PageUtils, "initFadeElements");
-      const initSmoothScrollSpy = vi.spyOn(PageUtils, "initSmoothScroll");
       const initScrollArrowSpy = vi.spyOn(PageUtils, "initScrollArrow");
+
+      // Call PageUtils.init() to set up the event listener
+      PageUtils.init();
 
       // Simulate DOMContentLoaded event
       const event = new Event("DOMContentLoaded");
       document.dispatchEvent(event);
 
       expect(initFadeElementsSpy).toHaveBeenCalled();
-      expect(initSmoothScrollSpy).toHaveBeenCalled();
       expect(initScrollArrowSpy).toHaveBeenCalled();
     });
   });

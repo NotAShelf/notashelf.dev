@@ -178,7 +178,7 @@ describe("PostSearchState", () => {
 
     it("should not attempt operations in non-browser environment", () => {
       // Mock non-browser environment by mocking isBrowser to return false
-      vi.spyOn(PostSearchState, 'isBrowser').mockReturnValue(false);
+      vi.spyOn(PostSearchState, "isBrowser").mockReturnValue(false);
       const mockSetItem = vi.spyOn(sessionStorage, "setItem");
       const mockGetItem = vi.spyOn(sessionStorage, "getItem");
       const mockRemoveItem = vi.spyOn(sessionStorage, "removeItem");
