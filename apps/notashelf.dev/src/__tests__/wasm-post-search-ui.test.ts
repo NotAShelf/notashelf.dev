@@ -47,6 +47,7 @@ describe("wasm-post-search-ui", () => {
     mockPosts = [
       {
         id: "post-1",
+        collection: "posts",
         data: {
           title: "JavaScript Testing",
           description: "Learn about testing in JavaScript",
@@ -58,6 +59,7 @@ describe("wasm-post-search-ui", () => {
       },
       {
         id: "post-2",
+        collection: "posts",
         data: {
           title: "TypeScript Guide",
           description: "TypeScript development guide",
@@ -396,7 +398,13 @@ describe("wasm-post-search-ui", () => {
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
 
-      // Manually trigger the initWasmOnDemand function - this should work after init() is called
+      const searchInput = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement;
+      expect(searchInput).toBeTruthy();
+
+      // Manually trigger the initWasmOnDemand function.
+      // This should work after init() is called
       await (searchUI as any).initWasmOnDemand();
 
       expect(mockWasmPostSearch.init).toHaveBeenCalledWith(mockPosts);

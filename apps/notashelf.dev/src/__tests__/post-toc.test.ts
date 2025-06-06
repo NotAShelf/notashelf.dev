@@ -208,10 +208,27 @@ describe("PostTableOfContents", () => {
       document.dispatchEvent(event);
 
       // Simulate intersection with heading1
+      const mockRect = {
+        bottom: 100,
+        height: 50,
+        left: 0,
+        right: 100,
+        top: 50,
+        width: 100,
+        x: 0,
+        y: 50,
+        toJSON: () => ({}),
+      } as DOMRectReadOnly;
+
       const entries = [
         {
           target: heading1,
           isIntersecting: true,
+          boundingClientRect: mockRect,
+          intersectionRatio: 1.0,
+          intersectionRect: mockRect,
+          rootBounds: mockRect,
+          time: Date.now(),
         } as IntersectionObserverEntry,
       ];
 

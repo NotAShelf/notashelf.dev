@@ -20,10 +20,14 @@
     "test:ui": "vitest --ui",
     "test:web": "vitest run --project notashelf.dev",
     "test:packages": "vitest run --project vite-copyright-replace",
-    "test:ci": "vitest run --coverage"
+    "test:ci": "vitest run --coverage",
+    "test:mutants": "stryker run"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
+    "@stryker-mutator/core": "^9.0.1",
+    "@stryker-mutator/typescript-checker": "^9.0.1",
+    "@stryker-mutator/vitest-runner": "^9.0.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@types/eslint": "^9.6.1",
     "@types/postcss-normalize": "^9.0.4",

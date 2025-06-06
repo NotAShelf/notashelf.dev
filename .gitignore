@@ -20,3 +20,6 @@ result*
 # Generated coverage reports
 **/coverage
 
+# Stryker
+.stryker-tmp
+reports/*

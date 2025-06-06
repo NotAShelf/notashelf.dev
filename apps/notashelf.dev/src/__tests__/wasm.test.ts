@@ -72,6 +72,7 @@ describe("wasm.ts", () => {
     mockPosts = [
       {
         id: "post-1",
+        collection: "posts",
         data: {
           title: "Test Post 1",
           description: "Test description 1",
@@ -83,6 +84,7 @@ describe("wasm.ts", () => {
       },
       {
         id: "post-2",
+        collection: "posts",
         data: {
           title: "Test Post 2",
           description: "Test description 2",
@@ -486,6 +488,9 @@ describe("wasm.ts", () => {
 
       const { WasmFeaturedProjects } = await import("../scripts/wasm.ts");
       const projectsInstance = new WasmFeaturedProjects();
+      const shuffleSpy = vi
+        .spyOn(projectsInstance, "shuffleProjects")
+        .mockResolvedValue();
       const addEventListenerSpy = vi.spyOn(document, "addEventListener");
 
       await projectsInstance.setupClientSideShuffling();
@@ -494,6 +499,7 @@ describe("wasm.ts", () => {
         "DOMContentLoaded",
         expect.any(Function),
       );
+      expect(shuffleSpy).toBeDefined();
     });
 
     it("should generate random range", async () => {
@@ -533,7 +539,7 @@ describe("wasm.ts", () => {
 
       const result = await projectsInstance.shuffleJsonArray("[1,2,3]");
 
-      expect(result).toBe("[1,2,3]"); // Should return original on error
+      expect(result).toBe("[1,2,3]"); // should return original on error
     });
 
     it("should handle random sample errors", async () => {
@@ -547,7 +553,7 @@ describe("wasm.ts", () => {
 
       const result = await projectsInstance.randomSample("[1,2,3]", 2);
 
-      expect(result).toBe("[1,2,3]"); // Should return original on error
+      expect(result).toBe("[1,2,3]"); // should return original on error
     });
 
     it("should handle initialization with existing global flag", async () => {
@@ -645,7 +651,7 @@ describe("wasm.ts", () => {
       const { WasmTextProcessing } = await import("../scripts/wasm.ts");
       const textInstance = new WasmTextProcessing();
 
-      // Ensure not initialized initially
+      // Shouldn't be initialized initially
       expect(textInstance["isInitialized"]).toBe(false);
 
       await textInstance.init();

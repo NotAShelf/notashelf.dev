@@ -177,11 +177,18 @@ describe("PostSearchState", () => {
     });
 
     it("should not attempt operations in non-browser environment", () => {
-      // Mock non-browser environment by mocking isBrowser to return false
-      vi.spyOn(PostSearchState, "isBrowser").mockReturnValue(false);
-      const mockSetItem = vi.spyOn(sessionStorage, "setItem");
-      const mockGetItem = vi.spyOn(sessionStorage, "getItem");
-      const mockRemoveItem = vi.spyOn(sessionStorage, "removeItem");
+      // Mock non-browser environment by mocking window and sessionStorage
+      const originalWindow = global.window;
+      const originalSessionStorage = global.sessionStorage;
+
+      // @ts-ignore
+      delete global.window;
+      // @ts-ignore
+      delete global.sessionStorage;
+
+      const mockSetItem = vi.fn();
+      const mockGetItem = vi.fn();
+      const mockRemoveItem = vi.fn();
 
       // Test setSearchState
       PostSearchState.setSearchState("test", "tag", false);
@@ -199,6 +206,10 @@ describe("PostSearchState", () => {
       // Test clearSearchState
       PostSearchState.clearSearchState();
       expect(mockRemoveItem).not.toHaveBeenCalled();
+
+      // Restore original environment
+      global.window = originalWindow;
+      global.sessionStorage = originalSessionStorage;
     });
   });
 
