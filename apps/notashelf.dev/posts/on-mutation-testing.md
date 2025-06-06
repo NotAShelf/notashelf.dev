@@ -24,27 +24,28 @@ say a word. It sees the function ran, so it's satisfied. Mutation testing
 wouldn't let that slide, no sir. It would change the discount from 10% to 20%,
 rerun the test, and when it passes anyway, it would call your bluff.
 
-[^1]: This is a hypothetical example, but it is _exactly_ what I have done. Got
-    too preoccupied with switching over to a different module to write tests,
-    and forgot about un-hardcoding my test data.
+[^1]: This is a hypothetical example, but it is _exactly_ what I have done. I
+    got too preoccupied with investigating a different part of the codebase and
+    with writing tests, and forgot about un-hardcoding my dummy test values. The
+    result was meaningless tests. Yikes.
 
 This is not a hypothetical. Mutation testing catches exactly these kinds of
 failures: logic that appears tested but is not meaningfully verified. Silent
-bugs. Assumptions you didn't realize your tests were making. All the things that
-lead to 2AM incident reports and embarrassing root cause writeups, or maybe an
-apology to your co-maintainers...
+bugs. Assumptions that you didn't realize your tests were making. All the things
+that lead to 2AM incident reports and embarrassing root cause writeups, or maybe
+an apology to your co-maintainers...
 
 And once you start using it, your relationship with testing changes. You stop
 writing tests to satisfy metrics. You stop writing tests for the CI badge. You
 start writing tests with intent because you know they'll be interrogated. This
-does something subtle but powerful: it aligns testing with reality. Code is
+does something subtle, but powerful: it aligns testing with reality. Code is
 messy, deadlines exist, teams rotate, and not every dev has full context.
 Mutation testing cuts through that by asking the only question that matters: if
-this breaks, will anyone notice? The answer is "no" more often than it is "yes",
-because the noticing part usually comes when sometime does break.
+this breaks, will anyone notice? The answer is "no" more often than it is "yes,"
+because the noticing part usually comes when something _does_ break.
 
 When you start to see mutants surviving---mutants that change core logic, edge
-cases, or conditional flows---it stings, it becomes a scratch that you _must_ to
+cases, or conditional flows---it stings, it becomes a scratch that you _must_
 scratch. But it also shows you exactly where your testing assumptions were too
 generous. That makes mutation testing a better code reviewer than most humans.
 It doesn't praise you for structure. It doesn't care if your mocks are elegant.
@@ -68,15 +69,16 @@ That tension is useful. Developers often lean too far in one direction: either
 overly optimistic about what their tests catch, or so cynical they abandon
 testing altogether. Mutation testing grounds both extremes. It doesn't require
 faith. It just produces data. Data that tells you, without ceremony, what
-would've slipped through.
+would've slipped through. [^3]
 
-And maybe that's what makes mutation testing hard to sell. It doesn't flatter
-you. It shows you the difference between looking tested and being tested.
-Between surface coverage and real confidence.
+[^3]: And maybe that's what makes mutation testing hard to sell. It doesn't
+    flatter you. It shows you the difference between looking tested and being
+    tested. Between surface coverage and real confidence.
 
-But if you're building something that matters. An API others depend on, an
-authentication system, anything stateful or money-related. This is the kind of
-tool you'll wish you'd introduced earlier.
+When you are building something that matters, however... Perhaps an API others
+depend on, an authentication system, anything stateful or money-related. This is
+the kind of tool you'll wish you'd introduced earlier. You simply cannot afford
+the fluff, you MUST test.
 
 ## Postscript
 
