@@ -16,6 +16,13 @@ export const projectConfig = defineProject({
 export default defineConfig({
   test: {
     globals: true,
+    projects: [
+      "./apps/notashelf.dev",
+      "./packages/astro-email-obfuscation",
+      "./packages/astro-purge-css",
+      "./packages/remark-em-dash",
+      "./packages/vite-copyright-replace",
+    ],
     coverage: {
       exclude: [
         ".github",
