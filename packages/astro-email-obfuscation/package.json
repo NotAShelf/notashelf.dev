@@ -20,6 +20,12 @@
     "README.md",
     "LICENSE"
   ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
   "keywords": [
     "astro",
     "astro-integration",
@@ -33,7 +39,8 @@
     "astro": "^5.0.0"
   },
   "devDependencies": {
-    "@types/node": "^22.15.23",
-    "typescript": "^5.8.3"
+    "@types/node": "^22.15.30",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.2"
   }
 }

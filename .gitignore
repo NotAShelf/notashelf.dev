@@ -17,3 +17,9 @@ result*
 # Lighthouse Reports
 **/*.report.html
 
+# Generated coverage reports
+**/coverage*
+
+# Stryker
+**/.stryker-tmp*
+**/reports/*

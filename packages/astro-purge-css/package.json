@@ -22,10 +22,17 @@
     "postcss": "^8.5.3",
     "purgecss": "^7.0.2"
   },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
   "devDependencies": {
     "@types/node": "^22.15.21",
     "astro": "^5.8.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^3.1.4"
   },
   "keywords": [
     "astro",

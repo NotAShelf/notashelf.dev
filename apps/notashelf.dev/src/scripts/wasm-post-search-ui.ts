@@ -39,6 +39,9 @@ export class WasmPostSearchUI {
   private initWasmOnDemand: () => Promise<void | null> = async () =>
     Promise.resolve(null);
 
+  // Cache the WASM initialization promise
+  private wasmInitPromise: Promise<void | null> | null = null;
+
   // Method to clean up any attached event listeners
   public cleanup(): void {
     // Remove search form listeners
@@ -297,7 +300,10 @@ export class WasmPostSearchUI {
       this.cleanupEventListeners();
 
       const hasSearchElements =
-        this.elements.searchInput && this.elements.searchForm;
+        this.elements.searchInput &&
+        this.elements.searchForm &&
+        !this.elements.searchInput.hidden &&
+        !this.elements.searchForm.hidden;
       if (!hasSearchElements) {
         this.setupBasicEventListeners();
         return;
@@ -391,15 +397,21 @@ export class WasmPostSearchUI {
   }
 
   private setupLazyWasmLoading(): void {
-    let wasmInitPromise: Promise<void | null> | null = null;
-
     // Assign to the class property
     this.initWasmOnDemand = async () => {
-      if (this.isInitialized || wasmInitPromise) {
-        return wasmInitPromise;
+      // Always return the cached promise if it exists
+      if (this.wasmInitPromise) {
+        return this.wasmInitPromise;
       }
 
-      wasmInitPromise = (async () => {
+      // If already initialized, create and cache a resolved promise
+      if (this.isInitialized) {
+        this.wasmInitPromise = Promise.resolve();
+        return this.wasmInitPromise;
+      }
+
+      // Create and cache the initialization promise
+      this.wasmInitPromise = (async () => {
         try {
           await wasmPostSearch.init(this.allPosts);
           this.isInitialized = true;
@@ -410,7 +422,7 @@ export class WasmPostSearchUI {
         }
       })();
 
-      return wasmInitPromise;
+      return this.wasmInitPromise;
     };
 
     // Set up search form handler
@@ -566,7 +578,13 @@ export class WasmPostSearchUI {
   }
 
   private performBasicSearch(): void {
-    const searchTerm = this.elements.searchInput.value.toLowerCase().trim();
+    // Guard against missing search input element
+    if (!this.elements.searchInput) {
+      return;
+    }
+
+    const searchTerm =
+      this.elements.searchInput?.value?.toLowerCase().trim() || "";
     let visibleCount = 0;
 
     const displayingPaginated = !this.isViewingAll && !searchTerm;
@@ -619,7 +637,7 @@ export class WasmPostSearchUI {
     // Show/hide no results message
     this.elements.noResults.style.display =
       visibleCount === 0 ? "block" : "none";
-    this.elements.clearButton.style.display = this.elements.searchInput.value
+    this.elements.clearButton.style.display = this.elements.searchInput?.value
       ? ""
       : "none";
   }
@@ -628,7 +646,7 @@ export class WasmPostSearchUI {
     matchedPosts: PostEntry[],
     searchTerm: string,
   ): void {
-    const hasResults = matchedPosts.length > 0;
+    const hasResults = matchedPosts?.length > 0;
     const displayingAll = this.isViewingAll || searchTerm;
 
     // Show/hide appropriate lists
@@ -647,7 +665,7 @@ export class WasmPostSearchUI {
       allItems.forEach((item) => (item.style.display = "none"));
 
       // Show only matched posts
-      matchedPosts.forEach((post) => {
+      matchedPosts?.forEach((post) => {
         const postElement = this.elements.postListAll.querySelector(
           `[data-post-id="${post.id}"]`,
         ) as HTMLLIElement;
@@ -659,7 +677,7 @@ export class WasmPostSearchUI {
 
     // Show/hide no results message
     this.elements.noResults.style.display = hasResults ? "none" : "block";
-    this.elements.clearButton.style.display = this.elements.searchInput.value
+    this.elements.clearButton.style.display = this.elements.searchInput?.value
       ? ""
       : "none";
   }

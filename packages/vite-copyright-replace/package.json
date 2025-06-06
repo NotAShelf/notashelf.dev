@@ -11,8 +11,15 @@
       "types": "./index.ts"
     }
   },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
   "devDependencies": {
-    "typescript": "5.8.3"
+    "typescript": "5.8.3",
+    "vitest": "^3.2.2"
   },
   "peerDependencies": {
     "vite": "^6.0.0"

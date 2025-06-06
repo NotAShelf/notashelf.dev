@@ -28,6 +28,7 @@
     in {
       default = self.packages.${system}.site;
       site = pkgs.callPackage ./nix/site.nix {inherit self;};
+      ci = pkgs.callPackage ./nix/ci.nix {};
     });
 
     # Make sure that the packages and devshells are valid.
