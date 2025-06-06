@@ -20,3 +20,6 @@ package-lock.json
 # Reports and logs
 **/*.report.html
 **/*.log
+
+# Other tools
+.stryker-tmp

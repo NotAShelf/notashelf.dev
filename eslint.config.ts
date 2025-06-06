@@ -22,6 +22,7 @@ const config = tseslint.config(
       "**/wasm-utils/**", // built WASM packages
       "**/pkg/**", // WASM pkg outputs
       "**/target/**", // Rust build artifacts
+      "**/.stryker-tmp/**", // Stryker temporary files
     ],
   },
 

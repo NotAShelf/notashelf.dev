@@ -1,15 +1,15 @@
 // @ts-check
 /** @type {import('@stryker-mutator/api/core').PartialStrykerOptions} */
 const config = {
-  mutate: ['apps/**/*.{ts,tsx}'], // TODO: more modules must be tested.
+  mutate: ["apps/**/*.{ts,tsx}"], // TODO: more modules must be tested.
   packageManager: "pnpm",
-  reporters: ["html", "clear-text", "progress", "dashboard"],
+  reporters: ["html", "clear-text", "progress"],
   testRunner: "vitest",
   coverageAnalysis: "perTest",
   plugins: ["@stryker-mutator/vitest-runner"],
-  tempDirName: '.stryker-tmp',
-  tsconfigFile: 'tsconfig.json',
-  ignorePatterns: ['.direnv/**', "**/*.nix"],
+  tempDirName: ".stryker-tmp",
+  tsconfigFile: "tsconfig.json",
+  ignorePatterns: [".direnv/**", "**/*.nix"],
 };
 
 export default config;

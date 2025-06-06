@@ -18,8 +18,8 @@ result*
 **/*.report.html
 
 # Generated coverage reports
-**/coverage
+**/coverage*
 
 # Stryker
-.stryker-tmp
-reports/*
+**/.stryker-tmp*
+**/reports/*
