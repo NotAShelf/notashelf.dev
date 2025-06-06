@@ -23,19 +23,19 @@
     "test:ci": "vitest run --coverage"
   },
   "devDependencies": {
-    "@eslint/js": "^9.27.0",
+    "@eslint/js": "^9.28.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@types/eslint": "^9.6.1",
     "@types/postcss-normalize": "^9.0.4",
     "@types/react": "^19.1.6",
-    "@types/react-dom": "^19.1.5",
+    "@types/react-dom": "^19.1.6",
     "@types/unist": "^3.0.3",
-    "@typescript-eslint/eslint-plugin": "^8.33.0",
-    "@typescript-eslint/parser": "^8.33.0",
-    "@typescript-eslint/utils": "^8.33.0",
-    "@vitest/coverage-v8": "^3.1.4",
-    "@vitest/ui": "^3.1.4",
-    "eslint": "^9.27.0",
+    "@typescript-eslint/eslint-plugin": "^8.33.1",
+    "@typescript-eslint/parser": "^8.33.1",
+    "@typescript-eslint/utils": "^8.33.1",
+    "@vitest/coverage-v8": "^3.2.2",
+    "@vitest/ui": "^3.2.2",
+    "eslint": "^9.28.0",
     "eslint-plugin-astro": "^1.3.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "fs-extra": "^11.3.0",
@@ -46,13 +46,13 @@
     "prettier-plugin-astro": "0.14.1",
     "prettier-plugin-astro-organize-imports": "^0.4.11",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.33.0",
-    "vitest": "^3.1.4"
+    "typescript-eslint": "^8.33.1",
+    "vitest": "^3.2.2"
   },
   "dependencies": {
     "cssnano": "^7.0.7",
     "glob": "^11.0.2",
-    "postcss": "^8.5.3",
+    "postcss": "^8.5.4",
     "purgecss": "^7.0.2"
   }
 }
