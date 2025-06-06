@@ -181,9 +181,9 @@ describe("PostSearchState", () => {
       const originalWindow = global.window;
       const originalSessionStorage = global.sessionStorage;
 
-      // @ts-ignore
+      // @ts-expect-error - Intentionally deleting global properties for testing non-browser environment
       delete global.window;
-      // @ts-ignore
+      // @ts-expect-error - Same as above comment
       delete global.sessionStorage;
 
       const mockSetItem = vi.fn();
