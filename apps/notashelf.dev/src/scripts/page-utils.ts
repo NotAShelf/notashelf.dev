@@ -1,7 +1,6 @@
 /**
  * Unified page utilities for common functionality:
  * - Fade-in animations
- * - Smooth scrolling
  * - Scroll arrow animation
  */
 class PageUtils {
@@ -13,7 +12,6 @@ class PageUtils {
   static init(): void {
     document.addEventListener("DOMContentLoaded", () => {
       this.initFadeElements();
-      this.initSmoothScroll();
       this.initScrollArrow();
     });
   }
@@ -37,25 +35,6 @@ class PageUtils {
     );
 
     fadeElements.forEach((el) => observer.observe(el));
-  }
-
-  static initSmoothScroll(): void {
-    document
-      .querySelectorAll<HTMLAnchorElement>('a[href^="#"]')
-      .forEach((anchor) => {
-        anchor.addEventListener("click", (e: MouseEvent) => {
-          e.preventDefault();
-          const targetId = anchor.getAttribute("href");
-
-          // Skip if targetId is undefined, just "#", or empty
-          if (targetId && targetId !== "#" && targetId.length > 1) {
-            const targetElement = document.querySelector<HTMLElement>(targetId);
-            if (targetElement) {
-              targetElement.scrollIntoView({ behavior: "smooth" });
-            }
-          }
-        });
-      });
   }
 
   static initScrollArrow(): void {
