@@ -66,6 +66,9 @@ importers:
       '@vitest/ui':
         specifier: ^3.2.2
         version: 3.2.2(vitest@3.2.2)
+      core:
+        specifier: link:@stryker-mutator/api/core
+        version: link:@stryker-mutator/api/core
       eslint:
         specifier: ^9.28.0
         version: 9.28.0(jiti@2.4.2)
