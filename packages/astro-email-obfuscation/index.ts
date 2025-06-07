@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 /**
  * Available obfuscation methods with their effectiveness and characteristics.
  */
-type ObfuscationMethod =
+export type ObfuscationMethod =
   | "rot18"
   | "js-concat"
   | "js-interaction"
