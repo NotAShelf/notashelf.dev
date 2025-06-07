@@ -90,7 +90,7 @@ in
       ln -sf ${wasmUtils} packages/wasm-utils/pkg
     '';
 
-    nativCheckInputs = [
+    nativeCheckInputs = [
       nodejs
       pnpm
     ];
