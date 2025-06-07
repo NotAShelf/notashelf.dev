@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-nix:
+  fix-nix-hash:
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
@@ -33,6 +33,9 @@ jobs:
       # Exit early if no relevant files are updated
       - uses: DeterminateSystems/nix-installer-action@main
         if: steps.changed-files.outputs.files == 'true'
+        with:
+          source-url: https://install.lix.systems/lix/lix-installer-x86_64-linux
+          logger: pretty
 
       - name: "Update Dependency Hash"
         if: steps.changed-files.outputs.files == 'true'
@@ -58,3 +61,23 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "meta: auto-update dependencies"
+  cachix:
+    needs: fix-nix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout
+
+      - name: Install Lix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          source-url: https://install.lix.systems/lix/lix-installer-x86_64-linux
+          logger: pretty
+
+      - uses: cachix/cachix-action@v16
+        with:
+          name: nyx
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+
+      - name: Build neovim-flake with default settings
+        run: nix build .#site -Lv
