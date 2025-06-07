@@ -96,11 +96,7 @@ impl SearchEngine {
         }
 
         // Sort by relevance score (descending)
-        results.sort_by(|a, b| {
-            b.score
-                .partial_cmp(&a.score)
-                .unwrap_or(std::cmp::Ordering::Equal)
-        });
+        results.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap_or(std::cmp::Ordering::Equal));
 
         // Limit results
         results.truncate(max_results);
@@ -162,9 +158,7 @@ impl SearchEngine {
     fn safe_serialize_to_json<T: serde::Serialize>(&self, data: &T, fallback: &str) -> String {
         match serde_wasm_bindgen::to_value(data) {
             Ok(js_value) => match js_sys::JSON::stringify(&js_value) {
-                Ok(js_string) => js_string
-                    .as_string()
-                    .unwrap_or_else(|| fallback.to_string()),
+                Ok(js_string) => js_string.as_string().unwrap_or_else(|| fallback.to_string()),
                 Err(_) => fallback.to_string(),
             },
             Err(_) => fallback.to_string(),
@@ -224,10 +218,7 @@ impl SearchEngine {
 
                     // Track match types
                     if let Some(post) = self.posts.get(post_idx) {
-                        let entry =
-                            post_matches
-                                .entry(post_idx)
-                                .or_insert((false, false, Vec::new()));
+                        let entry = post_matches.entry(post_idx).or_insert((false, false, Vec::new()));
 
                         let norm_title = self.normalize_text(&post.title);
                         if norm_title.contains(term) {
@@ -315,10 +306,7 @@ impl SearchEngine {
             let window = &words[i..end];
             let window_text = window.join(" ");
 
-            let matches = query_terms
-                .iter()
-                .filter(|term| window_text.contains(*term))
-                .count();
+            let matches = query_terms.iter().filter(|term| window_text.contains(*term)).count();
 
             if matches > max_matches {
                 max_matches = matches;

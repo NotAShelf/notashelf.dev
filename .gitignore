@@ -22,4 +22,4 @@ result*
 
 # Stryker
 **/.stryker-tmp*
-**/reports/*
+**/reports*
