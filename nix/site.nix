@@ -81,8 +81,27 @@ in
 
     pnpmDeps = pnpm.fetchDeps {
       inherit (finalAttrs) pname src;
-      hash = "sha256-zEV2ZijmDDe0SBfEsJURt2mqNvR4zp+z5n7LHAxmhXk=";
+      hash = "sha256-Xds1/HTVdxFO28r0eilJqvFh+qzCqbYFG2t7PcTnDG4=";
     };
+
+    postPatch = ''
+      # Create the expected directory structure and symlink to our built WASM utils
+      mkdir -p packages/wasm-utils
+      ln -sf ${wasmUtils} packages/wasm-utils/pkg
+    '';
+
+    nativCheckInputs = [
+      nodejs
+      pnpm
+    ];
+
+    checkPhase = ''
+      runHook preCheck
+
+      pnpm run test:ci
+
+      runHook postCheck
+    '';
 
     nativeBuildInputs = [
       nodejs
@@ -92,18 +111,6 @@ in
       wasm-pack
     ];
 
-    env = {
-      ASTRO_TELEMETRY_DISABLED = true;
-      GIT_REV = finalAttrs.version;
-      SITE_SRC = "https://github.com/notashelf/notashelf.dev";
-    };
-
-    postPatch = ''
-      # Create the expected directory structure and symlink to our built WASM utils
-      mkdir -p packages/wasm-utils
-      ln -sf ${wasmUtils} packages/wasm-utils/pkg
-    '';
-
     buildPhase = ''
       runHook preBuild
 
@@ -111,6 +118,12 @@ in
 
       runHook postBuild
     '';
+
+    env = {
+      ASTRO_TELEMETRY_DISABLED = true;
+      GIT_REV = finalAttrs.version;
+      SITE_SRC = "https://github.com/notashelf/notashelf.dev";
+    };
 
     meta = {
       description = "Pure, reproducible builder for my blog";
