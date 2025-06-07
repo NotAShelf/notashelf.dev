@@ -114,6 +114,28 @@ export default function astroEmailObfuscation(
     return text.replace(/[&<>"']/g, (m) => map[m]);
   }
 
+  // Validate and sanitize email input
+  function validateEmail(email: string): boolean {
+    // Basic format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return false;
+    }
+
+    // Length validation
+    if (email.length > 254) {
+      return false;
+    }
+
+    // Check for dangerous characters
+    const dangerousChars = /<|>|"|'|&|script|javascript|data:/i;
+    if (dangerousChars.test(email)) {
+      return false;
+    }
+
+    return true;
+  }
+
   // Generate deterministic unique ID based on content hash
   // This ensures IDs are stable across builds for the same content
   function generateUniqueId(email: string, method: string): string {
@@ -142,6 +164,10 @@ export default function astroEmailObfuscation(
      * Crawler resistance: High
      */
     rot18: (email: string) => {
+      if (!validateEmail(email)) {
+        return email; // return unchanged if invalid
+      }
+
       const encoded = rot18(email);
       const id = generateUniqueId(email, "rot18");
       const escapedPlaceholder = escapeHtml(options.placeholder);
@@ -160,8 +186,12 @@ export default function astroEmailObfuscation(
      * Crawler resistance: Very High
      */
     "js-concat": (email: string) => {
+      if (!validateEmail(email)) {
+        return email;
+      }
+
       const parts = email.split("@");
-      if (parts.length !== 2) return email; // Invalid email format
+      if (parts.length !== 2) return email; // invalid email format
 
       const [localPart, domain] = parts;
       const id = generateUniqueId(email, "js-concat");
@@ -357,7 +387,7 @@ export default function astroEmailObfuscation(
         /(<a[^>]*?)href=["']mailto:([^"']+)["']([^>]*?>)([^<]*?)(<\/a>)/gi,
         (match, openTag, email: string, middleTag, linkText, closeTag) => {
           // Validate email format before processing
-          if (emailPattern.test(email)) {
+          if (emailPattern.test(email) && validateEmail(email)) {
             emailCount++;
             const obfuscatedEmail = applyObfuscationChain(email);
             // For mailto links, we replace the entire link content
