@@ -207,25 +207,19 @@ function purgeCSSIntegration(
           if (cssnanoOptions !== false) {
             const cssnanoConfig =
               typeof cssnanoOptions === "boolean" ? {} : cssnanoOptions || {};
-            // Ensure deterministic cssnano configuration
             const deterministicConfig = {
               ...cssnanoConfig,
               preset: cssnanoConfig.preset || [
                 "default",
                 {
-                  // Ensure deterministic property sorting
-                  mergeRules: false, // Disable rule merging that could cause order issues
+                  mergeRules: true,
+                  mergeLonghand: true,
                   normalizeWhitespace: true,
                   discardComments: { removeAll: true },
-                  // Disable optimizations that might affect rule order
-                  mergeLonghand: false,
                   minifySelectors: true,
-                  colormin: true,
-                  convertValues: true,
                   discardDuplicates: true,
                   discardEmpty: true,
-                  discardOverridden: true,
-                  normalizeUrl: true,
+                  discardOverridden: false,
                   reduceIdents: false,
                   zindex: false,
                 },
