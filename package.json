@@ -19,7 +19,6 @@
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
     "test:web": "vitest run --project notashelf.dev",
-    "test:packages": "vitest run --project vite-copyright-replace",
     "test:ci": "vitest run --coverage",
     "test:mutants": "stryker run"
   },
