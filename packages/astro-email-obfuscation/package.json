@@ -1,6 +1,6 @@
 {
   "name": "astro-email-obfuscation",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "type": "module",
   "description": "An Astro integration for email obfuscation with multiple methods",
   "author": "NotAShelf",
@@ -39,7 +39,9 @@
     "astro": "^5.0.0"
   },
   "devDependencies": {
+    "@types/jsdom": "^21.1.7",
     "@types/node": "^22.15.30",
+    "jsdom": "^26.1.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.2"
   }

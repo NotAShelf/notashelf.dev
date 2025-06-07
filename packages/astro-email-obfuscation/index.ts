@@ -51,10 +51,11 @@ export default function astroEmailObfuscation(
     (userOptions.method ? [userOptions.method] : ["rot18"]);
 
   // Validate http-redirect method requirements BEFORE applying defaults
-  // Only validate if redirectBaseUrl is explicitly provided and empty
-  if (methods.includes("http-redirect") && 
-      userOptions.redirectBaseUrl !== undefined && 
-      !userOptions.redirectBaseUrl) {
+  // Validate if http-redirect is used and redirectBaseUrl is not provided or is empty
+  if (
+    methods.includes("http-redirect") &&
+    (!userOptions.redirectBaseUrl || userOptions.redirectBaseUrl === "")
+  ) {
     throw new Error(
       "redirectBaseUrl is required when using http-redirect method",
     );
