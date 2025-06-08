@@ -117,7 +117,10 @@ describe("Core Functionality", () => {
     });
 
     it("should process emails with JavaScript concatenation method", async () => {
-      const integration = astroEmailObfuscation({ method: "js-concat", dev: true });
+      const integration = astroEmailObfuscation({
+        method: "js-concat",
+        dev: true,
+      });
       const buildHook = integration.hooks["astro:build:done"];
 
       const htmlContent = `

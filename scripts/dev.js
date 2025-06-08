@@ -32,8 +32,12 @@ if (existsSync(wasmDir)) {
 
   wasmBuild.on("close", (code) => {
     if (code !== 0) {
-      console.warn("⚠️  WASM build failed, continuing without WASM optimizations");
-      console.warn("   Development server will start but may lack some features");
+      console.warn(
+        "⚠️  WASM build failed, continuing without WASM optimizations",
+      );
+      console.warn(
+        "   Development server will start but may lack some features",
+      );
     } else {
       console.log("✅ WASM build completed successfully");
     }
