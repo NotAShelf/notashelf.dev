@@ -139,17 +139,15 @@ export default function astroEmailObfuscation(
   // Generate deterministic unique ID based on content hash
   // This ensures IDs are stable across builds for the same content
   function generateUniqueId(email: string, method: string): string {
-    // Simple hash function for deterministic IDs
+    // Simple deterministic hash for stable IDs across builds
     const content = `${email}|${method}`;
     let hash = 0;
     for (let i = 0; i < content.length; i++) {
       const char = content.charCodeAt(i);
       hash = (hash << 5) - hash + char;
-      hash |= 0; // Convert to 32-bit integer
+      hash = hash & hash; // Convert to 32-bit integer
     }
-    // Convert to positive number and base36
-    const positiveHash = Math.abs(hash).toString(36);
-    return "obf_" + positiveHash.padStart(6, "0");
+    return "obf_" + Math.abs(hash).toString(16).slice(0, 8);
   }
 
   /**
@@ -535,7 +533,9 @@ export default function astroEmailObfuscation(
                 }
               }
             } catch (error) {
-              logger.warn(`Could not read directory: ${dirPath}`, error);
+              logger.warn(
+                `Could not read directory: ${dirPath} - ${error instanceof Error ? error.message : String(error)}`,
+              );
             }
 
             return totalProcessed;
