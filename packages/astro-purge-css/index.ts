@@ -43,12 +43,13 @@ function normalizePlugin(plugin: any): Plugin | PluginCreator<any> {
   return typeof plugin === "function" ? plugin() : plugin;
 }
 
-function normalizeContentForPurgeCSS(content: string): string {
-  // Create a mapping from original IDs to stable unique IDs
+/**
+ * Normalizes FontAwesome dynamic IDs to stable identifiers for deterministic builds
+ */
+function normalizeFontAwesomeIds(content: string): string {
   const idMapping = new Map<string, string>();
   let idCounter = 0;
 
-  // Gets or creates a stable ID for an original ID
   const getStableId = (originalId: string): string => {
     if (!idMapping.has(originalId)) {
       idMapping.set(originalId, `svg-inline--fa-title-stable-${idCounter++}`);
@@ -56,49 +57,61 @@ function normalizeContentForPurgeCSS(content: string): string {
     return idMapping.get(originalId)!;
   };
 
-  // First pass: collect all FontAwesome title IDs to build the mapping
+  // First pass: collect all FontAwesome title IDs to build stable mapping
   const faIdPattern = /svg-inline--fa-title-[a-zA-Z0-9]+/g;
   let match;
   while ((match = faIdPattern.exec(content)) !== null) {
     getStableId(match[0]);
   }
 
-  // Reset regex lastIndex for subsequent replacements
   faIdPattern.lastIndex = 0;
 
-  return (
-    content
-      // Normalize all FontAwesome title ID references
-      .replace(/svg-inline--fa-title-[a-zA-Z0-9]+/g, (match) =>
-        getStableId(match),
-      )
-      // Normalize id attributes
-      .replace(
-        /id="(svg-inline--fa-title-[a-zA-Z0-9]+)"/g,
-        (match, originalId) => `id="${getStableId(originalId)}"`,
-      )
-      // Normalize aria-labelledby attributes
-      .replace(
-        /aria-labelledby="(svg-inline--fa-title-[a-zA-Z0-9]+)"/g,
-        (match, originalId) => `aria-labelledby="${getStableId(originalId)}"`,
-      )
-      // Normalize any other dynamic IDs that might appear in title tags
-      .replace(
-        /<title id="(svg-inline--fa-title-[a-zA-Z0-9]+)">/g,
-        (match, originalId) => `<title id="${getStableId(originalId)}">`,
-      )
-      // Normalize potential other random identifiers (preserve attribute name, normalize value)
-      .replace(/(data-fa-[a-z]+-id)="[a-zA-Z0-9]+"/g, '$1="stable"')
-      // Sort any space-separated attribute values for consistency and remove duplicates
-      .replace(/class="([^"]*?)"/g, (match, classes) => {
-        if (!classes || !classes.trim()) {
-          return `class=""`;
-        }
-        const uniqueSortedClasses = [...new Set(classes.trim().split(/\s+/))]
-          .sort()
-          .join(" ");
-        return `class="${uniqueSortedClasses}"`;
-      })
+  return content
+    .replace(/svg-inline--fa-title-[a-zA-Z0-9]+/g, (match) =>
+      getStableId(match),
+    )
+    .replace(
+      /id="(svg-inline--fa-title-[a-zA-Z0-9]+)"/g,
+      (match, originalId) => `id="${getStableId(originalId)}"`,
+    )
+    .replace(
+      /aria-labelledby="(svg-inline--fa-title-[a-zA-Z0-9]+)"/g,
+      (match, originalId) => `aria-labelledby="${getStableId(originalId)}"`,
+    )
+    .replace(
+      /<title id="(svg-inline--fa-title-[a-zA-Z0-9]+)">/g,
+      (match, originalId) => `<title id="${getStableId(originalId)}">`,
+    );
+}
+
+/**
+ * Normalizes data attributes to stable values
+ */
+function normalizeDataAttributes(content: string): string {
+  return content.replace(/(data-fa-[a-z]+-id)="[a-zA-Z0-9]+"/g, '$1="stable"');
+}
+
+/**
+ * Normalizes class attributes by sorting and deduplicating classes
+ */
+function normalizeClassAttributes(content: string): string {
+  return content.replace(/class="([^"]*?)"/g, (match, classes) => {
+    if (!classes || !classes.trim()) {
+      return `class=""`;
+    }
+    const uniqueSortedClasses = [...new Set(classes.trim().split(/\s+/))]
+      .sort()
+      .join(" ");
+    return `class="${uniqueSortedClasses}"`;
+  });
+}
+
+/**
+ * Normalizes content for PurgeCSS to ensure deterministic builds
+ */
+function normalizeContentForPurgeCSS(content: string): string {
+  return normalizeClassAttributes(
+    normalizeDataAttributes(normalizeFontAwesomeIds(content)),
   );
 }
 
@@ -172,81 +185,133 @@ function purgeCSSIntegration(
 
         const purgeCSS = new PurgeCSS();
 
-        for (const cssFile of cssFiles) {
+        // Process CSS files in parallel with controlled concurrency
+        const processCSSFile = async (cssFile: string) => {
           const cssPath = path.join(distPath, cssFile);
-          const cssContent = await readFile(cssPath, "utf-8");
-          const originalSize = cssContent.length;
+          const normalizedCssPath = path.resolve(cssPath);
+          const normalizedDistPath = path.resolve(distPath);
 
-          const [result] = await purgeCSS.purge({
-            content: normalizedContent.map((c) => ({
-              raw: c,
-              extension: "html" as const,
-            })),
-            css: [{ raw: cssContent }],
-            defaultExtractor: (content) => {
-              const broadMatches =
-                content.match(/[^<>"'`\s]*[^<>"'`\s:]/g) || [];
-              const innerMatches =
-                content.match(/[^<>"'`\s.()]*[^<>"'`\s.():]/g) || [];
-              // Sort matches to ensure deterministic output
-              return [...new Set([...broadMatches, ...innerMatches])].sort();
-            },
-            ...finalPurgeOptions,
-          });
-
-          let finalCSS = result.css;
-
-          const plugins: any[] = [];
-
-          if (postcssConfig?.plugins) {
-            for (const plugin of postcssConfig.plugins) {
-              plugins.push(normalizePlugin(plugin));
-            }
+          // Security: try to prevent path traversal attacks
+          if (!normalizedCssPath.startsWith(normalizedDistPath)) {
+            logger.warn(`Skipping file outside dist directory: ${cssFile}`);
+            return { cssFile, error: "Path traversal attempt" };
           }
 
-          if (cssnanoOptions !== false) {
-            const cssnanoConfig =
-              typeof cssnanoOptions === "boolean" ? {} : cssnanoOptions || {};
-            const deterministicConfig = {
-              ...cssnanoConfig,
-              preset: cssnanoConfig.preset || [
-                "default",
-                {
-                  mergeRules: true,
-                  mergeLonghand: true,
-                  normalizeWhitespace: true,
-                  discardComments: { removeAll: true },
-                  minifySelectors: true,
-                  discardDuplicates: true,
-                  discardEmpty: true,
-                  discardOverridden: false,
-                  reduceIdents: false,
-                  zindex: false,
-                },
-              ],
-            };
-            plugins.push(cssnano(deterministicConfig));
-          }
+          try {
+            const cssContent = await readFile(cssPath, "utf-8");
+            const originalSize = cssContent.length;
 
-          if (plugins.length > 0) {
-            const postcssResult = await postcss(plugins).process(finalCSS, {
-              from: undefined,
-              ...postcssConfig?.options,
+            const [result] = await purgeCSS.purge({
+              content: normalizedContent.map((c) => ({
+                raw: c,
+                extension: "html" as const,
+              })),
+              css: [{ raw: cssContent }],
+              defaultExtractor: (content) => {
+                const broadMatches =
+                  content.match(/[^<>"'`\s]*[^<>"'`\s:]/g) || [];
+                const innerMatches =
+                  content.match(/[^<>"'`\s.()]*[^<>"'`\s.():]/g) || [];
+                // Sort matches to ensure deterministic output
+                return [...new Set([...broadMatches, ...innerMatches])].sort();
+              },
+              ...finalPurgeOptions,
             });
-            finalCSS = postcssResult.css;
+
+            let finalCSS = result.css;
+
+            const plugins: any[] = [];
+
+            if (postcssConfig?.plugins) {
+              for (const plugin of postcssConfig.plugins) {
+                plugins.push(normalizePlugin(plugin));
+              }
+            }
+
+            if (cssnanoOptions !== false) {
+              const cssnanoConfig =
+                typeof cssnanoOptions === "boolean" ? {} : cssnanoOptions || {};
+              const deterministicConfig = {
+                ...cssnanoConfig,
+                preset: cssnanoConfig.preset || [
+                  "default",
+                  {
+                    mergeRules: true,
+                    mergeLonghand: true,
+                    normalizeWhitespace: true,
+                    discardComments: { removeAll: true },
+                    minifySelectors: true,
+                    discardDuplicates: true,
+                    discardEmpty: true,
+                    discardOverridden: false,
+                    reduceIdents: false,
+                    zindex: false,
+                  },
+                ],
+              };
+              plugins.push(cssnano(deterministicConfig));
+            }
+
+            if (plugins.length > 0) {
+              const postcssResult = await postcss(plugins).process(finalCSS, {
+                from: undefined,
+                ...postcssConfig?.options,
+              });
+              finalCSS = postcssResult.css;
+            }
+
+            await writeFile(cssPath, finalCSS);
+
+            const newSize = finalCSS.length;
+            const reduction = (
+              ((originalSize - newSize) / originalSize) *
+              100
+            ).toFixed(1);
+
+            return {
+              cssFile,
+              originalSize,
+              newSize,
+              reduction,
+              success: true,
+            };
+          } catch (error) {
+            logger.warn(`Failed to process ${cssFile}: ${error}`);
+            return { cssFile, error: String(error), success: false };
           }
+        };
 
-          await writeFile(cssPath, finalCSS);
+        // Process CSS files with controlled concurrency (max 4 parallel)
+        const concurrencyLimit = Math.min(4, cssFiles.length);
+        const results: Array<{
+          cssFile: string;
+          originalSize?: number;
+          newSize?: number;
+          reduction?: string;
+          success?: boolean;
+          error?: string;
+        }> = [];
 
-          const newSize = finalCSS.length;
-          const reduction = (
-            ((originalSize - newSize) / originalSize) *
-            100
-          ).toFixed(1);
+        for (let i = 0; i < cssFiles.length; i += concurrencyLimit) {
+          const batch = cssFiles.slice(i, i + concurrencyLimit);
+          const batchResults = await Promise.all(batch.map(processCSSFile));
+          results.push(...batchResults);
+        }
 
-          logger.info(
-            `${cssFile} - ${originalSize}b → ${newSize}b (${reduction}% reduction)`,
-          );
+        // Log results in original order
+        const successfulResults = results.filter((r) => r.success);
+        const failedResults = results.filter((r) => !r.success);
+
+        for (const result of successfulResults) {
+          if (result.originalSize && result.newSize && result.reduction) {
+            logger.info(
+              `${result.cssFile} - ${result.originalSize}b → ${result.newSize}b (${result.reduction}% reduction)`,
+            );
+          }
+        }
+
+        if (failedResults.length > 0) {
+          logger.warn(`Failed to process ${failedResults.length} CSS files`);
         }
 
         logger.info("CSS purging completed");
