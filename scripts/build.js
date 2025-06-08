@@ -31,14 +31,23 @@ if (existsSync(wasmDir)) {
 
   wasmBuild.on("close", (code) => {
     if (code !== 0) {
-      console.error("WASM build failed");
-      process.exit(1);
+      console.warn("⚠️  WASM build failed, continuing without WASM optimizations");
+      console.warn("   This may impact performance but won't break the build");
+    } else {
+      console.log("✅ WASM build completed successfully");
     }
 
-    // Build the app
+    // Always continue with app build regardless of WASM result
+    buildApp();
+  });
+
+  wasmBuild.on("error", (err) => {
+    console.warn("⚠️  WASM build encountered an error:", err.message);
+    console.warn("   Continuing without WASM optimizations");
     buildApp();
   });
 } else {
+  console.log("No WASM package found, skipping WASM build");
   buildApp();
 }
 
