@@ -1,25 +1,37 @@
 #!/usr/bin/env node
 
-import { spawn } from 'child_process';
-import { existsSync } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { spawn } from "child_process";
+import { existsSync } from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.join(__dirname, '..');
+const rootDir = path.join(__dirname, "..");
 
 // Build WASM if it exists
-const wasmDir = path.join(rootDir, 'packages', 'wasm-utils');
+const wasmDir = path.join(rootDir, "packages", "wasm-utils");
 if (existsSync(wasmDir)) {
-  console.log('Building WASM...');
-  const wasmBuild = spawn('wasm-pack', ['build', '--target', 'web', '--out-dir', 'pkg', '--out-name', 'wasm-utils'], {
-    cwd: wasmDir,
-    stdio: 'inherit'
-  });
+  console.log("Building WASM...");
+  const wasmBuild = spawn(
+    "wasm-pack",
+    [
+      "build",
+      "--target",
+      "web",
+      "--out-dir",
+      "pkg",
+      "--out-name",
+      "wasm-utils",
+    ],
+    {
+      cwd: wasmDir,
+      stdio: "inherit",
+    },
+  );
 
-  wasmBuild.on('close', (code) => {
+  wasmBuild.on("close", (code) => {
     if (code !== 0) {
-      console.error('WASM build failed');
+      console.error("WASM build failed");
       process.exit(1);
     }
 
@@ -31,13 +43,17 @@ if (existsSync(wasmDir)) {
 }
 
 function buildApp() {
-  console.log('Building app...');
-  const child = spawn('pnpm', ['--filter', './apps/notashelf.dev', 'run', 'build'], {
-    cwd: rootDir,
-    stdio: 'inherit'
-  });
+  console.log("Building app...");
+  const child = spawn(
+    "pnpm",
+    ["--filter", "./apps/notashelf.dev", "run", "build"],
+    {
+      cwd: rootDir,
+      stdio: "inherit",
+    },
+  );
 
-  child.on('close', (code) => {
+  child.on("close", (code) => {
     process.exit(code);
   });
 }
