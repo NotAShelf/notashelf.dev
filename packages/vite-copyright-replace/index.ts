@@ -28,6 +28,9 @@ export function copyrightYearPlugin(
       : `${startYear}-${currentYear}`;
   let isProduction = false;
 
+  // Pre-compile extension set for efficient lookups
+  const validExtensions = new Set([".astro", ".ts", ".js", ".svelte"]);
+
   return {
     name: "copyright-year",
     enforce: "pre",
@@ -36,13 +39,15 @@ export function copyrightYearPlugin(
     },
     transform(code: string, id: string) {
       // Only process relevant files (avoid processing node_modules and other irrelevant files)
-      if (
-        id.includes("node_modules") ||
-        (!id.endsWith(".astro") &&
-          !id.endsWith(".ts") &&
-          !id.endsWith(".js") &&
-          !id.endsWith(".svelte"))
-      ) {
+      if (id.includes("node_modules")) {
+        return null;
+      }
+
+      // Efficient extension checking using Set lookup
+      const hasValidExtension = validExtensions.has(
+        id.slice(id.lastIndexOf(".")),
+      );
+      if (!hasValidExtension) {
         return null;
       }
 
