@@ -9,6 +9,11 @@ const { mockFs, mockPath, mockFileURLToPath } = vi.hoisted(() => ({
     join: vi.fn((...args: string[]) => args.join("/")),
     dirname: vi.fn((p: string) => p.split("/").slice(0, -1).join("/")),
     relative: vi.fn((from: string, to: string) => to),
+    resolve: vi.fn((...args: string[]) => {
+      // Simple resolve implementation for testing
+      const path = args.join("/").replace(/\/+/g, "/");
+      return path.startsWith("/") ? path : "/" + path;
+    }),
   },
   mockFileURLToPath: vi.fn((url: string | URL) => {
     if (typeof url === "string") {
@@ -43,11 +48,17 @@ describe("Core Functionality", () => {
     warn: vi.fn(),
     error: vi.fn(),
     debug: vi.fn(),
-  };
+    options: {},
+    label: "test",
+    fork: vi.fn(() => mockLogger),
+  } as any;
 
   const mockBuildContext = {
     dir: new URL("file:///test/dist/"),
     logger: mockLogger,
+    pages: [],
+    routes: [],
+    assets: new Map(),
   };
 
   beforeEach(() => {
@@ -64,7 +75,7 @@ describe("Core Functionality", () => {
 
   describe("Email Detection and Processing", () => {
     it("should process emails with ROT18 method", async () => {
-      const integration = astroEmailObfuscation({ method: "rot18" });
+      const integration = astroEmailObfuscation({ method: "rot18", dev: true });
       const buildHook = integration.hooks["astro:build:done"];
 
       const htmlContent = `
@@ -106,7 +117,7 @@ describe("Core Functionality", () => {
     });
 
     it("should process emails with JavaScript concatenation method", async () => {
-      const integration = astroEmailObfuscation({ method: "js-concat" });
+      const integration = astroEmailObfuscation({ method: "js-concat", dev: true });
       const buildHook = integration.hooks["astro:build:done"];
 
       const htmlContent = `
@@ -146,7 +157,7 @@ describe("Core Functionality", () => {
     });
 
     it("should handle SVG obfuscation method", async () => {
-      const integration = astroEmailObfuscation({ method: "svg" });
+      const integration = astroEmailObfuscation({ method: "svg", dev: true });
       const buildHook = integration.hooks["astro:build:done"];
 
       const htmlContent = `
@@ -190,6 +201,7 @@ describe("Core Functionality", () => {
     it("should use the last method in a methods array", async () => {
       const integration = astroEmailObfuscation({
         methods: ["rot18", "base64", "js-concat"],
+        dev: true,
       });
       const buildHook = integration.hooks["astro:build:done"];
 
@@ -236,6 +248,7 @@ describe("Core Functionality", () => {
       const integration = astroEmailObfuscation({
         method: "rot18",
         target: "link",
+        dev: true,
       });
       const buildHook = integration.hooks["astro:build:done"];
 
@@ -284,6 +297,7 @@ describe("Core Functionality", () => {
       const integration = astroEmailObfuscation({
         method: "rot18",
         target: "text",
+        dev: true,
       });
       const buildHook = integration.hooks["astro:build:done"];
 
@@ -397,7 +411,7 @@ describe("Core Functionality", () => {
 
   describe("Error Handling", () => {
     it("should handle empty HTML content gracefully", async () => {
-      const integration = astroEmailObfuscation({ method: "rot18" });
+      const integration = astroEmailObfuscation({ method: "rot18", dev: true });
       const buildHook = integration.hooks["astro:build:done"];
 
       mockFs.readdir.mockResolvedValue([
@@ -423,7 +437,7 @@ describe("Core Functionality", () => {
     });
 
     it("should handle malformed email addresses gracefully", async () => {
-      const integration = astroEmailObfuscation({ method: "rot18" });
+      const integration = astroEmailObfuscation({ method: "rot18", dev: true });
       const buildHook = integration.hooks["astro:build:done"];
 
       const htmlContent = `

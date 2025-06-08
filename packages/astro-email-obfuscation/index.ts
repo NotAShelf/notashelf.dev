@@ -504,6 +504,14 @@ export default function astroEmailObfuscation(
           const processDirectory = async (dirPath: string): Promise<number> => {
             let totalProcessed = 0;
 
+            // Security: Validate path to prevent directory traversal
+            const normalizedPath = path.resolve(dirPath);
+            const normalizedDist = path.resolve(distPath);
+            if (!normalizedPath.startsWith(normalizedDist)) {
+              logger.warn(`Skipping directory outside dist: ${dirPath}`);
+              return 0;
+            }
+
             try {
               const entries = await fs.readdir(dirPath, {
                 withFileTypes: true,
@@ -526,8 +534,8 @@ export default function astroEmailObfuscation(
                   totalProcessed += await processHTMLFile(fullPath);
                 }
               }
-            } catch {
-              logger.warn(`Could not read directory: ${dirPath}`);
+            } catch (error) {
+              logger.warn(`Could not read directory: ${dirPath}`, error);
             }
 
             return totalProcessed;
