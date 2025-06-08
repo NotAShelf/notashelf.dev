@@ -43,7 +43,7 @@ const config = tseslint.config(
 
   {
     // Set globals for Node scripts.
-    files: ["src/scripts/**"],
+    files: ["scripts/**", "src/scripts/**"],
     languageOptions: {
       globals: globals.node,
     },
