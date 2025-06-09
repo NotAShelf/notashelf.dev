@@ -21,7 +21,7 @@ jobs:
         run: nix run .#ci
 
       - name: Upload coverage reports
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         if: always()
         with:
           directory: ./apps/notashelf.dev/coverage
