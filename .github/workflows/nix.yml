@@ -62,7 +62,7 @@ jobs:
         with:
           commit_message: "meta: auto-update dependencies"
   cachix:
-    needs: fix-nix
+    needs: fix-nix-hash
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
