@@ -1,16 +1,19 @@
 {
-  inputs.nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+
+    # <https://github.com/nix-systems/nix-systems>
+    systems.url = "github:nix-systems/default-linux";
+  };
 
   outputs = {
     nixpkgs,
     self,
     ...
-  }: let
+  } @ inputs: let
     inherit (nixpkgs) legacyPackages lib;
 
-    # Compose for multiple systems. Less systems seem to be reducing the eval duration
-    # for, e.g., Direnv but more may be added as seen necessary. If I ever get a Mac...
-    systems = ["x86_64-linux"];
+    systems = import inputs.systems;
     forEachSystem = lib.genAttrs systems;
     pkgsForEach = legacyPackages;
   in {
