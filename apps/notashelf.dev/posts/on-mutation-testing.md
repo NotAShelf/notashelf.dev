@@ -6,6 +6,8 @@ date: 2025-06-06
 keywords: ["thoughts", "programming", "software"]
 ---
 
+# On Mutation Testing
+
 If you have ever worked on any serious codebase, then you probably know how
 truly deceptive confidence can be; you push a change, tests pass, CI is all
 green and the voice in your head yells "**MERGE ON GREEN!**" Then regressions
@@ -15,6 +17,8 @@ comes to the same realization: coverage is not correctness.
 That is where mutation testing becomes a quiet revolution. It doesn't just
 measure code that's been run, it asks, does your test suite care if this logic
 is wrong?
+
+## A Practical Example
 
 Imagine, for a moment, writing a unit test for a function that calculates
 discounts. It _passes_, because the discount is 10% and the test expects 10%.
@@ -134,3 +138,12 @@ complex, but because it asks the question we should've been asking all along:
 what if this code breaks, will my tests even notice? Mutation testing does not
 offer comfort. It offers clarity. And in a field full of false confidence and
 cargo cult coverage, that's exactly what I didn't know I needed.
+
+As a final note, I would like to remind you that mutation testing _is_ heavy.
+With cargo-mutants, it has taken me around an hour to test around 2000 lines of
+code. Though my hardware is not the best, I can't imagine having to spend around
+an hour every time I have to evaluate my codebase for the possibility of
+regressions. It is critical that we learn to evaluate the codebase mentally as
+if mutation tests will be ran on it _anyway_.
+
+Cheers!
