@@ -117,7 +117,7 @@ same values you would pass to `nix.settings`, which are used to construct the
 standalone, it is an attribute set of values that would be converted to their
 `nix.conf` equivalents.
 
-[`libflake/flake/config.cc`]: https://github.com/NixOS/nix/blob/92c4789ec72a5bf485679f9a5e5a244e553fb03d/src/libflake/flake/config.cc.
+[`libflake/flake/config.cc`]: https://github.com/NixOS/nix/blob/92c4789ec72a5bf485679f9a5e5a244e553fb03d/src/libflake/flake/config.cc
 
 It is defined and used in [`libflake/flake/config.cc`], and according to the
 `getDataDir()` function, this retrieves the full path of Nix's data directory
