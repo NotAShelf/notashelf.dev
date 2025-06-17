@@ -1,7 +1,6 @@
 ---
 import Footer from "@components/Footer.astro";
 import Navigation from "@components/Navigation.astro";
-import Plausible from "@components/Plausible.astro";
 import SEO from "@components/SEO.astro";
 
 export interface Props {
@@ -41,9 +40,6 @@ const {
       title="{title}"
       href={new URL("rss.xml", Astro.site)}
     />
-
-    <!-- Get the Plausible analytics component. This collects minimal, non-identifying analytics -->
-    <Plausible domain="notashelf.dev" />
 
     <!-- Critical CSS inlined for fastest rendering -->
     <style lang="scss">

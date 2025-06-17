@@ -9,6 +9,7 @@ import partytown from "@astrojs/partytown";
 import svelte from "@astrojs/svelte";
 
 // Personal integrations or plugins
+import plausible from "astro-plausible";
 import purgeCss from "astro-purge-css";
 import emailObfuscation from "astro-email-obfuscation";
 import copyrightYearPlugin from "vite-copyright-replace";
@@ -55,7 +56,17 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap(),
-    partytown(),
+    partytown({
+      config: {
+        forward: ["plausible"],
+        resolveUrl: (url) => {
+          if (url.hostname === "pl.notashelf.dev") {
+            return url;
+          }
+          return url;
+        },
+      },
+    }),
     svelte(),
     mdx({
       gfm: true,
@@ -77,6 +88,14 @@ export default defineConfig({
     }),
 
     // Home-Baked Integrations
+    plausible({
+      domain: "notashelf.dev",
+      src: "https://pl.notashelf.dev/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js",
+      withPartytown: true,
+      excludeHash: true,
+      excludeSearch: true,
+    }),
+
     emailObfuscation({
       methods: ["js-interaction", "rot18"],
       placeholder: "me @ domain",
