@@ -232,7 +232,9 @@ export default function plausibleIntegration(
         // Try page injection instead of head-inline
         injectScript("page", script);
 
-        logger.info(`Plausible Analytics configured for domain: ${options.domain}`);
+        logger.info(
+          `Plausible Analytics configured for domain: ${options.domain}`,
+        );
       },
     },
   };
