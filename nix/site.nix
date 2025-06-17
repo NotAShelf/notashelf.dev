@@ -81,7 +81,7 @@ in
 
     pnpmDeps = pnpm.fetchDeps {
       inherit (finalAttrs) pname src;
-      hash = "sha256-Xds1/HTVdxFO28r0eilJqvFh+qzCqbYFG2t7PcTnDG4=";
+      hash = "sha256-96CnHfEeP2wmAqzsk9DR47BjkeEsREm99nHhXiOV7cI=";
     };
 
     postPatch = ''
