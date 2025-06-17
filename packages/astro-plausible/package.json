@@ -1,0 +1,49 @@
+{
+  "name": "astro-plausible",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Plausible Analytics for your Astro website",
+  "author": "NotAShelf",
+  "license": "MPL-2.0",
+  "main": "index.ts",
+  "types": "index.ts",
+  "homepage": "https://github.com/notashelf/astro-plausible#readme",
+  "repository": "https://github.com/notashelf/astro-plausible",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.ts"
+    }
+  },
+  "files": [
+    "index.ts",
+    "index.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "peerDependencies": {
+    "astro": "^5.8.0"
+  },
+  "keywords": [
+    "astro",
+    "astro-integration",
+    "analytics",
+    "plausible",
+    "privacy"
+  ],
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
+
