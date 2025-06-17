@@ -1,6 +1,9 @@
 packages:
+  # Webapps hosted by this monorepository
   - apps/notashelf.dev
+  # Exported members of my monorepository
   - packages/wasm-utils/pkg
+  - packages/astro-plausible
   - packages/astro-email-obfuscation
   - packages/vite-copyright-replace
   - packages/vite-purge-css

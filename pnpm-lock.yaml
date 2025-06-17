@@ -109,6 +109,34 @@ importers:
         specifier: ^3.2.2
         version: 3.2.2(@types/debug@4.1.12)(@types/node@22.15.30)(@vitest/ui@3.2.2)(happy-dom@17.6.3)(jiti@2.4.2)(jsdom@26.1.0)(sass@1.89.1)(terser@5.41.0)(yaml@2.8.0)
 
+  apps/feel-cook:
+    dependencies:
+      '@astrojs/check':
+        specifier: ^0.9.4
+        version: 0.9.4(prettier-plugin-astro@0.14.1)(prettier@3.5.3)(typescript@5.8.3)
+      '@astrojs/ts-plugin':
+        specifier: ^1.10.4
+        version: 1.10.4
+      astro:
+        specifier: ^5.6.0
+        version: 5.9.0(@types/node@22.15.30)(jiti@2.4.2)(rollup@4.42.0)(sass@1.89.1)(terser@5.41.0)(typescript@5.8.3)(yaml@2.8.0)
+      marked:
+        specifier: ^15.0.7
+        version: 15.0.12
+    devDependencies:
+      '@typescript-eslint/parser':
+        specifier: ^8.29.0
+        version: 8.33.1(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)
+      prettier:
+        specifier: 3.5.3
+        version: 3.5.3
+      prettier-plugin-astro:
+        specifier: 0.14.1
+        version: 0.14.1
+      typescript:
+        specifier: ^5.8.2
+        version: 5.8.3
+
   apps/notashelf.dev:
     dependencies:
       '@astrojs/mdx':
@@ -153,6 +181,9 @@ importers:
       astro-email-obfuscation:
         specifier: link:../../packages/astro-email-obfuscation
         version: link:../../packages/astro-email-obfuscation
+      astro-plausible:
+        specifier: link:../../packages/astro-plausible
+        version: link:../../packages/astro-plausible
       astro-purge-css:
         specifier: link:../../packages/astro-purge-css
         version: link:../../packages/astro-purge-css
@@ -278,6 +309,22 @@ importers:
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+      vitest:
+        specifier: ^3.2.2
+        version: 3.2.2(@types/debug@4.1.12)(@types/node@22.15.30)(@vitest/ui@3.2.2)(happy-dom@17.6.3)(jiti@2.4.2)(jsdom@26.1.0)(sass@1.89.1)(terser@5.41.0)(yaml@2.8.0)
+
+  packages/astro-plausible:
+    dependencies:
+      astro:
+        specifier: ^5.0.0
+        version: 5.9.0(@types/node@22.15.30)(jiti@2.4.2)(rollup@4.42.0)(sass@1.89.1)(terser@5.41.0)(typescript@5.8.3)(yaml@2.8.0)
+    devDependencies:
+      '@types/node':
+        specifier: ^22.15.30
+        version: 22.15.30
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -3607,6 +3654,11 @@ packages:
 
   markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
+
+  marked@15.0.12:
+    resolution: {integrity: sha512-8dD6FusOQSrpv9Z1rdNMdlSgQOIP880DHqnohobOmYLElGEqAL/JvxvuxZO16r4HtjTlfPRDC1hbvxC9dPN2nA==}
+    engines: {node: '>= 18'}
+    hasBin: true
 
   math-intrinsics@1.1.0:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
@@ -9309,6 +9361,8 @@ snapshots:
   markdown-extensions@2.0.0: {}
 
   markdown-table@3.0.4: {}
+
+  marked@15.0.12: {}
 
   math-intrinsics@1.1.0: {}
 

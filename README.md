@@ -61,6 +61,10 @@ All in-house dependencies created for my personal website have been stored in
 the `packages` directory, which is where new dependencies will be added. For the
 time being, it contains three distinct packages.
 
+- [astro-plausible](./packages/astro-plausible) is an Astro integration,
+  refactored out of my previous `notashelf.dev` app where it was a tiny
+  component. Now it's a fully tested integration with various customizability
+  options.
 - [astro-email-obfuscation](./packages/astro-email-obfuscation/) is a home-made
   Astro integration with advanced e-mail obfuscation capabilities, designed to
   fend off scrapers to the best of my ability.
@@ -178,7 +182,8 @@ All creative content found in this website is released under the
 attribution for the code you borrow. <!-- Yes I'm looking at you -->
 
 The Astro integrations have been made available under the Mozilla Public License
-2.0, as disctated by [their](./packages/vite-copyright-replace/LICENSE)
+2.0, as dictated [by](./packages/astrp-plausible/LICENSE)
+[their](./packages/vite-copyright-replace/LICENSE)
 [respective](./packages/astro-email-obfuscation/LICENSE)
 [license](./packages/astro-purge-css/LICENSE)
 [files](./packages/wasm-utils/LICENSE).
