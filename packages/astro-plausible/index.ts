@@ -189,19 +189,18 @@ async function getInjectableWebAnalyticsContent({
 
   if (mode === "development") {
     return `
-      (function () {
-        // Disable Plausible tracking in development mode
-        window.plausible = window.plausible || function() { console.log('[Plausible] Development mode - tracking disabled:', arguments); };
+        console.log('[astro-plausible] Development mode - Plausible script not loaded');
 
-        ${commonScript}
-      })()
+        // Provide mock plausible function for development
+        window.plausible = window.plausible || function() {
+          console.log('[Plausible] Development mode - tracking disabled:', arguments);
+        };
     `;
   }
 
   return `
-    (function () {
-      ${commonScript}
-    })()
+        console.log('[astro-plausible] Production mode - loading Plausible script');
+        ${commonScript}
   `;
 }
 
@@ -222,13 +221,18 @@ export default function plausibleIntegration(
   return {
     name: "astro-plausible",
     hooks: {
-      "astro:config:setup": async ({ command, injectScript }) => {
+      "astro:config:setup": async ({ command, injectScript, logger }) => {
+        const isDev = command === "dev";
+
         const script = await getInjectableWebAnalyticsContent({
-          mode: command === "dev" ? "development" : "production",
+          mode: isDev ? "development" : "production",
           options,
         });
 
-        injectScript("head-inline", script);
+        // Try page injection instead of head-inline
+        injectScript("page", script);
+
+        logger.info(`Plausible Analytics configured for domain: ${options.domain}`);
       },
     },
   };
