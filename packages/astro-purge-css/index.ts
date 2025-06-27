@@ -8,6 +8,17 @@ import cssnano from "cssnano";
 import postcss from "postcss";
 import type { ProcessOptions, Plugin, PluginCreator } from "postcss";
 
+// Accept Tailwind v4 PluginCreator type
+// This looks silly, but it's the actual type exported by @tailwindcss/postcss
+// I hate Typescript so much actually.
+type AnyPostCSSPlugin =
+  | Plugin
+  | PluginCreator<any>
+  | { postcssPlugin: string }
+  | [Plugin | PluginCreator<any>, any]
+  | string
+  | [string, any];
+
 interface CSSNanoOptions {
   preset?: [string, Record<string, any>] | string;
   plugins?: any[];
@@ -15,13 +26,7 @@ interface CSSNanoOptions {
 }
 
 interface PostCSSConfig {
-  plugins?: (
-    | Plugin
-    | PluginCreator<any>
-    | [Plugin | PluginCreator<any>, any]
-    | string
-    | [string, any]
-  )[];
+  plugins?: AnyPostCSSPlugin[];
   options?: ProcessOptions;
 }
 
@@ -35,11 +40,17 @@ interface PurgeCSSIntegrationOptions {
   fontFace?: boolean;
 }
 
-function normalizePlugin(plugin: any): Plugin | PluginCreator<any> {
+function normalizePlugin(plugin: any): any {
   if (Array.isArray(plugin)) {
     const [pluginFn, options] = plugin;
     return typeof pluginFn === "function" ? pluginFn(options) : pluginFn;
   }
+
+  // Accept objects with postcssPlugin property
+  if (plugin && typeof plugin === "object" && "postcssPlugin" in plugin) {
+    return plugin;
+  }
+
   return typeof plugin === "function" ? plugin() : plugin;
 }
 

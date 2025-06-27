@@ -7,14 +7,16 @@ export interface CSSNanoOptions {
   [key: string]: any;
 }
 
+export type AnyPostCSSPlugin =
+  | Plugin
+  | PluginCreator<any>
+  | { postcssPlugin: string }
+  | [Plugin | PluginCreator<any>, any]
+  | string
+  | [string, any];
+
 export interface PostCSSConfig {
-  plugins?: (
-    | Plugin
-    | PluginCreator<any>
-    | [Plugin | PluginCreator<any>, any]
-    | string
-    | [string, any]
-  )[];
+  plugins?: AnyPostCSSPlugin[];
   options?: ProcessOptions;
 }
 
