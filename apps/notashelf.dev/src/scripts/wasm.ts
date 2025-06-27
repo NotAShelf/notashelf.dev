@@ -132,17 +132,14 @@ export class WasmFeaturedProjects {
       .map((index) => projectCards[index])
       .filter(Boolean) as Element[];
 
-    projectCards.forEach((card) => {
-      (card as HTMLElement).style.display = "none";
-    });
+    // Remove all cards from the grid
+    while (projectsGrid.firstChild) {
+      projectsGrid.removeChild(projectsGrid.firstChild);
+    }
 
+    // Append only the selected cards
     selectedCards.forEach((card) => {
-      (card as HTMLElement).style.display = "";
-      if (projectsGrid.firstChild) {
-        projectsGrid.insertBefore(card, projectsGrid.firstChild);
-      } else {
-        projectsGrid.appendChild(card);
-      }
+      projectsGrid.appendChild(card);
     });
   }
 
