@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import plausibleIntegration from "../../index.ts";
 import {
   TEST_DOMAIN,
@@ -7,7 +7,6 @@ import {
   TEST_API_HOST,
   createMockSetupContext,
   mockInjectScript,
-  mockAstroLogger,
 } from "./setup.ts";
 
 describe("astro-plausible", () => {
