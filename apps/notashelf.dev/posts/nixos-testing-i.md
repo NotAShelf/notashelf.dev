@@ -5,8 +5,6 @@ date: 2025-04-03
 keywords: ["nix", "nixos", "tutorial"]
 ---
 
-# Integration tests with NixOS VM Tests
-
 One of the things that convinced me to _stay on NixOS_ was how easy it is to
 write integration tests for my existing infrastructure. Unlike traditional
 testing setups, which often require complex tooling, manual configuration, or
@@ -92,8 +90,8 @@ test to give you an idea before I write the rest of the test.
 
 ## Anatomy of `runNixOSTest`
 
-`runNixOSTest` is a wrapper function around `runTest` from Nix*OS* (not
-nix*pkgs*) library, defined in
+`runNixOSTest` is a wrapper function around `runTest` from Nix_OS_ (not
+nix_pkgs_) library, defined in
 [nixos/lib](https://github.com/NixOS/nixpkgs/tree/7d5cd42fece2ae9b065b00c08696b439a864401f/nixos/lib).
 It imports `nixos/lib/default.nix` and wraps the `runTest` function that is
 defined in NixOS library, which is _inherited from the testing library inside

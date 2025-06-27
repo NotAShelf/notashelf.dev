@@ -5,8 +5,6 @@ date: 2025-03-31
 keywords: ["nix", "flakes", "security"]
 ---
 
-# What is nixConfig, and Should You Trust It?
-
 [article on flakes]: https://wiki.nixos.org/wiki/Flakes#Flake_schema
 
 Those of you who have been a part of the Nix ecosystem, more specifically the
@@ -143,7 +141,6 @@ accepting the prompt (which defaults to true for some reason).
 This has been your ever-so-informative technical rant on Nix and its
 undocumented mess. Hope you learned something today. Cheers.
 
-[^1]:
-    If you don't use Nix flakes or have no idea what they are, then this post
+[^1]: If you don't use Nix flakes or have no idea what they are, then this post
     does not apply to you. In fact, I'm glad you're saving yourself the
     headache!

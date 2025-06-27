@@ -6,8 +6,6 @@ date: 2025-06-06
 keywords: ["thoughts", "programming", "software"]
 ---
 
-# On Mutation Testing
-
 If you have ever worked on any serious codebase, then you probably know how
 truly deceptive confidence can be; you push a change, tests pass, CI is all
 green and the voice in your head yells "**MERGE ON GREEN!**" Then regressions

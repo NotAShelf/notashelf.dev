@@ -5,13 +5,11 @@ description: "Exploring lazy evaluation in relative depth"
 keywords: ["nix", "programming"]
 ---
 
-# Lazy Evaluation in Nix: Where Your Conditionals Go to Die
-
 If you have spent time in traditional programming languages, then you have
 probably relied on conditionals (`if-else`, `switch`, `case`) at least once in
-In Nix, as a result of lazy evaluation, many of those constructs become less relevant
-less relevant---or outright unnecessary. This post dives into _why_ this is the
-case, and hopes to save you from a few pitfalls that come with this.
+In Nix, as a result of lazy evaluation, many of those constructs become less
+relevant less relevant---or outright unnecessary. This post dives into _why_
+this is the case, and hopes to save you from a few pitfalls that come with this.
 
 ## What is Lazy Evaluation?
 
@@ -72,14 +70,12 @@ In Nix, laziness manifests in several ways:
 
 [Statix]: https://github.com/oppiliappan/statix
 
-[^1]:
-    Static analysis tools, such as [Statix] will warn you when the function
+[^1]: Static analysis tools, such as [Statix] will warn you when the function
     argument is unused. For example in the `alwaysReturnOne` function I've used
     as an example above, Statix would've warned you about the unused argument
     `x`.
 
-[^2]:
-    This is possible due to lazy evaluation resolving circular dependencies
+[^2]: This is possible due to lazy evaluation resolving circular dependencies
     without causing crashes. However, an infinitely recursing attribute can
     exist as long as it's not evaluated.
 
@@ -211,8 +207,7 @@ like `fix`. This is because Nix only evaluates values when needed, meaning
 references can exist without being immediately resolved. In contrast, strict
 languages would require fix to explicitly establish recursion. [^3]
 
-[^3]:
-    I'm very well aware that there is a `fix` function in nixpkgs lib. I
+[^3]: I'm very well aware that there is a `fix` function in nixpkgs lib. I
     mainly want to focus on core Nix language, so applications of `lib.fix` are
     omitted this time around. I'd like to talk about `fix` and recursion
     specifically in another post, another time. This is already long as it is.

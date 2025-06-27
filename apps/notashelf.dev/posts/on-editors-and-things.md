@@ -5,14 +5,12 @@ date: 2025-03-11
 keywords: ["software", "neovim", "news"]
 ---
 
-# On Editors and Things
-
 Hi all, good news first. I am a **Release Editor for NixOS 25.05**. This is a
 bit difficult for me to talk about, since I do not know what exactly what it
 entails _yet_ but know that I am excited about it, and I wanted to share it with
-you, dear reader. It has been one _hell_ of a journey so far, I am excited to see
-what is to come. NixOS, with its flaws, has a special place in my heart and it
-is great to be able to finally play a part in the grand scheme of things.
+you, dear reader. It has been one _hell_ of a journey so far, I am excited to
+see what is to come. NixOS, with its flaws, has a special place in my heart and
+it is great to be able to finally play a part in the grand scheme of things.
 
 There are a few articles that I am working on, one of them being the
 continuation of the NixOS hardening series. Unfortunately there is not much time
@@ -32,8 +30,8 @@ department, I have been able to use LaTeX in the past and more recently I have
 been enjoying [Typst](https://typst.app). Much of this editing, regardless of
 the framework, involves an editor. While it would be all too simple to use
 something like LibreOffice, I rarely find myself opening `.docx` files to edit
-an essay, and it's even less rare of an occurrence for me to be writing in one. What I use for most of my editing
-is, of course, my trusty Neovim setup.
+an essay, and it's even less rare of an occurrence for me to be writing in one.
+What I use for most of my editing is, of course, my trusty Neovim setup.
 
 Neovim holds an interesting place in my tool belt. I have switched off
 VSCode--the editor I have started with-- due to its annoyingly high RAM usage
@@ -85,8 +83,7 @@ available as plugins on Neovim. There is no conflicting design choices or UI
 decisions. Not yet, anyway. I think consistent UI is a good thing to have in
 your editor, however good your UX may be.
 
-[^1]:
-    This is due to my particular distaste of Lisp and Lisp-likes. Helix's so
+[^1]: This is due to my particular distaste of Lisp and Lisp-likes. Helix's so
     called "plugin system" is, at its core, a glorified Scheme interpreter and I
     do not feel positively about it. I believe there is also talks about using
     Scheme for _configuration_, and not just plugins. Compared to something like
@@ -143,13 +140,14 @@ created to be stable, but perhaps they will be picked back up as well. I have
 been meaning to make Microfetch even faster (can't stop, won't stop) for a while
 now...
 
-Regardless, there are many nice things planned for the future but I first need some free
-time. Working on a few projects, and it is almost the busy season at $WORK. But
-I digress. I wanted to give you this as a progress report, and to explain the
-reasoning behind my absence. Some of those projects have been getting a lot of
-attention, even with my absence, so I wanted to personally thank everyone who
-has been submitting pull requests. You may not think much of it, but it means
-much to me that you have taken the time to contribute to the project(s).
+Regardless, there are many nice things planned for the future but I first need
+some free time. Working on a few projects, and it is almost the busy season at
+$WORK. But I digress. I wanted to give you this as a progress report, and to
+explain the reasoning behind my absence. Some of those projects have been
+getting a lot of attention, even with my absence, so I wanted to personally
+thank everyone who has been submitting pull requests. You may not think much of
+it, but it means much to me that you have taken the time to contribute to the
+project(s).
 
 ## Closing Thoughts
 

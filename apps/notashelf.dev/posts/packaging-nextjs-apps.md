@@ -5,8 +5,6 @@ date: 2023-05-21
 archived: true
 ---
 
-# Packaging NextJS Webapps with Nix
-
 Recently I have had to go through the misfortune of hosting some websites
 written with _NextJS_ on my VPS running NixOS, this note entry shall document my
 experience and the "easy" path I have chosen.

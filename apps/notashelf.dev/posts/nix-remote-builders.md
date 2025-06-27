@@ -5,8 +5,6 @@ date: 2025-02-17
 keywords: ["nix", "nixos", "tutorial", "linux"]
 ---
 
-# Getting Remote Builders to Build your Nix Derivations
-
 Nix is a package manager--nay, a _build tool_[^1] that is capable of scaling
 both vertically and horizontally through its **Binary Caches** and **Remote
 Builders** respectively.

@@ -5,8 +5,6 @@ date: 2025-04-07
 keywords: ["thoughts"]
 ---
 
-# Considerations
-
 > I am a sick man... I am a spiteful man. I am an unattractive man. I believe my
 > liver is diseased. However, I know nothing at all about my disease, and do not
 > know for certain what ails me. I don’t consult a doctor for it, and never

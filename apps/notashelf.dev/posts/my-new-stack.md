@@ -1,11 +1,9 @@
 ---
 title: My New Tech Stack
-description: From Javascript, to Golang and Rust
+description: From Javascript, to Golang and Rust: A Technical Journey
 date: 2025-04-03
 keywords: ["software", "programming"]
 ---
-
-# From Golang to Rust (with a Dash of C and a Look at Zig): A Technical Journey
 
 I have began programming with Javascript back in 2018. It was a spontaneous
 decision, made mostly in the hope of solving a basic problem that a game server

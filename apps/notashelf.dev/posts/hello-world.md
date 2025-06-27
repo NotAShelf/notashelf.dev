@@ -5,8 +5,6 @@ date: 2025-01-01
 keywords: []
 ---
 
-# Hello World
-
 After hours on end of reckless consideration and rewriting, I have finally
 crafted my static site generator---a basic (but extremely inelegant) Bash
 script---and my blog is now fully live. Not that I needed to tell you; after

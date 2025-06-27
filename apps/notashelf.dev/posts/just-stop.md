@@ -5,10 +5,6 @@ date: 2024-06-02
 archived: true
 ---
 
-# Please Just Stop
-
-## What is Just?
-
 [Just](https://github.com/casey/just) is a fast and powerful command runner,
 built with Rust. It is fast, simple and available
 [almost everywhere](https://github.com/casey/just?tab=readme-ov-file#packages)
@@ -94,8 +90,8 @@ This setup implies you are using channels, but similar instructions will apply
 on flakes. Regardless, acquire your development packages from nixpkgs and put
 them in your shell's `nativeBuildInputs`. If you are trying to put, e.g., a
 Python script available in [nixpkgs](https://github.com/NixOS/nixpkgs), simply
-place it in `nativeBuildInputs`.
-shell, then you can write your script as follows:
+place it in `nativeBuildInputs`. shell, then you can write your script as
+follows:
 
 ```nix
 { pkgs ? import <nixpkgs> {} }:
@@ -121,8 +117,7 @@ completely ditch Just. Remember that someone observing your NixOS configuration
 is less likely to use Just, and more likely to use Nix. Choose the appropriate
 tool for the job, lest you over or underprepare.
 
-[^1]:
-    Nix is actually not a package manager. It has been called that was to make
+[^1]: Nix is actually not a package manager. It has been called that was to make
     it more approachable for the casual users, but it is actually a build tool.
     Or better yet, it is **lambda calculus on files**. I feel the need to
     clarify, because package management is _only one_ of Nix's features. Whereas

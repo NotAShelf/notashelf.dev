@@ -5,8 +5,6 @@ description: "Just one of those that should be illegal, but is not."
 keywords: ["rant", "linux", "web", "software"]
 ---
 
-# Stop Scraping my Git Forge!
-
 Not so long ago, while performing maintenance on my VPS and setting up
 Prometheus, Grafana, and related tools, I noticed something unexpected yet not
 entirely surprising. My Nginx instance was under constant bombardment of
@@ -160,8 +158,7 @@ Stay safe.
 
 [very same documentation]: https://developers.facebook.com/docs/sharing/webmasters/web-crawlers
 
-[^1]:
-    Meta's own web-crawler documentation indicates that they may choose to
+[^1]: Meta's own web-crawler documentation indicates that they may choose to
     disregard your `robots.txt` if they are performing "integrity or security
     checks" which in truth is just a vague way to say that you may sometimes
     decide to _not_ play by the rules. At this point your bet is banning them by

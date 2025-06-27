@@ -5,8 +5,6 @@ date: 2025-02-01
 keywords: ["nix", "tutorial"]
 ---
 
-# When, Why and How to Extend Nixpkgs Standard Library
-
 In plenty of cases, you might need to write your own custom functions and store
 them somewhere. While it is conceptually possible and easy to define them inside
 an argument you might want to stick in for example `specialArgs` in the context

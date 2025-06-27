@@ -5,10 +5,6 @@ date: 2023-01-22
 archived: true
 ---
 
-# System Backlight
-
-## The Problem
-
 Following a large system upgrade two days ago, my HP Pavilion laptop has stopped
 registering the `intel_backlight` device interface in `/sys/class/backlight` -
 which is most often used by tools such as `brightnessctl` or `light` to control

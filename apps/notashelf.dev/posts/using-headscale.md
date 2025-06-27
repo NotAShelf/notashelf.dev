@@ -5,8 +5,6 @@ date: 2023-11-11
 archived: true
 ---
 
-# Headscale on NixOS, Tailscale anywhere
-
 Today's main attraction is the Headscale setup on my VPS running NixOS, which
 I've finally came around to self-host.
 

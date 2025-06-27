@@ -5,8 +5,6 @@ date: 2024-05-11
 archived: true
 ---
 
-# On SysRq
-
 ## Resources
 
 - https://wiki.archlinux.org/title/keyboard_shortcuts
@@ -171,19 +169,16 @@ on low-end systems because despite what devs might say, **electron still
 sucks**. As such, I do not think that SysRq is worth the potential security flaw
 right, but that question is for you to answer yourself.
 
-[^1]:
-    Quite literally what it is called in the
+[^1]: Quite literally what it is called in the
     [kernel documentation](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/sysrq.rst)
 
-[^2]:
-    The permission bitmap is a 32-bit bitmap that determines which SysRq
+[^2]: The permission bitmap is a 32-bit bitmap that determines which SysRq
     commands are allowed to be executed. Each bit in the bitmap corresponds to a
     specific SysRq command. When a SysRq command is issued, the kernel checks
     the corresponding bit in the permission bitmap to determine whether the
     command is allowed or not.
 
-[^3]:
-    The whole set of `REISUB` functions can be enabled by setting SysRq value
+[^3]: The whole set of `REISUB` functions can be enabled by setting SysRq value
     to 244, although this will also enable additional functions which some may
     find undesirable. If in doubt, do the math and choose your bitmask range
     yourself.

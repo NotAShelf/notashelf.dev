@@ -5,8 +5,6 @@ date: 2025-03-03
 keywords: ["linux", "security", "nixos", "tutorial"]
 ---
 
-# NixOS Security I: Systemd
-
 A Linux system is a complex ecosystem of components, each with its own set of
 vulnerabilities. NixOS is no exception. While its declarative nature provides
 some advantages, it is not--nor can it ever be--a silver bullet against the
@@ -160,8 +158,7 @@ establish some baseline for how you may look at hardening.
 |    RestrictRealtime    | Limits real-time scheduling capabilities                    |
 |    RestrictSUIDSGID    | Restricts SUID/SGID binaries[^1]                            |
 
-[^1]:
-    SUID (Set User ID) and GUID (Set Group ID) binaries are special
+[^1]: SUID (Set User ID) and GUID (Set Group ID) binaries are special
     executables that run with elevated privileges. When executed, they
     temporarily assume the privileges of the owner or group specified in their
     file attributes. This allows certain programs to perform operations that
@@ -282,8 +279,7 @@ that try and handle hardening for you, but remember that there is no solution
 that suits all systems. Not to mention that relying on a 3rd party project for
 your system hardening is a security vulnerability of its own.
 
-[^3]:
-    Okay maybe not _all_ of them. It is not feasible to try and harden each
+[^3]: Okay maybe not _all_ of them. It is not feasible to try and harden each
     service, as the minimum required conditions to run some services will always
     remain unsafe by Systemd's definition. This is what I have meant when I
     referred to the scores as arbitrary. Services that run as root, for example,

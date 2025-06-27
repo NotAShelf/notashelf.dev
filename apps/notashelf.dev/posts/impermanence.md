@@ -5,8 +5,6 @@ date: 2025-02-15
 keywords: ["nix", "nixos", "tutorial", "linux"]
 ---
 
-# Impermanence on NixOS
-
 Impermanence is an interesting concept. Aside from its philosophical aspect, it
 has strange but pleasant implications on a NixOS system. Not only is it a
 display of sheer flexibility of NixOS as an operating system, it also provides a
@@ -16,8 +14,8 @@ clearing useless state some programs have left behind.
 This general setup concept utilizes NixOS' ability to boot off of a disk that
 contains only `/nix` and `/boot`, linking appropriate devices and blocks during
 the boot process and deleting all state that programs may have left over my
-system. The end result, for me, was a fully encrypted system that uses BTRFS snapshots
-to restore `/` to its original state on each boot.
+system. The end result, for me, was a fully encrypted system that uses BTRFS
+snapshots to restore `/` to its original state on each boot.
 
 ## Resources
 
@@ -390,8 +388,8 @@ could never. May they bask in their supreme glory.
 ## Closing Notes
 
 As interesting as Impermanence is, it is also a little risky. The constant new
-changes Nixpkgs receives on a daily basis might mean that a service may suddenly stop
-using the state directory that you have configured it to use, and move to a
+changes Nixpkgs receives on a daily basis might mean that a service may suddenly
+stop using the state directory that you have configured it to use, and move to a
 directory that you have not yet persisted. While running such a set up, you must
 make sure to pay close attention to your system and back up everything
 accordingly. Make sure to persist important directories, and have backups ready
@@ -415,13 +413,11 @@ remain on your disk. This is sometimes a security vulnerability, and sometimes
 just general annoyance. Impermanence completely eliminates configuration drift,
 and makes sure that your system is sparkly clean on each boot. Cool, right?
 
-[^1]:
-    I could be using `tmpfs` for `/` at this point in time. Unfortunately,
+[^1]: I could be using `tmpfs` for `/` at this point in time. Unfortunately,
     since I share this setup on some of my low-end laptops, I've got no RAM to
     spare - which is exactly why I have opted out with BTRFS. It is a reliable
     filesystem that I am used to, and it allows for us to use a script that
     we'll see later on.
 
-[^2]:
-    Read about noatime
+[^2]: Read about noatime
     [here](https://opensource.com/article/20/6/linux-noatime)

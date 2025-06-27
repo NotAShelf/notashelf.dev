@@ -5,8 +5,6 @@ date: 2023-07-14
 archived: true
 ---
 
-# Nix remote builders on non-standard OpenSSH ports
-
 My VPS, which hosts some of my infrastructure, has been running NixOS for a
 while now. Although weak, I use it for distributed builds alongside the rest of
 my NixOS machines on a Tailscale network.

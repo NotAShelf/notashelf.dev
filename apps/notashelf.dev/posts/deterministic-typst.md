@@ -5,8 +5,6 @@ date: 2025-03-17
 keywords: ["tutorial", "nix", "software"]
 ---
 
-# Building Deterministic Typst Packages with Nix
-
 [Typst Builder PR]: https://github.com/NixOS/nixpkgs/pull/369283
 
 Recently, I encountered a [Typst Builder PR] in Nixpkgs that implements a Typst
