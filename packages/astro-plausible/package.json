@@ -38,11 +38,12 @@
     "privacy"
   ],
   "devDependencies": {
-    "@types/node": "^24.0.4",
+    "@types/node": "^22.15.30",
     "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.2"
   },
   "publishConfig": {
     "access": "public"
   }
 }
+
