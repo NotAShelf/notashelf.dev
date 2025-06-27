@@ -1,5 +1,8 @@
 import { vitePreprocess } from "@astrojs/svelte";
 
-export default {
+/** @type {import('svelte').Config} */
+let svelteConfig = {
   preprocess: vitePreprocess(),
 };
+
+export default svelteConfig;

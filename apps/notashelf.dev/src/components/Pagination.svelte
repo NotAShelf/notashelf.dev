@@ -58,7 +58,7 @@
       {/if}
     {/if}
 
-    {#each Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i) as page}
+    {#each Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i) as page (page)}
       <a
         href={getPageUrl(page)}
         class={`pagination-link ${currentPage === page ? "active" : ""}`}

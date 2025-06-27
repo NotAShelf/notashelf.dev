@@ -1,7 +1,11 @@
 import eslint from "@eslint/js";
-import eslintPluginAstro from "eslint-plugin-astro";
+import eslintAstro from "eslint-plugin-astro";
+import eslintSvelte from "eslint-plugin-svelte";
+
 import globals from "globals";
 import tseslint from "typescript-eslint";
+
+import svelteConfig from "./apps/notashelf.dev/svelte.config.js";
 
 const config = tseslint.config(
   // JavaScript
@@ -9,7 +13,9 @@ const config = tseslint.config(
   // TypeScript
   ...tseslint.configs.recommended,
   // Astro
-  ...eslintPluginAstro.configs["flat/recommended"],
+  ...eslintAstro.configs["flat/recommended"],
+  // Svelte
+  ...eslintSvelte.configs.recommended,
 
   {
     // Global ignores
@@ -54,6 +60,18 @@ const config = tseslint.config(
     files: ["**/decoder.js", "**/decoder.ts"],
     languageOptions: {
       globals: globals.browser,
+    },
+  },
+
+  {
+    files: ["**/*.svelte", "**/*.svelte.ts", "**/*.svelte.js"],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        extraFileExtensions: [".svelte"],
+        parser: tseslint.parser,
+        svelteConfig,
+      },
     },
   },
 );
