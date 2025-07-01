@@ -1,31 +1,6 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
-
-// Allowed keywords for posts and tidbits.
-const allowedKeywords = [
-  "thoughts",
-  "programming",
-  "software",
-  "tutorial",
-  "nix",
-  "federation",
-  "nixos",
-  "linux",
-  "security",
-  "flakes",
-  "rant",
-  "web",
-  "news",
-  "neovim",
-  "git",
-  "cli",
-  "bash",
-  "productivity",
-  "version-control",
-  "workflow",
-  "development",
-  "packaging",
-] as const;
+import { allowedKeywords } from "./lib/types";
 
 const posts = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./writing/posts" }),
@@ -34,7 +9,7 @@ const posts = defineCollection({
     description: z.string().optional(),
     date: z.coerce.date(),
     updated: z.coerce.date().optional(),
-    keywords: z.array(z.enum(allowedKeywords)).default([]),
+    keywords: z.array(z.enum([...allowedKeywords])).default([]),
     draft: z.boolean().default(false),
     archived: z.boolean().optional().default(false),
   }),
@@ -46,7 +21,7 @@ const tidbits = defineCollection({
     title: z.string().max(80),
     description: z.string().optional(),
     date: z.coerce.date(),
-    keywords: z.array(z.enum(allowedKeywords)).default([]),
+    keywords: z.array(z.enum([...allowedKeywords])).default([]),
     draft: z.boolean().default(false),
   }),
 });

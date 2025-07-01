@@ -1,27 +1,42 @@
 ---
 import Pagination from "@components/Pagination.svelte";
 import PostList from "@components/PostList.astro";
+import TidbitList from "@components/TidbitList.astro";
 import {
   faArchive,
   faLayerGroup,
   faList,
   faMagnifyingGlass,
+  faToggleOff,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import type { PostEntry } from "@lib/types";
+import type { PostEntry, TidbitEntry } from "@lib/types";
+
 import { getCollection } from "astro:content";
 
 // Get all blog posts
 const allPosts = await getCollection("posts");
 
+// Get all tidbits
+const allTidbits = (await getCollection("tidbits")) as TidbitEntry[];
+
 // Extract all unique tags from posts
-const allTags = [
+const allPostTags = [
   ...new Set(
     allPosts
       .filter((post: PostEntry) => !post.data.draft && !post.data.archived)
       .flatMap((post: PostEntry) => post.data.keywords || []),
+  ),
+].sort();
+
+// Extract all unique tags from tidbits
+const allTidbitTags = [
+  ...new Set(
+    allTidbits
+      .filter((tidbit: TidbitEntry) => !tidbit.data.draft)
+      .flatMap((tidbit: TidbitEntry) => tidbit.data.keywords || []),
   ),
 ].sort();
 
@@ -33,17 +48,38 @@ const filteredPosts = allPosts
       new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
   );
 
-// Calculate pagination
+// Filter out draft tidbits
+const filteredTidbits = allTidbits
+  .filter((tidbit: TidbitEntry) => !tidbit.data.draft)
+  .sort(
+    (a: TidbitEntry, b: TidbitEntry) =>
+      new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+  );
+
+// Calculate pagination for posts
 const postsPerPage = 5;
 const totalPosts = filteredPosts.length;
-const totalPages = Math.ceil(totalPosts / postsPerPage);
+const totalPostPages = Math.ceil(totalPosts / postsPerPage);
 const currentPage = 1;
 const posts = filteredPosts.slice(0, postsPerPage);
+
+// Calculate pagination for tidbits
+const tidbitsPerPage = 8;
+const totalTidbits = filteredTidbits.length;
+const totalTidbitPages = Math.ceil(totalTidbits / tidbitsPerPage);
+const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
 ---
 
-<BaseLayout title="Blog Posts" description="Collection of blog posts">
+<BaseLayout
+  title="Posts & Tidbits"
+  description="Collection of blog posts and tidbits"
+>
   <div class="posts-header">
-    <h1 class="page-title">Blog Posts</h1>
+    <h1 class="page-title">
+      <span class="title-word" id="posts-word">Posts</span>
+      <span class="title-separator">&</span>
+      <span class="title-word" id="tidbits-word">Tidbits</span>
+    </h1>
     <div class="header-actions">
       <button
         id="view-toggle"
@@ -58,6 +94,15 @@ const posts = filteredPosts.slice(0, postsPerPage);
           style={{ display: "none" }}
         />
         <span id="view-label">View All</span>
+      </button>
+      <button
+        id="content-toggle"
+        class="content-toggle"
+        title="Toggle between posts and tidbits"
+        aria-label="Toggle between posts and tidbits view"
+      >
+        <FontAwesomeIcon icon={faToggleOff} id="toggle-icon" />
+        <span id="content-label">Show Tidbits</span>
       </button>
       <a href="/archive" class="archive-link">
         <FontAwesomeIcon icon={faArchive} /> View Archive
@@ -90,11 +135,26 @@ const posts = filteredPosts.slice(0, postsPerPage);
     </div>
 
     <div class="tags-container">
-      <div class="tags-wrap">
-        <button type="button" class="tag-filter" data-tag=""> All </button>
+      <div class="tags-wrap post-tags-wrap">
+        <button type="button" class="tag-filter active" data-tag="">
+          All
+        </button>
 
         {
-          allTags.map((tag) => (
+          allPostTags.map((tag) => (
+            <button type="button" class="tag-filter" data-tag={tag}>
+              {tag}
+            </button>
+          ))
+        }
+      </div>
+      <div class="tags-wrap tidbit-tags-wrap">
+        <button type="button" class="tag-filter active" data-tag="">
+          All
+        </button>
+
+        {
+          allTidbitTags.map((tag) => (
             <button type="button" class="tag-filter" data-tag={tag}>
               {tag}
             </button>
@@ -112,6 +172,15 @@ const posts = filteredPosts.slice(0, postsPerPage);
     style="display: none;"
   />
 
+  <div class="tidbit-container" style="display: none;">
+    <TidbitList tidbits={tidbits} className="tidbit-list" />
+    <TidbitList
+      tidbits={filteredTidbits}
+      className="tidbit-list-all"
+      style="display: none;"
+    />
+  </div>
+
   <div class="no-results" style="display: none;">
     <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
     <p>No posts found matching your criteria</p>
@@ -123,7 +192,16 @@ const posts = filteredPosts.slice(0, postsPerPage);
   <div id="pagination-container">
     <Pagination
       currentPage={currentPage}
-      totalPages={totalPages}
+      totalPages={totalPostPages}
+      baseUrl="/posts"
+      client:load
+    />
+  </div>
+
+  <div id="tidbit-pagination-container" style="display: none;">
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalTidbitPages}
       baseUrl="/posts"
       client:load
     />
@@ -131,12 +209,195 @@ const posts = filteredPosts.slice(0, postsPerPage);
 </BaseLayout>
 
 <script>
-  import type { PostEntry } from "../../lib/types";
-  import { WasmPostSearchUI } from "../../scripts/wasm-post-search-ui";
+  import type { AllowedKeyword, PostEntry, TidbitEntry } from "@lib/types";
+  import { allowedKeywords } from "@lib/types";
+  import { WasmPostSearchUI } from "@scripts/wasm-post-search-ui";
 
   document.addEventListener("DOMContentLoaded", async () => {
-    // Pass all posts data to the WASM search UI
+    let showingTidbits = false;
+    function switchTagContainers() {
+      const postTagsWrap = document.querySelector(
+        ".post-tags-wrap",
+      ) as HTMLElement;
+      const tidbitTagsWrap = document.querySelector(
+        ".tidbit-tags-wrap",
+      ) as HTMLElement;
+
+      if (showingTidbits) {
+        if (postTagsWrap) postTagsWrap.classList.remove("visible");
+        if (tidbitTagsWrap) tidbitTagsWrap.classList.add("visible");
+      } else {
+        if (tidbitTagsWrap) tidbitTagsWrap.classList.remove("visible");
+        if (postTagsWrap) postTagsWrap.classList.add("visible");
+      }
+    }
+
+    function resetActiveTagFilters() {
+      const currentContainer = showingTidbits
+        ? ".tidbit-tags-wrap"
+        : ".post-tags-wrap";
+      document
+        .querySelectorAll(`${currentContainer} .tag-filter`)
+        .forEach((btn) => {
+          btn.classList.remove("active");
+        });
+      const allButton = document.querySelector(
+        `${currentContainer} .tag-filter[data-tag='']`,
+      );
+      if (allButton) {
+        allButton.classList.add("active");
+      }
+    }
+
+    function performContextualSearch() {
+      const searchValue =
+        (
+          document.getElementById("search-input") as HTMLInputElement
+        )?.value.toLowerCase() || "";
+      const currentContainer = showingTidbits
+        ? ".tidbit-tags-wrap"
+        : ".post-tags-wrap";
+      const activeTagButton = document.querySelector(
+        `${currentContainer} .tag-filter.active`,
+      ) as HTMLButtonElement;
+      const activeTag = activeTagButton?.getAttribute("data-tag") || "";
+
+      if (showingTidbits) {
+        filterContent(
+          ".tidbit-container .post-dropdown-item",
+          searchValue,
+          activeTag,
+        );
+      } else {
+        filterContent(
+          ".post-list .post-dropdown-item, .post-list-all .post-dropdown-item",
+          searchValue,
+          activeTag,
+        );
+      }
+    }
+
+    function filterContent(
+      selector: string,
+      searchValue: string,
+      activeTag: string,
+    ) {
+      const items = document.querySelectorAll(selector);
+      let visibleCount = 0;
+
+      items.forEach((item) => {
+        const element = item as HTMLElement;
+        const title =
+          element.querySelector(".post-title")?.textContent?.toLowerCase() ||
+          "";
+        const description =
+          element
+            .querySelector(".post-description")
+            ?.textContent?.toLowerCase() || "";
+        const keywords =
+          element.getAttribute("data-keywords")?.split(",") || [];
+
+        const matchesSearch =
+          searchValue === "" ||
+          title.includes(searchValue) ||
+          description.includes(searchValue) ||
+          keywords.some((k) => k.toLowerCase().includes(searchValue));
+
+        const matchesTag = activeTag === "" || keywords.includes(activeTag);
+
+        if (matchesSearch && matchesTag) {
+          element.style.display = "";
+          visibleCount++;
+        } else {
+          element.style.display = "none";
+        }
+      });
+
+      // Show/hide no results message
+      const noResults = document.querySelector(".no-results") as HTMLElement;
+      if (noResults) {
+        noResults.style.display = visibleCount === 0 ? "block" : "none";
+      }
+    }
+
+    function attachTagListeners() {
+      document.querySelectorAll(".tag-filter").forEach((button) => {
+        // Remove any existing listeners to prevent duplicates
+        button.removeEventListener("click", handleTagClick);
+        button.addEventListener("click", handleTagClick);
+      });
+    }
+
+    function handleTagClick(e: Event) {
+      const btn = e.target as HTMLButtonElement;
+
+      // Get the current tag container (post or tidbit)
+      const currentContainer = showingTidbits
+        ? ".tidbit-tags-wrap"
+        : ".post-tags-wrap";
+
+      // Remove active class from all tags in current container
+      document
+        .querySelectorAll(`${currentContainer} .tag-filter`)
+        .forEach((b) => {
+          b.classList.remove("active");
+        });
+
+      // Add active class to clicked button
+      btn.classList.add("active");
+
+      performContextualSearch();
+    }
+
+    function ensureTagStyling() {
+      document.querySelectorAll(".tags-wrap").forEach((container) => {
+        const wrap = container as HTMLElement;
+        if (wrap.style.display !== "none") {
+          wrap.style.display = "flex";
+          wrap.style.flexWrap = "wrap";
+          wrap.style.gap = "0.5rem";
+          wrap.style.paddingBottom = "0.5rem";
+
+          wrap.querySelectorAll(".tag-filter").forEach((button) => {
+            const btn = button as HTMLElement;
+            btn.style.display = "inline-block";
+            btn.style.padding = "0.3rem 0.8rem";
+            btn.style.borderRadius = "4px";
+            btn.style.border = "none";
+            btn.style.cursor = "pointer";
+            btn.style.fontSize = "0.85rem";
+            btn.style.textDecoration = "none";
+            btn.style.transition = "all 0.2s ease";
+            btn.style.marginBottom = "0.5rem";
+            btn.style.fontFamily = "inherit";
+            btn.style.boxSizing = "border-box";
+            btn.style.margin = "0";
+          });
+        }
+      });
+    }
+
+    // Pass all posts and tidbits data to the WASM search UI
     const allPosts: PostEntry[] = [];
+    const allTidbits: TidbitEntry[] = [];
+
+    // Valid keywords from all posts and tidbits
+    const validKeywords: AllowedKeyword[] = [
+      ...new Set([
+        ...allPosts.flatMap((p) => p.data.keywords || []),
+        ...allTidbits.flatMap((t) => t.data.keywords || []),
+      ]),
+    ].filter((k): k is AllowedKeyword =>
+      (allowedKeywords as readonly string[]).includes(k),
+    );
+    function filterToValidKeywords(arr: string[]): AllowedKeyword[] {
+      // Only allow keywords that are present in the content collections
+      return arr
+        .map((k) => k.trim())
+        .filter((k): k is AllowedKeyword =>
+          validKeywords.includes(k as AllowedKeyword),
+        );
+    }
 
     // Extract post data from DOM elements for WASM
     document.querySelectorAll(".post-dropdown-item").forEach((el) => {
@@ -148,7 +409,8 @@ const posts = filteredPosts.slice(0, postsPerPage);
       const timeElement = element.querySelector(".post-date");
       const keywords = element.getAttribute("data-keywords")?.split(",") || [];
 
-      // Extract actual date from the datetime attribute or fallback gracefully
+      // Extract actual date from the datetime attribute
+      // or fallback gracefully
       let postDate = new Date();
       if (timeElement) {
         const datetimeAttr = timeElement.getAttribute("datetime");
@@ -167,7 +429,9 @@ const posts = filteredPosts.slice(0, postsPerPage);
           data: {
             title,
             description: description || "",
-            keywords: keywords.filter((k) => k.trim() !== ""),
+            keywords: filterToValidKeywords(
+              keywords.filter((k) => k.trim() !== ""),
+            ),
             date: postDate,
             draft: false,
             archived: false,
@@ -178,9 +442,342 @@ const posts = filteredPosts.slice(0, postsPerPage);
       }
     });
 
+    // Extract tidbit data from DOM elements for WASM
+    document
+      .querySelectorAll(".tidbit-container .post-dropdown-item")
+      .forEach((el) => {
+        const element = el as HTMLElement;
+        const linkElement = element.querySelector(
+          ".dropdown-link",
+        ) as HTMLAnchorElement;
+        const tidbitId = linkElement?.href.split("/").pop();
+        const title = element.querySelector(".post-title")?.textContent;
+        const description =
+          element.querySelector(".post-description")?.textContent;
+        const timeElement = element.querySelector(".post-date");
+        const keywords =
+          element.getAttribute("data-keywords")?.split(",") || [];
+
+        // Extract actual date from the datetime attribute
+        // or fallback gracefully
+        let tidbitDate = new Date();
+        if (timeElement) {
+          const datetimeAttr = timeElement.getAttribute("datetime");
+          if (datetimeAttr) {
+            const parsedDate = new Date(datetimeAttr);
+            // Only use parsed date if it's valid
+            if (!isNaN(parsedDate.getTime())) {
+              tidbitDate = parsedDate;
+            }
+          }
+        }
+
+        if (tidbitId && title) {
+          allTidbits.push({
+            id: tidbitId,
+            data: {
+              title,
+              description: description || "",
+              keywords: filterToValidKeywords(
+                keywords.filter((k) => k.trim() !== ""),
+              ),
+              date: tidbitDate,
+              draft: false,
+            },
+            body: "",
+            collection: "tidbits",
+          });
+        }
+      });
+
     // Initialize WASM search UI
     const searchUI = new WasmPostSearchUI(allPosts);
     await searchUI.init();
+
+    // Initialize tag filters and title highlighting
+    resetActiveTagFilters();
+
+    // Set initial title highlighting
+    const postsWord = document.getElementById("posts-word");
+    if (postsWord) postsWord.classList.add("active");
+
+    // Initialize tag containers
+    switchTagContainers();
+
+    // Content toggle
+    const contentToggle = document.getElementById("content-toggle");
+    const toggleIcon = document.getElementById("toggle-icon");
+    const contentLabel = document.getElementById("content-label");
+    const postContainer = document.querySelector(".post-list");
+    const postContainerAll = document.querySelector(".post-list-all");
+    const tidbitContainer = document.querySelector(".tidbit-container");
+    const paginationContainer = document.getElementById("pagination-container");
+    const tidbitPaginationContainer = document.getElementById(
+      "tidbit-pagination-container",
+    );
+
+    // View toggle
+    const viewToggle = document.getElementById("view-toggle");
+    const paginationIcon = document.getElementById("pagination-icon");
+    const allIcon = document.getElementById("all-icon");
+    const viewLabel = document.getElementById("view-label");
+    let showingAll = false;
+
+    viewToggle?.addEventListener("click", () => {
+      showingAll = !showingAll;
+
+      if (showingTidbits) {
+        // Toggle tidbit views
+        const tidbitList = document.querySelector(
+          ".tidbit-list",
+        ) as HTMLElement | null;
+        const tidbitListAll = document.querySelector(
+          ".tidbit-list-all",
+        ) as HTMLElement | null;
+
+        if (showingAll) {
+          tidbitList?.style.setProperty("display", "none");
+          tidbitListAll?.style.setProperty("display", "block");
+          if (tidbitPaginationContainer) {
+            (tidbitPaginationContainer as HTMLElement).style.setProperty(
+              "display",
+              "none",
+            );
+          }
+        } else {
+          tidbitList?.style.setProperty("display", "block");
+          tidbitListAll?.style.setProperty("display", "none");
+          if (tidbitPaginationContainer) {
+            (tidbitPaginationContainer as HTMLElement).style.setProperty(
+              "display",
+              "block",
+            );
+          }
+        }
+      } else {
+        // Toggle post views
+        if (showingAll) {
+          (postContainer as HTMLElement | null)?.style.setProperty(
+            "display",
+            "none",
+          );
+          (postContainerAll as HTMLElement | null)?.style.setProperty(
+            "display",
+            "block",
+          );
+          (paginationContainer as HTMLElement | null)?.style.setProperty(
+            "display",
+            "none",
+          );
+        } else {
+          (postContainer as HTMLElement | null)?.style.setProperty(
+            "display",
+            "block",
+          );
+          (postContainerAll as HTMLElement | null)?.style.setProperty(
+            "display",
+            "none",
+          );
+          (paginationContainer as HTMLElement | null)?.style.setProperty(
+            "display",
+            "block",
+          );
+        }
+      }
+
+      // Update view toggle button
+      if (showingAll) {
+        (paginationIcon as HTMLElement | null)?.style.setProperty(
+          "display",
+          "none",
+        );
+        (allIcon as HTMLElement | null)?.style.setProperty("display", "inline");
+        if (viewLabel) viewLabel.textContent = "Paginate";
+      } else {
+        (paginationIcon as HTMLElement | null)?.style.setProperty(
+          "display",
+          "inline",
+        );
+        (allIcon as HTMLElement | null)?.style.setProperty("display", "none");
+        if (viewLabel) viewLabel.textContent = "View All";
+      }
+    });
+
+    contentToggle?.addEventListener("click", () => {
+      showingTidbits = !showingTidbits;
+
+      if (showingTidbits) {
+        // Show tidbits
+        (postContainer as HTMLElement | null)?.style.setProperty(
+          "display",
+          "none",
+        );
+        (postContainerAll as HTMLElement | null)?.style.setProperty(
+          "display",
+          "none",
+        );
+        (tidbitContainer as HTMLElement | null)?.style.setProperty(
+          "display",
+          "block",
+        );
+        (paginationContainer as HTMLElement | null)?.style.setProperty(
+          "display",
+          "none",
+        );
+
+        if (showingAll) {
+          (
+            document.querySelector(".tidbit-list") as HTMLElement | null
+          )?.style.setProperty("display", "none");
+          (
+            document.querySelector(".tidbit-list-all") as HTMLElement | null
+          )?.style.setProperty("display", "block");
+          (tidbitPaginationContainer as HTMLElement | null)?.style.setProperty(
+            "display",
+            "none",
+          );
+        } else {
+          (
+            document.querySelector(".tidbit-list") as HTMLElement | null
+          )?.style.setProperty("display", "block");
+          (
+            document.querySelector(".tidbit-list-all") as HTMLElement | null
+          )?.style.setProperty("display", "none");
+          (tidbitPaginationContainer as HTMLElement | null)?.style.setProperty(
+            "display",
+            "block",
+          );
+        }
+
+        // Update toggle button
+        toggleIcon?.classList.remove("fa-toggle-off");
+        toggleIcon?.classList.add("fa-toggle-on");
+        if (contentLabel) contentLabel.textContent = "Show Posts";
+
+        // Update title highlighting
+        const postsWord = document.getElementById("posts-word");
+        const tidbitsWord = document.getElementById("tidbits-word");
+        if (postsWord) postsWord.classList.remove("active");
+        if (tidbitsWord) tidbitsWord.classList.add("active");
+      } else {
+        // Show posts
+        (tidbitContainer as HTMLElement | null)?.style.setProperty(
+          "display",
+          "none",
+        );
+        (tidbitPaginationContainer as HTMLElement | null)?.style.setProperty(
+          "display",
+          "none",
+        );
+
+        if (showingAll) {
+          (postContainer as HTMLElement | null)?.style.setProperty(
+            "display",
+            "none",
+          );
+          (postContainerAll as HTMLElement | null)?.style.setProperty(
+            "display",
+            "block",
+          );
+          (paginationContainer as HTMLElement | null)?.style.setProperty(
+            "display",
+            "none",
+          );
+        } else {
+          (postContainer as HTMLElement | null)?.style.setProperty(
+            "display",
+            "block",
+          );
+          (postContainerAll as HTMLElement | null)?.style.setProperty(
+            "display",
+            "none",
+          );
+          (paginationContainer as HTMLElement | null)?.style.setProperty(
+            "display",
+            "block",
+          );
+        }
+
+        // Update toggle button
+        toggleIcon?.classList.remove("fa-toggle-on");
+        toggleIcon?.classList.add("fa-toggle-off");
+        if (contentLabel) contentLabel.textContent = "Show Tidbits";
+
+        // Update title highlighting
+        const postsWord = document.getElementById("posts-word");
+        const tidbitsWord = document.getElementById("tidbits-word");
+        if (postsWord) postsWord.classList.add("active");
+        if (tidbitsWord) tidbitsWord.classList.remove("active");
+      }
+
+      // Always update tag containers after toggling
+      switchTagContainers();
+
+      // Reset search and filters when switching
+      const searchInput = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement;
+      if (searchInput) {
+        searchInput.value = "";
+        const clearButton = document.getElementById(
+          "clear-search",
+        ) as HTMLElement;
+        if (clearButton) clearButton.style.display = "none";
+      }
+      resetActiveTagFilters();
+      performContextualSearch();
+    });
+
+    // Add search input listener
+    const searchInput = document.getElementById(
+      "search-input",
+    ) as HTMLInputElement;
+    searchInput?.addEventListener("input", () => {
+      performContextualSearch();
+
+      // Update clear button visibility
+      const clearButton = document.getElementById(
+        "clear-search",
+      ) as HTMLElement;
+      if (clearButton) {
+        clearButton.style.display = searchInput.value ? "block" : "none";
+      }
+    });
+
+    // Initial tag listener setup
+    attachTagListeners();
+    ensureTagStyling();
+
+    // Reset filters button
+    const resetButton = document.getElementById("reset-filters");
+    resetButton?.addEventListener("click", () => {
+      const searchInput = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement;
+      if (searchInput) {
+        searchInput.value = "";
+        // Update clear button visibility
+        const clearButton = document.getElementById(
+          "clear-search",
+        ) as HTMLElement;
+        if (clearButton) clearButton.style.display = "none";
+      }
+      resetActiveTagFilters();
+      performContextualSearch();
+    });
+
+    // Add clear search button functionality
+    const clearButton = document.getElementById("clear-search");
+    clearButton?.addEventListener("click", () => {
+      const searchInput = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement;
+      if (searchInput) {
+        searchInput.value = "";
+        clearButton.style.display = "none";
+      }
+      performContextualSearch();
+    });
   });
 </script>
 <style lang="scss">
@@ -196,6 +793,24 @@ const posts = filteredPosts.slice(0, postsPerPage);
 
   .page-title {
     margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .title-word {
+    transition: all 0.2s ease;
+    opacity: 0.6;
+
+    &.active {
+      opacity: 1;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .title-separator {
+    opacity: 0.4;
+    font-weight: 300;
   }
 
   .header-actions {
@@ -205,7 +820,8 @@ const posts = filteredPosts.slice(0, postsPerPage);
   }
 
   .archive-link,
-  .view-toggle {
+  .view-toggle,
+  .content-toggle {
     @include button-base;
     @include icon-size(0.9rem);
     display: flex;
@@ -296,35 +912,51 @@ const posts = filteredPosts.slice(0, postsPerPage);
   }
 
   .tags-wrap {
-    display: flex;
+    display: none;
     flex-wrap: wrap;
     gap: 0.5rem;
     padding-bottom: 0.5rem;
   }
+  .tags-wrap.visible {
+    display: flex;
+  }
 
-  .tag-filter {
-    display: inline-block;
-    padding: 0.3rem 0.8rem;
-    border-radius: 4px;
-    background-color: $button-bg;
-    color: $text-muted;
-    font-size: 0.85rem;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    margin-bottom: 0.5rem;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
+  .tidbit-tags-wrap {
+    display: none;
+  }
+
+  .post-tags-wrap {
+    display: flex;
+  }
+
+  .tidbit-tags-wrap {
+    display: none !important;
+  }
+
+  .tags-wrap .tag-filter {
+    display: inline-block !important;
+    padding: 0.3rem 0.8rem !important;
+    border-radius: 4px !important;
+    background-color: $button-bg !important;
+    color: $text-muted !important;
+    font-size: 0.85rem !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    margin-bottom: 0.5rem !important;
+    border: none !important;
+    cursor: pointer !important;
+    font-family: inherit !important;
+    box-sizing: border-box !important;
 
     &:hover {
-      background-color: $button-bg-hover;
-      color: $secondary;
+      background-color: $button-bg-hover !important;
+      color: $secondary !important;
     }
 
     &.active {
-      background-color: $border-medium;
-      color: $secondary;
-      font-weight: 500;
+      background-color: $border-medium !important;
+      color: $secondary !important;
+      font-weight: 500 !important;
     }
   }
 
@@ -378,6 +1010,11 @@ const posts = filteredPosts.slice(0, postsPerPage);
   }
 
   @media (max-width: 768px) {
+    .page-title {
+      gap: 0.5rem;
+      font-size: 1.8rem;
+    }
+
     .header-actions {
       flex-direction: column;
       align-items: flex-end;
@@ -389,5 +1026,9 @@ const posts = filteredPosts.slice(0, postsPerPage);
       font-size: 0.8rem;
       padding: 0.3rem 0.6rem;
     }
+  }
+
+  .tidbit-container {
+    margin: 1.5rem 0;
   }
 </style>

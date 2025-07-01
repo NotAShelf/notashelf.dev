@@ -26,7 +26,8 @@ export async function getStaticPaths() {
   const postsPerPage = 5;
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
 
-  // Generate pages starting from page 2 (page 1 is handled by index.astro)
+  // Generate pages starting from page 2
+  // Page 1 is handled by index.astro
   return Array.from({ length: totalPages - 1 }).map((_, i) => {
     const pageNum = i + 2; // Start from page 2
     return {
@@ -144,8 +145,8 @@ const allTags = [
 </BaseLayout>
 
 <script>
-  import type { PostEntry } from "../../lib/types";
-  import { WasmPostSearchUI } from "../../scripts/wasm-post-search-ui";
+  import type { PostEntry } from "@lib/types";
+  import { WasmPostSearchUI } from "@scripts/wasm-post-search-ui";
 
   document.addEventListener("DOMContentLoaded", async () => {
     // Pass all posts data to the WASM search UI
@@ -161,7 +162,8 @@ const allTags = [
       const timeElement = element.querySelector(".post-date");
       const keywords = element.getAttribute("data-keywords")?.split(",") || [];
 
-      // Extract actual date from the datetime attribute or fallback gracefully
+      // Extract actual date from the datetime attribute
+      // or fallback gracefully
       let postDate = new Date();
       if (timeElement) {
         const datetimeAttr = timeElement.getAttribute("datetime");
@@ -180,7 +182,9 @@ const allTags = [
           data: {
             title,
             description: description || "",
-            keywords: keywords.filter((k) => k.trim() !== ""),
+            keywords: keywords.filter(
+              (k) => k.trim() !== "",
+            ) as PostEntry["data"]["keywords"],
             date: postDate,
             draft: false,
             archived: false,

@@ -1,5 +1,33 @@
 import type { CollectionEntry } from "astro:content";
 
+// Allowed keywords for posts and tidbits (shared between schema and runtime)
+export const allowedKeywords = [
+  "thoughts",
+  "programming",
+  "software",
+  "tutorial",
+  "nix",
+  "federation",
+  "nixos",
+  "linux",
+  "security",
+  "flakes",
+  "rant",
+  "web",
+  "news",
+  "neovim",
+  "git",
+  "cli",
+  "bash",
+  "productivity",
+  "version-control",
+  "workflow",
+  "development",
+  "packaging",
+] as const;
+
+export type AllowedKeyword = (typeof allowedKeywords)[number];
+
 // Define explicit types for collections.
 export type PostEntry = CollectionEntry<"posts">;
 export type TidbitEntry = CollectionEntry<"tidbits">;

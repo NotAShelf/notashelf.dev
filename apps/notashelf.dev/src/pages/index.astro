@@ -29,7 +29,8 @@ let spotlightPost = null;
 let sidePosts: typeof featuredPosts = [];
 
 if (featuredPosts.length >= 3) {
-  // Only render PostSpotlight if we have at least 3 posts (1 spotlight + 2 side posts)
+  // Only render PostSpotlight if we have at least 3 posts
+  // -> 1 spotlight + 2 side posts
   spotlightPost = featuredPosts[0];
   sidePosts = featuredPosts.slice(1, 3);
 }
@@ -415,6 +416,7 @@ if (featuredPosts.length >= 3) {
       flex-direction: row;
       width: 100%;
       justify-content: center;
+      flex-wrap: wrap;
     }
   }
 
