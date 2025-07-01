@@ -76,7 +76,7 @@ describe("wasm.ts", () => {
         data: {
           title: "Test Post 1",
           description: "Test description 1",
-          keywords: ["javascript", "testing"],
+          keywords: ["programming", "software"],
           date: new Date("2024-01-01"),
           draft: false,
           archived: false,
@@ -88,7 +88,7 @@ describe("wasm.ts", () => {
         data: {
           title: "Test Post 2",
           description: "Test description 2",
-          keywords: ["typescript", "vitest"],
+          keywords: ["programming", "software"],
           date: new Date("2024-01-02"),
           draft: false,
           archived: false,
