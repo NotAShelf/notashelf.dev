@@ -119,6 +119,7 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
           id="search-input"
           placeholder="Search posts..."
           aria-label="Search posts"
+          autocomplete="off"
         />
         <button type="submit" class="search-button" id="search-button">
           <FontAwesomeIcon icon={faMagnifyingGlass} />
@@ -164,27 +165,37 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
     </div>
   </div>
 
-  <PostList posts={posts} className="post-list" />
-
-  <PostList
-    posts={filteredPosts}
-    className="post-list-all"
-    style="display: none;"
-  />
-
-  <div class="tidbit-container" style="display: none;">
-    <TidbitList tidbits={tidbits} className="tidbit-list" />
-    <TidbitList
-      tidbits={filteredTidbits}
-      className="tidbit-list-all"
+  <div id="posts-container">
+    <PostList posts={posts} className="post-list" />
+    <PostList
+      posts={filteredPosts}
+      className="post-list-all"
       style="display: none;"
     />
   </div>
 
-  <div class="no-results" style="display: none;">
+  <div id="tidbits-container" style="display: none;">
+    <div class="tidbit-container">
+      <TidbitList tidbits={tidbits} className="tidbit-list" />
+      <TidbitList
+        tidbits={filteredTidbits}
+        className="tidbit-list-all"
+        style="display: none;"
+      />
+    </div>
+  </div>
+
+  <div class="no-results no-results-posts" style="display: none;">
     <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
     <p>No posts found matching your criteria</p>
-    <button type="button" id="reset-filters" class="reset-filters">
+    <button type="button" id="reset-filters-posts" class="reset-filters">
+      Reset filters
+    </button>
+  </div>
+  <div class="no-results no-results-tidbits" style="display: none;">
+    <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
+    <p>No tidbits found matching your criteria</p>
+    <button type="button" id="reset-filters-tidbits" class="reset-filters">
       Reset filters
     </button>
   </div>
@@ -235,6 +246,7 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
     // Read initial state from URL params
     const viewParam = getQueryParam("view");
     const typeParam = getQueryParam("type");
+    const searchParam = getQueryParam("q");
     if (viewParam === "tidbits") {
       showingTidbits = true;
     } else {
@@ -245,6 +257,17 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
     } else {
       showingAll = false;
     }
+
+    // Initialize search input from URL param
+    document.addEventListener("DOMContentLoaded", () => {
+      const searchInputElem = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement;
+      if (searchInputElem && searchParam) {
+        searchInputElem.value = searchParam;
+        performContextualSearch();
+      }
+    });
 
     function switchTagContainers() {
       const postTagsWrap = document.querySelector(
@@ -280,11 +303,84 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
       }
     }
 
+    function enforceContainerVisibility() {
+      const postsContainer = document.getElementById(
+        "posts-container",
+      ) as HTMLElement | null;
+      const tidbitsContainer = document.getElementById(
+        "tidbits-container",
+      ) as HTMLElement | null;
+      const paginationContainer = document.getElementById(
+        "pagination-container",
+      ) as HTMLElement | null;
+      const tidbitPaginationContainer = document.getElementById(
+        "tidbit-pagination-container",
+      ) as HTMLElement | null;
+      const tidbitList = document.querySelector(
+        ".tidbit-list",
+      ) as HTMLElement | null;
+      const tidbitListAll = document.querySelector(
+        ".tidbit-list-all",
+      ) as HTMLElement | null;
+      const postList = document.querySelector(
+        ".post-list",
+      ) as HTMLElement | null;
+      const postListAll = document.querySelector(
+        ".post-list-all",
+      ) as HTMLElement | null;
+
+      if (showingTidbits) {
+        if (postsContainer) postsContainer.style.display = "none";
+        if (tidbitsContainer) tidbitsContainer.style.display = "block";
+        if (paginationContainer) paginationContainer.style.display = "none";
+        if (showingAll) {
+          if (tidbitList) tidbitList.style.display = "none";
+          if (tidbitListAll) tidbitListAll.style.display = "block";
+          if (tidbitPaginationContainer)
+            tidbitPaginationContainer.style.display = "none";
+        } else {
+          if (tidbitList) tidbitList.style.display = "block";
+          if (tidbitListAll) tidbitListAll.style.display = "none";
+          if (tidbitPaginationContainer)
+            tidbitPaginationContainer.style.display = "block";
+        }
+      } else {
+        if (postsContainer) postsContainer.style.display = "block";
+        if (tidbitsContainer) tidbitsContainer.style.display = "none";
+        if (tidbitPaginationContainer)
+          tidbitPaginationContainer.style.display = "none";
+        if (showingAll) {
+          if (postList) postList.style.display = "none";
+          if (postListAll) postListAll.style.display = "block";
+          if (paginationContainer) paginationContainer.style.display = "none";
+        } else {
+          if (postList) postList.style.display = "block";
+          if (postListAll) postListAll.style.display = "none";
+          if (paginationContainer) paginationContainer.style.display = "block";
+        }
+      }
+    }
+
     function performContextualSearch() {
-      const searchValue =
-        (
-          document.getElementById("search-input") as HTMLInputElement
-        )?.value.toLowerCase() || "";
+      const searchInputElem = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement;
+      const searchValue = searchInputElem?.value.toLowerCase() || "";
+
+      // Store search query in URL
+      if (searchInputElem) {
+        const params = new URLSearchParams(window.location.search);
+        if (searchInputElem.value) {
+          params.set("q", searchInputElem.value);
+        } else {
+          params.delete("q");
+        }
+        history.replaceState(
+          null,
+          "",
+          `${window.location.pathname}?${params.toString()}`,
+        );
+      }
       const currentContainer = showingTidbits
         ? ".tidbit-tags-wrap"
         : ".post-tags-wrap";
@@ -292,6 +388,16 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
         `${currentContainer} .tag-filter.active`,
       ) as HTMLButtonElement;
       const activeTag = activeTagButton?.getAttribute("data-tag") || "";
+
+      // Always hide both no-results elements before filtering
+      const noResultsPosts = document.querySelector(
+        ".no-results-posts",
+      ) as HTMLElement;
+      const noResultsTidbits = document.querySelector(
+        ".no-results-tidbits",
+      ) as HTMLElement;
+      if (noResultsPosts) noResultsPosts.style.display = "none";
+      if (noResultsTidbits) noResultsTidbits.style.display = "none";
 
       // Only search the currently visible list
       if (showingTidbits) {
@@ -323,6 +429,7 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
           );
         }
       }
+      enforceContainerVisibility();
     }
 
     function filterContent(
@@ -361,10 +468,22 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
         }
       });
 
-      // Show/hide no results message
-      const noResults = document.querySelector(".no-results") as HTMLElement;
-      if (noResults) {
-        noResults.style.display = visibleCount === 0 ? "block" : "none";
+      // Show/hide no results message for posts or tidbits
+      const noResultsPosts = document.querySelector(
+        ".no-results-posts",
+      ) as HTMLElement;
+      const noResultsTidbits = document.querySelector(
+        ".no-results-tidbits",
+      ) as HTMLElement;
+      if (selector.includes("tidbit-list")) {
+        if (noResultsTidbits)
+          noResultsTidbits.style.display =
+            visibleCount === 0 ? "block" : "none";
+        if (noResultsPosts) noResultsPosts.style.display = "none";
+      } else {
+        if (noResultsPosts)
+          noResultsPosts.style.display = visibleCount === 0 ? "block" : "none";
+        if (noResultsTidbits) noResultsTidbits.style.display = "none";
       }
     }
 
@@ -581,65 +700,6 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
       showingAll = !showingAll;
       setQueryParam("type", showingAll ? "all" : "paginated");
 
-      if (showingTidbits) {
-        // Toggle tidbit views
-        const tidbitList = document.querySelector(
-          ".tidbit-list",
-        ) as HTMLElement | null;
-        const tidbitListAll = document.querySelector(
-          ".tidbit-list-all",
-        ) as HTMLElement | null;
-
-        if (showingAll) {
-          tidbitList?.style.setProperty("display", "none");
-          tidbitListAll?.style.setProperty("display", "block");
-          if (tidbitPaginationContainer) {
-            (tidbitPaginationContainer as HTMLElement).style.setProperty(
-              "display",
-              "none",
-            );
-          }
-        } else {
-          tidbitList?.style.setProperty("display", "block");
-          tidbitListAll?.style.setProperty("display", "none");
-          if (tidbitPaginationContainer) {
-            (tidbitPaginationContainer as HTMLElement).style.setProperty(
-              "display",
-              "block",
-            );
-          }
-        }
-      } else {
-        // Toggle post views
-        if (showingAll) {
-          (postContainer as HTMLElement | null)?.style.setProperty(
-            "display",
-            "none",
-          );
-          (postContainerAll as HTMLElement | null)?.style.setProperty(
-            "display",
-            "block",
-          );
-          (paginationContainer as HTMLElement | null)?.style.setProperty(
-            "display",
-            "none",
-          );
-        } else {
-          (postContainer as HTMLElement | null)?.style.setProperty(
-            "display",
-            "block",
-          );
-          (postContainerAll as HTMLElement | null)?.style.setProperty(
-            "display",
-            "none",
-          );
-          (paginationContainer as HTMLElement | null)?.style.setProperty(
-            "display",
-            "block",
-          );
-        }
-      }
-
       // Update view toggle button
       if (showingAll) {
         (paginationIcon as HTMLElement | null)?.style.setProperty(
@@ -663,109 +723,19 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
       showingTidbits = !showingTidbits;
       setQueryParam("view", showingTidbits ? "tidbits" : "posts");
 
-      if (showingTidbits) {
-        // Show tidbits
-        (postContainer as HTMLElement | null)?.style.setProperty(
-          "display",
-          "none",
-        );
-        (postContainerAll as HTMLElement | null)?.style.setProperty(
-          "display",
-          "none",
-        );
-        (tidbitContainer as HTMLElement | null)?.style.setProperty(
-          "display",
-          "block",
-        );
-        (paginationContainer as HTMLElement | null)?.style.setProperty(
-          "display",
-          "none",
-        );
+      // Update toggle button
+      toggleIcon?.classList.toggle("fa-toggle-off", !showingTidbits);
+      toggleIcon?.classList.toggle("fa-toggle-on", showingTidbits);
+      if (contentLabel)
+        contentLabel.textContent = showingTidbits
+          ? "Show Posts"
+          : "Show Tidbits";
 
-        if (showingAll) {
-          (
-            document.querySelector(".tidbit-list") as HTMLElement | null
-          )?.style.setProperty("display", "none");
-          (
-            document.querySelector(".tidbit-list-all") as HTMLElement | null
-          )?.style.setProperty("display", "block");
-          (tidbitPaginationContainer as HTMLElement | null)?.style.setProperty(
-            "display",
-            "none",
-          );
-        } else {
-          (
-            document.querySelector(".tidbit-list") as HTMLElement | null
-          )?.style.setProperty("display", "block");
-          (
-            document.querySelector(".tidbit-list-all") as HTMLElement | null
-          )?.style.setProperty("display", "none");
-          (tidbitPaginationContainer as HTMLElement | null)?.style.setProperty(
-            "display",
-            "block",
-          );
-        }
-
-        // Update toggle button
-        toggleIcon?.classList.remove("fa-toggle-off");
-        toggleIcon?.classList.add("fa-toggle-on");
-        if (contentLabel) contentLabel.textContent = "Show Posts";
-
-        // Update title highlighting
-        const postsWord = document.getElementById("posts-word");
-        const tidbitsWord = document.getElementById("tidbits-word");
-        if (postsWord) postsWord.classList.remove("active");
-        if (tidbitsWord) tidbitsWord.classList.add("active");
-      } else {
-        // Show posts
-        (tidbitContainer as HTMLElement | null)?.style.setProperty(
-          "display",
-          "none",
-        );
-        (tidbitPaginationContainer as HTMLElement | null)?.style.setProperty(
-          "display",
-          "none",
-        );
-
-        if (showingAll) {
-          (postContainer as HTMLElement | null)?.style.setProperty(
-            "display",
-            "none",
-          );
-          (postContainerAll as HTMLElement | null)?.style.setProperty(
-            "display",
-            "block",
-          );
-          (paginationContainer as HTMLElement | null)?.style.setProperty(
-            "display",
-            "none",
-          );
-        } else {
-          (postContainer as HTMLElement | null)?.style.setProperty(
-            "display",
-            "block",
-          );
-          (postContainerAll as HTMLElement | null)?.style.setProperty(
-            "display",
-            "none",
-          );
-          (paginationContainer as HTMLElement | null)?.style.setProperty(
-            "display",
-            "block",
-          );
-        }
-
-        // Update toggle button
-        toggleIcon?.classList.remove("fa-toggle-on");
-        toggleIcon?.classList.add("fa-toggle-off");
-        if (contentLabel) contentLabel.textContent = "Show Tidbits";
-
-        // Update title highlighting
-        const postsWord = document.getElementById("posts-word");
-        const tidbitsWord = document.getElementById("tidbits-word");
-        if (postsWord) postsWord.classList.add("active");
-        if (tidbitsWord) tidbitsWord.classList.remove("active");
-      }
+      // Update title highlighting
+      const postsWord = document.getElementById("posts-word");
+      const tidbitsWord = document.getElementById("tidbits-word");
+      if (postsWord) postsWord.classList.toggle("active", !showingTidbits);
+      if (tidbitsWord) tidbitsWord.classList.toggle("active", showingTidbits);
 
       // Always update tag containers after toggling
       switchTagContainers();
