@@ -214,7 +214,38 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
   import { WasmPostSearchUI } from "@scripts/wasm-post-search-ui";
 
   document.addEventListener("DOMContentLoaded", async () => {
-    let showingTidbits = false;
+    // View state from URL params
+    function getQueryParam(name: string): string | null {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+    function setQueryParam(name: string, value: string) {
+      const params = new URLSearchParams(window.location.search);
+      params.set(name, value);
+      history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}?${params.toString()}`,
+      );
+    }
+
+    let showingTidbits: boolean = false;
+    let showingAll: boolean = false;
+
+    // Read initial state from URL params
+    const viewParam = getQueryParam("view");
+    const typeParam = getQueryParam("type");
+    if (viewParam === "tidbits") {
+      showingTidbits = true;
+    } else {
+      showingTidbits = false;
+    }
+    if (typeParam === "all") {
+      showingAll = true;
+    } else {
+      showingAll = false;
+    }
+
     function switchTagContainers() {
       const postTagsWrap = document.querySelector(
         ".post-tags-wrap",
@@ -262,18 +293,35 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
       ) as HTMLButtonElement;
       const activeTag = activeTagButton?.getAttribute("data-tag") || "";
 
+      // Only search the currently visible list
       if (showingTidbits) {
-        filterContent(
-          ".tidbit-container .post-dropdown-item",
-          searchValue,
-          activeTag,
-        );
+        if (showingAll) {
+          filterContent(
+            ".tidbit-list-all .post-dropdown-item",
+            searchValue,
+            activeTag,
+          );
+        } else {
+          filterContent(
+            ".tidbit-list .post-dropdown-item",
+            searchValue,
+            activeTag,
+          );
+        }
       } else {
-        filterContent(
-          ".post-list .post-dropdown-item, .post-list-all .post-dropdown-item",
-          searchValue,
-          activeTag,
-        );
+        if (showingAll) {
+          filterContent(
+            ".post-list-all .post-dropdown-item",
+            searchValue,
+            activeTag,
+          );
+        } else {
+          filterContent(
+            ".post-list .post-dropdown-item",
+            searchValue,
+            activeTag,
+          );
+        }
       }
     }
 
@@ -497,9 +545,16 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
     // Initialize tag filters and title highlighting
     resetActiveTagFilters();
 
-    // Set initial title highlighting
+    // Set initial title highlighting and containers based on URL params
     const postsWord = document.getElementById("posts-word");
-    if (postsWord) postsWord.classList.add("active");
+    const tidbitsWord = document.getElementById("tidbits-word");
+    if (showingTidbits) {
+      if (postsWord) postsWord.classList.remove("active");
+      if (tidbitsWord) tidbitsWord.classList.add("active");
+    } else {
+      if (postsWord) postsWord.classList.add("active");
+      if (tidbitsWord) tidbitsWord.classList.remove("active");
+    }
 
     // Initialize tag containers
     switchTagContainers();
@@ -521,10 +576,10 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
     const paginationIcon = document.getElementById("pagination-icon");
     const allIcon = document.getElementById("all-icon");
     const viewLabel = document.getElementById("view-label");
-    let showingAll = false;
 
     viewToggle?.addEventListener("click", () => {
       showingAll = !showingAll;
+      setQueryParam("type", showingAll ? "all" : "paginated");
 
       if (showingTidbits) {
         // Toggle tidbit views
@@ -601,10 +656,12 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
         (allIcon as HTMLElement | null)?.style.setProperty("display", "none");
         if (viewLabel) viewLabel.textContent = "View All";
       }
+      performContextualSearch();
     });
 
     contentToggle?.addEventListener("click", () => {
       showingTidbits = !showingTidbits;
+      setQueryParam("view", showingTidbits ? "tidbits" : "posts");
 
       if (showingTidbits) {
         // Show tidbits
