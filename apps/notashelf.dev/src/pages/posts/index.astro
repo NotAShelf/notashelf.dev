@@ -520,25 +520,9 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
       document.querySelectorAll(".tags-wrap").forEach((container) => {
         const wrap = container as HTMLElement;
         if (wrap.style.display !== "none") {
-          wrap.style.display = "flex";
-          wrap.style.flexWrap = "wrap";
-          wrap.style.gap = "0.5rem";
-          wrap.style.paddingBottom = "0.5rem";
-
+          wrap.classList.add("tags-wrap");
           wrap.querySelectorAll(".tag-filter").forEach((button) => {
-            const btn = button as HTMLElement;
-            btn.style.display = "inline-block";
-            btn.style.padding = "0.3rem 0.8rem";
-            btn.style.borderRadius = "4px";
-            btn.style.border = "none";
-            btn.style.cursor = "pointer";
-            btn.style.fontSize = "0.85rem";
-            btn.style.textDecoration = "none";
-            btn.style.transition = "all 0.2s ease";
-            btn.style.marginBottom = "0.5rem";
-            btn.style.fontFamily = "inherit";
-            btn.style.boxSizing = "border-box";
-            btn.style.margin = "0";
+            (button as HTMLElement).classList.add("tag-filter");
           });
         }
       });
@@ -746,10 +730,7 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
       ) as HTMLInputElement;
       if (searchInput) {
         searchInput.value = "";
-        const clearButton = document.getElementById(
-          "clear-search",
-        ) as HTMLElement;
-        if (clearButton) clearButton.style.display = "none";
+        toggleClearButton(false);
       }
       resetActiveTagFilters();
       performContextualSearch();
@@ -761,19 +742,21 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
     ) as HTMLInputElement;
     searchInput?.addEventListener("input", () => {
       performContextualSearch();
-
-      // Update clear button visibility
-      const clearButton = document.getElementById(
-        "clear-search",
-      ) as HTMLElement;
-      if (clearButton) {
-        clearButton.style.display = searchInput.value ? "block" : "none";
-      }
+      toggleClearButton(!!searchInput.value);
     });
 
     // Initial tag listener setup
     attachTagListeners();
     ensureTagStyling();
+
+    function toggleClearButton(enabled?: boolean) {
+      const clearButton = document.getElementById(
+        "clear-search",
+      ) as HTMLElement | null;
+      if (clearButton) {
+        clearButton.style.display = enabled ? "block" : "none";
+      }
+    }
 
     // Reset filters button
     const resetButton = document.getElementById("reset-filters");
@@ -783,11 +766,7 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
       ) as HTMLInputElement;
       if (searchInput) {
         searchInput.value = "";
-        // Update clear button visibility
-        const clearButton = document.getElementById(
-          "clear-search",
-        ) as HTMLElement;
-        if (clearButton) clearButton.style.display = "none";
+        toggleClearButton(false);
       }
       resetActiveTagFilters();
       performContextualSearch();
@@ -801,9 +780,8 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
       ) as HTMLInputElement;
       if (searchInput) {
         searchInput.value = "";
-        clearButton.style.display = "none";
+        toggleClearButton(false);
       }
-      performContextualSearch();
     });
   });
 </script>
