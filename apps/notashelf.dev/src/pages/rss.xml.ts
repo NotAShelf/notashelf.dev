@@ -93,12 +93,9 @@ export async function GET(): Promise<Response> {
         new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf(),
     );
 
-  const sortedTidbits = tidbits
-    .filter((tidbit: TidbitEntry) => !tidbit.data.draft)
-    .sort(
-      (a: TidbitEntry, b: TidbitEntry) =>
-        new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf(),
-    );
+  const filteredTidbits = tidbits.filter(
+    (tidbit: TidbitEntry) => !tidbit.data.draft,
+  );
 
   const postItems = await Promise.all(
     sortedPosts.map(async (post) => {
@@ -134,7 +131,7 @@ export async function GET(): Promise<Response> {
   );
 
   const tidbitItems = await Promise.all(
-    sortedTidbits.map(async (tidbit: TidbitEntry) => {
+    filteredTidbits.map(async (tidbit: TidbitEntry) => {
       const isMdx = tidbit.id.endsWith(".mdx");
       const tidbitContent = tidbit.body || "";
       const tidbitUrl = `${site}/tidbits/${tidbit.id}`;
