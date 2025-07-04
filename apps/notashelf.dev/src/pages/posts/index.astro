@@ -390,47 +390,37 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
       const activeTag = activeTagButton?.getAttribute("data-tag") || "";
 
       // Always hide both no-results elements before filtering
-      const noResultsPosts = document.querySelector(
-        ".no-results-posts",
-      ) as HTMLElement;
-      const noResultsTidbits = document.querySelector(
-        ".no-results-tidbits",
-      ) as HTMLElement;
       if (noResultsPosts) noResultsPosts.style.display = "none";
       if (noResultsTidbits) noResultsTidbits.style.display = "none";
 
       // Only search the currently visible list
-      if (showingTidbits) {
-        if (showingAll) {
-          filterContent(
-            ".tidbit-list-all .post-dropdown-item",
-            searchValue,
-            activeTag,
-          );
+      function getFilterSelector(showingTidbits: boolean, showingAll: boolean) {
+        if (showingTidbits) {
+          return showingAll
+            ? ".tidbit-list-all .post-dropdown-item"
+            : ".tidbit-list .post-dropdown-item";
         } else {
-          filterContent(
-            ".tidbit-list .post-dropdown-item",
-            searchValue,
-            activeTag,
-          );
-        }
-      } else {
-        if (showingAll) {
-          filterContent(
-            ".post-list-all .post-dropdown-item",
-            searchValue,
-            activeTag,
-          );
-        } else {
-          filterContent(
-            ".post-list .post-dropdown-item",
-            searchValue,
-            activeTag,
-          );
+          return showingAll
+            ? ".post-list-all .post-dropdown-item"
+            : ".post-list .post-dropdown-item";
         }
       }
+
+      filterContent(
+        getFilterSelector(showingTidbits, showingAll),
+        searchValue,
+        activeTag,
+      );
       enforceContainerVisibility();
     }
+
+    // Cache no-results elements at the top-level to avoid repeated queries
+    const noResultsPosts = document.querySelector(
+      ".no-results-posts",
+    ) as HTMLElement;
+    const noResultsTidbits = document.querySelector(
+      ".no-results-tidbits",
+    ) as HTMLElement;
 
     function filterContent(
       selector: string,
@@ -666,13 +656,6 @@ const tidbits = filteredTidbits.slice(0, tidbitsPerPage);
     const contentToggle = document.getElementById("content-toggle");
     const toggleIcon = document.getElementById("toggle-icon");
     const contentLabel = document.getElementById("content-label");
-    const postContainer = document.querySelector(".post-list");
-    const postContainerAll = document.querySelector(".post-list-all");
-    const tidbitContainer = document.querySelector(".tidbit-container");
-    const paginationContainer = document.getElementById("pagination-container");
-    const tidbitPaginationContainer = document.getElementById(
-      "tidbit-pagination-container",
-    );
 
     // View toggle
     const viewToggle = document.getElementById("view-toggle");
