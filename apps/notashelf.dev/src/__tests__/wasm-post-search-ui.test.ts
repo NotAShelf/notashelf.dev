@@ -51,7 +51,7 @@ describe("wasm-post-search-ui", () => {
         data: {
           title: "JavaScript Testing",
           description: "Learn about testing in JavaScript",
-          keywords: ["javascript", "testing"],
+          keywords: ["programming", "software"],
           date: new Date("2024-01-01"),
           draft: false,
           archived: false,
@@ -63,7 +63,7 @@ describe("wasm-post-search-ui", () => {
         data: {
           title: "TypeScript Guide",
           description: "TypeScript development guide",
-          keywords: ["typescript", "development"],
+          keywords: ["programming", "software"],
           date: new Date("2024-01-02"),
           draft: false,
           archived: false,
@@ -90,12 +90,12 @@ describe("wasm-post-search-ui", () => {
         </li>
       </ul>
       <ul class="post-list-all">
-        <li class="post-dropdown-item" data-post-id="post-1" data-keywords="javascript,testing">
+        <li class="post-dropdown-item" data-post-id="post-1" data-keywords="programming,software">
           <div class="post-title">JavaScript Testing</div>
           <div class="post-description">Learn about testing in JavaScript</div>
           <time class="post-date" datetime="2024-01-01T00:00:00Z">2024-01-01</time>
         </li>
-        <li class="post-dropdown-item" data-post-id="post-2" data-keywords="typescript,development">
+        <li class="post-dropdown-item" data-post-id="post-2" data-keywords="programming,software">
           <div class="post-title">TypeScript Guide</div>
           <div class="post-description">TypeScript development guide</div>
           <time class="post-date" datetime="2024-01-02T00:00:00Z">2024-01-02</time>

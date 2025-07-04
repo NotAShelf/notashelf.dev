@@ -1,0 +1,221 @@
+---
+import PostLayout from "@layouts/PostLayout.astro";
+import { convertTidbitDates, getTidbitStaticPaths } from "@lib/tidbitUtils";
+import type { TidbitEntry } from "@lib/types";
+import { render } from "astro:content";
+
+export const prerender = true;
+export async function getStaticPaths() {
+  return getTidbitStaticPaths();
+}
+
+const { entry } = Astro.props as { entry: TidbitEntry };
+const { Content } = await render(entry);
+const convertedData = convertTidbitDates(entry.data, { throwOnError: false });
+// Fall back to raw data with stringified dates if conversion fails
+const frontmatter = convertedData ?? {
+  ...entry.data,
+  date: entry.data.date?.toString() ?? new Date().toISOString(),
+};
+---
+
+<PostLayout frontmatter={frontmatter}>
+  <Content />
+</PostLayout>
+
+<style lang="scss">
+  @use "../../styles/global" as *;
+  @use "sass:color";
+
+  .tidbit-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .tidbit-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid color.adjust($primary, $lightness: 8%);
+  }
+
+  .tidbit-badge {
+    display: inline-block;
+    background: color.adjust($primary, $lightness: -3%);
+    color: var(--text-subtle);
+    padding: 0.3rem 0.8rem;
+    border-radius: 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+    border: 1px solid color.adjust($primary, $lightness: 5%);
+  }
+
+  .tidbit-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    color: var(--secondary);
+    line-height: 1.2;
+  }
+
+  .tidbit-date {
+    display: block;
+    font-size: 1rem;
+    color: var(--text-subtle);
+    margin-bottom: 1rem;
+  }
+
+  .tidbit-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .tidbit-tag {
+    background: color.adjust($primary, $lightness: -3%);
+    color: var(--text-subtle);
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    border: 1px solid color.adjust($primary, $lightness: 5%);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: color.adjust($primary, $lightness: -1%);
+      color: var(--secondary);
+    }
+  }
+
+  .tidbit-body {
+    line-height: 1.7;
+    color: var(--secondary);
+    margin-bottom: 2rem;
+
+    :global(p) {
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    :global(h1),
+    :global(h2),
+    :global(h3),
+    :global(h4),
+    :global(h5),
+    :global(h6) {
+      margin: 2rem 0 1rem 0;
+      color: var(--secondary);
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    :global(code) {
+      background: color.adjust($primary, $lightness: -2%);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      border: 1px solid color.adjust($primary, $lightness: 5%);
+      font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+    }
+
+    :global(pre) {
+      background: color.adjust($primary, $lightness: -2%);
+      padding: 1.5rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid color.adjust($primary, $lightness: 5%);
+      margin: 1.5rem 0;
+
+      :global(code) {
+        background: none;
+        padding: 0;
+        border: none;
+        font-size: 0.9rem;
+      }
+    }
+
+    :global(ul),
+    :global(ol) {
+      margin: 1rem 0;
+      padding-left: 2rem;
+    }
+
+    :global(li) {
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
+    }
+
+    :global(blockquote) {
+      margin: 1.5rem 0;
+      padding: 1rem 1.5rem;
+      border-left: 4px solid color.adjust($primary, $lightness: 10%);
+      background: color.adjust($primary, $lightness: 1%);
+      border-radius: 0 4px 4px 0;
+
+      :global(p) {
+        margin: 0;
+        font-style: italic;
+      }
+    }
+  }
+
+  .tidbit-footer {
+    padding-top: 1.5rem;
+    border-top: 1px solid color.adjust($primary, $lightness: 8%);
+    text-align: center;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--text-subtle);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    border: 1px solid color.adjust($primary, $lightness: 8%);
+
+    &:hover {
+      color: var(--secondary);
+      background: color.adjust($primary, $lightness: 2%);
+      border-color: color.adjust($primary, $lightness: 12%);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .tidbit-content {
+      padding: 1rem;
+    }
+
+    .tidbit-title {
+      font-size: 1.5rem;
+    }
+
+    .tidbit-tags {
+      justify-content: center;
+    }
+
+    .tidbit-body {
+      :global(p) {
+        font-size: 1rem;
+      }
+
+      :global(pre) {
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+    }
+  }
+</style>

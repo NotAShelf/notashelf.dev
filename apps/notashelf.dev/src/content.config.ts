@@ -1,16 +1,28 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
+import { allowedKeywords } from "./lib/types";
 
 const posts = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./posts" }),
+  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./writing/posts" }),
   schema: z.object({
     title: z.string().max(99),
     description: z.string().optional(),
     date: z.coerce.date(),
     updated: z.coerce.date().optional(),
-    keywords: z.array(z.string()).default([]),
+    keywords: z.array(z.enum([...allowedKeywords])).default([]),
     draft: z.boolean().default(false),
     archived: z.boolean().optional().default(false),
+  }),
+});
+
+const tidbits = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./writing/tidbits" }),
+  schema: z.object({
+    title: z.string().max(80),
+    description: z.string().optional(),
+    date: z.coerce.date(),
+    keywords: z.array(z.enum([...allowedKeywords])).default([]),
+    draft: z.boolean().default(false),
   }),
 });
 
@@ -41,6 +53,7 @@ const affiliations = defineCollection({
 
 export const collections = {
   posts,
+  tidbits,
   projects,
   affiliations,
 };

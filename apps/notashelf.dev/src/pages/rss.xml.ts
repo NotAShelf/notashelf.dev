@@ -1,11 +1,16 @@
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
-import type { CollectionEntry } from "astro:content";
+
+import type { PostEntry, TidbitEntry } from "@lib/types";
+
+// Render post contents in the RSS feed
 import { remark } from "remark";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
+
+// For MDX support
 import { compile } from "@mdx-js/mdx";
 import remarkMdx from "remark-mdx";
 
@@ -56,6 +61,7 @@ async function mdxToHtml(content: string): Promise<string> {
     return result.toString();
   } catch {
     // If MDX processing fails, fall back to regular markdown
+    // This'll leave some MDX syntax as is without converting it, but that's fine.
     return markdownToHtml(content);
   }
 }
@@ -74,13 +80,22 @@ export async function GET(): Promise<Response> {
   const site = import.meta.env.SITE || "https://notashelf.dev";
   const feedUrl = `${site}/rss.xml`;
 
-  const posts: CollectionEntry<"posts">[] = await getCollection("posts");
+  // const posts: CollectionEntry<"posts">[] = await getCollection("posts");
+  const posts: PostEntry[] = (await getCollection("posts")) as PostEntry[];
+  const tidbits: TidbitEntry[] = (await getCollection(
+    "tidbits",
+  )) as TidbitEntry[];
+
   const sortedPosts = posts
     .filter((post) => !post.data.draft)
     .sort(
       (a, b) =>
         new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf(),
     );
+
+  const filteredTidbits = tidbits.filter(
+    (tidbit: TidbitEntry) => !tidbit.data.draft,
+  );
 
   const postItems = await Promise.all(
     sortedPosts.map(async (post) => {
@@ -115,12 +130,40 @@ export async function GET(): Promise<Response> {
     }),
   );
 
+  const tidbitItems = await Promise.all(
+    filteredTidbits.map(async (tidbit: TidbitEntry) => {
+      const isMdx = tidbit.id.endsWith(".mdx");
+      const tidbitContent = tidbit.body || "";
+      const tidbitUrl = `${site}/tidbits/${tidbit.id}`;
+
+      let htmlContent = isMdx
+        ? await mdxToHtml(tidbitContent)
+        : await markdownToHtml(tidbitContent);
+
+      htmlContent = fixRelativeUrls(htmlContent, tidbitUrl);
+
+      return {
+        title: `[Tidbit] ${tidbit.data.title}`,
+        pubDate: new Date(tidbit.data.date),
+        description: tidbit.data.title,
+        content: htmlContent,
+        link: tidbitUrl,
+        categories: tidbit.data.keywords,
+      };
+    }),
+  );
+
+  // Combine and sort all items by date
+  const allItems = [...postItems, ...tidbitItems].sort(
+    (a, b) => b.pubDate.valueOf() - a.pubDate.valueOf(),
+  );
+
   return rss({
     title: "NotAShelf's Blog",
     description:
-      "Personal notes on Linux, Nix, NixOS, System Administration and Programming",
+      "Personal notes, tidbits, and insights on Linux, Nix, NixOS, System Administration and Programming",
     site: site,
-    items: postItems,
+    items: allItems,
     customData: `
       <language>en-us</language>
       <atom:link href="${feedUrl}" rel="self" type="application/rss+xml" />
