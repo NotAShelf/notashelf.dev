@@ -13,9 +13,9 @@ const { entry } = Astro.props as { entry: TidbitEntry };
 const { Content } = await render(entry);
 const convertedData = convertTidbitDates(entry.data, { throwOnError: false });
 // Fall back to raw data with stringified dates if conversion fails
-const frontmatter = convertedData || {
+const frontmatter = convertedData ?? {
   ...entry.data,
-  date: entry.data.date?.toString() || new Date().toISOString(),
+  date: entry.data.date?.toString() ?? new Date().toISOString(),
 };
 ---
 
