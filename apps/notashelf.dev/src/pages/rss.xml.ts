@@ -74,6 +74,14 @@ export async function GET(): Promise<Response> {
   const site = import.meta.env.SITE || "https://notashelf.dev";
   const feedUrl = `${site}/rss.xml`;
 
+  // We get the build date from an environment variable if available for the
+  // sake of a truly reproducible build. This helps ensure that we do NOT
+  // trick the RSS feed readers into believing the feed was updated each
+  // and every single time I re-deploy my site.
+  const buildDate = import.meta.env.BUILD_DATE
+    ? new Date(import.meta.env.BUILD_DATE)
+    : new Date();
+
   const posts: CollectionEntry<"posts">[] = await getCollection("posts");
   const sortedPosts = posts
     .filter((post) => !post.data.draft)
@@ -123,6 +131,7 @@ export async function GET(): Promise<Response> {
     items: postItems,
     customData: `
       <language>en-us</language>
+      <lastBuildDate>${buildDate.toUTCString()}</lastBuildDate>
       <atom:link href="${feedUrl}" rel="self" type="application/rss+xml" />
     `,
     stylesheet: "/rss-styles.xsl",

@@ -240,6 +240,9 @@ export default defineConfig({
       "import.meta.env.SITE_SRC": JSON.stringify(
         process.env.SITE_SRC || "https://github.com/notashelf/notashelf.dev",
       ),
+      "import.meta.env.BUILD_DATE": JSON.stringify(
+        process.env.BUILD_DATE || new Date(),
+      ),
     },
   },
 });
