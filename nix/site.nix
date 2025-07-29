@@ -45,20 +45,22 @@
 
       cargoLock.lockFile = ../packages/wasm-utils/Cargo.lock;
 
-      WASM_PACK_CACHE = ".wasm-pack-cache";
+      env.WASM_PACK_CACHE = ".wasm-pack-cache";
 
       postBuild = ''
         mkdir -p $out/lib
         wasm-pack build --release --target web --out-dir $out --out-name wasm-utils
       '';
     };
+
+  buildDate = builtins.concatStringsSep "-" (builtins.match "(.{4})(.{2})(.{2}).*" self.lastModifiedDate);
 in
   stdenv.mkDerivation (finalAttrs: {
-    pname = "build-site";
+    pname = "notashelf-dev";
     version =
       if (self ? rev)
       then (builtins.substring 0 7 self.rev)
-      else "main";
+      else buildDate;
 
     src = let
       sp = ../.;
@@ -123,6 +125,7 @@ in
       ASTRO_TELEMETRY_DISABLED = true;
       GIT_REV = finalAttrs.version;
       SITE_SRC = "https://github.com/notashelf/notashelf.dev";
+      BUILD_DATE = buildDate;
     };
 
     meta = {
