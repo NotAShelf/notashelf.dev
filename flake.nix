@@ -23,7 +23,7 @@
       pkgs = pkgsForEach.${system};
     in {
       default = self.devShells.${system}.site;
-      site = pkgs.callPackage ./nix/shell.nix {};
+      site = pkgs.callPackage ./nix/shell.nix {inherit self;};
     });
 
     packages = forEachSystem (system: let
