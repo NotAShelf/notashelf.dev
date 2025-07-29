@@ -24,13 +24,12 @@ configuration easily.
 
 ## Why would you need to extend `nixpkgs.lib`
 
-While the library functions provided by nixpkgs is quite extensive and usually
-suits my needs, I sometimes feel the need to define my own function or wrap an
-existing function to complete a task. Normally we can handle the process of a
+While the library functions provided by nixpkgs are quite extensive and usually
+suit my needs, I sometimes feel the need to define my own function or wrap an
+existing function to complete a task. Normally, we can handle the process of a
 function inside a simple `let in` and be well off, but there may be times you
-need to re-use the existing function across your configuration file. In such
-times, you might want to either write your own lib and inherit it at the source
-of your `flake.nix` to then inherit them across your configuration.
+need to re-use the existing function across your configuration files. In such
+times, you might want to define your own lib at the root of your `flake.nix` and then inherit it across your configuration.
 
 ## Extending `nixpkgs.lib`
 

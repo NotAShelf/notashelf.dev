@@ -30,7 +30,7 @@ everything you might need to set up a stateless NixOS system on your machines.
 
 ## Reproduction steps
 
-I've had to go through a few guides before I could figure out a set up that I
+I've had to go through a few guides before I could figure out a setup that I
 really like. The final decision was that I would have an encrypted disk that
 restores itself to its former state during boot. Is it fast? Absolutely not. But
 it sure as hell is cool. And stateless!
@@ -126,7 +126,7 @@ case of course, but I prefer having the option.
 ```bash
 btrfs subvolume snapshot -r /mnt/root /mnt/root-blank
 
-# Make sure to unmount, otherwise nixos-rebuild will try to remove /mnt
+Make sure to unmount; otherwise, nixos-rebuild will try to remove /mnt
 # and fail
 umount /mnt
 ```

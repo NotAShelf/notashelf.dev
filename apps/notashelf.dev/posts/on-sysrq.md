@@ -1,6 +1,6 @@
 ---
 title: "On SysRq"
-description: "Understanding, using or disabling SysRq as per your needs"
+description: "Understanding, using, or disabling SysRq as per your needs"
 date: 2024-05-11
 archived: true
 ---
@@ -23,16 +23,16 @@ are your PrtSc key (located somewhat close to your Numpad) doubles as it.
 ## What can I do with it?
 
 SysRq is most often used to recover from and debug an unresponsive system,
-especially if you are trying to avoid doing a hard shutdown - which could
-potentially cause data corruption - and is recommended over a hard shutdown.
+especially if you are trying to avoid doing a hard shutdown—which could
+potentially cause data corruption—and is recommended over a hard shutdown.
 Using the SysRq key, you can communicate with the Linux kernel directly and
-reboot your _correctly_, without potentially nuking active disk writes.
+reboot your system correctly, without potentially nuking active disk writes.
 
 ## How do I use SysRq?
 
 You should first check if your system is configured to support SysRq. Some
 distros and users (such as myself) decide to disable SysRq because it is a
-potential security flaw.
+potential security risk.
 
 To check whether your system is allowed to use SysRq, simply run
 
@@ -46,7 +46,7 @@ or whether or not it is allowed.
 ### Possible Values
 
 The [kernel documentation](https://docs.kernel.org/admin-guide/sysrq.html) gives
-you a neat list of values and what they allow.
+you a neat list of values and what they allow:
 
 | Value | Bitmask | Description                                           |
 | ----- | ------- | ----------------------------------------------------- |
@@ -63,7 +63,7 @@ you a neat list of values and what they allow.
 
 ### Setting SysRq Bitmask
 
-You can set SysRq to `0` in order to disable it, `1` to allow ALL functionality
+You can set SysRq to `0` in order to disable it, `1` to allow ALL functionality,
 and to a value `>= 1` to set a bitmask[^2] of allowed SysRq functions.
 
 ```bash
@@ -90,7 +90,7 @@ Which would perform the following bitwise OR operation:
 ```
 
 This **hexadecimal** value would then be converted to **decimal** (which the
-kernel commandline expects) as `146.` Therefore you would run the following
+kernel command line expects) as `146`. Therefore, you would run the following
 command to set your desired bitmask:
 
 ```bash
@@ -100,11 +100,11 @@ echo 146 > /proc/sys/kernel/sysrq
 ### Persisting SysRq
 
 You can enable `SysRq` with one command, as described above. Do keep in mind
-that running e.g. `echo 1 > /proc/sys/kernel/sysrq` will enable SysRq only until
+that running, e.g., `echo 1 > /proc/sys/kernel/sysrq` will enable SysRq only until
 reboot and its state will not persist across reboots.
 
 On traditional distros, you can make it persistent by adding
-`"kernel.sysrq = 1"` at the end of `/etc/sysctl.d/99-sysctl.conf`.
+`kernel.sysrq = 1` at the end of `/etc/sysctl.d/99-sysctl.conf`.
 
 On NixOS, you will need to set `boot.kernel.sysctl."kernel.sysrq" = 1;` in your
 `configuration.nix`. In some cases, you might need to _force_ this value in case
@@ -117,11 +117,11 @@ boot.kernel.sysctl."kernel.sysrq" = lib.mkForce 1;
 ## Useful applications of SysRq
 
 There are various applications of SysRq based on the bitmask range it was
-allowed. Below are the two most common ones that I came across.
+allowed. Below are the two most common ones that I have come across.
 
 ### Rebooting with SysRq
 
-Earlier I have mentioned that SysRq is often used to perform a proper reboot and
+Earlier I mentioned that SysRq is often used to perform a proper reboot and
 to recover a frozen system. With a permissive enough[^3] bitmask, you can use
 the following idiom: "Reboot Even If System Utterly Broken" (also referred to as
 "REISUB").
@@ -136,21 +136,19 @@ the following idiom: "Reboot Even If System Utterly Broken" (also referred to as
 > Please be aware that "REISUB" itself is just a mnemonic, not any kind of
 > general recommendation for the key press sequence to take back control of an
 > unresponsive system. You should not blindly press these sequences each time
-> without knowing their actual function as noted below[^4]
+> without knowing their actual function as noted below.[^4]
 
-To do this on your system, you what you need to do is to hold down the `ALT` key
-and the `SysRq` keys at the same time, hit the next queued letter while holding
-the key combination, and then release. Repeat this for each letter (command) in
+To do this on your system, you need to hold down the `ALT` and `SysRq` keys at the same time, press the next letter in the sequence, then release. Repeat this for each letter (command) in
 the idiom. To summarize, running the `REISUB` sequence would require you to hold
-down `ALT + SysRq` 6 **separate** times
+down `ALT + SysRq` 6 **separate** times.
 
 ### Invoking OOM Killer
 
 SysRq can also be used to invoke the OOM (out-of-memory) killer without causing
 a kernel panic if there is nothing to kill. If your system is frozen due to
-intense memory pressure, this could be an useful way to quickly get yourself out
-of a status that might corrupt your data. Simply run `ALT + SysRq + f` and hope
-that OOM killer picks something recoverable.
+intense memory pressure, this could be a useful way to quickly get yourself out
+of a situation that might corrupt your data. Simply run `ALT + SysRq + f` and hope
+that the OOM killer picks something recoverable.
 
 > Keep in mind that the OOM killer, despite its well-meaning heuristics, can be
 > unpredictable and lead to irreversible damage. Do not use this key combination
@@ -161,13 +159,13 @@ that OOM killer picks something recoverable.
 Those who have gone through my system configuration might have noticed that I
 force SysRq to be disabled with `kernel.sysrq` set to `0`.
 
-That is because I never had the need to use SysRq. After years on Linux, I never
+That is because I have never had the need to use SysRq. After years on Linux, I never
 had to recover from a system freezing over a long duration. It either lives, or
-it dies. Recently I have configured OOM killer daemon to automatically kill
-useless applications such as Electron, that tend to drain my memory - especially
-on low-end systems because despite what devs might say, **electron still
-sucks**. As such, I do not think that SysRq is worth the potential security flaw
-right, but that question is for you to answer yourself.
+it dies. Recently, I have configured an OOM killer daemon to automatically kill
+useless applications such as Electron, which tend to drain my memory—especially
+on low-end systems, because despite what devs might say, **Electron still
+sucks**. As such, I do not think that SysRq is worth the potential security risk,
+but that question is for you to answer yourself.
 
 [^1]: Quite literally what it is called in the
     [kernel documentation](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/sysrq.rst)

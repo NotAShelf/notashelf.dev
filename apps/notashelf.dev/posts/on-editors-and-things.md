@@ -6,9 +6,9 @@ keywords: ["software", "neovim", "news"]
 ---
 
 Hi all, good news first. I am a **Release Editor for NixOS 25.05**. This is a
-bit difficult for me to talk about, since I do not know what exactly what it
-entails _yet_ but know that I am excited about it, and I wanted to share it with
-you, dear reader. It has been one _hell_ of a journey so far, I am excited to
+bit difficult for me to talk about, since I do not know exactly what it
+entails _yet_, but know that I am excited about it, and I wanted to share it with
+you, dear reader. It has been one _hell_ of a journey so far. I am excited to
 see what is to come. NixOS, with its flaws, has a special place in my heart and
 it is great to be able to finally play a part in the grand scheme of things.
 
@@ -24,32 +24,32 @@ pace.
 
 I do a lot of, well, editing on my computer. This is sometimes for academic
 essays that I have to write myself, or sometimes academic essays that I have to
-proofread but it usually involves me sitting in front of a computer screen for
-hours on end and simply type away. Thanks to the relative leniency of my
+proofread, but it usually involves me sitting in front of a computer screen for
+hours on end and simply typing away. Thanks to the relative leniency of my
 department, I have been able to use LaTeX in the past and more recently I have
 been enjoying [Typst](https://typst.app). Much of this editing, regardless of
 the framework, involves an editor. While it would be all too simple to use
 something like LibreOffice, I rarely find myself opening `.docx` files to edit
-an essay, and it's even less rare of an occurrence for me to be writing in one.
+an essay, and it's even rarer for me to be writing in one.
 What I use for most of my editing is, of course, my trusty Neovim setup.
 
-Neovim holds an interesting place in my tool belt. I have switched off
-VSCode--the editor I have started with-- due to its annoyingly high RAM usage
+Neovim holds an interesting place in my tool belt. I switched off
+VSCode—the editor I started with—due to its annoyingly high RAM usage
 and power draw on my laptop, which made it less than ideal for when I could not
 easily find a place to plug my charger. Around the same time I was learning
-about Linux (and customizing the hell out of my Arch Linux setup) so it
-eventually lead to me checking out Neovim. It was something reminiscent of love
-at first sight. It was all snappy and intuitive and simple, I could not have
+about Linux (and customizing the hell out of my Arch Linux setup), so it
+eventually led to me checking out Neovim. It was something reminiscent of love
+at first sight. It was all snappy and intuitive and simple; I could not have
 asked for a better editor. Neovim _was_ what I was looking for.
 
 Over time I began adding plugins, usually to add features that I was missing
 from VSCode. LSPs and debugger plugins quickly found their way into my
 configuration, and over time Neovim was not quite what it first was. It had
-become sluggish, and complex. Worse, it had become inconsistent with the number
-of plugins that all insist that their way of doings things is the correct one.
+become sluggish and complex. Worse, it had become inconsistent with the number
+of plugins that all insist that their way of doing things is the correct one.
 Around this time, I switched to NixOS and began thinking about setting up Neovim
 declaratively on my system. `programs.neovim` was not quite intuitive, and
-linking a `nvim` directory to `~/.config/nvim` felt less than ideal. This lead
+linking a `nvim` directory to `~/.config/nvim` felt less than ideal. This led
 to _neovim-flake_. I cannot quite call it my creation, as I have soft-forked it
 from a project with the same name by Jordan Isaacs, but I had many different,
 conflicting ideas in mind. So much so, that it warranted the soft-fork to take
@@ -68,18 +68,18 @@ to write Nix.
 > to do more than just to observe. If you _are_, however, an expert in the field
 > perhaps reach out to me. I would love to hear about your thoughts as well.
 
-As I was saying, neovim-flake--now nvf--was a learning experience. More
+As I was saying, neovim-flake—now nvf—was a learning experience. More
 importantly, it was a testing ground for my "ideal" Neovim configuration. I have
 learned about Neovim as much as I have learned about Nix by maintaining nvf. The
-most important discovery while working on nvf and Neovim, was that **Neovim is a
-subpar editor**. I mean this in an endearing way of course; I would want my
-editor to become better and I think it is moving in the right direction,
-however, with contenders such as Helix now challenging Neovim's place it _might_
-be the time to reconsider priorities and re-allocate resources. Although I am
-uninterested in Helix [^1], it has pushed--moreso, nudged Neovim in the correct
+most important discovery while working on nvf and Neovim was that **Neovim is a
+subpar editor**. I mean this in an endearing way, of course; I want my
+editor to become better and I think it is moving in the right direction.
+However, with contenders such as Helix now challenging Neovim's place, it _might_
+be time to reconsider priorities and re-allocate resources. Although I am
+uninterested in Helix [^1], it has pushed—more so, nudged—Neovim in the correct
 direction by looking at Neovim's long-time mistakes and working on fixing them.
 For one, Helix boasts a more consistent interface for features that are only
-available as plugins on Neovim. There is no conflicting design choices or UI
+available as plugins on Neovim. There are no conflicting design choices or UI
 decisions. Not yet, anyway. I think consistent UI is a good thing to have in
 your editor, however good your UX may be.
 
@@ -93,7 +93,7 @@ your editor, however good your UX may be.
     strike me as something I can bring myself to daily drive.
 
 As I have mentioned above, Neovim has started moving in the correct direction
-with some of the core-features of Helix stealing the hearts of many Neovim
+with some of the core features of Helix stealing the hearts of many Neovim
 users. After a very underwhelming 0.10 release, I believe 0.11 is taking Neovim
 in a better direction by analyzing the core demands of the community and trying
 to implement them as a part of the editor, in response to the needs and demands.
@@ -103,8 +103,8 @@ has been a frustrating experience, with how slow and clunky it is. none-ls
 doubled down on complexity by moving feature-complete builtins to a different
 repo, which you have to fetch and load yourself. This is _not_ how an editor
 should function. Taking from Helix, I would be delighted to see some of the
-plugin exclusive features as parts of the core editor. Although, this might be
-wishful thinking. So far, I am excited for the prospect of natively configuring
+plugin-exclusive features as parts of the core editor. Although this might be
+wishful thinking, so far, I am excited for the prospect of natively configuring
 LSPs and a few UI additions that I have been looking forward to. Perhaps I'll
 write about Neovim again when 0.11 drops. There is also the less commonly talked
 about [snippet engine](https://github.com/neovim/neovim/pull/27339) that will be
@@ -114,7 +114,7 @@ great time to be a Neovim user.
 For the time being, I have been aggressively dropping plugins that I don't
 _really_ need or rewriting them myself as more efficient autocommands as parts
 of my configuration. This seems to have helped with the startup times, as some
-Neovim plugins are _very_ inefficient. I have also dropped nvim-cmp because how
+Neovim plugins are _very_ inefficient. I have also dropped nvim-cmp because of
 how slow it was, but blink.nvim is restoring my "faith" in completion plugins
 again. The [frizbee](https://github.com/Saghen/frizbee) matcher is quite fast,
 and hopefully it will be utilized better in the future. On that note, I
@@ -130,8 +130,8 @@ implementations to problems "solved" by small convenience plugins.
 [Microfetch]: https://github.com/notashelf/microfetch
 
 On a more emotional side, I have been very burnt out with things. If you use any
-of my projects, you might have noticed that they have not been maintained on
-their usual pace for a while now. This is not permanent, I have _many_ plans but
+of my projects, you might have noticed that they have not been maintained at
+their usual pace for a while now. This is not permanent; I have _many_ plans but
 unfortunately not enough time to follow through _for now_. Expect the language
 modules to be improved for [nvf] in the near future, and an internal rewrite of
 [Schizofox]. [Hjem] is, fortunately, a team project and is able to proceed with
@@ -151,16 +151,16 @@ project(s).
 
 ## Closing Thoughts
 
-If this reads off as a little pessimistic, worry not. Nothing is changing
+If this reads as a little pessimistic, worry not. Nothing is changing
 anytime soon, or at least nothing is changing for the _worse_ anytime soon. I
 will continue writing on this blog, and I will continue working on nvf as Neovim
 appears to be my forever editor. This was a temporary break from my usual pace
 of detailed, technical writing that takes more time and an opportunity to get
 some things off my chest, or out of my mind. As I've said before, there are
-multiple articles in the writing, but I would like to hear what you think I
-should write about too. Nix ecosystem is weirdly obscure, and sometimes
+multiple articles in the works, but I would like to hear what you think I
+should write about too. The Nix ecosystem is weirdly obscure, and sometimes
 independent blog articles do better than official documentation for learning.
 
 If you have read this far, thank you. I would also like to hear your thoughts on
-an of the things I've talked about above. Feel free to reach out to me anytime.
+any of the things I've talked about above. Feel free to reach out to me anytime.
 That said, this is all I have time for today. Thank you for reading.
