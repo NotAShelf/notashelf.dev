@@ -7,6 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FontAwesome from "./FontAwesome.astro";
+import Link from "./Link.astro";
 
 const gitEnv = import.meta.env.GIT_ENV || "development";
 ---
@@ -15,30 +16,40 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
   <div class="footer-divider"></div>
   <div class="footer-content">
     <div class="footer-icons">
-      <a href="https://github.com/notashelf" aria-label="GitHub">
+      <Link
+        href="https://github.com/notashelf"
+        aria-label="GitHub"
+        external={true}
+      >
         <FontAwesomeIcon icon={faGithub} title="GitHub" className="icon" />
-      </a>
-      <a href="https://twitter.com/notashelf" aria-label="Twitter">
+      </Link>
+      <Link
+        href="https://twitter.com/notashelf"
+        aria-label="Twitter"
+        external={true}
+      >
         <FontAwesomeIcon icon={faTwitter} title="Twitter" className="icon" />
-      </a>
+      </Link>
       <a href="/rss.xml" aria-label="RSS Feed">
         <FontAwesomeIcon icon={faRss} title="RSS Feed" className="icon" />
       </a>
     </div>
     <div class="nix-webring">
-      <a
+      <Link
         href="https://nixwebr.ing/prev/notashelf"
         title="Previous site in the Nix webring"
         aria-label="Previous site"
+        external={true}
       >
         <FontAwesomeIcon icon={faChevronLeft} className="icon" />
-      </a>
+      </Link>
       <div class="webring-container">
-        <a
+        <Link
           href="https://nixwebr.ing/rand"
           class="webring-logo"
           title="Visit a random site in the Nix webring"
           aria-label="Random site"
+          external={true}
         >
           <img
             src="/images/nix-webring.svg"
@@ -47,21 +58,23 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
             width="36"
             height="18"
           />
-        </a>
+        </Link>
         <div class="webring-info">
-          This site is part of the <a
+          This site is part of the <Link
             href="https://nixwebr.ing"
-            class="webring-link">Nix webring</a
+            class="webring-link"
+            external={true}>Nix webring</Link
           >. Click the logo to visit a random site.
         </div>
       </div>
-      <a
+      <Link
         href="https://nixwebr.ing/next/notashelf"
         title="Next site in the Nix webring"
         aria-label="Next site"
+        external={true}
       >
         <FontAwesomeIcon icon={faChevronRight} className="icon" />
-      </a>
+      </Link>
     </div>
     <div class="built-from">
       <FontAwesome icon="code-branch" title="Git Branch" className="icon" />
