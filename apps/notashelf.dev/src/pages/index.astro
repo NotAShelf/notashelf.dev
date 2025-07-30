@@ -2,9 +2,10 @@
 import FeaturedProjects from "@components/FeaturedProjects.astro";
 import FontAwesome from "@components/FontAwesome.astro";
 import PostSpotlight from "@components/PostSpotlight.astro";
-import ResponsiveImage from "@components/ResponsiveImage.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
+import avatar120 from "../images/avatar-120.webp";
 
 // Get latest posts for featured section
 const allPosts = await getCollection("posts");
@@ -42,8 +43,8 @@ if (featuredPosts.length >= 3) {
   <section id="hero" class="hero fade-in">
     <div class="hero-content">
       <div class="profile-image-wrapper">
-        <ResponsiveImage
-          src="/images/avatar-120.webp"
+        <Image
+          src={avatar120}
           alt="Profile Picture"
           width={120}
           height={120}
@@ -51,8 +52,6 @@ if (featuredPosts.length >= 3) {
           loading="lazy"
           decoding="async"
           sizes="(max-width: 480px) 100px, 120px"
-          widths={[100, 120, 150, 180, 240]}
-          quality={90}
         />
       </div>
       <h1 class="reveal-text">Howdy! Welcome to my personal website.</h1>

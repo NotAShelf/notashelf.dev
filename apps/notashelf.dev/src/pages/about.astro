@@ -1,6 +1,5 @@
 ---
 import FeaturedProjects from "@components/FeaturedProjects.astro";
-import ResponsiveImage from "@components/ResponsiveImage.astro";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
   faDiscord,
@@ -20,6 +19,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 
 // Get affiliations from collection
@@ -145,7 +145,7 @@ const skillCategories = [
     <div class="about-header fade-in">
       <div class="profile-image-container">
         <div class="profile-image-wrapper">
-          <ResponsiveImage
+          <Image
             src="https://avatars.githubusercontent.com/u/62766066?v=4"
             alt="Profile Picture"
             width={160}
@@ -156,7 +156,7 @@ const skillCategories = [
         <div class="tech-badges">
           {
             techBadges.map((badge) => (
-              <span class="tech-badge" data-tooltip={badge.tooltip}>
+              <span class="tech-badge">
                 <FontAwesomeIcon icon={badge.icon} />
               </span>
             ))
@@ -247,7 +247,7 @@ const skillCategories = [
                         icon={affiliation.logo as IconDefinition}
                       />
                     ) : (
-                      <ResponsiveImage
+                      <Image
                         src={affiliation.logo as string}
                         alt={`${affiliation.name} Logo`}
                         width={40}
@@ -319,26 +319,7 @@ const skillCategories = [
 
     document.querySelectorAll(".fade-in").forEach((el) => observer.observe(el));
 
-    document.querySelectorAll(".tech-badge").forEach((badge) => {
-      badge.addEventListener("mouseenter", function (this: HTMLElement) {
-        const tooltip = this.getAttribute("data-tooltip");
-        if (tooltip) {
-          const tooltipEl = document.createElement("div");
-          tooltipEl.className = "tooltip";
-          tooltipEl.textContent = tooltip;
-          this.appendChild(tooltipEl);
-          setTimeout(() => tooltipEl.classList.add("visible"), 10);
-        }
-      });
-
-      badge.addEventListener("mouseleave", function (this: HTMLElement) {
-        const tooltipEl = this.querySelector(".tooltip");
-        if (tooltipEl) {
-          tooltipEl.classList.remove("visible");
-          setTimeout(() => tooltipEl.remove(), 200);
-        }
-      });
-    });
+    document.querySelectorAll(".tech-badge").forEach((badge) => {});
   });
 </script>
 
