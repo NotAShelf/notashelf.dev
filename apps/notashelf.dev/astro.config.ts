@@ -2,6 +2,7 @@
 import { defineConfig } from "astro/config";
 
 // First party integrations
+import alpinejs from "@astrojs/alpinejs";
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
@@ -54,6 +55,7 @@ export default defineConfig({
 
   // https://docs.astro.build/en/reference/configuration-reference/
   integrations: [
+    alpinejs(),
     react(),
     sitemap(),
     partytown({
