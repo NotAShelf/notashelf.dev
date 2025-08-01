@@ -26,8 +26,6 @@
       inherit pname version;
       src = ../packages/wasm-utils;
 
-      useFetchCargoVendor = true;
-
       nativeBuildInputs = [
         wasm-pack
         lld
@@ -36,12 +34,8 @@
       ];
 
       copyLibs = true;
-
       doCheck = true;
-      checkInputs = [
-        cargo
-        rustc
-      ];
+      checkInputs = [cargo rustc];
 
       cargoLock.lockFile = ../packages/wasm-utils/Cargo.lock;
 
@@ -83,7 +77,7 @@ in
 
     pnpmDeps = pnpm.fetchDeps {
       inherit (finalAttrs) pname src;
-      hash = "sha256-jKdutnPqCLSBLpSj/TqsNhmy4GaOK0KRvR+GniORfMM=";
+      hash = "sha256-IFZ9z/62+JC+orAaH1UJDjA5jAvrY1yyVDkMF2cx6pY=";
       fetcherVersion = 2; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
     };
 
