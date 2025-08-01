@@ -5,7 +5,7 @@ import PostSpotlight from "@components/PostSpotlight.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
-import avatar120 from "../images/avatar-120.webp";
+import Avatar from "../images/notashelf-pfp.png";
 
 // Get latest posts for featured section
 const allPosts = await getCollection("posts");
@@ -44,7 +44,7 @@ if (featuredPosts.length >= 3) {
     <div class="hero-content">
       <div class="profile-image-wrapper">
         <Image
-          src={avatar120}
+          src={Avatar}
           alt="Profile Picture"
           width={120}
           height={120}

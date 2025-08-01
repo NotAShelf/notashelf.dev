@@ -134,6 +134,8 @@ const skillCategories = [
     ],
   },
 ];
+
+import Avatar from "../images/notashelf-pfp.png";
 ---
 
 <BaseLayout
@@ -146,11 +148,14 @@ const skillCategories = [
       <div class="profile-image-container">
         <div class="profile-image-wrapper">
           <Image
-            src="https://avatars.githubusercontent.com/u/62766066?v=4"
+            src={Avatar}
             alt="Profile Picture"
-            width={160}
-            height={160}
+            width={120}
+            height={120}
             class="profile-image"
+            loading="lazy"
+            decoding="async"
+            sizes="(max-width: 480px) 100px, 120px"
           />
         </div>
         <div class="tech-badges">
