@@ -38,7 +38,7 @@ writeShellApplication {
     echo "Cargo version: $(cargo --version)"
     echo "Working directory: $(pwd)"
 
-    # Install dependencies with CI-optimized flags
+    # Install dependencies with "CI-optimized" flags
     echo "Installing dependencies..."
     pnpm install \
       --frozen-lockfile --strict-peer-dependencies --recursive --prefer-offline  || error_exit "Failed to install dependencies."
