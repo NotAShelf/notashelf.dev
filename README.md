@@ -8,23 +8,24 @@
 This is a monorepository containing my website and blog as well as its
 dependencies. The rendered site is available under
 [notashelf.dev](https://notashelf.dev), and this time it uses Astro as the
-underlying build tool, while also explores the possibilities of components done
+underlying build tool, while also exploring the possibilities of components done
 in various languages or frameworks. Countless hours were spent rewriting this
 site time and time again. This is iteration number 8, I think. Maybe 9, who
 knows?
 
 ## Repository Structure
 
-As my needs changed, I have decided to consolidate packages/utilities created
-for this repository into a single repository. This allows me to work on
-everything from a single repository, thanks to PNPM's workspaces feature. The
-repository structure is as follows:
+As my needs have changed, so did this repository. I have decided to consolidate
+packages/utilities created for my website into a single repository. This allows
+me to work on everything from a single repository, thanks to PNPM's workspaces
+feature. The repository structure is as follows:
 
 ```bash
 notashelf.dev/
  ├── apps # webapps
  ├── nix # nix packaging
- └── packages # dependencies, local packages, etc.
+ ├── packages # dependencies, local packages, etc.
+ └── scripts # Node scripts involved in the build process
 ```
 
 The **apps** directory contains, and will continue to contain, web applications
@@ -32,10 +33,12 @@ such as my website and blog. If I plan to host more static sites under my
 domain, that is also where those new sites will go. The **packages** directory
 contains packages, utilities or other home-made dependencies used in the web
 applications. This, for now, includes my Vite plugins, Astro integrations and
-WASM components. Lastly, the **nix** directory is for packaging and to keep Nix
-tooling out of repository root as much as possible. The top-level `flake.nix`
-acts as the entry point for packaging, though `pnpm` is utilized to an extent in
-the repository, and can be leveraged for rapid development builds.
+WASM components. **scripts** directory is bit of a wildcard, because it contains
+Node scripts I wrote for fun and comfort, it's probably not good reference.
+Lastly, the **nix** directory is for packaging and to keep Nix tooling out of
+repository root as much as possible.The top-level `flake.nix` acts as the entry
+point for packaging, though `pnpm` is utilized to an extent in the repository,
+and can be leveraged for rapid development builds.
 
 Markdown sources of my writings, blog posts, and similar content can be found in
 `apps/notashelf.dev/`. Namely, the `posts` directory contains Markdown and MDX
@@ -61,15 +64,21 @@ All in-house dependencies created for my personal website have been stored in
 the `packages` directory, which is where new dependencies will be added. For the
 time being, it contains three distinct packages.
 
+- [astro-email-obfuscation](./packages/astro-email-obfuscation/) is a home-made
+  Astro integration with advanced e-mail obfuscation capabilities, designed to
+  fend off scrapers to the best of my ability.
 - [astro-plausible](./packages/astro-plausible) is an Astro integration,
   refactored out of my previous `notashelf.dev` app where it was a tiny
   component. Now it's a fully tested integration with various customizability
   options.
-- [astro-email-obfuscation](./packages/astro-email-obfuscation/) is a home-made
-  Astro integration with advanced e-mail obfuscation capabilities, designed to
-  fend off scrapers to the best of my ability.
 - [astro-purge-css](./packages/astro-purge-css/) is a small Astro integration
   that purges unused styles using PurgeCSS.
+- [remark-em-dash](/packages/remark-em-dash/) is a Remark plugin to replace
+  `---` with em dashes. This was not covered by Astro's markdown typography, so
+  I just made a plugin.
+- [vite-copyright-replace](./packages/vite-copyright-replace) is a Vite plugin
+  to replace a placeholder with the current year to keep license notices
+  up-to-date without using Javascript to infer it from the browser's clock.
 - [wasm-utils](./packages/wasm-utils/) contains my personal WASM utilities that
   are leveraged in [apps/notashelf.dev](./apps/notashelf.dev/) to offload
   compute-heavy operations to smaller, faster WebAssembly modules. This is an
@@ -100,7 +109,8 @@ time around because of _how easy_ Astro made it to overengineer things. Using
 Pandoc, Bash and Makefiles was a great experiment, but comparatively this is
 much better to work with. That said, the user-facing side of the site _is_
 lightweight. It loads pretty fast, and it has been optimized to require as
-little resources as possible.
+little resources as possible. It's still below 200kb for the initial page. Hwo
+cool is that?
 
 ### Features
 
@@ -150,14 +160,15 @@ linter results directly. Make sure that no new warnings are introduced.
 > [Astro](https://astro.build) project and create your own website. If you would
 > like to discuss how you may do this, please feel free to contact me. I'll try
 > to help you out. Below instructions are for **contributors** and you will not
-> receive any support in building this site.
+> receive any support in building or modifying this site if you want to run it
+> yourself.
 
 The _recommended_ way of hacking at this project is by using
 [Nix](https://nixos.org). There is a default dev shell that provides everything
 required to work with this project. I also provide an `.envrc` for Direnv
 integration, which you would be recommended to use.
 
-If you choose _not_ to use Nix, theen you will need to install several
+If you choose _not_ to use Nix, then you will need to install several
 dependencies. Most notably, you will need `nodejs` and `pnpm` installed with
 your package manager as a bare minimum. You will also want `cargo`, `gcc`, and
 `wasm-pack` to build the website, which requires my
@@ -171,9 +182,17 @@ your package manager as a bare minimum. You will also want `cargo`, `gcc`, and
   static site. You may serve it locally with `pnpm run dev`, or via NGINX using
   the production build.
 
-Alternatively there is a Nix package provided as `bsite`, which can be built
-with `nix build .`. The WASM component is not exposed as its own package, but is
+Alternatively there is a Nix package provided as `site`, which can be built with
+`nix build .`. The WASM component is not exposed as its own package, but is
 built automatically when building the default package.
+
+#### Testing
+
+While my testing setup is still barebones, I have around 25% coverage with
+Vitest. If you are adding new scripts, then some test must accompany those
+scripts. For Astro components I do _not_ have tests yet, but they'll eventually
+be added. `pnpm run test` is the quickest way to run your test.
+`pnpm run test:coverage` can be used to view a coverage report.
 
 ## License
 
@@ -181,8 +200,9 @@ All creative content found in this website is released under the
 [CC BY License](./LICENSE). This entails that you **must** provide proper
 attribution for the code you borrow. <!-- Yes I'm looking at you -->
 
-The Astro integrations have been made available under the Mozilla Public License
-2.0, as dictated [by](./packages/astrp-plausible/LICENSE)
+The Astro integrations & other package components of this repository have been
+made available under the Mozilla Public License v2.0, as dictated
+[by](./packages/astrp-plausible/LICENSE)
 [their](./packages/vite-copyright-replace/LICENSE)
 [respective](./packages/astro-email-obfuscation/LICENSE)
 [license](./packages/astro-purge-css/LICENSE)
