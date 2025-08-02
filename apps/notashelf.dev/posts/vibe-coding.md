@@ -1,5 +1,5 @@
 ---
-title: "I am Not Convinced By Vibe Coding"
+title: "I am Not Convinced by Vibe Coding"
 description: "A Critique of Vibe Coding and its False Promise of Effortless Software Development."
 date: 2025-08-02
 keywords: ["thoughts", "software", "programming"]
@@ -37,7 +37,7 @@ random. Millions of iterations, nonsensical and broken and unbuildable---but
 every once in a while, a design emerges that is striking. Beautiful, even. So
 they discard the garbage and hand-pick the good ones.
 
-[^1]: Or maybe its sequel, The Son Of Dice Man? It's been years since I read the
+[^1]: Or maybe its sequel, The Son of Dice Man? It's been years since I read the
     books...
 
 That's what I vibe coding to be. You prompt an AI a hundred times, throw away
@@ -144,8 +144,8 @@ Claude and Gemini may be useful but it must be made perfectly clear that their
 use case is acting as assistants, not replacements. Using them well requires
 clarity, and not vibes.
 
-What I take issue with in the usage of such tools is I do not trust most
-developers to draw the line clearly. The most common and dare I say natural
+What I take issue with in the usage of such tools is that I **do not trust**
+most developers to draw the line clearly. The most common and dare I say natural
 response to the task often is something along the lines of "well I used it for
 prototyping and it worked, it can probably handle the production code as well"
 and to me that violates a contract of trust.
@@ -187,11 +187,27 @@ mistakes? I don't think so.
 
 Lastly there is the part of effort. When I see an art piece that I like, it is
 not just about the art itself but also the time spent on the piece. I _respect_
-the artist as much as I _enjoy_ their art. When the piece is good but there is
-no time behind it, the level of my enjoyment only goes down. Sure you might have
-expressed an idea, but what about the journey? What have you gained out of this
-except for a potentially malformed artwork that is the expression of words
-instead of feelings?
+the artist as much as I _enjoy_ their art. If the piece is good, but I _know_
+the artist has spent no time on the piece, then my respect for the artwork and
+thus the level of my enjoyment only goes down. Sure you might have expressed an
+idea, but what about the journey? What have you gained out of this except for a
+potentially malformed artwork that is the expression of words instead of
+feelings? What am I even looking at? There is no beauty here, just lines. Vibe
+coding is very similar in principle. Yes most enterprise code is for the sake of
+completing a task, and doing so while making or saving the company money but
+what about FOSS? What happens to the individuality, to the collaborative
+creative wisdom of the people? Deferring inventing to AI is nothing but
+reductive. It can _never_ be anything but reductive. This is not pragmatism. [^3]
+
+[^3]: If you mention driving a car or using printing presses to replace walking
+    and printing, I will simply defenestrate you. You _know_ those things are
+    not equal, and you KNOW that they solve problems of capacity. You cannot
+    walk a thousand miles, even if you could the time spent would not be worth
+    it. One man cannot copy a million books, even if he did it would take a
+    lifetime. One developer, however, solve write one hundred projects. A
+    thousand. AI only makes it less incentivized to think on those projects.
+
+---
 
 This has been my miniature rant on vibe coding. Truth be told, I was exposed to
 "AI slop" more often than I'd like while in academia, and all it has done to
@@ -201,3 +217,21 @@ code reviews or project planning. Not yet though, at least not until the hype
 bubble pops. Hope you enjoyed this writing. It was more emotional than the rest
 of my writing, and I'd like to hear your thoughts. If you think I've missed
 anything, I'm also open to further discussion.
+
+[One of them]: https://advancesinsimulation.biomedcentral.com/articles/10.1186/s41077-025-00350-6
+[The second study]: https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/
+
+I want to leave you with two interesting studies. [One of them] is on the
+AI-assisted academic writing and recommendations for ethical use. While ethics
+are whole new discussion point that I want to avoid, the practicality of AI is
+an interesting question. It is a relatively short read, so I recommend that you
+give it at least a skim. Especially if you are a student. [The second study] is
+on the impact of AI on developers in 2025. It challenges some of the baseless
+assumptions usually perpetuated by those that stand to gain from perpetuating
+the unseen (but somehow very real) productivity boost of AI in enterprise. If
+you would like a real statistical study (that you can pull out next time someone
+tells you that "AI makes developers faster, trust me") then I recommend you take
+a look at this one as well. If you have some other interesting articles, please
+feel free to contact me to let me know.
+
+Cheers!
