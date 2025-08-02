@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "private": true,
   "workspaces": [
     "apps/notashelf.dev",
@@ -6,12 +7,10 @@
     "packages/wasm-utils/pkg"
   ],
   "scripts": {
-    "build": "node scripts/build.js",
-    "build:basic": "pnpm run build:wasm-utils && pnpm run build:web",
-    "build:web": "pnpm --filter ./apps/notashelf.dev run build",
-    "build:wasm-utils": "cd packages/wasm-utils && wasm-pack build --target web --out-dir pkg --out-name wasm-utils",
-    "dev": "node scripts/dev.js",
-    "dev:basic": "pnpm run build:wasm-utils && pnpm --filter ./apps/notashelf.dev run dev",
+    "build": "node scripts/build.js notashelf.dev build",
+    "build:web": "node scripts/build.js notashelf.dev build",
+    "build:wasm-utils": "node scripts/build.js wasm-utils build",
+    "dev": "node scripts/dev.js notashelf.dev dev",
     "preview": "pnpm --filter ./apps/notashelf.dev run preview",
     "check": "pnpm --filter ./apps/notashelf.dev run check",
     "fmt": "prettier . --write",
