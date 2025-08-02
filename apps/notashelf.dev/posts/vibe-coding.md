@@ -26,6 +26,9 @@ generator of noise with occasional signals, and it relies entirely on your
 ability to tell the difference. What happens when you _can't_ tell the
 difference? Have you really accounted for that?
 
+The assumption that the technology alone solves the entire problem overlooks the
+complexity embedded in software development beyond mere code generation.
+
 ## The Machine That Designed Cars
 
 There's a plot point in the book The Dice Man [^1] that I keep returning to. At
@@ -41,15 +44,15 @@ That's what I vibe coding to be. You prompt an AI a hundred times, throw away
 the malformed outputs, and keep the one that works, at least on the surface. It
 looks right. It runs. The UI renders. The button clicks. Success, right?
 
-I think this comes from the fact that software programming having fewer win
-conditions. While in most domains a "win condition" is some universally
-recognized state of victory---e.g., in chess, it's checkmate; in biology, it's a
-Nobel-worthy discovery; in sports, it’s a gold medal--- programming has _no
-universal definition of "done right"_, [^2] _no standard of elegance that
-everyone agrees on_ and _no fixed endpoint_. Hell, even shipping a product
-doesn't mean you "won." There are always bugs, tech debt, UX complaints,
-performance ceilings, etc. Even "perfect code" is usually replaced or rewritten
-within a decade.
+I think this misconception, so to speak, comes from the fact that software
+programming has fewer win conditions. While in most domains a "win condition" is
+some universally recognized state of victory---e.g., in chess, it's checkmate;
+in biology, it's a Nobel-worthy discovery; in sports, it’s a gold
+medal---programming has _no universal definition of "done right"_, [^2] _no
+standard of elegance that everyone agrees on_ and _no fixed endpoint_. Hell,
+even shipping a product doesn't mean you "won." There are always bugs, tech
+debt, UX complaints, performance ceilings, etc. Even "perfect code" is usually
+replaced or rewritten within a decade.
 
 [^2]: No matter what the grifters on tech Twitter will tell you, there simply
     isn't one.
@@ -58,7 +61,10 @@ As such the internal structure matters. Code is not just visual. It is layered
 with behavior, security, data access, side effects, and edge cases. You are not
 choosing car sketches for a brochure; you are selecting an actual vehicle that
 someone will drive. And if you don't understand what's under the hood, you are
-gambling with your user's safety.
+gambling with your user's safety. The belief that AI-generated code can be
+blindly trusted because it "builds and runs" dismisses these hidden complexities
+and the inherent unpredictability of probabilistic models. Treating generated
+code as a finished product rather than a draft invites risk.
 
 ## What Vibe Coding Forgets
 
@@ -75,10 +81,15 @@ Blindly trusting generated code without review or comprehension is not
 engineering, it is nowhere near that. In fact, I think it is something to be
 ashamed of. The pride tied to the fact that you do not understand something
 is... tragic. I can only describe (most cases of) vibe coding as "aesthetic
-selection". The entire method hinges on your ability to recognize what’s good or
-most of then good _looking_---but good on what axis? Speed? Readability?
-Robustness? Security? These are nto things you can judge from a glance. They
+selection". The entire method hinges on your ability to recognize what is good
+or most of the time good _looking_, but good on what axis? Speed? Readability?
+Robustness? Security? These are not things you can judge from a glance. They
 take context. They take understanding.
+
+Relying on AI as a catch-all acceleration tool ignores the essential nature of
+software as a system. Speed without comprehension leads to fragility and
+technical debt. The supposed gains are only superficial if the foundational
+integrity of the codebase is compromised.
 
 ## The Shortcut That Becomes a Detour
 
@@ -93,12 +104,18 @@ Worse, you may not even notice. The very act of vibe coding discourages
 investigation. You didn't write this code. You don't own it. You don't feel
 responsible for it. If it breaks, you will just prompt again. But that's not
 development. That's gambling at best. Desperation at worst. Even if you are
-someone who understands the principles of programming, which is a safer than
-most use cases I have witnessed, it still gives you tunnel vision to a degree
-unless you had a perfectly outlined plan from the start. Unless you know what
-_exactly_ you were going for, then you are letting a subpar sentence generator
-decide what will be happening in your project. Even if you reject its proposals,
-it will plant the seeds of an idea in your head.
+someone who understands the principles of programming, which is safer than most
+use cases I have witnessed, it still gives you tunnel vision to a degree unless
+you had a perfectly outlined plan from the start. Unless you know what _exactly_
+you were going for, then you are letting a subpar sentence generator decide what
+will be happening in your project. Even if you reject its proposals, it will
+plant the seeds of an idea in your head.
+
+This mindset assumes that the code is only a surface-level artifact and ignores
+that true software development involves maintaining systems, anticipating edge
+cases, and managing complexity. The idea that one can simply "iterate until it
+works" neglects the institutional knowledge and discipline required to sustain
+software over time.
 
 ## When Vibe Coding Makes Sense
 
@@ -113,6 +130,12 @@ surface, you are in a different game. At that point, the vibe must end. You need
 understanding. You need rigor. You need systems that are legible, testable, and
 maintainable.
 
+The excitement around these tools often ignores that they require significant
+infrastructure: embedding the codebase, hooking into CI pipelines, and layering
+tests and linting to catch AI hallucinations. These are not trivial tasks, and
+most teams are not equipped to treat AI as a dependable collaborator rather than
+a toy.
+
 ### You Cannot Abdicate Responsibility
 
 No matter how arcane it looks, software is not magic. It is logic encoded for
@@ -121,7 +144,7 @@ Claude and Gemini may be useful but it must be made perfectly clear that their
 use case is acting as assistants, not replacements. Using them well requires
 clarity, and not vibes.
 
-What I take issue with in the usage of such tools are I do not trust must
+What I take issue with in the usage of such tools is I do not trust most
 developers to draw the line clearly. The most common and dare I say natural
 response to the task often is something along the lines of "well I used it for
 prototyping and it worked, it can probably handle the production code as well"
@@ -132,15 +155,12 @@ the potential consequences on a personal level. If a software programmer makes a
 mistake that causes my home directory to be deleted, they will feel remorse.
 They will also aim to never make that mistake again. What about LLMs? It'll give
 you an empty apology, fix its mistake for one time and move on. Will you always
-check the code in case if it accidentally deletes your users home directory
-again?
+check the code in case it accidentally deletes your user's home directory again?
 
 Thus I want to say that we do not need to throw out our understanding to embrace
 the future. We need to carry it forward. Celebrate the collective intelligence,
-experience and effort. Otherwise, we're not building---we're browsing. The cost
-of mistaking one for the other is always paid in production.
-
-### You Cannot Deny
+experience and effort. Otherwise, we're not building; we are merely browsing.
+The cost of mistaking one for the other is always paid in production.
 
 ## Closing Thoughts
 
@@ -154,15 +174,16 @@ though, who knows?
 
 The point I really wanted to make in this post is that no matter how the app was
 coded (but especially if it was _vibe_ coded) then you have a moral
-responsibility to understand it before yous hip it. When I see something that
+responsibility to understand it before you ship it. When I see something that
 boasts being written by LLMs, I tend to turn away and pretend that the repo does
 not exist. Not because I feel a moral superiority by doing so, it was never
 about that, but because I am not willing to take the chances of getting caught
-be a destructive oversight no human developer would make. After years of
-programming, I would like to _think_ that humans programmers inherently target
-or at least document production-critical bugs, whereas LLMs choose to put env
-vars in production code. Sure we all know better than that, but what if you make
-a mistake you can't even recognize?
+by a destructive oversight no human developer would make. After years of
+programming, I would like to _think_ that human programmers inherently target or
+at least document production-critical bugs, whereas LLMs choose to put
+environment variables in production code. Sure we all know better than that, but
+what if you make a mistake you can't even recognize? Can AI learn from its
+mistakes? I don't think so.
 
 Lastly there is the part of effort. When I see an art piece that I like, it is
 not just about the art itself but also the time spent on the piece. I _respect_
