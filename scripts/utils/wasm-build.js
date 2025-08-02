@@ -1,16 +1,6 @@
-#!/usr/bin/env node
-
 const { spawn } = require("child_process");
-const { existsSync, readdirSync, statSync } = require("fs");
+const { existsSync, statSync, readdirSync } = require("fs");
 const path = require("path");
-
-const rootDir = path.join(__dirname, "..");
-
-const [, , workspace, ...cmd] = process.argv;
-if (!workspace || cmd.length === 0) {
-  console.error("Usage: node scripts/build.js <workspace> <command...>");
-  process.exit(1);
-}
 
 function latestMtime(dir) {
   let m = 0;
@@ -32,7 +22,7 @@ function needsBuild(wasmDir) {
   return srcTime > latestMtime(pkg);
 }
 
-function buildWasm(wasmDir, dev) {
+function buildWasm(wasmDir, dev = false) {
   return new Promise((resolve) => {
     if (!existsSync(wasmDir)) return resolve(false);
     if (!needsBuild(wasmDir)) {
@@ -62,36 +52,4 @@ function buildWasm(wasmDir, dev) {
   });
 }
 
-async function buildAllWasm(root) {
-  const pkgs = [];
-  const pkgsDir = path.join(root, "packages");
-  if (existsSync(pkgsDir)) {
-    for (const name of readdirSync(pkgsDir)) {
-      const dir = path.join(pkgsDir, name);
-      if (
-        existsSync(path.join(dir, "Cargo.toml")) &&
-        existsSync(path.join(dir, "src"))
-      ) {
-        pkgs.push(dir);
-      }
-    }
-  }
-  for (const dir of pkgs) await buildWasm(dir, false);
-}
-
-async function main() {
-  await buildAllWasm(rootDir);
-  runBuild(workspace, cmd);
-}
-
-function runBuild(ws, args) {
-  const filter =
-    ws.startsWith("apps/") || ws.startsWith("packages/") ? ws : `apps/${ws}`;
-  const child = spawn("pnpm", ["--filter", `./${filter}`, "run", ...args], {
-    cwd: rootDir,
-    stdio: "inherit",
-  });
-  child.on("close", (code) => process.exit(code));
-}
-
-main();
+module.exports = { buildWasm };
