@@ -52,193 +52,372 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
             width="36"
             height="18"
           />
+          <div class="footer-content-wide">
+            <div class="footer-row">
+              <div class="footer-left">
+                <Link
+                  href="/privacy"
+                  class="privacy-link"
+                  aria-label="Privacy Policy"
+                >
+                  Privacy
+                </Link>
+                <div class="webring-info">
+                  This site is part of the <Link
+                    href="https://nixwebr.ing"
+                    class="webring-link"
+                    external={true}>Nix webring</Link
+                  >. Click the logo to visit a random site.
+                </div>
+              </div>
+              <Link
+                href="https://nixwebr.ing/next/notashelf"
+                title="Next site in the Nix webring"
+                aria-label="Next site"
+                external={true}
+              >
+                <Icon name="chevron-right" class="icon" />
+              </Link>
+            </div>
+            <div class="footer-center">
+              <div class="nix-webring">
+                <Link
+                  href="https://nixwebr.ing/prev/notashelf"
+                  title="Previous site in the Nix webring"
+                  aria-label="Previous site"
+                  external={true}
+                >
+                  <Icon name="chevron-left" class="icon" />
+                </Link>
+                <div class="webring-container">
+                  <Link
+                    href="https://nixwebr.ing/rand"
+                    class="webring-logo"
+                    title="Visit a random site in the Nix webring"
+                    aria-label="Random site"
+                    external={true}
+                  >
+                    <img
+                      src="/images/nix-webring.svg"
+                      alt="Nix Webring"
+                      class="webring-img"
+                      width="36"
+                      height="18"
+                    />
+                  </Link>
+                  <div class="webring-info">
+                    This site is part of the <Link
+                      href="https://nixwebr.ing"
+                      class="webring-link"
+                      external={true}>Nix webring</Link
+                    >. Click the logo to visit a random site.
+                  </div>
+                </div>
+                <Link
+                  href="https://nixwebr.ing/next/notashelf"
+                  title="Next site in the Nix webring"
+                  aria-label="Next site"
+                  external={true}
+                >
+                  <Icon name="chevron-right" class="icon" />
+                </Link>
+              </div>
+              <div class="built-from">
+                <Icon name="code-branch" title="Git Branch" class="icon" />
+                <span>{gitEnv}</span>
+              </div>
+            </div>
+            <div class="footer-right">
+              <div class="footer-icons">
+                <Link
+                  href="https://github.com/notashelf"
+                  aria-label="GitHub"
+                  external={true}
+                >
+                  <Icon name="github" title="GitHub" class="icon" />
+                </Link>
+                <Link
+                  href="https://twitter.com/notashelf"
+                  aria-label="Twitter"
+                  external={true}
+                >
+                  <Icon name="twitter" title="Twitter" class="icon" />
+                </Link>
+                <a href="/rss.xml" aria-label="RSS Feed">
+                  <Icon name="rss" title="RSS Feed" class="icon" />
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="built-from">
+            <Icon name="code-branch" title="Git Branch" class="icon" />
+            <span>{gitEnv}</span>
+            <div class="footer-copyright-row">
+              <p class="copyright">
+                &copy; <span id="copyright">__COPYRIGHT_YEAR__</span> NotAShelf
+              </p>
+            </div>
+          </div>
         </Link>
-        <div class="webring-info">
-          This site is part of the <Link
-            href="https://nixwebr.ing"
-            class="webring-link"
-            external={true}>Nix webring</Link
-          >. Click the logo to visit a random site.
-        </div>
+
+        <style lang="scss">
+          @use "../styles/global" as *;
+
+          footer {
+            color: $secondary;
+            padding: 20px 0 0 0;
+            margin-top: auto;
+            position: relative;
+            background: none;
+            width: 100%;
+
+            .footer-divider {
+              position: absolute;
+              top: 0;
+              left: 50%;
+              transform: translateX(-50%);
+              width: 20%;
+              height: 1px;
+              background-color: $secondary;
+            }
+
+            .footer-content-wide {
+              max-width: 80ch;
+              width: 100%;
+              margin: 0 auto;
+              padding-top: 15px;
+              display: flex;
+              flex-direction: column;
+              align-items: stretch;
+              box-sizing: border-box;
+            }
+
+            .footer-row {
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: flex-start;
+              width: 100%;
+              gap: 1.5rem;
+            }
+
+            .footer-left,
+            .footer-center,
+            .footer-right {
+              display: flex;
+              align-items: center;
+              min-height: 48px;
+            }
+
+            .footer-left {
+              justify-content: flex-start;
+              flex: 1 1 0;
+            }
+
+            .footer-center {
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              flex: 2 1 0;
+              gap: 0.3em;
+            }
+
+            .footer-right {
+              justify-content: flex-end;
+              flex: 1 1 0;
+            }
+
+            .privacy-link {
+              color: $secondary;
+              opacity: 0.8;
+              font-size: 0.95em;
+              text-decoration: none;
+              padding: 0.2em 0.7em;
+              border-radius: 3px;
+              transition:
+                background 0.2s,
+                color 0.2s,
+                opacity 0.2s;
+
+              &:hover {
+                color: $hover-color;
+                opacity: 1;
+                background: $background-light;
+              }
+            }
+
+            .footer-icons {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+
+              a {
+                color: $secondary;
+                text-decoration: none;
+                opacity: 0.8;
+                transition: opacity 0.2s;
+
+                &:hover {
+                  opacity: 1;
+                }
+              }
+            }
+
+            .built-from {
+              font-size: 0.85em;
+              opacity: 0.8;
+              margin-top: 0.2em;
+
+              .icon {
+                margin-right: 4px;
+              }
+            }
+
+            .nix-webring {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 0.85em;
+              margin: 2px 0;
+
+              a {
+                color: $secondary;
+                text-decoration: none;
+                margin: 0 3px;
+                display: flex;
+                align-items: center;
+                opacity: 0.8;
+
+                &:hover {
+                  opacity: 1;
+                }
+              }
+
+              .webring-container {
+                position: relative;
+                display: inline-block;
+
+                .webring-logo {
+                  display: block;
+
+                  .webring-img {
+                    height: 18px !important;
+                    width: auto !important;
+                    opacity: 0.8;
+
+                    :global(img) {
+                      height: 18px !important;
+                      width: auto !important;
+                      object-fit: contain;
+                    }
+
+                    &:hover {
+                      opacity: 1;
+                    }
+                  }
+                }
+
+                .webring-info {
+                  position: absolute;
+                  bottom: 26px;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  background: $background-dark;
+                  color: $secondary;
+                  padding: 4px 8px;
+                  border-radius: 3px;
+                  font-size: 0.75em;
+                  opacity: 0;
+                  visibility: hidden;
+                  transition:
+                    opacity 0.2s,
+                    visibility 0.2s;
+                  z-index: 10;
+                  width: 180px;
+                  white-space: normal;
+                  text-align: center;
+                  line-height: 1.4;
+
+                  .webring-link {
+                    color: $hover-color;
+                    text-decoration: none;
+                    white-space: nowrap;
+                    display: inline;
+
+                    &:hover {
+                      text-decoration: underline;
+                    }
+                  }
+
+                  &::after {
+                    content: "";
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    border-width: 4px;
+                    border-style: solid;
+                    border-color: $background-dark transparent transparent
+                      transparent;
+                  }
+                }
+
+                &:hover {
+                  .webring-info {
+                    opacity: 1;
+                    visibility: visible;
+                  }
+                }
+              }
+            }
+
+            .footer-copyright-row {
+              width: 100%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-top: 0.5em;
+              margin-bottom: 0.2em;
+            }
+
+            .copyright {
+              color: $secondary;
+              font-size: 0.8em;
+              margin: 0;
+              opacity: 0.75;
+              text-align: center;
+              width: 100%;
+            }
+
+            .icon {
+              width: 0.7em;
+              height: 0.7em;
+            }
+
+            @media (max-width: 900px) {
+              .footer-content-wide {
+                max-width: 98vw;
+                padding-left: 0.5em;
+                padding-right: 0.5em;
+              }
+              .footer-row {
+                flex-direction: column;
+                gap: 0.5em;
+                align-items: stretch;
+              }
+              .footer-left,
+              .footer-center,
+              .footer-right {
+                justify-content: center;
+                min-height: unset;
+              }
+              .footer-icons {
+                justify-content: center;
+              }
+            }
+          }
+        </style>
       </div>
-      <Link
-        href="https://nixwebr.ing/next/notashelf"
-        title="Next site in the Nix webring"
-        aria-label="Next site"
-        external={true}
-      >
-        <Icon name="chevron-right" class="icon" />
-      </Link>
     </div>
-    <div class="built-from">
-      <Icon name="code-branch" title="Git Branch" class="icon" />
-      <span>{gitEnv}</span>
-    </div>
-    <p class="copyright">
-      &copy; <span id="copyright">__COPYRIGHT_YEAR__</span> NotAShelf
-    </p>
   </div>
 </footer>
-
-<style lang="scss">
-  @use "../styles/global" as *;
-
-  footer {
-    color: $secondary;
-    padding: 20px 0;
-    text-align: center;
-    margin-top: auto;
-    position: relative;
-
-    .icon {
-      width: 0.7em;
-      height: 0.7em;
-    }
-
-    .footer-divider {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 20%;
-      height: 1px;
-      background-color: $secondary;
-    }
-
-    .footer-content {
-      max-width: 80ch;
-      margin: 0 auto;
-      padding-top: 15px;
-      display: grid;
-      row-gap: 2px;
-    }
-
-    .built-from {
-      font-size: 0.85em;
-      opacity: 0.8;
-
-      .icon {
-        margin-right: 4px;
-      }
-    }
-
-    .nix-webring {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85em;
-      margin: 2px 0;
-
-      a {
-        color: $secondary;
-        text-decoration: none;
-        margin: 0 3px;
-        display: flex;
-        align-items: center;
-        opacity: 0.8;
-
-        &:hover {
-          opacity: 1;
-        }
-      }
-
-      .webring-container {
-        position: relative;
-        display: inline-block;
-
-        .webring-logo {
-          display: block;
-
-          .webring-img {
-            height: 18px !important;
-            width: auto !important;
-            opacity: 0.8;
-
-            :global(img) {
-              height: 18px !important;
-              width: auto !important;
-              object-fit: contain;
-            }
-
-            &:hover {
-              opacity: 1;
-            }
-          }
-        }
-
-        .webring-info {
-          position: absolute;
-          bottom: 26px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: $background-dark;
-          color: $secondary;
-          padding: 4px 8px;
-          border-radius: 3px;
-          font-size: 0.75em;
-          opacity: 0;
-          visibility: hidden;
-          transition:
-            opacity 0.2s,
-            visibility 0.2s;
-          z-index: 10;
-          width: 180px;
-          white-space: normal;
-          text-align: center;
-          line-height: 1.4;
-
-          .webring-link {
-            color: $hover-color;
-            text-decoration: none;
-            white-space: nowrap;
-            display: inline;
-
-            &:hover {
-              text-decoration: underline;
-            }
-          }
-
-          &::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 4px;
-            border-style: solid;
-            border-color: $background-dark transparent transparent transparent;
-          }
-        }
-
-        &:hover {
-          .webring-info {
-            opacity: 1;
-            visibility: visible;
-          }
-        }
-      }
-    }
-
-    .footer-icons {
-      margin: 2px 0;
-
-      a {
-        color: $secondary;
-        text-decoration: none;
-        margin: 0 8px;
-        opacity: 0.8;
-
-        &:hover {
-          opacity: 1;
-        }
-      }
-    }
-
-    .copyright {
-      color: $secondary;
-      font-size: 0.8em;
-      margin: 4px 0 0 0;
-      opacity: 0.75;
-    }
-  }
-</style>
