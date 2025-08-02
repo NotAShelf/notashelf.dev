@@ -7,7 +7,7 @@ interface Props {
   [key: string]: any;
 }
 
-const { href, external, class: className, underline, ...rest } = Astro.props;
+const { href, external, ...rest } = Astro.props;
 ---
 
 <a href={href} target={external ? "_blank" : "_self"} {...rest}>
