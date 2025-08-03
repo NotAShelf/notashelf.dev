@@ -40,9 +40,10 @@ they discard the garbage and hand-pick the good ones.
 [^1]: Or maybe its sequel, The Son of Dice Man? It's been years since I read the
     books...
 
-That's what I vibe coding to be. You prompt an AI a hundred times, throw away
-the malformed outputs, and keep the one that works, at least on the surface. It
-looks right. It runs. The UI renders. The button clicks. Success, right?
+That's what I find vibe coding to be. You prompt an AI a hundred times, throw
+away the malformed outputs, and keep the one that works, at least on the
+surface. It looks right. It runs. The UI renders. The button clicks. Success,
+right?
 
 I think this misconception, so to speak, comes from the fact that software
 programming has fewer win conditions. While in most domains a "win condition" is
@@ -61,7 +62,7 @@ As such the internal structure matters. Code is not just visual. It is layered
 with behavior, security, data access, side effects, and edge cases. You are not
 choosing car sketches for a brochure; you are selecting an actual vehicle that
 someone will drive. And if you don't understand what's under the hood, you are
-gambling with your user's safety. The belief that AI-generated code can be
+gambling with your users' safety. The belief that AI-generated code can be
 blindly trusted because it "builds and runs" dismisses these hidden complexities
 and the inherent unpredictability of probabilistic models. Treating generated
 code as a finished product rather than a draft invites risk.
@@ -93,7 +94,7 @@ integrity of the codebase is compromised.
 
 ## The Shortcut That Becomes a Detour
 
-I'll be honest, yes vibe coding _does_ accelerate prototyping. Yes, it also
+I'll be honest; yes, vibe coding _does_ accelerate prototyping. Yes, it also
 lowers the floor for experimentation. But we have to stop pretending that this
 comes without trade-offs. You are accumulating technical debt at warp speed. You
 are outsourcing logic to a model trained on GitHub, filled with every security
@@ -146,8 +147,8 @@ clarity, and not vibes.
 
 What I take issue with in the usage of such tools is that I **do not trust**
 most developers to draw the line clearly. The most common and dare I say natural
-response to the task often is something along the lines of "well I used it for
-prototyping and it worked, it can probably handle the production code as well"
+response to the task often is something along the lines of "_Well I used it for
+prototyping and it worked. It can probably handle the production code as well_"
 and to me that violates a contract of trust.
 
 When I use software made by another person, I trust in their moral judgement and
@@ -214,8 +215,8 @@ This has been my miniature rant on vibe coding. Truth be told, I was exposed to
 serve me was to get on my nerves. Waste my time. Sure, don't think I guess. That
 said, I do not reject the idea outright. I believe there is merit in AI-assisted
 code reviews or project planning. Not yet though, at least not until the hype
-bubble pops. Hope you enjoyed this writing. It was more emotional than the rest
-of my writing, and I'd like to hear your thoughts. If you think I've missed
+bubble pops. Hope you enjoyed this post. It was more emotional than the rest of
+my writing, and I'd like to hear your thoughts. If you think I've missed
 anything, I'm also open to further discussion.
 
 [One of them]: https://advancesinsimulation.biomedcentral.com/articles/10.1186/s41077-025-00350-6
