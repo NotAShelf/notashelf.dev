@@ -36,6 +36,10 @@ export default defineConfig({
     enabled: false,
   },
 
+  redirects: {
+    "/blog": "/posts",
+  },
+
   image: {
     remotePatterns: [{ protocol: "https" }],
     service: {
