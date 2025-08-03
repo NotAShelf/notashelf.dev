@@ -1,7 +1,7 @@
 ---
 title: "I am Not Convinced by Vibe Coding"
 description: "A Critique of Vibe Coding and its False Promise of Effortless Software Development."
-date: 2025-08-02
+date: 2025-08-03
 keywords: ["thoughts", "software", "programming"]
 ---
 
