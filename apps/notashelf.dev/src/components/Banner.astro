@@ -1,13 +1,5 @@
 ---
-import {
-  faChevronDown,
-  faChevronUp,
-  faCircleCheck,
-  faExclamationTriangle,
-  faInfoCircle,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Icon } from "astro-icon/components";
 
 interface Props {
   type?: "info" | "warning" | "success";
@@ -49,11 +41,11 @@ const bannerId =
 const getTypeIcon = () => {
   switch (type) {
     case "warning":
-      return faExclamationTriangle;
+      return "exclamation-triangle";
     case "success":
-      return faCircleCheck;
+      return "circle-check";
     default:
-      return faInfoCircle;
+      return "info-circle";
   }
 };
 ---
@@ -61,11 +53,7 @@ const getTypeIcon = () => {
 <div class={`banner ${type}`} id={bannerId} data-expanded={expanded}>
   <div class="banner-header">
     <div class="banner-title">
-      {
-        showIcon && (
-          <FontAwesomeIcon icon={getTypeIcon()} className="banner-icon" />
-        )
-      }
+      {showIcon && <Icon name={getTypeIcon()} class="banner-icon" />}
       {title && <h3>{title}</h3>}
     </div>
     <div class="banner-actions">
@@ -76,9 +64,9 @@ const getTypeIcon = () => {
             aria-label={expanded ? "Collapse banner" : "Expand banner"}
             title={expanded ? "Collapse" : "Expand"}
           >
-            <FontAwesomeIcon
-              icon={expanded ? faChevronUp : faChevronDown}
-              className="toggle-icon"
+            <Icon
+              name={expanded ? "chevron-up" : "chevron-down"}
+              class="toggle-icon"
             />
           </button>
         )
@@ -86,7 +74,7 @@ const getTypeIcon = () => {
       {
         closable && (
           <button class="banner-close" aria-label="Close banner" title="Close">
-            <FontAwesomeIcon icon={faXmark} className="close-icon" />
+            <Icon name="xmark" class="close-icon" />
           </button>
         )
       }

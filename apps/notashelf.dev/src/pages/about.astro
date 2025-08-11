@@ -1,24 +1,7 @@
 ---
 import FeaturedProjects from "@components/FeaturedProjects.astro";
-import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import {
-  faDiscord,
-  faGithub,
-  faGolang,
-  faLinux,
-  faRust,
-  faTwitter,
-} from "@fortawesome/free-brands-svg-icons";
-import {
-  faCode,
-  faEnvelope,
-  faLayerGroup,
-  faSnowflake,
-  faUser,
-  faUserGroup,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { Icon } from "astro-icon/components";
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 
@@ -31,27 +14,28 @@ const sortedAffiliationsEntries = affiliationsEntries.sort((a, b) =>
 );
 
 // Map the icon names to actual icon objects
-const getIconByName = (name: string): IconDefinition => {
-  const icons: Record<string, IconDefinition> = {
-    faGithub,
-    faTwitter,
-    faDiscord,
-    faRust,
-    faLinux,
-    faGolang,
-    faCode,
-    faEnvelope,
-    faLayerGroup,
-    faSnowflake,
-    faUser,
-    faUserGroup,
+const getIconByName = (name: string): string => {
+  // Map old FontAwesome icon names to new SVG filenames
+  const icons: Record<string, string> = {
+    faGithub: "github",
+    faTwitter: "twitter",
+    faDiscord: "discord",
+    faRust: "rust",
+    faLinux: "linux",
+    faGolang: "golang",
+    faCode: "code-branch",
+    faEnvelope: "envelope",
+    faLayerGroup: "layer-group",
+    faSnowflake: "snowflake",
+    faUser: "user",
+    faUserGroup: "user-group",
   };
-  return icons[name] || faCode;
+  return icons[name] || "code-branch";
 };
 
 interface ProcessedAffiliation {
   id: string;
-  logo: string | IconDefinition;
+  logo: string;
   name: string;
   description: string;
   isIcon: boolean;
@@ -81,30 +65,30 @@ const affiliations: ProcessedAffiliation[] = sortedAffiliationsEntries.map(
 );
 
 const techBadges = [
-  { icon: faSnowflake, tooltip: "NixOS" },
-  { icon: faLinux, tooltip: "Linux" },
-  { icon: faRust, tooltip: "Rust" },
-  { icon: faGolang, tooltip: "Go" },
+  { icon: "snowflake", tooltip: "NixOS" },
+  { icon: "linux", tooltip: "Linux" },
+  { icon: "rust", tooltip: "Rust" },
+  { icon: "golang", tooltip: "Go" },
 ];
 
 const contactOptions = [
   {
-    icon: faEnvelope,
+    icon: "envelope",
     text: "raf@notashelf.dev",
     href: "mailto:raf@notashelf.dev",
   },
   {
-    icon: faDiscord,
+    icon: "discord",
     text: "@notashelf",
     href: "https://discord.com/users/419880181101232129",
   },
   {
-    icon: faCode,
+    icon: "code-branch",
     text: "Matrix",
     href: "https://matrix.to/#/@raf:notashelf.dev",
   },
   {
-    icon: faTwitter,
+    icon: "twitter",
     text: "Twitter",
     href: "https://twitter.com/NotAShelf",
   },
@@ -162,7 +146,7 @@ import Avatar from "../images/notashelf-pfp.png";
           {
             techBadges.map((badge) => (
               <span class="tech-badge">
-                <FontAwesomeIcon icon={badge.icon} />
+                <Icon name={badge.icon} />
               </span>
             ))
           }
@@ -182,10 +166,10 @@ import Avatar from "../images/notashelf-pfp.png";
             target="_blank"
             rel="noopener"
           >
-            <FontAwesomeIcon icon={faGithub} /> GitHub
+            <Icon name="github" /> GitHub
           </a>
           <a href="#contact" class="social-link highlight">
-            <FontAwesomeIcon icon={faEnvelope} /> Contact
+            <Icon name="envelope" /> Contact
           </a>
         </div>
       </div>
@@ -193,7 +177,7 @@ import Avatar from "../images/notashelf-pfp.png";
 
     <div class="content-grid">
       <section class="about-section fade-in" style="--delay: 0.1s">
-        <h2>Background <FontAwesomeIcon icon={faUser} /></h2>
+        <h2>Background <Icon name="user" /></h2>
         <div class="section-content">
           <p>
             I've been programming since 2018, entering the world of Linux,
@@ -215,7 +199,7 @@ import Avatar from "../images/notashelf-pfp.png";
       </section>
 
       <section class="about-section fade-in" style="--delay: 0.2s">
-        <h2>Tech Stack <FontAwesomeIcon icon={faLayerGroup} /></h2>
+        <h2>Tech Stack <Icon name="layer-group" /></h2>
         <div class="section-content">
           <div class="skills-container">
             {
@@ -235,7 +219,7 @@ import Avatar from "../images/notashelf-pfp.png";
       </section>
 
       <section class="about-section fade-in" style="--delay: 0.25s">
-        <h2>Affiliations <FontAwesomeIcon icon={faUserGroup} /></h2>
+        <h2>Affiliations <Icon name="user-group" /></h2>
         <div class="section-content">
           <p>
             I'm actively involved with several open-source communities and
@@ -248,9 +232,7 @@ import Avatar from "../images/notashelf-pfp.png";
                 <div class="affiliation-card">
                   <div class="affiliation-logo">
                     {affiliation.isIcon ? (
-                      <FontAwesomeIcon
-                        icon={affiliation.logo as IconDefinition}
-                      />
+                      <Icon name={affiliation.logo as string} />
                     ) : (
                       <Image
                         src={affiliation.logo as string}
@@ -276,7 +258,7 @@ import Avatar from "../images/notashelf-pfp.png";
       </section>
 
       <section id="contact" class="about-section fade-in" style="--delay: 0.5s">
-        <h2>Let's Connect <FontAwesomeIcon icon={faEnvelope} /></h2>
+        <h2>Let's Connect <Icon name="envelope" /></h2>
         <div class="section-content">
           <p class="contact-text">
             Want to talk? Ask a question? Want to discuss NixOS, Hyprland, or
@@ -296,7 +278,7 @@ import Avatar from "../images/notashelf-pfp.png";
                     option.href.startsWith("mailto:") ? undefined : "noopener"
                   }
                 >
-                  <FontAwesomeIcon icon={option.icon} />
+                  <Icon name={option.icon} />
                   <span>{option.text}</span>
                 </a>
               ))

@@ -1,7 +1,6 @@
 ---
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ProjectEntry } from "@lib/types";
+import { Icon } from "astro-icon/components";
 
 interface Props {
   project: ProjectEntry;
@@ -71,7 +70,7 @@ const formatDate = (date?: Date) => {
       rel="noopener noreferrer"
     >
       View Project{" "}
-      <FontAwesomeIcon icon={faArrowRight} className="arrow-icon" />
+      <Icon name="arrow-right" class="arrow-icon" title="Arrow Right" />
     </a>
   </div>
 </div>

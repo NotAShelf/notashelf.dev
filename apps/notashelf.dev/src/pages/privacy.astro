@@ -1,13 +1,6 @@
 ---
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import {
-  faExclamationCircle,
-  faInfoCircle,
-  faQuestion,
-  faShield,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { Icon } from "astro-icon/components";
 
 const lastUpdated = "February 16, 2025";
 const effectiveDate = "April 5, 2024";
@@ -37,7 +30,7 @@ const effectiveDate = "April 5, 2024";
     <div class="policy-grid">
       <div class="policy-section">
         <div class="section-icon">
-          <FontAwesomeIcon icon={faInfoCircle} client:load />
+          <Icon name="circle-info" />
         </div>
         <div class="section-content">
           <h2>Agreement</h2>
@@ -51,7 +44,7 @@ const effectiveDate = "April 5, 2024";
 
       <div class="policy-section">
         <div class="section-icon">
-          <FontAwesomeIcon icon={faShield} client:load />
+          <Icon name="shield" />
         </div>
         <div class="section-content">
           <h2>Information Collection</h2>
@@ -79,7 +72,7 @@ const effectiveDate = "April 5, 2024";
 
       <div class="policy-section">
         <div class="section-icon">
-          <FontAwesomeIcon icon={faExclamationCircle} client:load />
+          <Icon name="circle-exclamation" />
         </div>
         <div class="section-content">
           <h2>Site Analytics</h2>
@@ -97,7 +90,7 @@ const effectiveDate = "April 5, 2024";
 
       <div class="policy-section">
         <div class="section-icon">
-          <FontAwesomeIcon icon={faQuestion} client:load />
+          <Icon name="circle-question" />
         </div>
         <div class="section-content">
           <h2>Contact</h2>
@@ -121,7 +114,7 @@ const effectiveDate = "April 5, 2024";
         target="_blank"
         rel="noopener noreferrer"
       >
-        <FontAwesomeIcon icon={faGithub} client:load />
+        <Icon name="github" />
         Source code
       </a>
     </div>

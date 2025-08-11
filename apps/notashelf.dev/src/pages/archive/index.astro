@@ -1,9 +1,8 @@
 ---
 import Pagination from "@components/Pagination.svelte";
-import { faArchive } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import type { PostEntry } from "@lib/types";
+import { Icon } from "astro-icon/components";
 import { getCollection } from "astro:content";
 
 // Pagination settings
@@ -31,7 +30,7 @@ const posts = archivedPosts.slice(startIndex, endIndex);
   <div class="posts-header">
     <h1 class="page-title">Archive</h1>
     <a href="/posts" class="posts-link">
-      <FontAwesomeIcon icon={faArchive} /> Back to Posts
+      <Icon name="box-archive" /> Back to Posts
     </a>
   </div>
 
