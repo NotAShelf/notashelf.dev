@@ -31,10 +31,34 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200)); // 200 words per mi
 
 // Simple regex to extract headings with their IDs
 const headingRegex = /<h([2-3])[^>]*id="([^"]*)"[^>]*>(.*?)<\/h\1>/g;
+function decodeHtmlEntities(str: string): string {
+  if (!str) return "";
+
+  // Use browser decoding if available, fallback for SSR
+  if (typeof window !== "undefined") {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = str;
+    return txt.value;
+  }
+
+  // SSR: decode named, decimal, and hex numeric entities
+  return str
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#039;/g, "'")
+    .replace(/&#([0-9]+);/g, (_, dec) => String.fromCharCode(parseInt(dec, 10)))
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) =>
+      String.fromCharCode(parseInt(hex, 16)),
+    );
+}
+
 const headings = Array.from(content.matchAll(headingRegex), (match) => ({
   level: parseInt(match[1]),
   id: match[2],
-  text: match[3].replace(/<[^>]*>/g, ""),
+  text: decodeHtmlEntities(match[3].replace(/<[^>]*>/g, "")),
 }));
 
 // Show TOC only if there are enough headings
