@@ -15,6 +15,7 @@ import copyrightYearPlugin from "vite-copyright-replace";
 import remarkEmDash from "remark-em-dash";
 
 // Third Party integrations or plugins
+import icon from "astro-icon";
 import postcssNormalize from "postcss-normalize";
 import postcssPresetEnv from "postcss-preset-env";
 import autoprefixer from "autoprefixer";
@@ -25,8 +26,6 @@ import rehypeExternalLinks from "rehype-external-links";
 
 import wasm from "vite-plugin-wasm";
 import topLevelAwait from "vite-plugin-top-level-await";
-
-import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
@@ -60,6 +59,7 @@ export default defineConfig({
   // https://docs.astro.build/en/reference/configuration-reference/
   integrations: [
     sitemap(),
+    icon(),
     partytown({
       config: {
         forward: ["plausible"],
@@ -67,6 +67,7 @@ export default defineConfig({
           if (url.hostname === "pl.notashelf.dev") {
             return url;
           }
+
           return url;
         },
       },
@@ -89,7 +90,9 @@ export default defineConfig({
           },
         ],
       ],
-    }), // Home-Baked Integrations
+    }),
+
+    // Home-Baked Integrations
     plausible({
       domain: "notashelf.dev",
       src: "https://pl.notashelf.dev/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js",
@@ -97,10 +100,12 @@ export default defineConfig({
       excludeHash: true,
       excludeSearch: true,
     }),
+
     emailObfuscation({
       methods: ["js-interaction", "rot18"],
       placeholder: "me @ domain",
     }),
+
     purgeCss({
       safelist: ["safe-class"],
       blocklist: ["blocked-class"],
@@ -155,7 +160,6 @@ export default defineConfig({
         ],
       },
     }),
-    icon(),
   ],
 
   markdown: {
@@ -192,50 +196,8 @@ export default defineConfig({
   },
 
   vite: {
-    plugins: [wasm(), topLevelAwait(), copyrightYearPlugin()],
-    build: {
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            react: ["react", "react-dom"],
-            fontawesome: [
-              "@fortawesome/react-fontawesome",
-              "@fortawesome/fontawesome-svg-core",
-            ],
-            wasm: ["wasm-utils"],
-          },
-        },
-      },
-      minify: "terser",
-      terserOptions: {
-        compress: {
-          drop_console: true,
-          drop_debugger: true,
-          pure_funcs: [
-            "console.log",
-            "console.info",
-            "console.debug",
-            "console.warn",
-          ],
-          passes: 2,
-          unsafe_arrows: true,
-          unsafe_methods: true,
-          unsafe_proto: true,
-          unsafe_regexp: true,
-        },
-        mangle: {
-          properties: {
-            regex: /^_/,
-          },
-        },
-        format: {
-          comments: true,
-        },
-      },
-    },
-    optimizeDeps: {
-      exclude: ["wasm-utils"],
-    },
+    // Variables used by the build process. We can easily pass values to those with Nix
+    // during the build process, so this is deterministic and clean.
     define: {
       "import.meta.env.GIT_REV": JSON.stringify(process.env.GIT_REV || "main"),
       "import.meta.env.SITE_SRC": JSON.stringify(
@@ -244,6 +206,58 @@ export default defineConfig({
       "import.meta.env.BUILD_DATE": JSON.stringify(
         process.env.BUILD_DATE || new Date(),
       ),
+    },
+
+    plugins: [
+      // Replaces copyright variables during the build process. This is more performant
+      // compared to embedding some minor JS code to replace it dynamically.
+      copyrightYearPlugin(),
+
+      // WASM support for Vite. WASM is a sandbox experiment.
+      // <https://www.npmjs.com/package/vite-plugin-wasm>
+      wasm(),
+      topLevelAwait(),
+    ],
+
+    // Aggressively optimise Vite's build process. Terser is 1-3% slower, but it produces
+    // roughly 10% smaller results. Since we deploy this site exclusively on system switches
+    // the speed hit is not critical. It's a static site, not my super-epic online e-commerce.
+    build: {
+      minify: "terser",
+      terserOptions: {
+        compress: {
+          passes: 2,
+          unsafe_arrows: true,
+          unsafe_methods: true,
+          unsafe_proto: true,
+          unsafe_regexp: true,
+          drop_console: true,
+          drop_debugger: true,
+          pure_funcs: [
+            "console.log",
+            "console.info",
+            "console.debug",
+            "console.warn",
+          ],
+        },
+
+        mangle: {
+          properties: {
+            regex: /^_/,
+          },
+        },
+
+        format: {
+          comments: true,
+        },
+      },
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            wasm: ["wasm-utils"],
+          },
+        },
+      },
     },
   },
 });
