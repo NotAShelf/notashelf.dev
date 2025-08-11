@@ -40,6 +40,12 @@ interface AstroEmailObfuscationOptions {
   placeholder?: string;
   redirectBaseUrl?: string;
   includeFallbacks?: boolean;
+
+  /**
+   * Regex pattern (string or RegExp) to exclude file paths from processing.
+   * If a file path matches, it will not be obfuscated.
+   */
+  excludePathPattern?: RegExp | string;
 }
 
 export default function astroEmailObfuscation(
@@ -375,9 +381,31 @@ export default function astroEmailObfuscation(
       return { content, emailCount: 0 };
     }
 
-    // Email regex - more comprehensive and precise
+    // Systemd suffixes to exclude from email detection
+    const systemdSuffixes = [
+      ".service",
+      ".socket",
+      ".target",
+      ".mount",
+      ".timer",
+      ".slice",
+      ".scope",
+      ".device",
+      ".swap",
+      ".path",
+    ];
+
+    // Email regex; must have a dot in the domain part (avoids SSH user@host)
+    // Group 1: local part, Group 2: domain part
+    // This helps catch sensitive information while allowing not-so-sensitive
+    // SSH addresses such as me@machine without a domain.
     const emailPattern =
-      /\b[A-Za-z0-9](?:[A-Za-z0-9._%-]*[A-Za-z0-9])?@[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?\.[A-Za-z]{2,}\b/g;
+      /\b([A-Za-z0-9](?:[A-Za-z0-9._%+-]*[A-Za-z0-9])?)@([A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?\.[A-Za-z]{2,})\b/g;
+
+    // Check if domain ends with a systemd suffix
+    function isSystemdUnit(domain: string): boolean {
+      return systemdSuffixes.some((suffix) => domain.endsWith(suffix));
+    }
 
     // Process mailto links if target includes "link"
     if (options.target === "link" || options.target === "both") {
@@ -385,7 +413,13 @@ export default function astroEmailObfuscation(
         /(<a[^>]*?)href=["']mailto:([^"']+)["']([^>]*?>)([^<]*?)(<\/a>)/gi,
         (match, openTag, email: string, middleTag, linkText, closeTag) => {
           // Validate email format before processing
-          if (emailPattern.test(email) && validateEmail(email)) {
+          emailPattern.lastIndex = 0;
+          const matchParts = emailPattern.exec(email);
+          if (
+            matchParts &&
+            validateEmail(email) &&
+            !isSystemdUnit(matchParts[2])
+          ) {
             emailCount++;
             const obfuscatedEmail = applyObfuscationChain(email);
             // For mailto links, we replace the entire link content
@@ -402,7 +436,7 @@ export default function astroEmailObfuscation(
     // Process standalone emails in text content if target includes "text"
     if (options.target === "text" || options.target === "both") {
       content = content.replace(
-        />([^<]*?[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}[^<]*?)</g,
+        />((?:[^<]*?[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}[^<]*?))</g,
         (match, textContent) => {
           // Skip if this text is inside an already obfuscated element
           if (
@@ -415,16 +449,18 @@ export default function astroEmailObfuscation(
             return match;
           }
 
-          // Reset regex lastIndex to ensure clean matching
-          emailPattern.lastIndex = 0;
-          const newTextContent = textContent.replace(
+          // Replace only valid emails, skip SSH/systemd
+          const replacedText = textContent.replace(
             emailPattern,
-            (email: string) => {
+            (full: string, local: string, domain: string) => {
+              if (!validateEmail(full) || isSystemdUnit(domain)) {
+                return full;
+              }
               emailCount++;
-              return applyObfuscationChain(email);
+              return applyObfuscationChain(full);
             },
           );
-          return `>${newTextContent}<`;
+          return `>${replacedText}<`;
         },
       );
     }
@@ -543,6 +579,23 @@ export default function astroEmailObfuscation(
 
           const processHTMLFile = async (filePath: string): Promise<number> => {
             try {
+              // Exclude file if path matches excludePathPattern
+              // Use userOptions to access excludePathPattern, not options
+              if (userOptions.excludePathPattern) {
+                let pattern: RegExp;
+                if (typeof userOptions.excludePathPattern === "string") {
+                  pattern = new RegExp(userOptions.excludePathPattern);
+                } else {
+                  pattern = userOptions.excludePathPattern;
+                }
+                if (pattern.test(filePath)) {
+                  logger.info(
+                    `Skipping file due to excludePathPattern: ${path.relative(distPath, filePath)}`,
+                  );
+                  return 0;
+                }
+              }
+
               const content = await fs.readFile(filePath, "utf-8");
               const { content: processedContent, emailCount } =
                 processHTMLContent(content);
