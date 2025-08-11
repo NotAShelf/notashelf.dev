@@ -3,7 +3,6 @@ import { defineConfig } from "astro/config";
 
 // First party integrations
 import mdx from "@astrojs/mdx";
-import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import partytown from "@astrojs/partytown";
 import svelte from "@astrojs/svelte";
@@ -26,6 +25,8 @@ import rehypeExternalLinks from "rehype-external-links";
 
 import wasm from "vite-plugin-wasm";
 import topLevelAwait from "vite-plugin-top-level-await";
+
+import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
@@ -58,7 +59,6 @@ export default defineConfig({
 
   // https://docs.astro.build/en/reference/configuration-reference/
   integrations: [
-    react(),
     sitemap(),
     partytown({
       config: {
@@ -89,9 +89,7 @@ export default defineConfig({
           },
         ],
       ],
-    }),
-
-    // Home-Baked Integrations
+    }), // Home-Baked Integrations
     plausible({
       domain: "notashelf.dev",
       src: "https://pl.notashelf.dev/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js",
@@ -99,12 +97,10 @@ export default defineConfig({
       excludeHash: true,
       excludeSearch: true,
     }),
-
     emailObfuscation({
       methods: ["js-interaction", "rot18"],
       placeholder: "me @ domain",
     }),
-
     purgeCss({
       safelist: ["safe-class"],
       blocklist: ["blocked-class"],
@@ -159,6 +155,7 @@ export default defineConfig({
         ],
       },
     }),
+    icon(),
   ],
 
   markdown: {
