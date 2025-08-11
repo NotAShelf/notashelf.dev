@@ -15,6 +15,8 @@ export default getViteConfig({
       "wasm-utils": path.resolve(__dirname, "../../packages/wasm-utils/pkg"),
     },
   },
+
+  // @ts-ignore: shut up
   test: {
     name: "notashelf.dev",
     environment: "happy-dom",
