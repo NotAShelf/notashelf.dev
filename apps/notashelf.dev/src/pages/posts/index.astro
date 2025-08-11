@@ -1,16 +1,9 @@
 ---
 import Pagination from "@components/Pagination.svelte";
 import PostList from "@components/PostList.astro";
-import {
-  faArchive,
-  faLayerGroup,
-  faList,
-  faMagnifyingGlass,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import type { PostEntry } from "@lib/types";
+import { Icon } from "astro-icon/components";
 import { getCollection } from "astro:content";
 
 // Get all blog posts
@@ -51,16 +44,12 @@ const posts = filteredPosts.slice(0, postsPerPage);
         title="Toggle view mode"
         aria-label="Toggle between paginated and all posts view"
       >
-        <FontAwesomeIcon icon={faLayerGroup} id="pagination-icon" />
-        <FontAwesomeIcon
-          icon={faList}
-          id="all-icon"
-          style={{ display: "none" }}
-        />
+        <Icon name="layer-group" id="pagination-icon" />
+        <Icon name="list" id="all-icon" style={{ display: "none" }} />
         <span id="view-label">View All</span>
       </button>
       <a href="/archive" class="archive-link">
-        <FontAwesomeIcon icon={faArchive} /> View Archive
+        <Icon name="box-archive" /> View Archive
       </a>
     </div>
   </div>
@@ -76,7 +65,7 @@ const posts = filteredPosts.slice(0, postsPerPage);
           aria-label="Search posts"
         />
         <button type="submit" class="search-button" id="search-button">
-          <FontAwesomeIcon icon={faMagnifyingGlass} />
+          <Icon name="search" />
         </button>
         <button
           type="button"
@@ -84,7 +73,7 @@ const posts = filteredPosts.slice(0, postsPerPage);
           id="clear-search"
           style="display: none;"
         >
-          <FontAwesomeIcon icon={faXmark} />
+          <Icon name="xmark" />
         </button>
       </form>
     </div>
@@ -113,7 +102,7 @@ const posts = filteredPosts.slice(0, postsPerPage);
   />
 
   <div class="no-results" style="display: none;">
-    <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
+    <Icon name="search" class="search-icon" />
     <p>No posts found matching your criteria</p>
     <button type="button" id="reset-filters" class="reset-filters">
       Reset filters

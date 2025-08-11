@@ -1,11 +1,6 @@
 ---
-import {
-  faArrowLeft,
-  faHome,
-  faSearch,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { Icon } from "astro-icon/components";
 ---
 
 <BaseLayout
@@ -23,15 +18,15 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 
       <div class="error-actions">
         <a href="/" class="action-button primary">
-          <FontAwesomeIcon icon={faHome} client:load />
+          <Icon name="home" class="icon" title="Home" />
           <span>Home</span>
         </a>
         <a href="/posts" class="action-button">
-          <FontAwesomeIcon icon={faSearch} client:load />
+          <Icon name="search" class="icon" title="Blog Posts" />
           <span>Blog Posts</span>
         </a>
         <button id="go-back-button" class="action-button">
-          <FontAwesomeIcon icon={faArrowLeft} client:load />
+          <Icon name="arrow-left" class="icon" title="Go Back" />
           <span>Go Back</span>
         </button>
       </div>

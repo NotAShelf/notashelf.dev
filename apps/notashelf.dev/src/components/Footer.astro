@@ -1,12 +1,5 @@
 ---
-import { faGithub, faTwitter } from "@fortawesome/free-brands-svg-icons";
-import {
-  faChevronLeft,
-  faChevronRight,
-  faRss,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import FontAwesome from "./FontAwesome.astro";
+import { Icon } from "astro-icon/components";
 import Link from "./Link.astro";
 
 const gitEnv = import.meta.env.GIT_ENV || "development";
@@ -21,17 +14,17 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
         aria-label="GitHub"
         external={true}
       >
-        <FontAwesomeIcon icon={faGithub} title="GitHub" className="icon" />
+        <Icon name="github" title="GitHub" class="icon" />
       </Link>
       <Link
         href="https://twitter.com/notashelf"
         aria-label="Twitter"
         external={true}
       >
-        <FontAwesomeIcon icon={faTwitter} title="Twitter" className="icon" />
+        <Icon name="twitter" title="Twitter" class="icon" />
       </Link>
       <a href="/rss.xml" aria-label="RSS Feed">
-        <FontAwesomeIcon icon={faRss} title="RSS Feed" className="icon" />
+        <Icon name="rss" title="RSS Feed" class="icon" />
       </a>
     </div>
     <div class="nix-webring">
@@ -41,7 +34,7 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
         aria-label="Previous site"
         external={true}
       >
-        <FontAwesomeIcon icon={faChevronLeft} className="icon" />
+        <Icon name="chevron-left" class="icon" />
       </Link>
       <div class="webring-container">
         <Link
@@ -73,11 +66,11 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
         aria-label="Next site"
         external={true}
       >
-        <FontAwesomeIcon icon={faChevronRight} className="icon" />
+        <Icon name="chevron-right" class="icon" />
       </Link>
     </div>
     <div class="built-from">
-      <FontAwesome icon="code-branch" title="Git Branch" className="icon" />
+      <Icon name="code-branch" title="Git Branch" class="icon" />
       <span>{gitEnv}</span>
     </div>
     <p class="copyright">

@@ -1,7 +1,6 @@
 ---
-import { faArrowLeft, faCode } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { Icon } from "astro-icon/components";
 
 export interface Props {
   frontmatter: {
@@ -73,7 +72,7 @@ const postSrc =
           rel="noopener noreferrer"
           title="View Markdown Source"
         >
-          <FontAwesomeIcon icon={faCode} /> Source
+          <Icon name="code-branch" /> Source
         </a>
       </div>
 
@@ -114,7 +113,7 @@ const postSrc =
 
     <div class="post-footer">
       <a href="/posts" class="back-to-posts">
-        <FontAwesomeIcon icon={faArrowLeft} /> Back to all posts
+        <Icon name="arrow-left" /> Back to all posts
       </a>
     </div>
   </article>
