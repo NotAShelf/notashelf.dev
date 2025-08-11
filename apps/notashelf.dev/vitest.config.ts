@@ -16,7 +16,7 @@ export default getViteConfig({
     },
   },
 
-  // @ts-ignore: shut up
+  // @ts-expect-error: something about Vitest not being compatible. Blame Astro.
   test: {
     name: "notashelf.dev",
     environment: "happy-dom",
