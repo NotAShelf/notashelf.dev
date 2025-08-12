@@ -1,0 +1,76 @@
+---
+const { affiliation } = Astro.props;
+
+// Dynamically import the logo from src/images
+let logoSrc: string | undefined = undefined;
+try {
+  logoSrc = (await import(`../images/${affiliation.logo}`)).default;
+} catch {
+  // fallback to undefined if image not found
+  logoSrc = undefined;
+}
+---
+
+<div class="affiliation-card">
+  <div class="affiliation-logo">
+    {
+      logoSrc ? (
+        <img src={logoSrc} alt={affiliation.name + " logo"} loading="lazy" />
+      ) : (
+        <span class="logo-placeholder">No Logo</span>
+      )
+    }
+  </div>
+  <div class="affiliation-info">
+    <h3 class="affiliation-name">{affiliation.name}</h3>
+    <p class="affiliation-description">{affiliation.description}</p>
+  </div>
+</div>
+
+<style lang="scss">
+  .affiliation-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    background: var(--background, #222);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1rem;
+  }
+  .affiliation-logo {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    .logo-placeholder {
+      color: #888;
+      font-size: 0.8em;
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+    }
+  }
+  .affiliation-info {
+    flex: 1;
+    .affiliation-name {
+      margin: 0 0 0.25rem 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--secondary, #eee);
+    }
+    .affiliation-description {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--text-subtle, #bbb);
+    }
+  }
+</style>

@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
+
 import Link from "./Link.astro";
 
 const gitEnv = import.meta.env.GIT_ENV || "development";
@@ -44,9 +45,9 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
           aria-label="Random site"
           external={true}
         >
-          <img
-            src="/images/nix-webring.svg"
-            alt="Nix Webring"
+          <Icon
+            name="nix-webring"
+            title="Nix Webring"
             class="webring-img"
             width="36"
             height="18"

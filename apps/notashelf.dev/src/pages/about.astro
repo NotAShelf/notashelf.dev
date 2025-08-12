@@ -1,4 +1,9 @@
 ---
+import gitLogo from "@/images/git-logo.svg";
+import hyprlandLogo from "@/images/hyprland-logo.png";
+import nixosLogo from "@/images/nixos-logo.svg";
+import Avatar from "@/images/notashelf-pfp.png";
+import snugLogo from "@/images/snug-logo.png";
 import FeaturedProjects from "@components/FeaturedProjects.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { Icon } from "astro-icon/components";
@@ -42,8 +47,8 @@ interface ProcessedAffiliation {
 }
 
 // Process affiliations to convert string icon names to actual icon objects
-const affiliations: ProcessedAffiliation[] = sortedAffiliationsEntries.map(
-  (entry) => {
+const affiliations: ProcessedAffiliation[] = await Promise.all(
+  sortedAffiliationsEntries.map(async (entry) => {
     const data = entry.data;
     if (data.isIcon && data.logoIcon) {
       return {
@@ -54,14 +59,21 @@ const affiliations: ProcessedAffiliation[] = sortedAffiliationsEntries.map(
         isIcon: data.isIcon,
       };
     }
+    const logoMap = {
+      "git-logo.svg": gitLogo,
+      "hyprland-logo.png": hyprlandLogo,
+      "nixos-logo.svg": nixosLogo,
+      "snug-logo.png": snugLogo,
+    };
+    const logoSrc = logoMap[data.logo] || "";
     return {
       id: entry.id,
-      logo: data.logo || "",
+      logo: logoSrc,
       name: data.name,
       description: data.description,
       isIcon: data.isIcon,
     };
-  },
+  }),
 );
 
 const techBadges = [
@@ -118,8 +130,6 @@ const skillCategories = [
     ],
   },
 ];
-
-import Avatar from "../images/notashelf-pfp.png";
 ---
 
 <BaseLayout
@@ -233,13 +243,18 @@ import Avatar from "../images/notashelf-pfp.png";
                   <div class="affiliation-logo">
                     {affiliation.isIcon ? (
                       <Icon name={affiliation.logo as string} />
-                    ) : (
+                    ) : affiliation.logo ? (
                       <Image
                         src={affiliation.logo as string}
                         alt={`${affiliation.name} Logo`}
                         width={40}
                         height={40}
+                        loading="lazy"
+                        decoding="async"
+                        fetchpriority="auto"
                       />
+                    ) : (
+                      <span class="logo-placeholder">No Logo</span>
                     )}
                   </div>
                   <div class="affiliation-content">
