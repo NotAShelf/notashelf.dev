@@ -28,30 +28,13 @@ const content = await Astro.slots.render("default");
 const wordCount = content.split(/\s+/g).length;
 const readingTime = Math.max(1, Math.ceil(wordCount / 200)); // 200 words per minute
 
-// Simple regex to extract headings with their IDs
+import he from "he";
+const { decode } = he;
+
+// Extract headings with their IDs
 const headingRegex = /<h([2-3])[^>]*id="([^"]*)"[^>]*>(.*?)<\/h\1>/g;
 function decodeHtmlEntities(str: string): string {
-  if (!str) return "";
-
-  // Use browser decoding if available, fallback for SSR
-  if (typeof window !== "undefined") {
-    const txt = document.createElement("textarea");
-    txt.innerHTML = str;
-    return txt.value;
-  }
-
-  // SSR: decode named, decimal, and hex numeric entities
-  return str
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&#039;/g, "'")
-    .replace(/&#([0-9]+);/g, (_, dec) => String.fromCharCode(parseInt(dec, 10)))
-    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) =>
-      String.fromCharCode(parseInt(hex, 16)),
-    );
+  return decode(str || "");
 }
 
 const headings = Array.from(content.matchAll(headingRegex), (match) => ({
@@ -60,17 +43,20 @@ const headings = Array.from(content.matchAll(headingRegex), (match) => ({
   text: decodeHtmlEntities(match[3].replace(/<[^>]*>/g, "")),
 }));
 
-// Show TOC only if there are enough headings
+// Show TOC only if there are enough headings. We can generally assume
+// that a TOC is not necessary if there aren't *that many headings.
 const showToc = headings.length >= 2;
 
 // Get current URL to determine slug
 const currentPath = Astro.url.pathname;
 const slug = currentPath.split("/").filter(Boolean).pop();
 
-// Get git revision from environment variable or default to main
+// Get git revision from environment variable
+// or default to main
 const gitRevision = import.meta.env.GIT_REV || "main";
 
-// Get post sources from environment variable or default to the site source
+// Get post sources from environment variable
+// or default to the site source
 const postSrc =
   import.meta.env.SITE_SRC || "https://github.com/notashelf/notashelf.dev";
 ---
