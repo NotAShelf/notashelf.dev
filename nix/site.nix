@@ -24,7 +24,19 @@
   in
     rustPlatform.buildRustPackage {
       inherit pname version;
-      src = ../packages/wasm-utils;
+      src = let
+        sp = ../packages/wasm-utils;
+      in
+        fs.toSource {
+          root = sp;
+          fileset = fs.intersection (fs.fromSource (lib.sources.cleanSource sp)) (
+            fs.unions [
+              (sp + /src)
+              (sp + /Cargo.toml)
+              (sp + /Cargo.lock)
+            ]
+          );
+        };
 
       nativeBuildInputs = [
         wasm-pack
@@ -68,6 +80,7 @@ in
           fs.unions [
             ../apps
             ../packages
+            ../scripts
             ../package.json
             ../pnpm-lock.yaml
             ../pnpm-workspace.yaml
@@ -101,11 +114,8 @@ in
     '';
 
     nativeBuildInputs = [
-      nodejs
-      pnpm.configHook
-
-      cargo
-      wasm-pack
+      nodejs # build scripts
+      pnpm.configHook # dependency resolution
     ];
 
     buildPhase = ''
