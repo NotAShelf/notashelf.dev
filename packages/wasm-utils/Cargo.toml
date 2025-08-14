@@ -1,8 +1,11 @@
 [package]
 name = "wasm-utils"
 description = "WASM components for my personal website"
-version = "0.2.2"
+version = "0.2.3"
 edition = "2024"
+license = "MPL-2.0"
+authors = ["NotAShelf <raf@notashelf.dev>"]
+repository = "https://github.com/notashelf/notashelf.dev"
 
 [lib]
 crate-type = ["cdylib"]
@@ -10,7 +13,7 @@ crate-type = ["cdylib"]
 [dependencies]
 wasm-bindgen = { version = "0.2", features = ["serde-serialize"] }
 js-sys = "0.3"
-lru = "0.14"
+lru = "0.16"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serde-wasm-bindgen = "0.6"
