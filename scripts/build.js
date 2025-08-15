@@ -14,9 +14,25 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const rootDir = join(__dirname, "..");
 
+// Parse CLI args.
+// Ex: `node build.js <workspace> [npmScript] [--outDir foo]`
+function parseArgs(argv) {
+  let workspaceName = argv[2];
+  let npmScript = argv[3] && !argv[3].startsWith("--") ? argv[3] : "build";
+  let extraArgs = [];
+  for (let i = 2; i < argv.length; ++i) {
+    if (argv[i] === "--outDir" && argv[i + 1]) {
+      extraArgs.push("--outDir", argv[i + 1]);
+      i++;
+    } else if (argv[i].startsWith("--outDir=")) {
+      extraArgs.push(argv[i]);
+    }
+  }
+  return { workspaceName, npmScript, extraArgs };
+}
+
 async function main() {
-  const workspaceName = process.argv[2];
-  const npmScript = process.argv[3] || "build";
+  const { workspaceName, npmScript, extraArgs } = parseArgs(process.argv);
 
   const workspaceGlobs = await getWorkspaces(rootDir);
   const workspaceDirs = resolveWorkspaceDirs(workspaceGlobs, rootDir);
@@ -54,7 +70,7 @@ async function main() {
 
   // Build each selected workspace
   for (const wsDir of targets) {
-    await runWorkspaceBuild(wsDir, [npmScript]);
+    await runWorkspaceBuild(wsDir, [npmScript, ...extraArgs]);
   }
 }
 
