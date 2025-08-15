@@ -4,11 +4,11 @@
     ".astro/types.d.ts",
     "src/**/*.d.ts",
     "src/**/*.svelte",
-    "**/*",
   ],
-  "exclude": ["dist", "result", "node_modules"],
+  "exclude": ["dist", "result", "node_modules", "posts"],
   "compilerOptions": {
     "baseUrl": ".",
+    "outDir": "dist/",
     "declaration": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,

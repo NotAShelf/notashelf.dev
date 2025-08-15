@@ -15,6 +15,8 @@ export default getViteConfig({
       "wasm-utils": path.resolve(__dirname, "../../packages/wasm-utils/pkg"),
     },
   },
+
+  // @ts-expect-error: something about Vitest not being compatible. Blame Astro.
   test: {
     name: "notashelf.dev",
     environment: "happy-dom",

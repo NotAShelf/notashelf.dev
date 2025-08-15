@@ -1,0 +1,41 @@
+---
+import AffiliationCard from "./AffiliationCard.astro";
+
+// List of affiliation data files
+const affiliationFiles = [
+  "../data/affiliations/foss.json",
+  "../data/affiliations/hyprland.json",
+  "../data/affiliations/nixos.json",
+  "../data/affiliations/snug.json",
+];
+
+// Load all affiliations
+const affiliations: any[] = [];
+for (const file of affiliationFiles) {
+  try {
+    const data = (await import(file)).default;
+    affiliations.push(data);
+  } catch {
+    // If file not found or error, skip
+  }
+}
+---
+
+<div class="affiliations-list">
+  {
+    affiliations.map((affiliation) => (
+      <AffiliationCard affiliation={affiliation} />
+    ))
+  }
+</div>
+
+<style lang="scss">
+  .affiliations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+    width: 100%;
+    max-width: 600px;
+  }
+</style>

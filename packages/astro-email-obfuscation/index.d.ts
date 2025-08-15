@@ -71,6 +71,12 @@ interface AstroEmailObfuscationOptions {
   excludeSelector?: string;
 
   /**
+   * Regex pattern (string or RegExp) to exclude file paths from processing.
+   * If a file path matches, it will not be obfuscated.
+   */
+  excludePathPattern?: RegExp | string;
+
+  /**
    * Custom placeholder text for clickable obfuscated emails
    * @default "[Click to reveal email]"
    */

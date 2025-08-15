@@ -1,8 +1,8 @@
 ---
 import FeaturedProjects from "@components/FeaturedProjects.astro";
-import FontAwesome from "@components/FontAwesome.astro";
 import PostSpotlight from "@components/PostSpotlight.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { Icon } from "astro-icon/components";
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import Avatar from "../images/notashelf-pfp.png";
@@ -57,7 +57,7 @@ if (featuredPosts.length >= 3) {
       <h1 class="reveal-text">Howdy! Welcome to my personal website.</h1>
       <p class="intro">
         This is where I share my projects, ideas, thoughts and notes on topics
-        that I find interesting, difficult , obscure or otherwise worth sharing.
+        that I find interesting, difficult, obscure or otherwise worth sharing.
         Most of my writings are on Linux, Nix, NixOS or System Administration. I
         also intend to write about other topics I find interesting, outside of
         programming and technology, such as history, philosophy, and
@@ -70,7 +70,7 @@ if (featuredPosts.length >= 3) {
     </div>
     <div class="scroll-arrow">
       <a href="#latest-notes" aria-label="Scroll to latest notes">
-        <FontAwesome icon="chevron-down" size="2x" loadingStrategy="idle" />
+        <Icon name="chevron-down" class="icon" />
       </a>
     </div>
   </section>
@@ -84,12 +84,7 @@ if (featuredPosts.length >= 3) {
 
         <div class="see-all">
           <a href="/posts" class="see-all-link">
-            View all notes{" "}
-            <FontAwesome
-              icon="arrow-right"
-              class="icon"
-              loadingStrategy="visible"
-            />
+            View all notes <Icon name="arrow-right" class="icon" />
           </a>
         </div>
       </section>

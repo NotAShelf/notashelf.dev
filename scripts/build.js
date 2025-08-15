@@ -1,70 +1,84 @@
 #!/usr/bin/env node
 
-import { spawn } from "child_process";
-import { existsSync } from "fs";
-import path from "path";
+import { join, dirname } from "path";
 import { fileURLToPath } from "url";
+import { spawn } from "child_process";
+import {
+  getWorkspaces,
+  resolveWorkspaceDirs,
+  findWasmPackages,
+  buildAllWasm,
+} from "./utils/workspace.js";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.join(__dirname, "..");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const rootDir = join(__dirname, "..");
 
-// Build WASM if it exists
-const wasmDir = path.join(rootDir, "packages", "wasm-utils");
-if (existsSync(wasmDir)) {
-  console.log("Building WASM...");
-  const wasmBuild = spawn(
-    "wasm-pack",
-    [
-      "build",
-      "--target",
-      "web",
-      "--out-dir",
-      "pkg",
-      "--out-name",
-      "wasm-utils",
-    ],
-    {
-      cwd: wasmDir,
-      stdio: "inherit",
-    },
-  );
+async function main() {
+  const workspaceName = process.argv[2];
+  const npmScript = process.argv[3] || "build";
 
-  wasmBuild.on("close", (code) => {
-    if (code !== 0) {
-      console.warn(
-        "⚠️  WASM build failed, continuing without WASM optimizations",
+  const workspaceGlobs = await getWorkspaces(rootDir);
+  const workspaceDirs = resolveWorkspaceDirs(workspaceGlobs, rootDir);
+
+  // Select workspace to build
+  let targets = [];
+  if (workspaceName) {
+    const w = workspaceName.toLowerCase();
+    targets = workspaceDirs.filter((dir) => {
+      const dirName = dir.replace(rootDir + "/", "").toLowerCase();
+      return (
+        dirName === `apps/${w}` || dirName === `packages/${w}` || dirName === w
       );
-      console.warn("   This may impact performance but won't break the build");
-    } else {
-      console.log("✅ WASM build completed successfully");
+    });
+    if (targets.length === 0) {
+      console.error(`[build] No workspace found matching: ${workspaceName}`);
+      console.error(
+        `[build] Available workspaces: ${workspaceDirs.map((d) => d.replace(rootDir + "/", "")).join(", ")}`,
+      );
+      process.exit(1);
     }
+  } else {
+    console.error(`[build] Please specify a workspace to build`);
+    console.error(
+      `[build] Available workspaces: ${workspaceDirs.map((d) => d.replace(rootDir + "/", "")).join(", ")}`,
+    );
+    process.exit(1);
+  }
 
-    // Always continue with app build regardless of WASM result
-    buildApp();
-  });
+  // Build WASM packages by default
+  const wasmPkgs = findWasmPackages(rootDir);
+  if (wasmPkgs.length > 0) {
+    await buildAllWasm(wasmPkgs, false);
+  }
 
-  wasmBuild.on("error", (err) => {
-    console.warn("⚠️  WASM build encountered an error:", err.message);
-    console.warn("   Continuing without WASM optimizations");
-    buildApp();
-  });
-} else {
-  console.log("No WASM package found, skipping WASM build");
-  buildApp();
+  // Build each selected workspace
+  for (const wsDir of targets) {
+    await runWorkspaceBuild(wsDir, [npmScript]);
+  }
 }
 
-function buildApp() {
-  console.log("Building app...");
-  const child = spawn(
-    "pnpm",
-    ["--filter", "./apps/notashelf.dev", "run", "build"],
-    {
+function runWorkspaceBuild(wsDir, cmdArr) {
+  return new Promise((resolve, reject) => {
+    const wsName = wsDir.replace(`${rootDir}/`, "");
+    console.log(`[build] Building workspace: ${wsName} (${cmdArr.join(" ")})`);
+    const child = spawn("pnpm", ["--filter", `./${wsName}`, "run", ...cmdArr], {
       cwd: rootDir,
       stdio: "inherit",
-    },
-  );
-
-  child.on("close", (code) => {
-    process.exit(code);
+    });
+    child.on("close", (code) => {
+      if (code !== 0) {
+        console.error(`[build] Workspace build failed: ${wsName}`);
+        reject(new Error(`Build failed for ${wsName}`));
+      } else {
+        resolve();
+      }
+    });
+    child.on("error", (err) => {
+      console.error(`[build] Error: ${err.message}`);
+      reject(err);
+    });
   });
 }
+
+main();

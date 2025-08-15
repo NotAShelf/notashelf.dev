@@ -1,9 +1,5 @@
 ---
-import {
-  faChevronLeft,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Icon } from "astro-icon/components";
 
 export interface Props {
   currentPage: number;
@@ -42,7 +38,7 @@ function getPageUrl(page: number) {
         aria-disabled={currentPage <= 1}
         tabindex={currentPage <= 1 ? -1 : 0}
       >
-        <FontAwesomeIcon icon={faChevronLeft} className="chevron-icon" />
+        <Icon name="chevron-left" class="chevron-icon" />
       </a>
 
       {startPage > 1 && (
@@ -85,7 +81,7 @@ function getPageUrl(page: number) {
         aria-disabled={currentPage >= totalPages}
         tabindex={currentPage >= totalPages ? -1 : 0}
       >
-        <FontAwesomeIcon icon={faChevronRight} className="chevron-icon" />
+        <Icon name="chevron-right" class="chevron-icon" />
       </a>
     </nav>
   )

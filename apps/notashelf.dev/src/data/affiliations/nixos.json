@@ -1,5 +1,5 @@
 {
-  "logo": "/images/nixos-logo.svg",
+  "logo": "nixos-logo.svg",
   "name": "NixOS",
   "description": "NixOS hacker, Nixpkgs contributor and 25.05 release editor. I am always looking for new ways to improve the Nix/OS ecosystem.",
   "isIcon": false

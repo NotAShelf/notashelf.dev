@@ -1,7 +1,6 @@
 ---
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ProjectEntry } from "@lib/types";
+import { Icon } from "astro-icon/components";
 import { getCollection } from "astro:content";
 import ProjectCard from "./ProjectCard.astro";
 
@@ -77,10 +76,7 @@ const bottomRowProjects = displayProjects.slice(3);
 
   <div class="see-all">
     <a href="/projects" class="see-all-link">
-      View all projects <FontAwesomeIcon
-        icon={faArrowRight}
-        className="arrow-icon"
-      />
+      View all projects <Icon name="arrow-right" class="arrow-icon" />
     </a>
   </div>
 </section>

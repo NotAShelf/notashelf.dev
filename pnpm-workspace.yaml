@@ -1,7 +1,5 @@
 packages:
-  # Webapps hosted by this monorepository
   - apps/notashelf.dev
-  # Exported members of my monorepository
   - packages/wasm-utils/pkg
   - packages/astro-plausible
   - packages/astro-email-obfuscation
@@ -10,5 +8,6 @@ packages:
   - packages/remark-em-dash
 
 onlyBuiltDependencies:
+  - '@swc/core'
   - sharp
   - wasm-pack

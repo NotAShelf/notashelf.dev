@@ -1,23 +1,25 @@
 ---
 const secondaryNavItems = [
+  { title: "Projects", url: "/projects" },
   { title: "Posts", url: "/posts" },
   { title: "About", url: "/about" },
-  { title: "Privacy", url: "/privacy" },
 ];
 ---
 
-<div class="nav-wrapper">
-  <div class="nav-left">
-    <a class="nav-button" href="/">Index</a>
-  </div>
-  <div class="nav-right">
-    {
-      secondaryNavItems.map((item, index) => (
-        <a class="nav-button" href={item.url} data-key={`nav-${index}`}>
-          {item.title}
-        </a>
-      ))
-    }
+<div class="nav-outer">
+  <div class="nav-wrapper">
+    <div class="nav-left">
+      <a class="nav-button" href="/">Index</a>
+    </div>
+    <div class="nav-right">
+      {
+        secondaryNavItems.map((item, index) => (
+          <a class="nav-button" href={item.url} data-key={`nav-${index}`}>
+            {item.title}
+          </a>
+        ))
+      }
+    </div>
   </div>
 </div>
 <hr class="nav-border" />
@@ -26,10 +28,23 @@ const secondaryNavItems = [
   @use "../styles/global" as *;
   @use "sass:color";
 
+  .nav-outer {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: $primary;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
   .nav-wrapper {
     display: flex;
     justify-content: space-between;
     width: 100%;
+    max-width: 80ch;
+    margin: 0 auto;
     padding: 1rem 0;
     box-sizing: border-box;
   }
