@@ -5,6 +5,10 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::num::NonZeroUsize;
 use wasm_bindgen::prelude::*;
+use wee_alloc::WeeAlloc;
+
+#[global_allocator]
+static ALLOC: WeeAlloc = WeeAlloc::INIT;
 
 // Add random number generation
 use js_sys::Math;
@@ -51,7 +55,7 @@ impl SearchEngine {
             posts: Vec::new(),
             word_index: HashMap::new(),
             keyword_index: HashMap::new(),
-            normalized_cache: RefCell::new(LruCache::new(NonZeroUsize::new(1000).unwrap())),
+            normalized_cache: RefCell::new(LruCache::new(NonZeroUsize::new(250).unwrap())),
         }
     }
 
