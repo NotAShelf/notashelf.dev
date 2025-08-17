@@ -7,9 +7,10 @@
   # WASM
   cargo,
   rustc,
-  rustfmt,
   wasm-pack,
   lld,
+  rustfmt,
+  taplo,
   # Testing/Linting
   typos,
   google-lighthouse,
@@ -27,9 +28,11 @@ in
       # WASM
       cargo
       rustc
-      rustfmt
       wasm-pack
       lld
+
+      rustfmt
+      taplo
 
       # To run 'typos' on my content every once in a while
       typos
@@ -38,7 +41,5 @@ in
       google-lighthouse
     ];
 
-    env = {
-      BUILD_DATE = concatStringsSep "-" (match "(.{4})(.{2})(.{2}).*" self.lastModifiedDate);
-    };
+    env.BUILD_DATE = concatStringsSep "-" (match "(.{4})(.{2})(.{2}).*" self.lastModifiedDate);
   }
