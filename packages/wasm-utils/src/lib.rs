@@ -6,6 +6,13 @@ use std::collections::HashMap;
 use std::num::NonZeroUsize;
 use wasm_bindgen::prelude::*;
 
+#[cfg(target_arch = "wasm32")]
+use lol_alloc::{FreeListAllocator, LockedAllocator};
+
+#[cfg(target_arch = "wasm32")]
+#[global_allocator]
+static ALLOCATOR: LockedAllocator<FreeListAllocator> = LockedAllocator::new(FreeListAllocator::new());
+
 // Add random number generation
 use js_sys::Math;
 
@@ -51,7 +58,7 @@ impl SearchEngine {
             posts: Vec::new(),
             word_index: HashMap::new(),
             keyword_index: HashMap::new(),
-            normalized_cache: RefCell::new(LruCache::new(NonZeroUsize::new(1000).unwrap())),
+            normalized_cache: RefCell::new(LruCache::new(NonZeroUsize::new(250).unwrap())),
         }
     }
 

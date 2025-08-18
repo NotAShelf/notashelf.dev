@@ -3,6 +3,7 @@
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { spawn } from "child_process";
+import { readFileSync } from "fs";
 import {
   getWorkspaces,
   resolveWorkspaceDirs,
@@ -74,18 +75,31 @@ async function main() {
   }
 }
 
+function getWorkspacePkgName(wsDir) {
+  try {
+    const pkg = JSON.parse(readFileSync(join(wsDir, "package.json"), "utf8"));
+    return pkg.name;
+  } catch {
+    return null;
+  }
+}
+
 function runWorkspaceBuild(wsDir, cmdArr) {
   return new Promise((resolve, reject) => {
-    const wsName = wsDir.replace(`${rootDir}/`, "");
-    console.log(`[build] Building workspace: ${wsName} (${cmdArr.join(" ")})`);
-    const child = spawn("pnpm", ["--filter", `./${wsName}`, "run", ...cmdArr], {
+    const wsPkgName = getWorkspacePkgName(wsDir);
+    if (!wsPkgName) {
+      console.log(`[build] No package.json or name for workspace: ${wsDir}`);
+      return resolve();
+    }
+    console.log(`[build] Building workspace: ${wsPkgName} (${cmdArr.join(" ")})`);
+    const child = spawn("pnpm", ["--filter", wsPkgName, "run", ...cmdArr], {
       cwd: rootDir,
       stdio: "inherit",
     });
     child.on("close", (code) => {
       if (code !== 0) {
-        console.error(`[build] Workspace build failed: ${wsName}`);
-        reject(new Error(`Build failed for ${wsName}`));
+        console.error(`[build] Workspace build failed: ${wsPkgName}`);
+        reject(new Error(`Build failed for ${wsPkgName}`));
       } else {
         resolve();
       }

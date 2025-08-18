@@ -1,0 +1,12 @@
+{
+  "name": "wasm-utils",
+  "version": "1.0.0",
+  "private": true,
+  "description": "WASM utilities for notashelf.dev",
+  "type": "module",
+  "license": "MPL-2.0",
+  "scripts": {
+    "build": "wasm-pack build --release --target web",
+    "clean": "rm -rf pkg target"
+  }
+}
