@@ -5,10 +5,13 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::num::NonZeroUsize;
 use wasm_bindgen::prelude::*;
-use wee_alloc::WeeAlloc;
 
+#[cfg(target_arch = "wasm32")]
+use lol_alloc::{FreeListAllocator, LockedAllocator};
+
+#[cfg(target_arch = "wasm32")]
 #[global_allocator]
-static ALLOC: WeeAlloc = WeeAlloc::INIT;
+static ALLOCATOR: LockedAllocator<FreeListAllocator> = LockedAllocator::new(FreeListAllocator::new());
 
 // Add random number generation
 use js_sys::Math;
