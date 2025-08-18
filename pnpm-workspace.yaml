@@ -1,6 +1,6 @@
 packages:
   - apps/notashelf.dev
-  - packages/wasm-utils/pkg
+  - packages/wasm-utils
   - packages/astro-plausible
   - packages/astro-email-obfuscation
   - packages/vite-copyright-replace
