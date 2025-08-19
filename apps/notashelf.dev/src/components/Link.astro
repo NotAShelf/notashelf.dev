@@ -1,15 +1,124 @@
 ---
+import path from "path";
+
 interface Props {
   href: string;
-  external?: boolean;
   class?: string;
   underline?: boolean;
+  title?: string;
+  ariaLabel?: string;
+  externalInNewTab?: boolean;
   [key: string]: any;
 }
 
-const { href, external, ...rest } = Astro.props;
+const {
+  href = "#",
+  class: className = "",
+  underline = false,
+  title,
+  ariaLabel,
+  externalInNewTab = true,
+  ...rest
+} = Astro.props as Props;
+
+// Detect link type
+const isExternal = /^https?:\/\//.test(href);
+const isHash = href.startsWith("#");
+const isMail = href.startsWith("mailto:");
+const isTel = href.startsWith("tel:");
+const isInternal = !isExternal && !isHash && !isMail && !isTel;
+
+const contactData = isMail || isTel ? btoa(href) : null;
+
+// Preprocess href for internal links
+let parsedHref = href;
+if (isInternal && !isHash) {
+  const basePrefix = import.meta.env.BASE_URL ?? "/";
+  parsedHref = path.isAbsolute(href) ? path.join(basePrefix, href) : href;
+}
+if (contactData) {
+  parsedHref = "#";
+}
+
+// Compose rel and target
+const rel = isExternal
+  ? "noopener nofollow"
+  : isInternal
+    ? "prefetch"
+    : undefined;
+const target = isExternal && externalInNewTab ? "_blank" : undefined;
+
+// Compose class
+const typeClass = [
+  "link",
+  isExternal && "is-external",
+  isInternal && "is-internal",
+  isHash && "is-hash",
+  isMail && "is-mail",
+  isTel && "is-tel",
+  underline && "underline",
+  className,
+]
+  .filter(Boolean)
+  .join(" ");
+
+// Compose aria-label
+const computedAriaLabel =
+  ariaLabel ||
+  title ||
+  (isMail && `Email: ${href.replace("mailto:", "")}`) ||
+  (isTel && `Call: ${href.replace("tel:", "")}`) ||
+  undefined;
+
+// Collect extra attributes
+const internalProps = new Set([
+  "href",
+  "class",
+  "underline",
+  "title",
+  "ariaLabel",
+  "externalInNewTab",
+]);
+const extraAttrs: { [key: string]: string } = {};
+Object.entries(rest).forEach(([key, val]) => {
+  if (!internalProps.has(key)) {
+    extraAttrs[key] = `${val}`;
+  }
+});
 ---
 
-<a href={href} target={external ? "_blank" : "_self"} {...rest}>
+<a
+  href={parsedHref}
+  title={title}
+  class={typeClass}
+  aria-label={computedAriaLabel}
+  data-contact={contactData}
+  target={target}
+  rel={rel}
+  {...extraAttrs}
+>
   <slot />
 </a>
+
+<script type="module" is:inline>
+  if (typeof window !== "undefined") {
+    if (!window.__notashelf_link_handler__) {
+      window.__notashelf_link_handler__ = true;
+      document.addEventListener(
+        "click",
+        (e) => {
+          const link = e.target.closest?.(".link.is-mail, .link.is-tel");
+          if (link && link.hasAttribute("data-contact")) {
+            e.preventDefault();
+            const contactHrefRaw = link.getAttribute("data-contact");
+            if (contactHrefRaw) {
+              const contactHref = atob(contactHrefRaw);
+              window.location.href = contactHref;
+            }
+          }
+        },
+        true,
+      );
+    }
+  }
+</script>
