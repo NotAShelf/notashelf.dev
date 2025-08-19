@@ -1,6 +1,6 @@
 {
   "title": "NVF",
-  "description": "Modular, extensible and distro-agnostic Neovim configuration framework for Nix/NixOS ",
+  "description": "Modular, extensible and distro-agnostic Neovim configuration framework for Nix/NixOS",
   "sourceUrl": "https://github.com/notashelf/nvf",
   "startDate": "2023-02-01",
   "tags": ["nix", "neovim", "editor"],
