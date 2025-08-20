@@ -10,6 +10,7 @@
     "build": "node scripts/build.js notashelf.dev build",
     "build:web": "node scripts/build.js notashelf.dev build",
     "build:wasm-utils": "node scripts/build.js wasm-utils build",
+    "build:all": "node scripts/build.js --all",
     "dev": "node scripts/dev.js notashelf.dev dev",
     "preview": "pnpm --filter ./apps/notashelf.dev run preview",
     "check": "pnpm --filter ./apps/notashelf.dev run check",

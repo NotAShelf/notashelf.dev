@@ -17,30 +17,39 @@ const rootDir = join(__dirname, "..");
 
 // Parse CLI args.
 // Ex: `node build.js <workspace> [npmScript] [--outDir foo]`
+//      or `node build.js --all`
 function parseArgs(argv) {
-  let workspaceName = argv[2];
-  let npmScript = argv[3] && !argv[3].startsWith("--") ? argv[3] : "build";
+  let all = false;
+  let workspaceName = undefined;
+  let npmScript = "build";
   let extraArgs = [];
   for (let i = 2; i < argv.length; ++i) {
-    if (argv[i] === "--outDir" && argv[i + 1]) {
+    if (argv[i] === "--all") {
+      all = true;
+    } else if (!workspaceName && !argv[i].startsWith("--")) {
+      workspaceName = argv[i];
+    } else if (!npmScript && !argv[i].startsWith("--")) {
+      npmScript = argv[i];
+    } else if (argv[i] === "--outDir" && argv[i + 1]) {
       extraArgs.push("--outDir", argv[i + 1]);
       i++;
     } else if (argv[i].startsWith("--outDir=")) {
       extraArgs.push(argv[i]);
     }
   }
-  return { workspaceName, npmScript, extraArgs };
+  return { all, workspaceName, npmScript, extraArgs };
 }
 
 async function main() {
-  const { workspaceName, npmScript, extraArgs } = parseArgs(process.argv);
+  const { all, workspaceName, npmScript, extraArgs } = parseArgs(process.argv);
 
   const workspaceGlobs = await getWorkspaces(rootDir);
   const workspaceDirs = resolveWorkspaceDirs(workspaceGlobs, rootDir);
 
-  // Select workspace to build
   let targets = [];
-  if (workspaceName) {
+  if (all) {
+    targets = workspaceDirs;
+  } else if (workspaceName) {
     const w = workspaceName.toLowerCase();
     targets = workspaceDirs.filter((dir) => {
       const dirName = dir.replace(rootDir + "/", "").toLowerCase();
@@ -56,7 +65,7 @@ async function main() {
       process.exit(1);
     }
   } else {
-    console.error(`[build] Please specify a workspace to build`);
+    console.error(`[build] Please specify a workspace to build or use --all`);
     console.error(
       `[build] Available workspaces: ${workspaceDirs.map((d) => d.replace(rootDir + "/", "")).join(", ")}`,
     );
@@ -69,9 +78,22 @@ async function main() {
     await buildAllWasm(wasmPkgs, false);
   }
 
-  // Build each selected workspace
+  // Build each selected workspace and collect results
+  const results = [];
   for (const wsDir of targets) {
-    await runWorkspaceBuild(wsDir, [npmScript, ...extraArgs]);
+    const wsPkgName =
+      getWorkspacePkgName(wsDir) || wsDir.replace(rootDir + "/", "");
+    try {
+      await runWorkspaceBuild(wsDir, [npmScript, ...extraArgs]);
+      results.push({ name: wsPkgName, status: "success" });
+    } catch (err) {
+      results.push({ name: wsPkgName, status: "fail", error: err });
+    }
+  }
+
+  // Print summary reportF
+  if (all) {
+    printBuildReport(results);
   }
 }
 
@@ -111,6 +133,40 @@ function runWorkspaceBuild(wsDir, cmdArr) {
       reject(err);
     });
   });
+}
+
+function printBuildReport(results) {
+  const pad = (str, len) => str + " ".repeat(Math.max(0, len - str.length));
+  const maxName = Math.max(...results.map((r) => r.name.length), 12);
+  const summary = results
+    .map((r) => {
+      const status =
+        r.status === "success"
+          ? "\x1b[32mSUCCESS\x1b[0m"
+          : "\x1b[31mFAIL\x1b[0m";
+      return `  ${pad(r.name, maxName)}  ${status}`;
+    })
+    .join("\n");
+
+  const failed = results.filter((r) => r.status === "fail");
+  const passed = results.filter((r) => r.status === "success");
+
+  console.log("\n" + "=".repeat(6) + " Build Summary " + "=".repeat(6));
+  console.log(summary);
+  console.log("=".repeat(30));
+  console.log(
+    `  Total: ${results.length}  Passed: ${passed.length}  Failed: ${failed.length}`,
+  );
+  if (failed.length > 0) {
+    console.log("\nFailed builds:");
+    for (const r of failed) {
+      console.log(`  - ${r.name}`);
+      if (r.error && r.error.message) {
+        console.log(`      ${r.error.message}`);
+      }
+    }
+    process.exit(1);
+  }
 }
 
 main();
