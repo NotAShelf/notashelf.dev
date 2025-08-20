@@ -83,4 +83,14 @@ describe("Obfuscation Methods", () => {
       });
     });
   });
+
+  describe("excludeAddresses Option", () => {
+    it("should accept excludeAddresses in configuration", () => {
+      const integration = astroEmailObfuscation({
+        method: "rot18",
+        excludeAddresses: ["visible@example.com", "support@domain.com"],
+      });
+      expect(integration.name).toBe("astro-email-obfuscation");
+    });
+  });
 });

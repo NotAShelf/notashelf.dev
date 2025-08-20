@@ -57,6 +57,15 @@ describe("astro-email-obfuscation", () => {
         astroEmailObfuscation({ method: "rot18" });
       }).not.toThrow();
     });
+
+    it("should accept excludeAddresses option", () => {
+      expect(() => {
+        astroEmailObfuscation({
+          methods: ["rot18"],
+          excludeAddresses: ["visible@example.com", "support@domain.com"],
+        });
+      }).not.toThrow();
+    });
   });
 
   describe("Configuration Validation", () => {
