@@ -91,7 +91,9 @@ function runWorkspaceBuild(wsDir, cmdArr) {
       console.log(`[build] No package.json or name for workspace: ${wsDir}`);
       return resolve();
     }
-    console.log(`[build] Building workspace: ${wsPkgName} (${cmdArr.join(" ")})`);
+    console.log(
+      `[build] Building workspace: ${wsPkgName} (${cmdArr.join(" ")})`,
+    );
     const child = spawn("pnpm", ["--filter", wsPkgName, "run", ...cmdArr], {
       cwd: rootDir,
       stdio: "inherit",
