@@ -26,18 +26,19 @@ export default defineConfig({
     coverage: {
       exclude: [
         ".github",
-        "packages/wasm-utils",
         "nix",
-        "**/eslint.config.ts",
-        "**/content.config.ts",
+        "scripts", // we don't really want to test those
+        "packages/wasm-utils", // we can't actually test the output of this
+        // Config files
+        "**/*.config.{js, mjs, ts}",
         "**/vitest.workspace.ts",
-        "**/vitest.config.ts",
-        "**/.astro/",
         "**/coverage/",
+        "**/.astro/",
         "**/__tests__/**",
+        // Types etc.
         "**/dist/**",
         "**/types.*.ts",
-        "**/env.d.ts",
+        "**/*.d.ts",
       ],
     },
   },
