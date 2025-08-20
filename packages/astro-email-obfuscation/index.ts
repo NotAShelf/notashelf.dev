@@ -46,6 +46,11 @@ interface AstroEmailObfuscationOptions {
    * If a file path matches, it will not be obfuscated.
    */
   excludePathPattern?: RegExp | string;
+
+  /**
+   * Array of email addresses to exclude from obfuscation.
+   */
+  excludeAddresses?: string[];
 }
 
 export default function astroEmailObfuscation(

@@ -1,27 +1,22 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "include": [
-    ".astro/types.d.ts",
-    "src/**/*.d.ts",
-    "src/**/*.svelte"
-  ],
-  "exclude": ["dist", "result", "node_modules", "posts"],
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "dist/",
     "declaration": true,
+    "composite": true,
+    "noEmit": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "esModuleInterop": true,
-    "moduleResolution": "bundler",
-    "isolatedModules": true,
-    "incremental": true,
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "verbatimModuleSyntax": true,
+    "plugins": [
+      {
+        "name": "@astrojs/ts-plugin"
+      }
+    ],
     "paths": {
-      // https://docs.astro.build/en/guides/typescript/#import-aliases
       "@/*": ["src/*"],
       "@components/*": ["src/components/*"],
       "@layouts/*": ["src/layouts/*"],
@@ -31,13 +26,19 @@
       "@scripts/*": ["src/scripts/*"],
       "wasm-utils": ["../../packages/wasm-utils/pkg"],
       "wasm-utils/*": ["../../packages/wasm-utils/pkg/*"]
-    },
-    "plugins": [
-      {
-        "name": "@astrojs/ts-plugin"
-      }
-    ]
+    }
   },
+  "include": [
+    ".astro/types.d.ts",
+    "src/**/*.d.ts",
+    "src/**/*.svelte"
+  ],
+  "exclude": [
+    "dist",
+    "result",
+    "node_modules",
+    "posts"
+  ],
   "mdx": {
     "checkMdx": true
   }

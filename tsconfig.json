@@ -4,8 +4,29 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
     "skipLibCheck": true,
-    "noEmit": true
-  }
+    "noEmit": true,
+    "esModuleInterop": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "isolatedModules": true,
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "wasm-utils": ["packages/wasm-utils/pkg"],
+      "wasm-utils/*": ["packages/wasm-utils/pkg/*"],
+      "astro-email-obfuscation": ["packages/astro-email-obfuscation"],
+      "astro-plausible": ["packages/astro-plausible"],
+      "astro-purge-css": ["packages/astro-purge-css"],
+      "remark-em-dash": ["packages/remark-em-dash"],
+      "vite-copyright-replace": ["packages/vite-copyright-replace"]
+    }
+  },
+  "references": [
+    { "path": "./apps/notashelf.dev" },
+    { "path": "./packages/astro-email-obfuscation" },
+    { "path": "./packages/astro-plausible" },
+    { "path": "./packages/astro-purge-css" },
+    { "path": "./packages/remark-em-dash" },
+    { "path": "./packages/vite-copyright-replace" }
+  ]
 }
