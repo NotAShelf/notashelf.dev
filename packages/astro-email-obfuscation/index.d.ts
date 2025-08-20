@@ -77,6 +77,13 @@ interface AstroEmailObfuscationOptions {
   excludePathPattern?: RegExp | string;
 
   /**
+   * Array of email addresses to exclude from obfuscation.
+   * Any address in this list will be left as-is in the output.
+   * Useful for whitelisting support addresses, public emails, etc.
+   */
+  excludeAddresses?: string[];
+
+  /**
    * Custom placeholder text for clickable obfuscated emails
    * @default "[Click to reveal email]"
    */
