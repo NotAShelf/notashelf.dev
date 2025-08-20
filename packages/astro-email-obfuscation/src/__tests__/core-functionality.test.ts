@@ -360,6 +360,107 @@ describe("Core Functionality", () => {
         });
       });
 
+      describe("excludeAddresses", () => {
+        it("should not obfuscate addresses listed in excludeAddresses (text and link)", async () => {
+          const integration = astroEmailObfuscation({
+            method: "rot18",
+            dev: true,
+            excludeAddresses: ["visible@example.com", "link@example.com"],
+          });
+          const buildHook = integration.hooks["astro:build:done"];
+
+          const htmlContent = `
+            <html>
+              <body>
+                <p>Email: visible@example.com</p>
+                <a href="mailto:link@example.com">link@example.com</a>
+                <p>Email: obfuscate@example.com</p>
+              </body>
+            </html>
+          `;
+
+          mockFs.readdir.mockResolvedValue([
+            {
+              name: "exclude-addresses.html",
+              isDirectory: () => false,
+              isFile: () => true,
+            } as any,
+          ]);
+
+          mockFs.readFile.mockImplementation((filePath: any) => {
+            if (filePath.includes("decoder.js")) {
+              return Promise.resolve("// decoder script");
+            }
+            return Promise.resolve(htmlContent);
+          });
+
+          let processedContent = "";
+          mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
+            processedContent = content;
+            return Promise.resolve();
+          });
+
+          await buildHook(mockBuildContext);
+
+          // visible@example.com and link@example.com should not be obfuscated
+          expect(processedContent).toContain("visible@example.com");
+          expect(processedContent).toContain("link@example.com");
+          // obfuscate@example.com should be obfuscated
+          expect(processedContent).toContain("rot18-email");
+          // Only one email should be processed
+          expect(mockLogger.info).toHaveBeenCalledWith(
+            expect.stringContaining("1 emails processed"),
+          );
+        });
+
+        it("should obfuscate all emails if excludeAddresses is empty or not set", async () => {
+          const integration = astroEmailObfuscation({
+            method: "rot18",
+            dev: true,
+          });
+          const buildHook = integration.hooks["astro:build:done"];
+
+          const htmlContent = `
+            <html>
+              <body>
+                <p>Email: visible@example.com</p>
+                <a href="mailto:link@example.com">link@example.com</a>
+              </body>
+            </html>
+          `;
+
+          mockFs.readdir.mockResolvedValue([
+            {
+              name: "no-exclude-addresses.html",
+              isDirectory: () => false,
+              isFile: () => true,
+            } as any,
+          ]);
+
+          mockFs.readFile.mockImplementation((filePath: any) => {
+            if (filePath.includes("decoder.js")) {
+              return Promise.resolve("// decoder script");
+            }
+            return Promise.resolve(htmlContent);
+          });
+
+          let processedContent = "";
+          mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
+            processedContent = content;
+            return Promise.resolve();
+          });
+
+          await buildHook(mockBuildContext);
+
+          // Both emails should be obfuscated
+          expect(processedContent).toContain("rot18-email");
+          // Should process both emails
+          expect(mockLogger.info).toHaveBeenCalledWith(
+            expect.stringContaining("2 emails processed"),
+          );
+        });
+      });
+
       let processedContent = "";
       mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
         processedContent = content;
