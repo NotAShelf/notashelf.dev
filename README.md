@@ -196,15 +196,22 @@ be added. `pnpm run test` is the quickest way to run your test.
 
 ## License
 
-All creative content found in this website is released under the
-[CC BY License](./LICENSE). This entails that you **must** provide proper
-attribution for the code you borrow. <!-- Yes I'm looking at you -->
+<!-- I'm looking at you. You know who you are. -->
 
-The Astro integrations & other package components of this repository have been
-made available under the Mozilla Public License v2.0, as dictated
-[by](./packages/astrp-plausible/LICENSE)
-[their](./packages/vite-copyright-replace/LICENSE)
-[respective](./packages/astro-email-obfuscation/LICENSE)
+> [!NOTE]
+> All creative content, which includes all of my blog posts, project data and
+> affiliations, are available under the [CC BY-NC License](./LICENSE). By the
+> terms of this license, you must provide proper attribution, state changes if
+> any and release remixed content under the same legal conditions as this
+> repository.
+
+Any Typescript, Javascript, Astro, Svelte, Rust etc. code, my Astro
+integrations, Vite plugins other package components of this repository have been
+made available under the **Mozilla Public License v2.0**, as
+[dictated](./packages/astrp-plausible/LICENSE)
+[by](./packages/vite-copyright-replace/LICENSE)
+[their](./packages/astro-email-obfuscation/LICENSE)
+[respective](./packages/remark-em-dash/LICENSE)
 [license](./packages/astro-purge-css/LICENSE)
 [files](./packages/wasm-utils/LICENSE).
 
