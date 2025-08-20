@@ -1,0 +1,8 @@
+{
+  "title": "CatApi",
+  "description": "Minimal API for serving pictures of your cats. Now with a convenient frontend.",
+  "sourceUrl": "https://github.com/notashelf/catApi",
+  "tags": ["Go", "API", "Frontend"],
+  "active": true,
+  "featurable": true
+}

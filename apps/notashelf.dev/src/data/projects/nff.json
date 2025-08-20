@@ -1,0 +1,8 @@
+{
+  "title": "nff",
+  "description": "Experimental nftables configuration beautifier in Python.",
+  "sourceUrl": "https://github.com/notashelf/nff",
+  "tags": ["Python", "nftables", "Networking"],
+  "active": false,
+  "featurable": false
+}

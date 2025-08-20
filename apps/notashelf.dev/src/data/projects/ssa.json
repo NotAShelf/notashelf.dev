@@ -1,0 +1,8 @@
+{
+  "title": "SSA",
+  "description": "Simple, streamlined and pretty aggregator for systemd-analyze security.",
+  "sourceUrl": "https://github.com/NotAShelf/ssa",
+  "tags": ["Rust", "systemd", "security", "aggregator"],
+  "active": true,
+  "featurable": true
+}

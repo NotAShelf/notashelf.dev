@@ -1,0 +1,8 @@
+{
+  "title": "Nyxpkgs",
+  "description": "Collection of packages not found in Nixpkgs",
+  "sourceUrl": "https://github.com/notashelf/nyxexprs",
+  "tags": ["Nix"],
+  "active": true,
+  "featurable": true
+}

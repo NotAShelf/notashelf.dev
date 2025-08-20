@@ -1,0 +1,8 @@
+{
+  "title": "mrc",
+  "description": "Minimalistic, yet robust API wrapper and remote controller for MPV, the video player.",
+  "sourceUrl": "https://github.com/NotAShelf/mrc",
+  "tags": ["Rust", "API", "MPV", "Remote Control"],
+  "active": true,
+  "featurable": true
+}
