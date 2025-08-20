@@ -83,6 +83,7 @@ in
             ../packages
             ../scripts
             ../package.json
+            ../tsconfig.json
             ../pnpm-lock.yaml
             ../pnpm-workspace.yaml
           ]
