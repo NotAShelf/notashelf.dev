@@ -55,14 +55,14 @@
     "unist-util-visit": "^5.0.0",
     "vfile": "^6.0.3",
     "vite-copyright-replace": "link:../../packages/vite-copyright-replace",
-    "wasm-utils": "link:../../packages/wasm-utils/pkg"
-  },
-  "devDependencies": {
-    "@astrojs/check": "^0.9.4",
+    "wasm-utils": "link:../../packages/wasm-utils/pkg",
     "cssnano": "^7.1.0",
     "postcss-preset-env": "^10.2.4",
     "sharp": "^0.34.3",
     "vite-plugin-top-level-await": "^1.6.0",
     "vite-plugin-wasm": "^3.5.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4"
   }
 }
