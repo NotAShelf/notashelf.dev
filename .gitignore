@@ -13,6 +13,7 @@ result*
 **/.astro
 **/node_modules
 **/npm-debug.log*
+**/*.tsbuildinfo
 
 # Lighthouse Reports
 **/*.report.html
