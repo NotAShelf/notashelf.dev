@@ -114,9 +114,24 @@ export class WasmFeaturedProjects {
   }
 
   async shuffleProjects(): Promise<void> {
+    // Featured projects (homepage)
     const projectsGrid = document.querySelector(".projects-grid");
-    if (!projectsGrid) return;
+    if (projectsGrid) {
+      await this.shuffleFeaturedProjects(projectsGrid);
+      return;
+    }
 
+    // Recent projects (about page)
+    const recentContainer = document.querySelector(
+      ".recent-projects-container",
+    );
+    if (recentContainer) {
+      await this.shuffleRecentProjects(recentContainer);
+      return;
+    }
+  }
+
+  private async shuffleFeaturedProjects(projectsGrid: Element): Promise<void> {
     const projectCards = Array.from(projectsGrid.children);
     if (projectCards.length <= 3) return;
 
@@ -163,6 +178,80 @@ export class WasmFeaturedProjects {
       // Append only the selected cards
       selectedCards.forEach((card) => {
         projectsGrid.appendChild(card);
+      });
+    }
+  }
+
+  private async shuffleRecentProjects(recentContainer: Element): Promise<void> {
+    const topRow = recentContainer.querySelector(".top-row");
+    const bottomRow = recentContainer.querySelector(".bottom-row");
+
+    if (!topRow || !bottomRow) return;
+
+    // Collect all project cards from both rows
+    const allCards = [
+      ...Array.from(topRow.children),
+      ...Array.from(bottomRow.children),
+    ];
+
+    if (allCards.length <= 5) return;
+
+    try {
+      if (!this.isInitialized) await this.init();
+
+      const selectedIndices = this.projectUtils.randomSample(
+        JSON.stringify(Array.from({ length: allCards.length }, (_, i) => i)),
+        5,
+      );
+      const parsedIndices = JSON.parse(selectedIndices) as number[];
+
+      const selectedCards = parsedIndices
+        .map((index) => allCards[index])
+        .filter(Boolean) as Element[];
+
+      // Clear both rows
+      while (topRow.firstChild) {
+        topRow.removeChild(topRow.firstChild);
+      }
+      while (bottomRow.firstChild) {
+        bottomRow.removeChild(bottomRow.firstChild);
+      }
+
+      // Redistribute: first 3 cards to top row, remaining to bottom row
+      selectedCards.slice(0, 3).forEach((card) => {
+        topRow.appendChild(card);
+      });
+      selectedCards.slice(3).forEach((card) => {
+        bottomRow.appendChild(card);
+      });
+    } catch (error) {
+      console.warn(
+        "WASM shuffling failed, using fallback for recent projects:",
+        error,
+      );
+      // Simple fallback without WASM
+      const indices = Array.from({ length: allCards.length }, (_, i) => i);
+      const shuffled = indices.sort(() => Math.random() - 0.5);
+      const selectedIndices = shuffled.slice(0, 5);
+
+      const selectedCards = selectedIndices
+        .map((index) => allCards[index])
+        .filter(Boolean) as Element[];
+
+      // Clear both rows
+      while (topRow.firstChild) {
+        topRow.removeChild(topRow.firstChild);
+      }
+      while (bottomRow.firstChild) {
+        bottomRow.removeChild(bottomRow.firstChild);
+      }
+
+      // Redistribute: first 3 cards to top row, remaining to bottom row
+      selectedCards.slice(0, 3).forEach((card) => {
+        topRow.appendChild(card);
+      });
+      selectedCards.slice(3).forEach((card) => {
+        bottomRow.appendChild(card);
       });
     }
   }

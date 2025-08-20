@@ -32,14 +32,10 @@ if (mode === "featured") {
   // Client will pick 3 from this pool and hide the rest
   displayProjects = [...sortedActive, ...sortedInactive];
 } else {
-  // For recent mode: Get 5 most recent active projects
-  displayProjects = activeProjects
-    .sort((a, b) => {
-      const dateA = a.data.startDate?.getTime() || 0;
-      const dateB = b.data.startDate?.getTime() || 0;
-      return dateB - dateA;
-    })
-    .slice(0, 5);
+  // For recent mode: Get ALL active projects for client-side selection
+  // The client will pick 5 random ones from this larger pool
+  // Use deterministic sorting by id for consistent build output
+  displayProjects = activeProjects.sort((a, b) => a.id.localeCompare(b.id));
 }
 
 // Split projects for the recent mode layout
