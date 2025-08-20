@@ -99,6 +99,8 @@ in
       fetcherVersion = 2; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
     };
 
+    pnpmInstallFlags = ["--prod"]; # don't install dev dependencies
+
     # PNPM expects WASM utilities inside packages/wasm-utils/pkgs, however, we
     # cannot tell it to look at the Nix build output of wasm-utils package.
     # Instead we create the expected directory structure, and symlink to our
