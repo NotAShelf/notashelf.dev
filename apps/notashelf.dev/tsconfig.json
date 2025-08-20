@@ -3,7 +3,7 @@
   "include": [
     ".astro/types.d.ts",
     "src/**/*.d.ts",
-    "src/**/*.svelte",
+    "src/**/*.svelte"
   ],
   "exclude": ["dist", "result", "node_modules", "posts"],
   "compilerOptions": {
@@ -14,7 +14,7 @@
     "noUnusedParameters": false,
     "lib": ["dom", "dom.iterable", "esnext"],
     "esModuleInterop": true,
-    "moduleResolution": "Bundler",
+    "moduleResolution": "bundler",
     "isolatedModules": true,
     "incremental": true,
     "jsx": "react-jsx",
