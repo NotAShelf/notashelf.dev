@@ -231,6 +231,135 @@ describe("Core Functionality", () => {
         return Promise.resolve(htmlContent);
       });
 
+      describe("excludePathPattern", () => {
+        it("should skip files matching excludePathPattern (string regex)", async () => {
+          const integration = astroEmailObfuscation({
+            method: "rot18",
+            dev: true,
+            excludePathPattern: "/posts/.*\\.html$",
+          });
+          const buildHook = integration.hooks["astro:build:done"];
+
+          const htmlContent = `
+            <html>
+              <body>
+                <p>Email: skipme@example.com</p>
+              </body>
+            </html>
+          `;
+
+          mockFs.readdir.mockResolvedValue([
+            {
+              name: "posts",
+              isDirectory: () => true,
+              isFile: () => false,
+            } as any,
+          ]);
+          // Simulate /posts/slug.html inside /test/dist/posts
+          mockFs.readdir.mockImplementation(async (dirPath: string) => {
+            if (dirPath.endsWith("/posts")) {
+              return [
+                {
+                  name: "slug.html",
+                  isDirectory: () => false,
+                  isFile: () => true,
+                } as any,
+              ];
+            }
+            return [];
+          });
+
+          mockFs.readFile.mockImplementation((filePath: any) => {
+            if (filePath.includes("decoder.js")) {
+              return Promise.resolve("// decoder script");
+            }
+            return Promise.resolve(htmlContent);
+          });
+
+          let processedContent = "";
+          mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
+            processedContent = content;
+            return Promise.resolve();
+          });
+
+          await buildHook(mockBuildContext);
+
+          // Should not process or write any obfuscated content
+          expect(processedContent).toBe("");
+          expect(mockLogger.info).toHaveBeenCalledWith(
+            expect.stringContaining("Skipping file due to excludePathPattern"),
+          );
+        });
+
+        it("should skip files matching excludePathPattern (RegExp)", async () => {
+          const integration = astroEmailObfuscation({
+            method: "rot18",
+            dev: true,
+            excludePathPattern: /\/content\/articles\/.*\.html$/,
+          });
+          const buildHook = integration.hooks["astro:build:done"];
+
+          const htmlContent = `
+            <html>
+              <body>
+                <p>Email: skipme2@example.com</p>
+              </body>
+            </html>
+          `;
+
+          mockFs.readdir.mockResolvedValue([
+            {
+              name: "content",
+              isDirectory: () => true,
+              isFile: () => false,
+            } as any,
+          ]);
+          // Simulate /content/articles/foo.html inside /test/dist/content/articles
+          mockFs.readdir.mockImplementation(async (dirPath: string) => {
+            if (dirPath.endsWith("/content")) {
+              return [
+                {
+                  name: "articles",
+                  isDirectory: () => true,
+                  isFile: () => false,
+                } as any,
+              ];
+            }
+            if (dirPath.endsWith("/content/articles")) {
+              return [
+                {
+                  name: "foo.html",
+                  isDirectory: () => false,
+                  isFile: () => true,
+                } as any,
+              ];
+            }
+            return [];
+          });
+
+          mockFs.readFile.mockImplementation((filePath: any) => {
+            if (filePath.includes("decoder.js")) {
+              return Promise.resolve("// decoder script");
+            }
+            return Promise.resolve(htmlContent);
+          });
+
+          let processedContent = "";
+          mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
+            processedContent = content;
+            return Promise.resolve();
+          });
+
+          await buildHook(mockBuildContext);
+
+          // Should not process or write any obfuscated content
+          expect(processedContent).toBe("");
+          expect(mockLogger.info).toHaveBeenCalledWith(
+            expect.stringContaining("Skipping file due to excludePathPattern"),
+          );
+        });
+      });
+
       let processedContent = "";
       mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
         processedContent = content;
