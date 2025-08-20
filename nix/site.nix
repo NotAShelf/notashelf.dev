@@ -90,7 +90,7 @@ in
 
     pnpmDeps = pnpm.fetchDeps {
       inherit (finalAttrs) pname src;
-      hash = "sha256-/3lB2822KaETVYLaWK5IOdRXelFBP4/TJUeaaXzp8TE=";
+      hash = "sha256-g5hszwaiK1FSg1iCrjaEZbucAddny7mUwz3PjueRzDU=";
       fetcherVersion = 2; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
     };
 
