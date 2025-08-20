@@ -171,4 +171,35 @@ describe("Configuration Validation", () => {
       process.env.NODE_ENV = originalEnv;
     });
   });
+
+  describe("excludeAddresses Option", () => {
+    it("should accept excludeAddresses as an array of addresses", () => {
+      expect(() => {
+        const integration = astroEmailObfuscation({
+          methods: ["rot18"],
+          excludeAddresses: ["visible@example.com", "support@domain.com"],
+        });
+        integration.hooks["astro:config:setup"]({ logger: mockLogger });
+      }).not.toThrow();
+    });
+
+    it("should accept an empty excludeAddresses array", () => {
+      expect(() => {
+        const integration = astroEmailObfuscation({
+          methods: ["rot18"],
+          excludeAddresses: [],
+        });
+        integration.hooks["astro:config:setup"]({ logger: mockLogger });
+      }).not.toThrow();
+    });
+
+    it("should not throw if excludeAddresses is not set", () => {
+      expect(() => {
+        const integration = astroEmailObfuscation({
+          methods: ["rot18"],
+        });
+        integration.hooks["astro:config:setup"]({ logger: mockLogger });
+      }).not.toThrow();
+    });
+  });
 });

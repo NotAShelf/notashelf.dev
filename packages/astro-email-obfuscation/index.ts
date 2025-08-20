@@ -75,6 +75,7 @@ export default function astroEmailObfuscation(
     placeholder: userOptions.placeholder || "[Click to reveal email]",
     redirectBaseUrl: userOptions.redirectBaseUrl || "/api/email-redirect",
     includeFallbacks: userOptions.includeFallbacks !== false,
+    excludeAddresses: userOptions.excludeAddresses || [],
   } as const;
 
   // Utility functions
@@ -355,6 +356,9 @@ export default function astroEmailObfuscation(
     content: string,
   ): { content: string; emailCount: number } => {
     let emailCount = 0;
+    const excludeAddressesSet = new Set(
+      Array.isArray(options.excludeAddresses) ? options.excludeAddresses : [],
+    );
 
     // Skip if already processed to avoid double processing
     const obfuscationClasses = [
@@ -418,7 +422,8 @@ export default function astroEmailObfuscation(
           if (
             matchParts &&
             validateEmail(email) &&
-            !isSystemdUnit(matchParts[2])
+            !isSystemdUnit(matchParts[2]) &&
+            !excludeAddressesSet.has(email)
           ) {
             emailCount++;
             const obfuscatedEmail = applyObfuscationChain(email);
@@ -453,7 +458,11 @@ export default function astroEmailObfuscation(
           const replacedText = textContent.replace(
             emailPattern,
             (full: string, local: string, domain: string) => {
-              if (!validateEmail(full) || isSystemdUnit(domain)) {
+              if (
+                !validateEmail(full) ||
+                isSystemdUnit(domain) ||
+                excludeAddressesSet.has(full)
+              ) {
                 return full;
               }
               emailCount++;
