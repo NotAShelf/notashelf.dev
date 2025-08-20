@@ -1,4 +1,4 @@
-import { wasmFeaturedProjects } from "./wasm.ts";
+import { wasmFeaturedProjects } from "@scripts/wasm";
 
 async function initializeProjectShuffle() {
   console.log("Initializing project shuffle...");

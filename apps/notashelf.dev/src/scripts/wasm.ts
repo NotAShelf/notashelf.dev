@@ -114,42 +114,73 @@ export class WasmFeaturedProjects {
   }
 
   async shuffleProjects(): Promise<void> {
-    if (!this.isInitialized) await this.init();
-
     const projectsGrid = document.querySelector(".projects-grid");
     if (!projectsGrid) return;
 
     const projectCards = Array.from(projectsGrid.children);
     if (projectCards.length <= 3) return;
 
-    const selectedIndices = this.projectUtils.randomSample(
-      JSON.stringify(Array.from({ length: projectCards.length }, (_, i) => i)),
-      3,
-    );
-    const parsedIndices = JSON.parse(selectedIndices) as number[];
+    try {
+      if (!this.isInitialized) await this.init();
 
-    const selectedCards = parsedIndices
-      .map((index) => projectCards[index])
-      .filter(Boolean) as Element[];
+      const selectedIndices = this.projectUtils.randomSample(
+        JSON.stringify(
+          Array.from({ length: projectCards.length }, (_, i) => i),
+        ),
+        3,
+      );
+      const parsedIndices = JSON.parse(selectedIndices) as number[];
 
-    // Remove all cards from the grid
-    while (projectsGrid.firstChild) {
-      projectsGrid.removeChild(projectsGrid.firstChild);
+      const selectedCards = parsedIndices
+        .map((index) => projectCards[index])
+        .filter(Boolean) as Element[];
+
+      // Remove all cards from the grid
+      while (projectsGrid.firstChild) {
+        projectsGrid.removeChild(projectsGrid.firstChild);
+      }
+
+      // Append only the selected cards
+      selectedCards.forEach((card) => {
+        projectsGrid.appendChild(card);
+      });
+    } catch (error) {
+      console.warn("WASM shuffling failed, using fallback:", error);
+      // Simple fallback without WASM
+      const indices = Array.from({ length: projectCards.length }, (_, i) => i);
+      const shuffled = indices.sort(() => Math.random() - 0.5);
+      const selectedIndices = shuffled.slice(0, 3);
+
+      const selectedCards = selectedIndices
+        .map((index) => projectCards[index])
+        .filter(Boolean) as Element[];
+
+      // Remove all cards from the grid
+      while (projectsGrid.firstChild) {
+        projectsGrid.removeChild(projectsGrid.firstChild);
+      }
+
+      // Append only the selected cards
+      selectedCards.forEach((card) => {
+        projectsGrid.appendChild(card);
+      });
     }
-
-    // Append only the selected cards
-    selectedCards.forEach((card) => {
-      projectsGrid.appendChild(card);
-    });
   }
 
   async setupClientSideShuffling(): Promise<void> {
+    const shuffle = () => {
+      // Use setTimeout to ensure DOM is fully rendered
+      setTimeout(() => {
+        this.shuffleProjects().catch((error) => {
+          console.error("Failed to shuffle projects:", error);
+        });
+      }, 100);
+    };
+
     if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", () =>
-        this.shuffleProjects(),
-      );
+      document.addEventListener("DOMContentLoaded", shuffle);
     } else {
-      await this.shuffleProjects();
+      shuffle();
     }
   }
 
