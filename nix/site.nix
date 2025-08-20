@@ -55,7 +55,8 @@
 
       postBuild = ''
         mkdir -p $out/lib
-        wasm-pack build --release --target web --out-dir $out --out-name wasm-utils
+        wasm-pack build --release --target web \
+          --out-dir $out --out-name wasm-utils
       '';
     };
 
@@ -88,16 +89,22 @@ in
         );
       };
 
+    # XXX: The amount of dependencies required to build this project are a little absurd.
+    # If we could build just one workspace, we could also just specify a workspace here
+    # to fetch deps for and build. Alas, NodeJS.
     pnpmDeps = pnpm.fetchDeps {
       inherit (finalAttrs) pname src;
       hash = "sha256-LwC45AKG6hw3PHZAfpD0vAJV7FS3xGyhakwSec4eyvU=";
       fetcherVersion = 2; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
     };
 
+    # PNPM expects WASM utilities inside packages/wasm-utils/pkgs, however, we
+    # cannot tell it to look at the Nix build output of wasm-utils package.
+    # Instead we create the expected directory structure, and symlink to our
+    # WASM utilities build output.
     postPatch = ''
-      # Create the expected directory structure and symlink to our built WASM utils
       mkdir -p packages/wasm-utils
-      ln -sf ${wasmUtils} packages/wasm-utils/pkg
+      ln -sf ${wasmUtils.outPath} packages/wasm-utils/pkg
     '';
 
     nativeCheckInputs = [
@@ -121,11 +128,14 @@ in
     buildPhase = ''
       runHook preBuild
 
-      pnpm run build:web --outDir $out -- --standalone --disable-updater
+      pnpm run build:web --outDir $out
 
       runHook postBuild
     '';
 
+    # Env is the cleanest way we can pass data to Astro during build time. It
+    # is primarily used to inform the Nix-sandboxed build of data that it would
+    # normally have access to, such as the current date.
     env = {
       ASTRO_TELEMETRY_DISABLED = true;
       GIT_REV = finalAttrs.version;
@@ -134,7 +144,9 @@ in
     };
 
     meta = {
-      description = "Pure, reproducible builder for my blog";
+      description = "My personal website and blog built with Nix and Astro";
+      homepage = "https://github.com/notashelf/notashelf.dev";
+      license = lib.licenses.mpl20;
       maintainers = [lib.maintainers.NotAShelf];
     };
   })
