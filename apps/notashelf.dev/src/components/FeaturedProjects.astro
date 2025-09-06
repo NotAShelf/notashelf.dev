@@ -47,7 +47,7 @@ const bottomRowProjects = displayProjects.slice(3);
 
   {
     mode === "recent" ? (
-      <div class="recent-projects-container">
+      <div class="recent-projects-container pre-shuffle-hide-grid">
         <div class="top-row">
           {topRowProjects.map((project) => (
             <ProjectCard
@@ -69,7 +69,7 @@ const bottomRowProjects = displayProjects.slice(3);
         </div>
       </div>
     ) : (
-      <div class="projects-grid">
+      <div class="projects-grid pre-shuffle-hide-grid">
         {displayProjects.map((project) => (
           <ProjectCard
             project={project}
@@ -95,7 +95,10 @@ const bottomRowProjects = displayProjects.slice(3);
     console.log("Initializing project shuffle...");
     try {
       await projectShuffle.setupClientSideShuffling();
-      // .pre-shuffle-hide is now only removed from selected cards in the shuffle logic itself
+      // Remove .pre-shuffle-hide-grid from grid container after shuffle
+      document.querySelectorAll(".pre-shuffle-hide-grid").forEach((grid) => {
+        grid.classList.remove("pre-shuffle-hide-grid");
+      });
       console.log("Project shuffle initialized successfully");
     } catch (error) {
       console.warn("Failed to initialize project shuffle:", error);
@@ -235,6 +238,12 @@ const bottomRowProjects = displayProjects.slice(3);
 
   .pre-shuffle-hide {
     display: none !important;
+  }
+
+  .pre-shuffle-hide-grid {
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
   }
 
   .project-content {

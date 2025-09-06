@@ -115,6 +115,9 @@ export class ProjectShuffle {
       projectsGrid.appendChild(card);
     });
 
+    // Remove grid hide class after shuffle is complete
+    (projectsGrid as HTMLElement).classList.remove("pre-shuffle-hide-grid");
+
     console.log(
       `Featured shuffle complete: showing ${selectedCards.length} projects`,
     );
@@ -170,6 +173,9 @@ export class ProjectShuffle {
       card.classList.remove("pre-shuffle-hide");
       bottomRow.appendChild(card);
     });
+
+    // Remove grid hide class after shuffle is complete
+    (recentContainer as HTMLElement).classList.remove("pre-shuffle-hide-grid");
 
     console.log(
       `Recent shuffle complete: showing ${selectedCards.length} projects`,
