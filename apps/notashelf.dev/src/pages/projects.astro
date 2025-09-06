@@ -13,7 +13,12 @@ const sortedProjects = allProjects.sort((a, b) => {
   // Then sort by start date (newest first)
   const dateB = b.data.startDate?.valueOf() ?? 0;
   const dateA = a.data.startDate?.valueOf() ?? 0;
-  return dateB - dateA;
+  if (dateB !== dateA) {
+    return dateB - dateA;
+  }
+
+  // Final tiebreaker: sort by id (guaranteed unique and stable)
+  return a.id.localeCompare(b.id);
 });
 
 // Count of active projects

@@ -1,5 +1,4 @@
-import { wasmPostSearch } from "./wasm";
-import PostSearchState from "./post-search-state";
+import { postSearch, PostSearchState } from "./utils/post-search";
 import type { PostEntry } from "@lib/types";
 
 interface DOMElements {
@@ -36,11 +35,11 @@ export class WasmPostSearchUI {
   };
 
   // Function that will be initialized properly in setupLazyWasmLoading
-  private initWasmOnDemand: () => Promise<void | null> = async () =>
+  private initPostSearchOnDemand: () => Promise<void | null> = async () =>
     Promise.resolve(null);
 
-  // Cache the WASM initialization promise
-  private wasmInitPromise: Promise<void | null> | null = null;
+  // Cache the post search initialization promise
+  private postSearchInitPromise: Promise<void | null> | null = null;
 
   // Method to clean up any attached event listeners
   public cleanup(): void {
@@ -114,7 +113,7 @@ export class WasmPostSearchUI {
     clearTimeout(this.debounceTimer);
     this.debounceTimer = window.setTimeout(() => {
       if (this.elements.searchInput.value.trim()) {
-        this.initWasmOnDemand().then(() => {
+        this.initPostSearchOnDemand().then(() => {
           this.performSearch();
         });
       } else {
@@ -130,7 +129,7 @@ export class WasmPostSearchUI {
   };
 
   private handleSearchInputFocus = (): void => {
-    setTimeout(() => this.initWasmOnDemand(), 100);
+    setTimeout(() => this.initPostSearchOnDemand(), 100);
   };
 
   private handleTagButtonClick = (e: Event): void => {
@@ -166,7 +165,7 @@ export class WasmPostSearchUI {
       clearTimeout(this.debounceTimer);
       this.debounceTimer = window.setTimeout(() => {
         if (this.elements.searchInput.value.trim()) {
-          this.initWasmOnDemand().then(() => {
+          this.initPostSearchOnDemand().then(() => {
             this.performSearch();
           });
         } else {
@@ -182,7 +181,7 @@ export class WasmPostSearchUI {
     },
 
     searchInputFocus: () => {
-      setTimeout(() => this.initWasmOnDemand(), 100);
+      setTimeout(() => this.initPostSearchOnDemand(), 100);
     },
 
     // Basic search handlers
@@ -315,7 +314,7 @@ export class WasmPostSearchUI {
       this.currentActiveTag = activeTag || "";
 
       this.initializeFromState(searchTerm, activeTag);
-      this.setupLazyWasmLoading();
+      this.setupLazyPostSearchLoading();
       this.setupNonSearchEventListeners();
       this.updateViewMode(this.isViewingAll);
 
@@ -396,24 +395,24 @@ export class WasmPostSearchUI {
     this.eventListenersAttached = false;
   }
 
-  private setupLazyWasmLoading(): void {
+  private setupLazyPostSearchLoading(): void {
     // Assign to the class property
-    this.initWasmOnDemand = async () => {
+    this.initPostSearchOnDemand = async () => {
       // Always return the cached promise if it exists
-      if (this.wasmInitPromise) {
-        return this.wasmInitPromise;
+      if (this.postSearchInitPromise) {
+        return this.postSearchInitPromise;
       }
 
-      // If already initialized, create and cache a resolved promise
+      // If already initialized, return a resolved promise
       if (this.isInitialized) {
-        this.wasmInitPromise = Promise.resolve();
-        return this.wasmInitPromise;
+        this.postSearchInitPromise = Promise.resolve();
+        return this.postSearchInitPromise;
       }
 
       // Create and cache the initialization promise
-      this.wasmInitPromise = (async () => {
+      this.postSearchInitPromise = (async () => {
         try {
-          await wasmPostSearch.init(this.allPosts);
+          await postSearch.init(this.allPosts);
           this.isInitialized = true;
           return;
         } catch {
@@ -422,7 +421,7 @@ export class WasmPostSearchUI {
         }
       })();
 
-      return this.wasmInitPromise;
+      return this.postSearchInitPromise;
     };
 
     // Set up search form handler
@@ -564,7 +563,7 @@ export class WasmPostSearchUI {
     const searchTerm = this.elements.searchInput.value.toLowerCase().trim();
 
     try {
-      const matchedPosts = wasmPostSearch.combinedSearch(
+      const matchedPosts = postSearch.combinedSearch(
         searchTerm,
         this.currentActiveTag,
         100,

@@ -96,6 +96,19 @@ if (featuredPosts.length >= 3) {
 
 <script>
   import "../scripts/page-utils.ts";
+  import { projectShuffle } from "../scripts/utils/project-shuffle";
+
+  async function initializeProjectShuffle() {
+    console.log("Initializing project shuffle...");
+    try {
+      await projectShuffle.setupClientSideShuffling();
+      console.log("Project shuffle initialized successfully");
+    } catch (error) {
+      console.warn("Failed to initialize project shuffle:", error);
+    }
+  }
+
+  initializeProjectShuffle();
 </script>
 
 <style lang="scss">
