@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import PostSearchState from "../scripts/post-search-state";
+import { PostSearchState } from "../scripts/utils/post-search";
 
 describe("PostSearchState", () => {
   beforeEach(() => {

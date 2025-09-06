@@ -34,7 +34,6 @@ if (mode === "featured") {
 } else {
   // For recent mode: Get ALL active projects for client-side selection
   // The client will pick 5 random ones from this larger pool
-  // Use deterministic sorting by id for consistent build output
   displayProjects = activeProjects.sort((a, b) => a.id.localeCompare(b.id));
 }
 
@@ -48,23 +47,35 @@ const bottomRowProjects = displayProjects.slice(3);
 
   {
     mode === "recent" ? (
-      <div class="recent-projects-container">
+      <div class="recent-projects-container pre-shuffle-hide-grid">
         <div class="top-row">
           {topRowProjects.map((project) => (
-            <ProjectCard project={project} data-project-id={project.id} />
+            <ProjectCard
+              project={project}
+              data-project-id={project.id}
+              class="pre-shuffle-hide"
+            />
           ))}
         </div>
 
         <div class="bottom-row">
           {bottomRowProjects.map((project) => (
-            <ProjectCard project={project} data-project-id={project.id} />
+            <ProjectCard
+              project={project}
+              data-project-id={project.id}
+              class="pre-shuffle-hide"
+            />
           ))}
         </div>
       </div>
     ) : (
-      <div class="projects-grid">
+      <div class="projects-grid pre-shuffle-hide-grid">
         {displayProjects.map((project) => (
-          <ProjectCard project={project} data-project-id={project.id} />
+          <ProjectCard
+            project={project}
+            data-project-id={project.id}
+            class="pre-shuffle-hide"
+          />
         ))}
       </div>
     )
@@ -78,7 +89,23 @@ const bottomRowProjects = displayProjects.slice(3);
 </section>
 
 <script>
-  import "../scripts/client-project-shuffle.ts";
+  import { projectShuffle } from "../scripts/utils/project-shuffle";
+
+  async function initializeProjectShuffle() {
+    console.log("Initializing project shuffle...");
+    try {
+      await projectShuffle.setupClientSideShuffling();
+      // Remove .pre-shuffle-hide-grid from grid container after shuffle
+      document.querySelectorAll(".pre-shuffle-hide-grid").forEach((grid) => {
+        grid.classList.remove("pre-shuffle-hide-grid");
+      });
+      console.log("Project shuffle initialized successfully");
+    } catch (error) {
+      console.warn("Failed to initialize project shuffle:", error);
+    }
+  }
+
+  initializeProjectShuffle();
 </script>
 
 <style lang="scss">
@@ -194,7 +221,6 @@ const bottomRowProjects = displayProjects.slice(3);
     display: flex;
     flex-direction: column;
     width: 100%;
-
     &:hover {
       transform: translateY(-4px);
       background-color: color.scale($primary, $lightness: 9%);
@@ -208,6 +234,16 @@ const bottomRowProjects = displayProjects.slice(3);
         opacity: 0.9;
       }
     }
+  }
+
+  .pre-shuffle-hide {
+    display: none !important;
+  }
+
+  .pre-shuffle-hide-grid {
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
   }
 
   .project-content {
