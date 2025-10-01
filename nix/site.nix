@@ -10,10 +10,10 @@
   cargo,
   rustc,
   wasm-pack,
-  wasm-bindgen-cli,
   lld,
   binaryen,
-  ...
+  # Eugh
+  callPackage,
 }: let
   fs = lib.fileset;
 
@@ -41,8 +41,12 @@
       nativeBuildInputs = [
         wasm-pack
         lld
-        wasm-bindgen-cli
         binaryen
+
+        # FIXME: This is not yet in nixpkgs as a proper package
+        # Adds wasm-bindgen-cli to build inputs so that wasm-pack
+        # does not try to fetch it imperatively.
+        (callPackage ./wasm-bindgen-cli.nix {})
       ];
 
       copyLibs = true;
