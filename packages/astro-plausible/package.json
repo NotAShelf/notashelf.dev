@@ -38,8 +38,8 @@
     "privacy"
   ],
   "devDependencies": {
-    "@types/node": "^22.17.2",
-    "typescript": "^5.9.2",
+    "@types/node": "^24.6.2",
+    "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   },
   "publishConfig": {
