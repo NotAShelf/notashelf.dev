@@ -25,10 +25,12 @@
     "@mdx-js/mdx": "^3.1.0",
     "astro": "^5.13.2",
     "astro-email-obfuscation": "link:../../packages/astro-email-obfuscation",
+    "astro-expressive-code": "^0.41.3",
     "astro-icon": "^1.1.5",
     "astro-plausible": "link:../../packages/astro-plausible",
     "astro-purge-css": "link:../../packages/astro-purge-css",
     "autoprefixer": "^10.4.21",
+    "cssnano": "^7.1.0",
     "glob": "^11.0.3",
     "happy-dom": "^17.6.3",
     "hast-util-to-string": "^3.0.1",
@@ -36,6 +38,7 @@
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
     "postcss-normalize": "^13.0.1",
+    "postcss-preset-env": "^10.2.4",
     "purgecss": "^7.0.2",
     "rehype-external-links": "^3.0.0",
     "rehype-stringify": "^10.0.1",
@@ -47,6 +50,7 @@
     "remark-rehype": "^11.1.2",
     "remark-toc": "^9.0.0",
     "sass": "^1.90.0",
+    "sharp": "^0.34.3",
     "slugify": "^1.6.6",
     "svelte": "^5.38.2",
     "svelte-fa": "^4.0.4",
@@ -55,12 +59,9 @@
     "unist-util-visit": "^5.0.0",
     "vfile": "^6.0.3",
     "vite-copyright-replace": "link:../../packages/vite-copyright-replace",
-    "wasm-utils": "link:../../packages/wasm-utils/pkg",
-    "cssnano": "^7.1.0",
-    "postcss-preset-env": "^10.2.4",
-    "sharp": "^0.34.3",
     "vite-plugin-top-level-await": "^1.6.0",
-    "vite-plugin-wasm": "^3.5.0"
+    "vite-plugin-wasm": "^3.5.0",
+    "wasm-utils": "link:../../packages/wasm-utils/pkg"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4"

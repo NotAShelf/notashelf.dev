@@ -18,3 +18,10 @@
 .post-list-all {
   transition: opacity 0.1s ease;
 }
+
+// Force Expressive Code codeblock border color
+// Refuses to follow the configuration otherwise...
+.ec-codeblock,
+.ec-frame {
+  border: 1px solid #232323 !important;
+}

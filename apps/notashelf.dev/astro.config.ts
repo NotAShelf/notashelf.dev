@@ -16,6 +16,7 @@ import remarkEmDash from "remark-em-dash";
 
 // Third Party integrations or plugins
 import icon from "astro-icon";
+import expressiveCode from "astro-expressive-code";
 import postcssNormalize from "postcss-normalize";
 import postcssPresetEnv from "postcss-preset-env";
 import autoprefixer from "autoprefixer";
@@ -60,6 +61,28 @@ export default defineConfig({
   integrations: [
     sitemap(),
     icon(),
+    expressiveCode({
+      themes: ["one-dark-pro"],
+      frames: false,
+      defaultProps: {
+        wrap: true,
+      },
+
+      shiki: {
+        bundledLangs: [
+          // Only the languages I plan to talk about
+          "nix",
+          "rust",
+          "astro",
+          "javascript",
+          "typescript",
+          "go",
+          "zig",
+          "c",
+          "json",
+        ],
+      },
+    }),
     partytown({
       config: {
         forward: ["plausible"],
@@ -180,12 +203,6 @@ export default defineConfig({
         },
       ],
     ],
-
-    shikiConfig: {
-      theme: "one-dark-pro",
-      langs: [],
-      wrap: true,
-    },
   },
 
   // Prefetch configuration
