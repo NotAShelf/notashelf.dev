@@ -56,7 +56,7 @@ awesome [@eclairevoyant](https://github.com/eclairevoyant) to add a
 _reject-flake-config_ option to [Lix, the Nix fork](https://lix.systems), to
 automatically reject flakes' `nixConfig`.
 
-```diff
+```diff lang="cpp"
 From 25f1b8e714b13d2aa6fcdc67bedf1544bd17e45a Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?=C3=A9clairevoyant?= <848000+eclairevoyant@users.noreply.github.com>
 Date: Fri, 19 Jul 2024 09:23:27 -0400
