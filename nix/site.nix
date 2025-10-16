@@ -99,7 +99,7 @@ in
     # to fetch deps for and build. Alas, NodeJS.
     pnpmDeps = pnpm.fetchDeps {
       inherit (finalAttrs) pname src;
-      hash = "sha256-LiZmtB6FTJNuLIBalkfsfjueuZtqZSQ44JMOGal585I=";
+      hash = "sha256-Ewfc6uhfng2Yv7yGqkN51ZydWJfCEKiDlRLic/rRWyg=";
       fetcherVersion = 2; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
     };
 
