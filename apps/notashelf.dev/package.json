@@ -31,7 +31,7 @@
     "astro-purge-css": "link:../../packages/astro-purge-css",
     "autoprefixer": "^10.4.21",
     "cssnano": "^7.1.1",
-    "glob": "^11.0.3",
+    "glob": "^11.1.0",
     "happy-dom": "^20.0.2",
     "hast-util-to-string": "^3.0.1",
     "he": "1.2.0",

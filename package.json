@@ -59,7 +59,7 @@
   "dependencies": {
     "astro": "^5.14.3",
     "cssnano": "^7.1.1",
-    "glob": "^11.0.3",
+    "glob": "^11.1.0",
     "he": "1.2.0",
     "postcss": "^8.5.6",
     "purgecss": "^7.0.2"
