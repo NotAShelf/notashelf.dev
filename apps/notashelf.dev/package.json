@@ -23,7 +23,7 @@
     "@astrojs/ts-plugin": "^1.10.4",
     "@esbuild/linux-x64": "0.25.10",
     "@mdx-js/mdx": "^3.1.1",
-    "astro": "^5.14.3",
+    "astro": "^5.15.6",
     "astro-email-obfuscation": "link:../../packages/astro-email-obfuscation",
     "astro-expressive-code": "^0.41.3",
     "astro-icon": "^1.1.5",
