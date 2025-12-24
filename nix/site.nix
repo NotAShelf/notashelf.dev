@@ -2,9 +2,10 @@
   self,
   lib,
   stdenv,
-  # Used to build the web package
+  # Used to build the website package
   pnpm,
   nodejs,
+  fetchPnpmDeps,
   # Required for building WASM utilities
   rustPlatform,
   cargo,
@@ -12,13 +13,12 @@
   wasm-pack,
   lld,
   binaryen,
-  # Eugh
-  callPackage,
+  wasm-bindgen-cli_0_2_104,
 }: let
   fs = lib.fileset;
 
   wasmUtils = let
-    cargoToml = builtins.fromTOML (builtins.readFile ../packages/wasm-utils/Cargo.toml);
+    cargoToml = lib.importTOML ../packages/wasm-utils/Cargo.toml;
     pname = cargoToml.package.name;
     version = cargoToml.package.version;
   in
@@ -32,6 +32,7 @@
           fileset = fs.intersection (fs.fromSource (lib.sources.cleanSource sp)) (
             fs.unions [
               (sp + /src)
+
               (sp + /Cargo.toml)
               (sp + /Cargo.lock)
             ]
@@ -42,11 +43,7 @@
         wasm-pack
         lld
         binaryen
-
-        # FIXME: This is not yet in nixpkgs as a proper package
-        # Adds wasm-bindgen-cli to build inputs so that wasm-pack
-        # does not try to fetch it imperatively.
-        (callPackage ./wasm-bindgen-cli.nix {})
+        wasm-bindgen-cli_0_2_104
       ];
 
       copyLibs = true;
@@ -86,6 +83,7 @@ in
             ../apps
             ../packages
             ../scripts
+
             ../package.json
             ../tsconfig.json
             ../pnpm-lock.yaml
@@ -93,17 +91,6 @@ in
           ]
         );
       };
-
-    # XXX: The amount of dependencies required to build this project are a little absurd.
-    # If we could build just one workspace, we could also just specify a workspace here
-    # to fetch deps for and build. Alas, NodeJS.
-    pnpmDeps = pnpm.fetchDeps {
-      inherit (finalAttrs) pname src;
-      hash = "sha256-Ewfc6uhfng2Yv7yGqkN51ZydWJfCEKiDlRLic/rRWyg=";
-      fetcherVersion = 2; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
-    };
-
-    pnpmInstallFlags = ["--prod"]; # don't install dev dependencies
 
     # PNPM expects WASM utilities inside packages/wasm-utils/pkgs, however, we
     # cannot tell it to look at the Nix build output of wasm-utils package.
@@ -119,13 +106,16 @@ in
       pnpm
     ];
 
-    checkPhase = ''
-      runHook preCheck
+    pnpmInstallFlags = ["--prod"]; # don't install dev dependencies
 
-      pnpm run test:ci
-
-      runHook postCheck
-    '';
+    # XXX: The amount of dependencies required to build this project are a little absurd.
+    # If we could build just one workspace, we could also just specify a workspace here
+    # to fetch deps for and build. Alas, NodeJS.
+    pnpmDeps = fetchPnpmDeps {
+      inherit (finalAttrs) pname src pnpmInstallFlags;
+      hash = "sha256-Ewfc6uhfng2Yv7yGqkN51ZydWJfCEKiDlRLic/rRWyg=";
+      fetcherVersion = 2; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
+    };
 
     nativeBuildInputs = [
       nodejs # build scripts
@@ -140,14 +130,22 @@ in
       runHook postBuild
     '';
 
+    checkPhase = ''
+      runHook preCheck
+
+      pnpm run test:ci
+
+      runHook postCheck
+    '';
+
     # Env is the cleanest way we can pass data to Astro during build time. It
     # is primarily used to inform the Nix-sandboxed build of data that it would
     # normally have access to, such as the current date.
     env = {
       ASTRO_TELEMETRY_DISABLED = true;
-      GIT_REV = finalAttrs.version;
       SITE_SRC = "https://github.com/notashelf/notashelf.dev";
       BUILD_DATE = buildDate;
+      GIT_REV = finalAttrs.version;
     };
 
     meta = {
