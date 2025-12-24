@@ -6,6 +6,7 @@
   pnpm,
   nodejs,
   fetchPnpmDeps,
+  pnpmConfigHook,
   # Required for building WASM utilities
   rustPlatform,
   cargo,
@@ -119,7 +120,7 @@ in
 
     nativeBuildInputs = [
       nodejs # build scripts
-      pnpm.configHook # dependency resolution
+      pnpmConfigHook # dependency resolution
     ];
 
     buildPhase = ''
