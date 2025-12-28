@@ -54,9 +54,8 @@ describe("project-shuffle integration", () => {
 
     // This should not throw
     expect(async () => {
-      const { projectShuffle } = await import(
-        "../scripts/utils/project-shuffle"
-      );
+      const { projectShuffle } =
+        await import("../scripts/utils/project-shuffle");
       await projectShuffle.setupClientSideShuffling();
     }).not.toThrow();
   });

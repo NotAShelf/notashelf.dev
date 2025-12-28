@@ -24,10 +24,14 @@ describe("PageUtils", () => {
         disconnect: vi.fn(),
       };
 
-      const IntersectionObserverMock = vi
-        .fn()
-        .mockImplementation(() => mockObserver);
-      global.IntersectionObserver = IntersectionObserverMock;
+      const IntersectionObserverMock = vi.fn(function (
+        this: any,
+        callback: IntersectionObserverCallback,
+        options?: IntersectionObserverInit,
+      ) {
+        return mockObserver;
+      });
+      global.IntersectionObserver = IntersectionObserverMock as any;
 
       PageUtils.initFadeElements();
 
@@ -50,13 +54,15 @@ describe("PageUtils", () => {
         disconnect: vi.fn(),
       };
 
-      const IntersectionObserverMock = vi
-        .fn()
-        .mockImplementation((callback) => {
-          observerCallback = callback;
-          return mockObserver;
-        });
-      global.IntersectionObserver = IntersectionObserverMock;
+      const IntersectionObserverMock = vi.fn(function (
+        this: any,
+        callback: IntersectionObserverCallback,
+        options?: IntersectionObserverInit,
+      ) {
+        observerCallback = callback;
+        return mockObserver;
+      });
+      global.IntersectionObserver = IntersectionObserverMock as any;
 
       PageUtils.initFadeElements();
 

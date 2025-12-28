@@ -115,9 +115,8 @@ describe("wasm-post-search-ui", () => {
 
   describe("WasmPostSearchUI", () => {
     it("should initialize with posts and setup DOM elements", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
@@ -125,9 +124,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should initialize successfully with all elements present", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -139,9 +137,8 @@ describe("wasm-post-search-ui", () => {
       document.getElementById("search-form")?.remove();
       document.getElementById("search-input")?.remove();
 
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -157,9 +154,8 @@ describe("wasm-post-search-ui", () => {
         viewAll: true,
       });
 
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -171,9 +167,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should perform basic search when WASM is not initialized", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -199,9 +194,8 @@ describe("wasm-post-search-ui", () => {
       const mockResults = [mockPosts[0]];
       mockWasmPostSearch.combinedSearch.mockReturnValue(mockResults);
 
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -225,9 +219,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle search form submission", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -244,9 +237,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should clear search when clear button is clicked", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -265,9 +257,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle tag selection", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -281,9 +272,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should toggle view mode", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -307,9 +297,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should reset filters when reset button is clicked", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -335,9 +324,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle pagination link clicks", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -354,9 +342,8 @@ describe("wasm-post-search-ui", () => {
       // Ensure WASM search returns empty results for this test
       mockWasmPostSearch.combinedSearch.mockReturnValue([]);
 
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -388,9 +375,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should lazy load WASM on search input focus", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -413,9 +399,8 @@ describe("wasm-post-search-ui", () => {
         .spyOn(console, "error")
         .mockImplementation(() => {});
 
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       // Need to call init() first to set up the lazy loading
@@ -434,9 +419,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should cleanup event listeners", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -457,9 +441,8 @@ describe("wasm-post-search-ui", () => {
       document.getElementById("all-icon")?.remove();
       document.getElementById("view-label")?.remove();
 
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
@@ -468,9 +451,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle search input with debouncing and empty search", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -498,9 +480,8 @@ describe("wasm-post-search-ui", () => {
     }, 1000);
 
     it("should handle search input with non-empty value and WASM initialization", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -540,9 +521,8 @@ describe("wasm-post-search-ui", () => {
     }, 2000);
 
     it("should handle cleanupEventListeners method", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -566,9 +546,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle setupBasicEventListeners method", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
@@ -586,9 +565,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle basic search input events", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
@@ -614,9 +592,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle performBasicSearch with no search input element", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
@@ -629,9 +606,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle performBasicSearch with cached elements", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -653,9 +629,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle performBasicSearch with view all mode", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -690,9 +665,8 @@ describe("wasm-post-search-ui", () => {
         </ul>
       `;
 
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -710,9 +684,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle tag selection switching to view all automatically", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -734,9 +707,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle tag selection with empty tag (All)", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -761,9 +733,8 @@ describe("wasm-post-search-ui", () => {
         <div id="view-label">View All</div>
       `;
 
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -814,9 +785,8 @@ describe("wasm-post-search-ui", () => {
     // });
 
     it("should handle search input focus with basic event handlers", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
@@ -832,9 +802,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle basic clear button event handler", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
@@ -851,9 +820,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle basic search input input event", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
@@ -881,9 +849,8 @@ describe("wasm-post-search-ui", () => {
     }, 1000);
 
     it("should handle basic search form submit event", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
@@ -897,9 +864,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle eventListeners cleanup when not attached", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
@@ -911,9 +877,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle initializeFromState with all tag button", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -937,15 +902,13 @@ describe("wasm-post-search-ui", () => {
         { id: "non-existent-post" },
       ]);
 
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
 
-      // Manually initialize WASM
-      await (searchUI as any).initPostSearchOnDemand();
+      (searchUI as any).isInitialized = true;
 
       const searchInput = document.getElementById(
         "search-input",
@@ -968,9 +931,8 @@ describe("wasm-post-search-ui", () => {
 
       const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
@@ -1008,9 +970,8 @@ describe("wasm-post-search-ui", () => {
 
       const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
@@ -1032,9 +993,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should test the constructor with posts parameter", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
@@ -1050,9 +1010,8 @@ describe("wasm-post-search-ui", () => {
       document.getElementById("search-input")?.remove();
       document.getElementById("search-form")?.remove();
 
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       const setupBasicSpy = vi.spyOn(
@@ -1081,9 +1040,8 @@ describe("wasm-post-search-ui", () => {
       // Clear modules to ensure fresh import
       vi.resetModules();
 
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
@@ -1109,9 +1067,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle WASM initialization with promise caching", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -1135,9 +1092,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle cleanup method with missing elements", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
@@ -1151,9 +1107,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle updatePostsDisplay with highlighting", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
       await searchUI.init();
@@ -1167,9 +1122,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should handle multiple event handler scenarios", async () => {
-      const { WasmPostSearchUI } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { WasmPostSearchUI } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
@@ -1208,9 +1162,8 @@ describe("wasm-post-search-ui", () => {
         </li>
       `;
 
-      const { extractPostsFromDOM } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { extractPostsFromDOM } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const posts = extractPostsFromDOM();
 
@@ -1230,9 +1183,8 @@ describe("wasm-post-search-ui", () => {
         </li>
       `;
 
-      const { extractPostsFromDOM } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { extractPostsFromDOM } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const posts = extractPostsFromDOM();
 
@@ -1248,9 +1200,8 @@ describe("wasm-post-search-ui", () => {
         </li>
       `;
 
-      const { extractPostsFromDOM } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { extractPostsFromDOM } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const posts = extractPostsFromDOM();
 
@@ -1265,9 +1216,8 @@ describe("wasm-post-search-ui", () => {
         </li>
       `;
 
-      const { extractPostsFromDOM } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { extractPostsFromDOM } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const posts = extractPostsFromDOM();
 
@@ -1282,9 +1232,8 @@ describe("wasm-post-search-ui", () => {
         </li>
       `;
 
-      const { extractPostsFromDOM } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { extractPostsFromDOM } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const posts = extractPostsFromDOM();
 
@@ -1295,9 +1244,8 @@ describe("wasm-post-search-ui", () => {
 
   describe("postSearchUIRegistry", () => {
     it("should initialize and return singleton instance", async () => {
-      const { postSearchUIRegistry } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { postSearchUIRegistry } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const instance1 = postSearchUIRegistry.init(mockPosts);
       const instance2 = postSearchUIRegistry.init(mockPosts);
@@ -1307,9 +1255,8 @@ describe("wasm-post-search-ui", () => {
     });
 
     it("should reuse existing instance and not cleanup", async () => {
-      const { postSearchUIRegistry } = await import(
-        "../scripts/wasm-post-search-ui.ts"
-      );
+      const { postSearchUIRegistry } =
+        await import("../scripts/wasm-post-search-ui.ts");
 
       const instance1 = postSearchUIRegistry.init(mockPosts);
       const cleanupSpy = vi.spyOn(instance1, "cleanup");
