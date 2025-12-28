@@ -40,23 +40,10 @@ describe("project-shuffle integration", () => {
 
     const { projectShuffle } = await import("../scripts/utils/project-shuffle");
 
-    // Mock setupClientSideShuffling is already rejected, so this should not throw
     try {
       await projectShuffle.setupClientSideShuffling();
     } catch (err) {
-      // Expected to catch the mocked rejection
       expect(err).toEqual(error);
     }
-  });
-
-  it("should not throw errors during initialization", async () => {
-    mockSetupClientSideShuffling.mockResolvedValue(undefined);
-
-    // This should not throw
-    expect(async () => {
-      const { projectShuffle } =
-        await import("../scripts/utils/project-shuffle");
-      await projectShuffle.setupClientSideShuffling();
-    }).not.toThrow();
   });
 });

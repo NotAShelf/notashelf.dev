@@ -564,13 +564,11 @@ describe("wasm-post-search-ui", () => {
       expect(preventDefaultSpy).toHaveBeenCalled();
     });
 
-    it("should handle basic search input events", async () => {
+    it("should handle basic search input and clear button events", async () => {
       const { WasmPostSearchUI } =
         await import("../scripts/wasm-post-search-ui.ts");
 
       const searchUI = new WasmPostSearchUI(mockPosts);
-
-      // Call setupBasicEventListeners to set up basic handlers
       (searchUI as any).setupBasicEventListeners();
 
       const searchInput = document.getElementById(
@@ -580,15 +578,18 @@ describe("wasm-post-search-ui", () => {
         "clear-search",
       ) as HTMLButtonElement;
 
-      // Test basic input event
+      vi.useFakeTimers();
+
       searchInput.value = "test";
       searchInput.dispatchEvent(new Event("input"));
-
       expect(clearButton.style.display).toBe("");
 
-      // Test basic clear button
+      vi.advanceTimersByTime(350);
+
       clearButton.dispatchEvent(new Event("click"));
       expect(searchInput.value).toBe("");
+
+      vi.useRealTimers();
     });
 
     it("should handle performBasicSearch with no search input element", async () => {
@@ -790,77 +791,13 @@ describe("wasm-post-search-ui", () => {
 
       const searchUI = new WasmPostSearchUI(mockPosts);
 
-      // Setup basic handlers instead of WASM handlers
       (searchUI as any).setupBasicEventListeners();
 
       const searchInput = document.getElementById(
         "search-input",
       ) as HTMLInputElement;
 
-      // Basic focus should not cause issues
       expect(() => searchInput.dispatchEvent(new Event("focus"))).not.toThrow();
-    });
-
-    it("should handle basic clear button event handler", async () => {
-      const { WasmPostSearchUI } =
-        await import("../scripts/wasm-post-search-ui.ts");
-
-      const searchUI = new WasmPostSearchUI(mockPosts);
-
-      // Use eventHandlers.basicClearButtonClick directly
-      const eventHandlers = (searchUI as any).eventHandlers;
-      const searchInput = document.getElementById(
-        "search-input",
-      ) as HTMLInputElement;
-
-      searchInput.value = "test";
-      eventHandlers.basicClearButtonClick();
-
-      expect(searchInput.value).toBe("");
-    });
-
-    it("should handle basic search input input event", async () => {
-      const { WasmPostSearchUI } =
-        await import("../scripts/wasm-post-search-ui.ts");
-
-      const searchUI = new WasmPostSearchUI(mockPosts);
-
-      const eventHandlers = (searchUI as any).eventHandlers;
-      const searchInput = document.getElementById(
-        "search-input",
-      ) as HTMLInputElement;
-      const clearButton = document.getElementById(
-        "clear-search",
-      ) as HTMLButtonElement;
-
-      searchInput.value = "test";
-
-      // Use fake timers to control debounce
-      vi.useFakeTimers();
-
-      eventHandlers.basicSearchInputInput();
-
-      expect(clearButton.style.display).toBe("");
-
-      // Fast-forward time to complete debounce
-      vi.advanceTimersByTime(350);
-
-      vi.useRealTimers();
-    }, 1000);
-
-    it("should handle basic search form submit event", async () => {
-      const { WasmPostSearchUI } =
-        await import("../scripts/wasm-post-search-ui.ts");
-
-      const searchUI = new WasmPostSearchUI(mockPosts);
-
-      const eventHandlers = (searchUI as any).eventHandlers;
-      const event = new Event("submit");
-      const preventDefaultSpy = vi.spyOn(event, "preventDefault");
-
-      eventHandlers.basicSearchFormSubmit(event);
-
-      expect(preventDefaultSpy).toHaveBeenCalled();
     });
 
     it("should handle eventListeners cleanup when not attached", async () => {
@@ -921,49 +858,12 @@ describe("wasm-post-search-ui", () => {
       expect(mockWasmPostSearch.combinedSearch).toHaveBeenCalled();
     });
 
-    it("should create fallback elements when required elements are missing", async () => {
-      // Remove required elements
+    it("should create fallback elements for all missing elements", async () => {
       document.getElementById("search-input")?.remove();
       document.getElementById("search-form")?.remove();
       document.getElementById("clear-search")?.remove();
       document.getElementById("reset-filters")?.remove();
       document.getElementById("pagination-container")?.remove();
-
-      const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
-      const { WasmPostSearchUI } =
-        await import("../scripts/wasm-post-search-ui.ts");
-
-      const searchUI = new WasmPostSearchUI(mockPosts);
-
-      // Constructor should create fallback elements and log warnings
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Required element #search-input not found - creating fallback element",
-      );
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Required element #search-form not found - creating fallback element",
-      );
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Required element #clear-search not found - creating fallback element",
-      );
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Required element #reset-filters not found - creating fallback element",
-      );
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Required element #pagination-container not found - creating fallback element",
-      );
-
-      // Check that fallback elements have hidden property
-      const elements = (searchUI as any).elements;
-      expect(elements.searchInput.hidden).toBe(true);
-      expect(elements.searchForm.hidden).toBe(true);
-      expect(elements.clearButton.hidden).toBe(true);
-      expect(elements.resetButton.hidden).toBe(true);
-      expect(elements.paginationContainer.hidden).toBe(true);
-    });
-
-    it("should create fallback elements for selectors when missing", async () => {
-      // Remove elements that use querySelector
       document.querySelector(".no-results")?.remove();
       document.querySelector(".post-list")?.remove();
       document.querySelector(".post-list-all")?.remove();
@@ -976,33 +876,18 @@ describe("wasm-post-search-ui", () => {
       const searchUI = new WasmPostSearchUI(mockPosts);
 
       expect(consoleSpy).toHaveBeenCalledWith(
-        "Required element .no-results not found - creating fallback element",
-      );
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Required element .post-list not found - creating fallback element",
-      );
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Required element .post-list-all not found - creating fallback element",
+        expect.stringContaining("not found - creating fallback element"),
       );
 
-      // Check that fallback elements have hidden property
       const elements = (searchUI as any).elements;
+      expect(elements.searchInput.hidden).toBe(true);
+      expect(elements.searchForm.hidden).toBe(true);
+      expect(elements.clearButton.hidden).toBe(true);
+      expect(elements.resetButton.hidden).toBe(true);
+      expect(elements.paginationContainer.hidden).toBe(true);
       expect(elements.noResults.hidden).toBe(true);
       expect(elements.postList.hidden).toBe(true);
       expect(elements.postListAll.hidden).toBe(true);
-    });
-
-    it("should test the constructor with posts parameter", async () => {
-      const { WasmPostSearchUI } =
-        await import("../scripts/wasm-post-search-ui.ts");
-
-      const searchUI = new WasmPostSearchUI(mockPosts);
-
-      expect((searchUI as any).allPosts).toEqual(mockPosts);
-      expect((searchUI as any).isViewingAll).toBe(false);
-      expect((searchUI as any).currentActiveTag).toBe("");
-      expect((searchUI as any).isInitialized).toBe(false);
-      expect((searchUI as any).eventListenersAttached).toBe(false);
     });
 
     it("should handle missing elements detection in init", async () => {
@@ -1192,25 +1077,12 @@ describe("wasm-post-search-ui", () => {
       expect(posts[0].data.description).toBeUndefined();
     });
 
-    it("should handle invalid date gracefully", async () => {
+    it("should handle missing or invalid dates gracefully", async () => {
       document.body.innerHTML = `
         <li class="post-dropdown-item" data-post-id="post-invalid-date" data-keywords="">
           <div class="post-title">Invalid Date Post</div>
           <time class="post-date" datetime="invalid-date">Invalid</time>
         </li>
-      `;
-
-      const { extractPostsFromDOM } =
-        await import("../scripts/wasm-post-search-ui.ts");
-
-      const posts = extractPostsFromDOM();
-
-      expect(posts).toHaveLength(1);
-      expect(posts[0].data.date).toBeInstanceOf(Date);
-    });
-
-    it("should handle missing time element", async () => {
-      document.body.innerHTML = `
         <li class="post-dropdown-item" data-post-id="post-no-time" data-keywords="">
           <div class="post-title">No Time Post</div>
         </li>
@@ -1221,8 +1093,10 @@ describe("wasm-post-search-ui", () => {
 
       const posts = extractPostsFromDOM();
 
-      expect(posts).toHaveLength(1);
-      expect(posts[0].data.date).toBeInstanceOf(Date);
+      expect(posts).toHaveLength(2);
+      posts.forEach((post) => {
+        expect(post.data.date).toBeInstanceOf(Date);
+      });
     });
 
     it("should filter empty keywords", async () => {

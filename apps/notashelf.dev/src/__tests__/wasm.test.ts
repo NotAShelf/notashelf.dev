@@ -219,18 +219,27 @@ describe("wasm.ts", () => {
       expect(results).toEqual([]);
     });
 
-    it("should handle search by tag errors gracefully", async () => {
+    it("should handle WASM method errors gracefully", async () => {
       mockSearchEngine.searchByTag.mockImplementation(() => {
         throw new Error("Tag search failed");
+      });
+      mockSearchEngine.getStats.mockImplementation(() => {
+        throw new Error("Stats failed");
       });
 
       const { PostSearch } = await import("../scripts/utils/post-search");
       const searchInstance = new PostSearch();
       await searchInstance.init(mockPosts);
 
-      const results = searchInstance.searchByTag("javascript");
+      const tagResults = searchInstance.searchByTag("javascript");
+      const stats = searchInstance.getStats();
 
-      expect(results).toEqual([]);
+      expect(tagResults).toEqual([]);
+      expect(stats).toEqual({
+        total_posts: 0,
+        indexed_words: 0,
+        indexed_keywords: 0,
+      });
     });
 
     it("should convert search results to posts", async () => {
@@ -360,24 +369,6 @@ describe("wasm.ts", () => {
 
       expect(mockSearchEngine.getStats).toHaveBeenCalled();
       expect(stats).toEqual(mockStats);
-    });
-
-    it("should handle getStats errors gracefully", async () => {
-      mockSearchEngine.getStats.mockImplementation(() => {
-        throw new Error("Stats failed");
-      });
-
-      const { PostSearch } = await import("../scripts/utils/post-search");
-      const searchInstance = new PostSearch();
-      await searchInstance.init(mockPosts);
-
-      const stats = searchInstance.getStats();
-
-      expect(stats).toEqual({
-        total_posts: 0,
-        indexed_words: 0,
-        indexed_keywords: 0,
-      });
     });
 
     it("should return default stats when not initialized", async () => {
