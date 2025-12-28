@@ -3,6 +3,7 @@ import Pagination from "@components/Pagination.svelte";
 import PostList from "@components/PostList.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import type { PostEntry } from "@lib/types";
+import { getSortedPosts } from "@lib/postUtils";
 import { Icon } from "astro-icon/components";
 import { getCollection } from "astro:content";
 
@@ -20,18 +21,17 @@ const allTags = [
 
 // Filter out draft and archived posts
 const filteredPosts = allPosts
-  .filter((post: PostEntry) => !post.data.draft && !post.data.archived)
-  .sort(
-    (a: PostEntry, b: PostEntry) =>
-      new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
-  );
+  .filter((post: PostEntry) => !post.data.draft && !post.data.archived);
+
+// Sort posts by effective date (updated posts bubble up)
+const sortedPosts = getSortedPosts(filteredPosts);
 
 // Calculate pagination
 const postsPerPage = 5;
-const totalPosts = filteredPosts.length;
+const totalPosts = sortedPosts.length;
 const totalPages = Math.ceil(totalPosts / postsPerPage);
 const currentPage = 1;
-const posts = filteredPosts.slice(0, postsPerPage);
+const posts = sortedPosts.slice(0, postsPerPage);
 ---
 
 <BaseLayout title="Blog Posts" description="Collection of blog posts">
@@ -82,6 +82,16 @@ const posts = filteredPosts.slice(0, postsPerPage);
       <div class="tags-wrap">
         <button type="button" class="tag-filter" data-tag=""> All </button>
 
+        <button
+          type="button"
+          class="tag-filter"
+          data-filter="recently-updated"
+          title="Show recently updated posts"
+          aria-label="Filter posts updated in the last 30 days"
+        >
+          Recently Updated
+        </button>
+
         {
           allTags.map((tag) => (
             <button type="button" class="tag-filter" data-tag={tag}>
@@ -96,7 +106,7 @@ const posts = filteredPosts.slice(0, postsPerPage);
   <PostList posts={posts} className="post-list" />
 
   <PostList
-    posts={filteredPosts}
+    posts={sortedPosts}
     className="post-list-all"
     style="display: none;"
   />
@@ -150,6 +160,16 @@ const posts = filteredPosts.slice(0, postsPerPage);
         }
       }
 
+      // Extract updated date if present
+      const updatedDateStr = element.getAttribute("data-updated") || "";
+      let updatedDate: Date | undefined = undefined;
+      if (updatedDateStr) {
+        const parsedUpdatedDate = new Date(updatedDateStr);
+        if (!isNaN(parsedUpdatedDate.getTime())) {
+          updatedDate = parsedUpdatedDate;
+        }
+      }
+
       if (postId && title) {
         allPosts.push({
           id: postId,
@@ -158,6 +178,7 @@ const posts = filteredPosts.slice(0, postsPerPage);
             description: description || "",
             keywords: keywords.filter((k) => k.trim() !== ""),
             date: postDate,
+            updated: updatedDate,
             draft: false,
             archived: false,
           },
@@ -179,7 +200,7 @@ const posts = filteredPosts.slice(0, postsPerPage);
   .posts-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
     margin-bottom: 1.5rem;
   }
 
@@ -205,6 +226,11 @@ const posts = filteredPosts.slice(0, postsPerPage);
     background-color: transparent;
 
     &:hover {
+      background-color: $button-bg;
+      color: $secondary;
+    }
+
+    &.active {
       background-color: $button-bg;
       color: $secondary;
     }
@@ -292,7 +318,8 @@ const posts = filteredPosts.slice(0, postsPerPage);
   }
 
   .tag-filter {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     padding: 0.3rem 0.8rem;
     border-radius: 4px;
     background-color: $button-bg;

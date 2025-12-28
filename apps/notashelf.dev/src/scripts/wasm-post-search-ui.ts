@@ -22,6 +22,7 @@ export class WasmPostSearchUI {
   private allPosts: PostEntry[] = [];
   private isViewingAll = false;
   private currentActiveTag = "";
+  private isRecentlyUpdatedFilter = false;
   private isInitialized = false;
   private eventListenersAttached = false; // track event listener setup
 
@@ -455,7 +456,13 @@ export class WasmPostSearchUI {
     this.elements.tagButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
         const tagValue = btn.getAttribute("data-tag") || "";
-        this.handleTagSelection(tagValue);
+        const filterType = btn.getAttribute("data-filter") || "";
+
+        if (filterType === "recently-updated") {
+          this.handleRecentlyUpdatedFilter();
+        } else {
+          this.handleTagSelection(tagValue);
+        }
       });
     });
 
@@ -528,7 +535,13 @@ export class WasmPostSearchUI {
     this.elements.tagButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
         const tagValue = btn.getAttribute("data-tag") || "";
-        this.handleTagSelection(tagValue);
+        const filterType = btn.getAttribute("data-filter") || "";
+
+        if (filterType === "recently-updated") {
+          this.handleRecentlyUpdatedFilter();
+        } else {
+          this.handleTagSelection(tagValue);
+        }
       });
     });
 
@@ -586,8 +599,10 @@ export class WasmPostSearchUI {
       this.elements.searchInput?.value?.toLowerCase().trim() || "";
     let visibleCount = 0;
 
-    const displayingPaginated = !this.isViewingAll && !searchTerm;
-    const displayingAll = this.isViewingAll || searchTerm;
+    const displayingPaginated =
+      !this.isViewingAll && !searchTerm && !this.isRecentlyUpdatedFilter;
+    const displayingAll =
+      this.isViewingAll || searchTerm || this.isRecentlyUpdatedFilter;
 
     this.elements.postList.style.display = displayingPaginated ? "" : "none";
     this.elements.postListAll.style.display = displayingAll ? "" : "none";
@@ -605,6 +620,9 @@ export class WasmPostSearchUI {
         this.elements.postList.querySelectorAll<HTMLLIElement>(
           ".post-dropdown-item",
         );
+
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
     itemsToFilter.forEach((post) => {
       const titleElement = post.querySelector(".post-title");
@@ -629,8 +647,23 @@ export class WasmPostSearchUI {
         !this.currentActiveTag ||
         keywords.includes(this.currentActiveTag.toLowerCase());
 
-      post.style.display = matchesSearch && matchesTag ? "" : "none";
-      if (matchesSearch && matchesTag) visibleCount++;
+      let matchesRecentlyUpdated = true;
+      if (this.isRecentlyUpdatedFilter) {
+        const hasSignificantUpdate =
+          post.getAttribute("data-has-significant-update") === "true";
+        const updatedDateStr = post.getAttribute("data-updated") || "";
+
+        if (hasSignificantUpdate && updatedDateStr) {
+          const updatedDate = new Date(updatedDateStr);
+          matchesRecentlyUpdated = updatedDate >= thirtyDaysAgo;
+        } else {
+          matchesRecentlyUpdated = false;
+        }
+      }
+
+      const shouldShow = matchesSearch && matchesTag && matchesRecentlyUpdated;
+      this.animatePostVisibility(post, shouldShow);
+      if (shouldShow) visibleCount++;
     });
 
     // Show/hide no results message
@@ -639,6 +672,10 @@ export class WasmPostSearchUI {
     this.elements.clearButton.style.display = this.elements.searchInput?.value
       ? ""
       : "none";
+  }
+
+  private animatePostVisibility(post: HTMLElement, show: boolean): void {
+    post.style.display = show ? "" : "none";
   }
 
   private updatePostsDisplay(
@@ -656,21 +693,22 @@ export class WasmPostSearchUI {
       : "";
 
     if (displayingAll) {
-      // Hide all posts first
+      // Get all items
       const allItems =
         this.elements.postListAll.querySelectorAll<HTMLLIElement>(
           ".post-dropdown-item",
         );
-      allItems.forEach((item) => (item.style.display = "none"));
 
-      // Show only matched posts
-      matchedPosts?.forEach((post) => {
-        const postElement = this.elements.postListAll.querySelector(
-          `[data-post-id="${post.id}"]`,
-        ) as HTMLLIElement;
-        if (postElement) {
-          postElement.style.display = "";
-        }
+      // Create a set of matched post IDs for O(1) lookup
+      const matchedPostIds = new Set(
+        matchedPosts?.map((post) => post.id) || [],
+      );
+
+      // Animate visibility for each post
+      allItems.forEach((item) => {
+        const postId = item.getAttribute("data-post-id");
+        const shouldShow = !!(postId && matchedPostIds.has(postId));
+        this.animatePostVisibility(item, shouldShow);
       });
     }
 
@@ -681,7 +719,57 @@ export class WasmPostSearchUI {
       : "none";
   }
 
+  private handleRecentlyUpdatedFilter(): void {
+    // Toggle recently updated filter
+    this.isRecentlyUpdatedFilter = !this.isRecentlyUpdatedFilter;
+
+    // Clear tag selection when enabling recently updated filter
+    if (this.isRecentlyUpdatedFilter) {
+      this.currentActiveTag = "";
+    }
+
+    // Update active states
+    this.elements.tagButtons.forEach((btn) => {
+      const filterType = btn.getAttribute("data-filter") || "";
+      if (filterType === "recently-updated") {
+        if (this.isRecentlyUpdatedFilter) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      } else {
+        btn.classList.remove("active");
+      }
+    });
+
+    // If "All" button exists and recently updated filter is off, make it active
+    if (!this.isRecentlyUpdatedFilter) {
+      const allButton = Array.from(this.elements.tagButtons).find(
+        (btn) => btn.getAttribute("data-tag") === "",
+      );
+      if (allButton) {
+        allButton.classList.add("active");
+      }
+    }
+
+    // Switch to view all posts when filter is active
+    if (this.isRecentlyUpdatedFilter && !this.isViewingAll) {
+      this.isViewingAll = true;
+      this.updateViewMode(true);
+    }
+
+    // Perform search with the new filter
+    if (this.isInitialized) {
+      this.performSearch();
+    } else {
+      this.performBasicSearch();
+    }
+  }
+
   private handleTagSelection(tagValue: string): void {
+    // Clear recently updated filter when selecting a tag
+    this.isRecentlyUpdatedFilter = false;
+
     // Update active tag
     this.elements.tagButtons.forEach((b) => b.classList.remove("active"));
     const selectedButton = Array.from(this.elements.tagButtons).find(
@@ -737,16 +825,37 @@ export class WasmPostSearchUI {
   }
 
   private resetFilters(): void {
+    // Reset all filters
     this.elements.searchInput.value = "";
     this.currentActiveTag = "";
+    this.isRecentlyUpdatedFilter = false;
+    this.elements.clearButton.style.display = "none";
+
+    // Reset tag buttons
     this.elements.tagButtons.forEach((btn) => {
       btn.classList.remove("active");
       if (btn.getAttribute("data-tag") === "") {
         btn.classList.add("active");
       }
     });
+
+    // Clear any lingering animation states
+    const allItems = document.querySelectorAll<HTMLLIElement>(
+      ".post-dropdown-item",
+    );
+    allItems.forEach((item) => {
+      item.classList.remove("filtering");
+      item.style.display = "";
+    });
+
     PostSearchState.clearSearchState();
-    this.performSearch();
+
+    // Perform search to refresh display
+    if (this.isInitialized) {
+      this.performSearch();
+    } else {
+      this.performBasicSearch();
+    }
   }
 
   private saveCurrentState(): void {
@@ -789,6 +898,16 @@ export function extractPostsFromDOM(): PostEntry[] {
       }
     }
 
+    // Extract updated date if present
+    const updatedDateStr = element.getAttribute("data-updated") || "";
+    let updatedDate: Date | undefined = undefined;
+    if (updatedDateStr) {
+      const parsedUpdatedDate = new Date(updatedDateStr);
+      if (!isNaN(parsedUpdatedDate.getTime())) {
+        updatedDate = parsedUpdatedDate;
+      }
+    }
+
     return {
       id,
       data: {
@@ -796,6 +915,7 @@ export function extractPostsFromDOM(): PostEntry[] {
         description: descriptionElement?.textContent || undefined,
         keywords,
         date: postDate,
+        updated: updatedDate,
         draft: false,
         archived: false,
       },

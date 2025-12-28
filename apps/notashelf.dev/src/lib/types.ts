@@ -12,6 +12,7 @@ export interface PostWithReadingTime {
   data: {
     title: string;
     date: Date;
+    updated?: Date;
     description?: string;
     draft?: boolean;
   };

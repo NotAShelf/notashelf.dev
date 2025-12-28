@@ -59,3 +59,56 @@ export function convertPostDates(
     return null;
   }
 }
+
+/**
+ * Determines if a post has a significant update.
+ * An update is considered significant if it occurred more than 7 days after publication.
+ * @param publishDate The original publication date
+ * @param updateDate The update date (optional)
+ * @returns true if the update is significant, false otherwise
+ */
+export function isSignificantUpdate(
+  publishDate: Date,
+  updateDate?: Date,
+): boolean {
+  if (!updateDate) return false;
+
+  const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+  const timeDiff = updateDate.getTime() - publishDate.getTime();
+
+  return timeDiff > SEVEN_DAYS_MS;
+}
+
+/**
+ * Gets the effective date for a post (used for sorting).
+ * Returns the update date if the update is significant (>7 days after publication),
+ * otherwise returns the publication date.
+ * @param post The post entry
+ * @returns The effective date for sorting
+ */
+export function getEffectiveDate(post: PostEntry): Date {
+  const publishDate = new Date(post.data.date);
+  const updateDate = post.data.updated
+    ? new Date(post.data.updated)
+    : undefined;
+
+  if (updateDate && isSignificantUpdate(publishDate, updateDate)) {
+    return updateDate;
+  }
+
+  return publishDate;
+}
+
+/**
+ * Sorts posts by their effective date (most recent first).
+ * Posts with significant updates will bubble up based on their update date.
+ * @param posts Array of post entries to sort
+ * @returns Sorted array of posts
+ */
+export function getSortedPosts(posts: PostEntry[]): PostEntry[] {
+  return [...posts].sort((a, b) => {
+    const dateA = getEffectiveDate(a);
+    const dateB = getEffectiveDate(b);
+    return dateB.getTime() - dateA.getTime();
+  });
+}
