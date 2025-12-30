@@ -21,7 +21,6 @@ describe("project-shuffle integration", () => {
 
   it("should initialize project shuffle successfully", async () => {
     mockSetupClientSideShuffling.mockResolvedValue(undefined);
-    const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
     // Import the project shuffle utility directly
     const { projectShuffle } = await import("../scripts/utils/project-shuffle");
@@ -33,10 +32,6 @@ describe("project-shuffle integration", () => {
   it("should handle initialization errors gracefully", async () => {
     const error = new Error("Project shuffle initialization failed");
     mockSetupClientSideShuffling.mockRejectedValue(error);
-
-    const consoleErrorSpy = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
 
     const { projectShuffle } = await import("../scripts/utils/project-shuffle");
 

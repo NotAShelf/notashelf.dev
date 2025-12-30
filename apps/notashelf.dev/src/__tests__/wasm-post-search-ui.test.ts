@@ -970,7 +970,7 @@ describe("wasm-post-search-ui", () => {
         await promise1;
         // In test environment, WASM loading fails, so isInitialized should remain false
         expect((searchUI as any).isInitialized).toBe(false);
-      } catch (error) {
+      } catch {
         // WASM initialization is expected to fail in test environment
         expect((searchUI as any).isInitialized).toBe(false);
       }

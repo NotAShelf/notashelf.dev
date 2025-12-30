@@ -419,7 +419,7 @@ describe("wasm.ts", () => {
     it("should initialize successfully", async () => {
       const { ProjectShuffle } =
         await import("../scripts/utils/project-shuffle");
-      const projectsInstance = new ProjectShuffle();
+      new ProjectShuffle();
 
       // ProjectShuffle auto-initializes
 
@@ -496,7 +496,6 @@ describe("wasm.ts", () => {
       const shuffleSpy = vi
         .spyOn(projectsInstance, "shuffleProjects")
         .mockResolvedValue();
-      const addEventListenerSpy = vi.spyOn(document, "addEventListener");
 
       await projectsInstance.setupClientSideShuffling();
 

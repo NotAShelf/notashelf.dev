@@ -1,6 +1,6 @@
 ---
-import type { PostEntry } from "@lib/types";
 import { isSignificantUpdate } from "@lib/postUtils";
+import type { PostEntry } from "@lib/types";
 
 interface Props {
   posts: PostEntry[];
@@ -16,7 +16,7 @@ const { posts, className, style } = Astro.props;
     posts.map((post: PostEntry) => {
       const hasSignificantUpdate = isSignificantUpdate(
         new Date(post.data.date),
-        post.data.updated ? new Date(post.data.updated) : undefined
+        post.data.updated ? new Date(post.data.updated) : undefined,
       );
 
       return (
@@ -46,15 +46,20 @@ const { posts, className, style } = Astro.props;
               </div>
               <div class="post-dates">
                 <time datetime={post.data.date.toISOString()} class="post-date">
-                  Published {new Date(post.data.date).toLocaleDateString("en-US", {
+                  Published{" "}
+                  {new Date(post.data.date).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
                   })}
                 </time>
                 {hasSignificantUpdate && post.data.updated && (
-                  <time datetime={post.data.updated.toISOString()} class="post-date post-date-updated">
-                    Updated {new Date(post.data.updated).toLocaleDateString("en-US", {
+                  <time
+                    datetime={post.data.updated.toISOString()}
+                    class="post-date post-date-updated"
+                  >
+                    Updated{" "}
+                    {new Date(post.data.updated).toLocaleDateString("en-US", {
                       year: "numeric",
                       month: "long",
                       day: "numeric",
@@ -148,7 +153,7 @@ const { posts, className, style } = Astro.props;
     color: color.scale($secondary, $lightness: -20%);
     margin: 0 0 8px 0;
     display: block;
-    
+
     &:not(:last-child) {
       margin-right: 1rem;
     }
@@ -202,5 +207,4 @@ const { posts, className, style } = Astro.props;
     gap: 0;
     margin: 0 0 8px 0;
   }
-
 </style>

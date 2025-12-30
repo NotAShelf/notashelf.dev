@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { Icon } from "astro-icon/components";
 import { isSignificantUpdate } from "@lib/postUtils";
+import { Icon } from "astro-icon/components";
 
 export interface Props {
   frontmatter: {
@@ -93,12 +93,18 @@ const postSrc =
 
     <div class="post-meta">
       <div class="meta-left">
-        {formattedDate && <time datetime={date || ""}>Published {formattedDate}</time>}
-        {hasSignificantUpdate && formattedUpdatedDate && (
-          <time datetime={updated || ""} class="updated-date">
-            Updated {formattedUpdatedDate}
-          </time>
-        )}
+        {
+          formattedDate && (
+            <time datetime={date || ""}>Published {formattedDate}</time>
+          )
+        }
+        {
+          hasSignificantUpdate && formattedUpdatedDate && (
+            <time datetime={updated || ""} class="updated-date">
+              Updated {formattedUpdatedDate}
+            </time>
+          )
+        }
         <span class="reading-time">{readingTime} min read</span>
         <a
           href={`${postSrc}/blob/${gitRevision}/apps/notashelf.dev/posts/${slug}.${fileExtension}`}
@@ -195,7 +201,7 @@ const postSrc =
   .post-meta time {
     color: $text-subtle;
     font-size: 0.9rem;
-    
+
     &:not(:last-child) {
       margin-right: 1rem;
     }

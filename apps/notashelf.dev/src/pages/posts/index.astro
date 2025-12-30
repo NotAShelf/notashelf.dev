@@ -2,8 +2,8 @@
 import Pagination from "@components/Pagination.svelte";
 import PostList from "@components/PostList.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import type { PostEntry } from "@lib/types";
 import { getSortedPosts } from "@lib/postUtils";
+import type { PostEntry } from "@lib/types";
 import { Icon } from "astro-icon/components";
 import { getCollection } from "astro:content";
 
@@ -20,8 +20,9 @@ const allTags = [
 ].sort();
 
 // Filter out draft and archived posts
-const filteredPosts = allPosts
-  .filter((post: PostEntry) => !post.data.draft && !post.data.archived);
+const filteredPosts = allPosts.filter(
+  (post: PostEntry) => !post.data.draft && !post.data.archived,
+);
 
 // Sort posts by effective date (updated posts bubble up)
 const sortedPosts = getSortedPosts(filteredPosts);

@@ -24,11 +24,7 @@ describe("PageUtils", () => {
         disconnect: vi.fn(),
       };
 
-      const IntersectionObserverMock = vi.fn(function (
-        this: any,
-        callback: IntersectionObserverCallback,
-        options?: IntersectionObserverInit,
-      ) {
+      const IntersectionObserverMock = vi.fn(function (this: any) {
         return mockObserver;
       });
       global.IntersectionObserver = IntersectionObserverMock as any;
@@ -57,7 +53,6 @@ describe("PageUtils", () => {
       const IntersectionObserverMock = vi.fn(function (
         this: any,
         callback: IntersectionObserverCallback,
-        options?: IntersectionObserverInit,
       ) {
         observerCallback = callback;
         return mockObserver;
