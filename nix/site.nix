@@ -114,13 +114,14 @@ in
     # to fetch deps for and build. Alas, NodeJS.
     pnpmDeps = fetchPnpmDeps {
       inherit (finalAttrs) pname src pnpmInstallFlags;
-      hash = "sha256-Ewfc6uhfng2Yv7yGqkN51ZydWJfCEKiDlRLic/rRWyg=";
-      fetcherVersion = 2; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
+      hash = "sha256-kqgTUzs6lLH/fXWXOJ3ywKzSbLmwYRFAGurb9XAENx4=";
+      fetcherVersion = 3; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
     };
 
     nativeBuildInputs = [
-      nodejs # build scripts
-      pnpmConfigHook # dependency resolution
+      pnpm
+      pnpmConfigHook
+      nodejs # build scripts require node :/
     ];
 
     buildPhase = ''
