@@ -83,7 +83,7 @@ and predictable.
 ## A Fork in the Road
 
 Projects used to come in two broad flavors. At least there are two that are
-relevant to us today, but the new third variant is more sinister. Tradditionally
+relevant to us today, but the new third variant is more sinister. Traditionally
 there were those two flavors. Anyway, I digress.
 
 You either get the reliable, boring version that just works and feels like a

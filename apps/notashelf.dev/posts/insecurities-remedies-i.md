@@ -200,7 +200,7 @@ different processes. This not only enhances security by limiting the potential
 impact of a compromised process but also improves resource management by
 isolating each instance's file system access. Although the impact of
 `DynamicUsers` on a service's exposure score is low, it is a very handy
-directive that you might consider if root privileges are not necessary for oyur
+directive that you might consider if root privileges are not necessary for your
 service.
 
 ##### SystemCallFilter
