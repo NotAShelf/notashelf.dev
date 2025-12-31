@@ -55,6 +55,17 @@ describe("PostTableOfContents", () => {
       document.body.appendChild(tocItem1);
       document.body.appendChild(tocItem2);
 
+      const mockObserver = {
+        observe: vi.fn(),
+        unobserve: vi.fn(),
+        disconnect: vi.fn(),
+      };
+
+      const IntersectionObserverMock = vi.fn(function (this: any) {
+        return mockObserver;
+      });
+      global.IntersectionObserver = IntersectionObserverMock as any;
+
       const initScrollObserverSpy = vi.spyOn(
         PostTableOfContents as any,
         "initScrollObserver",
@@ -144,10 +155,10 @@ describe("PostTableOfContents", () => {
         disconnect: vi.fn(),
       };
 
-      const IntersectionObserverMock = vi
-        .fn()
-        .mockImplementation(() => mockObserver);
-      global.IntersectionObserver = IntersectionObserverMock;
+      const IntersectionObserverMock = vi.fn(function (this: any) {
+        return mockObserver;
+      });
+      global.IntersectionObserver = IntersectionObserverMock as any;
 
       // Simulate DOMContentLoaded
       const event = new Event("DOMContentLoaded");
@@ -195,13 +206,14 @@ describe("PostTableOfContents", () => {
         disconnect: vi.fn(),
       };
 
-      const IntersectionObserverMock = vi
-        .fn()
-        .mockImplementation((callback) => {
-          observerCallback = callback;
-          return mockObserver;
-        });
-      global.IntersectionObserver = IntersectionObserverMock;
+      const IntersectionObserverMock = vi.fn(function (
+        this: any,
+        callback: IntersectionObserverCallback,
+      ) {
+        observerCallback = callback;
+        return mockObserver;
+      });
+      global.IntersectionObserver = IntersectionObserverMock as any;
 
       // Simulate DOMContentLoaded
       const event = new Event("DOMContentLoaded");

@@ -1,6 +1,7 @@
 ---
 import Pagination from "@components/Pagination.svelte";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { getSortedPosts } from "@lib/postUtils";
 import type { PostEntry } from "@lib/types";
 import { Icon } from "astro-icon/components";
 import { getCollection } from "astro:content";
@@ -11,12 +12,12 @@ const currentPage = parseInt(Astro.url.searchParams.get("page") || "1");
 
 // Get all archived posts and sort by date
 const allPosts = await getCollection("posts");
-const archivedPosts = allPosts
-  .filter((post: PostEntry) => post.data.archived && !post.data.draft)
-  .sort(
-    (a: PostEntry, b: PostEntry) =>
-      new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
-  );
+const filteredArchivedPosts = allPosts.filter(
+  (post: PostEntry) => post.data.archived && !post.data.draft,
+);
+
+// Sort archived posts by effective date (updated posts bubble up)
+const archivedPosts = getSortedPosts(filteredArchivedPosts);
 
 // Calculate pagination
 const totalPosts = archivedPosts.length;
@@ -97,7 +98,7 @@ const posts = archivedPosts.slice(startIndex, endIndex);
   .posts-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
     margin-bottom: 1.5rem;
   }
 

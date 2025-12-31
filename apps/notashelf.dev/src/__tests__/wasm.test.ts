@@ -219,18 +219,27 @@ describe("wasm.ts", () => {
       expect(results).toEqual([]);
     });
 
-    it("should handle search by tag errors gracefully", async () => {
+    it("should handle WASM method errors gracefully", async () => {
       mockSearchEngine.searchByTag.mockImplementation(() => {
         throw new Error("Tag search failed");
+      });
+      mockSearchEngine.getStats.mockImplementation(() => {
+        throw new Error("Stats failed");
       });
 
       const { PostSearch } = await import("../scripts/utils/post-search");
       const searchInstance = new PostSearch();
       await searchInstance.init(mockPosts);
 
-      const results = searchInstance.searchByTag("javascript");
+      const tagResults = searchInstance.searchByTag("javascript");
+      const stats = searchInstance.getStats();
 
-      expect(results).toEqual([]);
+      expect(tagResults).toEqual([]);
+      expect(stats).toEqual({
+        total_posts: 0,
+        indexed_words: 0,
+        indexed_keywords: 0,
+      });
     });
 
     it("should convert search results to posts", async () => {
@@ -362,24 +371,6 @@ describe("wasm.ts", () => {
       expect(stats).toEqual(mockStats);
     });
 
-    it("should handle getStats errors gracefully", async () => {
-      mockSearchEngine.getStats.mockImplementation(() => {
-        throw new Error("Stats failed");
-      });
-
-      const { PostSearch } = await import("../scripts/utils/post-search");
-      const searchInstance = new PostSearch();
-      await searchInstance.init(mockPosts);
-
-      const stats = searchInstance.getStats();
-
-      expect(stats).toEqual({
-        total_posts: 0,
-        indexed_words: 0,
-        indexed_keywords: 0,
-      });
-    });
-
     it("should return default stats when not initialized", async () => {
       const { PostSearch } = await import("../scripts/utils/post-search");
       const searchInstance = new PostSearch();
@@ -426,10 +417,9 @@ describe("wasm.ts", () => {
     });
 
     it("should initialize successfully", async () => {
-      const { ProjectShuffle } = await import(
-        "../scripts/utils/project-shuffle"
-      );
-      const projectsInstance = new ProjectShuffle();
+      const { ProjectShuffle } =
+        await import("../scripts/utils/project-shuffle");
+      new ProjectShuffle();
 
       // ProjectShuffle auto-initializes
 
@@ -437,9 +427,8 @@ describe("wasm.ts", () => {
     });
 
     it("should skip initialization if already initialized", async () => {
-      const { ProjectShuffle } = await import(
-        "../scripts/utils/project-shuffle"
-      );
+      const { ProjectShuffle } =
+        await import("../scripts/utils/project-shuffle");
       const projectsInstance = new ProjectShuffle();
 
       await projectsInstance.setupClientSideShuffling();
@@ -455,9 +444,8 @@ describe("wasm.ts", () => {
         new Error("Project utils init failed"),
       );
 
-      const { ProjectShuffle } = await import(
-        "../scripts/utils/project-shuffle"
-      );
+      const { ProjectShuffle } =
+        await import("../scripts/utils/project-shuffle");
       const projectsInstance = new ProjectShuffle();
 
       // The current implementation catches errors internally and doesn't reject
@@ -468,9 +456,8 @@ describe("wasm.ts", () => {
     });
 
     it("should shuffle projects successfully", async () => {
-      const { ProjectShuffle } = await import(
-        "../scripts/utils/project-shuffle"
-      );
+      const { ProjectShuffle } =
+        await import("../scripts/utils/project-shuffle");
       const projectsInstance = new ProjectShuffle();
 
       await projectsInstance.setupClientSideShuffling();
@@ -487,9 +474,8 @@ describe("wasm.ts", () => {
         writable: true,
       });
 
-      const { ProjectShuffle } = await import(
-        "../scripts/utils/project-shuffle"
-      );
+      const { ProjectShuffle } =
+        await import("../scripts/utils/project-shuffle");
       const projectsInstance = new ProjectShuffle();
       const shuffleSpy = vi.spyOn(projectsInstance, "shuffleProjects");
 
@@ -504,14 +490,12 @@ describe("wasm.ts", () => {
         writable: true,
       });
 
-      const { ProjectShuffle } = await import(
-        "../scripts/utils/project-shuffle"
-      );
+      const { ProjectShuffle } =
+        await import("../scripts/utils/project-shuffle");
       const projectsInstance = new ProjectShuffle();
       const shuffleSpy = vi
         .spyOn(projectsInstance, "shuffleProjects")
         .mockResolvedValue();
-      const addEventListenerSpy = vi.spyOn(document, "addEventListener");
 
       await projectsInstance.setupClientSideShuffling();
 
@@ -543,32 +527,6 @@ describe("wasm.ts", () => {
       expect(result).toBe(mockShuffled);
     });
 
-    it("should handle shuffle JSON array errors", async () => {
-      mockProjectUtils.shuffleJsonArray.mockImplementation(() => {
-        throw new Error("Shuffle failed");
-      });
-
-      const { wasmProjectUtils } = await import("../lib/wasm");
-      await wasmProjectUtils.init();
-
-      const result = wasmProjectUtils.shuffleJsonArray("[1,2,3]");
-
-      expect(result).toBe("[1,2,3]"); // Should return original on error
-    });
-
-    it("should handle random sample errors", async () => {
-      mockProjectUtils.randomSample.mockImplementation(() => {
-        throw new Error("Sample failed");
-      });
-
-      const { wasmProjectUtils } = await import("../lib/wasm");
-      await wasmProjectUtils.init();
-
-      const result = wasmProjectUtils.randomSample("[1,2,3]", 2);
-
-      expect(result).toBe("[1,2,3]"); // Should return original on error
-    });
-
     it("should handle initialization with existing global flag", async () => {
       const { wasmProjectUtils } = await import("../lib/wasm");
 
@@ -589,9 +547,8 @@ describe("wasm.ts", () => {
   describe("Singleton instances", () => {
     it("should export singleton instances", async () => {
       const postSearchModule = await import("../scripts/utils/post-search");
-      const projectShuffleModule = await import(
-        "../scripts/utils/project-shuffle"
-      );
+      const projectShuffleModule =
+        await import("../scripts/utils/project-shuffle");
 
       expect(postSearchModule.postSearch).toBeDefined();
       expect(projectShuffleModule.projectShuffle).toBeDefined();

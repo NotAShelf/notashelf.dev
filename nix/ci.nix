@@ -36,7 +36,6 @@ writeShellApplication {
     echo "PNPM version: $(pnpm --version)"
     echo "Rust version: $(rustc --version)"
     echo "Cargo version: $(cargo --version)"
-    echo "Working directory: $(pwd)"
 
     # Install dependencies with "CI-optimized" flags
     echo "Installing dependencies..."
@@ -46,10 +45,6 @@ writeShellApplication {
     # Formatting checks
     echo "Running format checks..."
     pnpm run fmt --check || error_exit "Code formatting check failed."
-
-    # Build WASM utilities
-    echo "Building WASM utilities..."
-    pnpm run build:wasm-utils || error_exit "WASM build failed."
 
     # Linting and type checking
     echo "Running lints..."

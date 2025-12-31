@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { isSignificantUpdate } from "@lib/postUtils";
 import { Icon } from "astro-icon/components";
 
 export interface Props {
@@ -7,12 +8,13 @@ export interface Props {
     title: string;
     description?: string;
     date?: string;
+    updated?: string;
     keywords?: string[];
   };
 }
 
 const { frontmatter } = Astro.props;
-const { title, description, date, keywords = [] } = frontmatter;
+const { title, description, date, updated, keywords = [] } = frontmatter;
 
 // Format date if it exists
 const formattedDate = date
@@ -22,6 +24,21 @@ const formattedDate = date
       day: "numeric",
     })
   : null;
+
+// Format updated date if it exists
+const formattedUpdatedDate = updated
+  ? new Date(updated).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  : null;
+
+// Check if update is significant
+const hasSignificantUpdate =
+  date && updated
+    ? isSignificantUpdate(new Date(date), new Date(updated))
+    : false;
 
 // Calculate reading time based on content
 const content = await Astro.slots.render("default");
@@ -51,6 +68,9 @@ const showToc = headings.length >= 2;
 const currentPath = Astro.url.pathname;
 const slug = currentPath.split("/").filter(Boolean).pop();
 
+// Determine file extension (.md or .mdx)
+const fileExtension = slug?.endsWith(".mdx") ? "mdx" : "md";
+
 // Get git revision from environment variable
 // or default to main
 const gitRevision = import.meta.env.GIT_REV || "main";
@@ -73,10 +93,21 @@ const postSrc =
 
     <div class="post-meta">
       <div class="meta-left">
-        {formattedDate && <time datetime={date || ""}>{formattedDate}</time>}
+        {
+          formattedDate && (
+            <time datetime={date || ""}>Published {formattedDate}</time>
+          )
+        }
+        {
+          hasSignificantUpdate && formattedUpdatedDate && (
+            <time datetime={updated || ""} class="updated-date">
+              Updated {formattedUpdatedDate}
+            </time>
+          )
+        }
         <span class="reading-time">{readingTime} min read</span>
         <a
-          href={`${postSrc}/blob/${gitRevision}/apps/notashelf.dev/posts/${slug}.md`}
+          href={`${postSrc}/blob/${gitRevision}/apps/notashelf.dev/posts/${slug}.${fileExtension}`}
           class="source-link"
           target="_blank"
           rel="noopener noreferrer"
@@ -163,13 +194,21 @@ const postSrc =
     .meta-left {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0;
     }
   }
 
   .post-meta time {
     color: $text-subtle;
     font-size: 0.9rem;
+
+    &:not(:last-child) {
+      margin-right: 1rem;
+    }
+  }
+
+  .updated-date {
+    font-weight: 500;
   }
 
   .reading-time {

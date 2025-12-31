@@ -1,4 +1,5 @@
 ---
+import { isSignificantUpdate } from "@lib/postUtils";
 import type { PostEntry } from "@lib/types";
 
 interface Props {
@@ -12,38 +13,68 @@ const { posts, className, style } = Astro.props;
 
 <ul class={className} style={style}>
   {
-    posts.map((post: PostEntry) => (
-      <li
-        class="post-dropdown-item"
-        data-keywords={post.data.keywords?.join(",")}
-        data-post-id={post.id}
-      >
-        <a href={`/posts/${post.id}`} class="dropdown-link">
-          <div class="post-content">
-            <div class="post-header">
-              <h2 class="post-title">{post.data.title}</h2>
-              {post.data.keywords && post.data.keywords.length > 0 && (
-                <div class="post-tags">
-                  {post.data.keywords.map((tag: string) => (
-                    <span class="post-tag">{tag}</span>
-                  ))}
-                </div>
+    posts.map((post: PostEntry) => {
+      const hasSignificantUpdate = isSignificantUpdate(
+        new Date(post.data.date),
+        post.data.updated ? new Date(post.data.updated) : undefined,
+      );
+
+      return (
+        <li
+          class="post-dropdown-item"
+          data-keywords={post.data.keywords?.join(",")}
+          data-post-id={post.id}
+          data-updated={post.data.updated?.toISOString() || ""}
+          data-has-significant-update={hasSignificantUpdate ? "true" : "false"}
+        >
+          <a href={`/posts/${post.id}`} class="dropdown-link">
+            <div class="post-content">
+              <div class="post-header">
+                <h2 class="post-title">
+                  {post.data.title}
+                  {hasSignificantUpdate && (
+                    <span class="updated-badge">Recently Updated</span>
+                  )}
+                </h2>
+                {post.data.keywords && post.data.keywords.length > 0 && (
+                  <div class="post-tags">
+                    {post.data.keywords.map((tag: string) => (
+                      <span class="post-tag">{tag}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div class="post-dates">
+                <time datetime={post.data.date.toISOString()} class="post-date">
+                  Published{" "}
+                  {new Date(post.data.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </time>
+                {hasSignificantUpdate && post.data.updated && (
+                  <time
+                    datetime={post.data.updated.toISOString()}
+                    class="post-date post-date-updated"
+                  >
+                    Updated{" "}
+                    {new Date(post.data.updated).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </time>
+                )}
+              </div>
+              {post.data.description && (
+                <p class="post-description">{post.data.description}</p>
               )}
             </div>
-            <time datetime={post.data.date.toISOString()} class="post-date">
-              {new Date(post.data.date).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </time>
-            {post.data.description && (
-              <p class="post-description">{post.data.description}</p>
-            )}
-          </div>
-        </a>
-      </li>
-    ))
+          </a>
+        </li>
+      );
+    })
   }
 </ul>
 
@@ -122,6 +153,14 @@ const { posts, className, style } = Astro.props;
     color: color.scale($secondary, $lightness: -20%);
     margin: 0 0 8px 0;
     display: block;
+
+    &:not(:last-child) {
+      margin-right: 1rem;
+    }
+  }
+
+  .post-date-updated {
+    font-weight: 500;
   }
 
   .post-description {
@@ -148,5 +187,24 @@ const { posts, className, style } = Astro.props;
     background: $border-light;
     padding: 2px 8px;
     border-radius: 3px;
+  }
+
+  .updated-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 500;
+    background: $border-light;
+    color: $secondary;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .post-dates {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 0 0 8px 0;
   }
 </style>

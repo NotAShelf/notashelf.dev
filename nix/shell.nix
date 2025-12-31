@@ -21,7 +21,7 @@ in
   mkShell {
     name = "blog-dev";
     packages = [
-      # Websitee
+      # Website
       nodejs-slim
       pnpm
 
@@ -31,7 +31,8 @@ in
       wasm-pack
       lld
 
-      rustfmt
+      # Rust & TOML formatting
+      (rustfmt.override {asNightly = true;})
       taplo
 
       # To run 'typos' on my content every once in a while
