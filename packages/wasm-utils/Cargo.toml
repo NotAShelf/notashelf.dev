@@ -1,37 +1,35 @@
 [package]
-name = "wasm-utils"
+name        = "wasm-utils"
 description = "WASM components for my personal website"
-version = "0.2.3"
-edition = "2024"
-license = "MPL-2.0"
-authors = ["NotAShelf <raf@notashelf.dev>"]
-repository = "https://github.com/notashelf/notashelf.dev"
+version     = "0.2.4"
+edition     = "2024"
+license     = "MPL-2.0"
+authors     = [ "NotAShelf <raf@notashelf.dev>" ]
+repository  = "https://github.com/notashelf/notashelf.dev"
 
 [lib]
-crate-type = ["cdylib"]
+crate-type = [ "cdylib" ]
 
 [dependencies]
-wasm-bindgen = { version = "0.2", features = [
-  "serde-serialize",
-], default-features = false }
-js-sys = "0.3"
+wasm-bindgen = { default-features = false, features = [ "serde-serialize" ], version = "0.2.106" }
+js-sys       = { default-features = false, version = "0.3.83" }
 
-lru = { version = "0.16.1", default-features = false }
-serde = { version = "1.0.228", features = ["derive"] }
-serde_json = { version = "1.0.145", default-features = false }
-serde-wasm-bindgen = { version = "0.6.5", default-features = false }
-web-sys = { version = "0.3.81", features = [] }
-lol_alloc = "0.4.1"
+lru                = { default-features = false, version = "0.16.1" }
+serde              = { features = [ "derive" ], version = "1.0.228" }
+serde_json         = { default-features = false, version = "1.0.145" }
+serde-wasm-bindgen = { default-features = false, version = "0.6.5" }
+web-sys            = { default-features = false, features = [  ], version = "0.3.81" }
+lol_alloc          = "0.4.1"
 
 [profile.dev]
 opt-level = 1
 
 [profile.release]
-strip = true
-opt-level = "z"
-lto = true
+strip         = true
+opt-level     = "z"
+lto           = true
 codegen-units = 1
-panic = "abort"
+panic         = "abort"
 
 [package.metadata.wasm-pack.profile.release]
-wasm-opt = ["-Oz"]
+wasm-opt = false
