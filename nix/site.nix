@@ -14,7 +14,7 @@
   wasm-pack,
   lld,
   binaryen,
-  wasm-bindgen-cli_0_2_104,
+  wasm-bindgen-cli_0_2_106,
 }: let
   fs = lib.fileset;
 
@@ -44,7 +44,7 @@
         wasm-pack
         lld
         binaryen
-        wasm-bindgen-cli_0_2_104
+        wasm-bindgen-cli_0_2_106
       ];
 
       copyLibs = true;
