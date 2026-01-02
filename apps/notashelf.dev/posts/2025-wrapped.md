@@ -6,7 +6,8 @@ keywords: []
 ---
 
 Howdy, it seems creating something with "wrapped" in the name is a ritual this
-year around so I decided to name my 2025 recap this way...
+year around so I decided to name my 2025 recap this way... It is also
+fashionably late because _Nix_ is a wonderful piece of software.
 
 Another year almost in the books. I thought about skipping the recap thing
 because honestly who cares, but then I remembered I care (a little), and also
@@ -148,10 +149,7 @@ ship, people use them, and my system feels marginally less awful.
 
 My blog has remained opinionated and chaotic as it was designed to be. I think
 I've dropped plenty of posts within 2025, but I'd like to highlight a few that
-I'm particularly proud of.
-
-Blog stayed opinionated, as always. Dropped a few longer pieces that I'm still
-mildly proud of:
+I'm particularly proud of:
 
 - "_The Curse of Knowing How, or; Fixing Everything_" was my most popular post
   this year, and it opened the door to many interesting conversations about
@@ -186,13 +184,13 @@ integrity in policy contexts. Briefly relapsed to Arch in November---don't ask,
 it was bad, I'm back on NixOS, lesson learned (again).
 
 Sailing, as usual, was alright when weather allowed. It seems that I am making
-less time for things I actually enjoy. Chess elo still trapped in the 1100-1150
+less time for things I actually enjoy. Chess ELO still trapped in the 1100-1150
 limbo but I haven't played chess in almost six months. I guess you can't climb
 in ELO without, you know, actually playing the damn game.
 
 Overall? Just the slow realization that software culture is still mostly vibes,
 politics, and bloat, and we're all just trying to carve out tiny corners where
-it sucks marginally less.
+it sucks marginally less. We make do, we always do.
 
 ## 2026 Wishlist: bigger than projects, smaller than miracles
 
