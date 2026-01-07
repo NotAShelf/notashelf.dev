@@ -14,7 +14,7 @@ crate-type = [ "cdylib" ]
 wasm-bindgen = { default-features = false, features = [ "serde-serialize" ], version = "0.2.106" }
 js-sys       = { default-features = false, version = "0.3.83" }
 
-lru                = { default-features = false, version = "0.16.1" }
+lru                = { default-features = false, version = "0.16.3" }
 serde              = { features = [ "derive" ], version = "1.0.228" }
 serde_json         = { default-features = false, version = "1.0.145" }
 serde-wasm-bindgen = { default-features = false, version = "0.6.5" }
