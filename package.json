@@ -3,8 +3,7 @@
   "private": true,
   "workspaces": [
     "apps/notashelf.dev",
-    "packages/*",
-    "packages/wasm-utils/pkg"
+    "packages/*"
   ],
   "scripts": {
     "build": "node scripts/build.js notashelf.dev build",
