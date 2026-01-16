@@ -1,0 +1,118 @@
+---
+// Slide transition with page awareness
+---
+
+<div id="page-transition" class="page-transition">
+  <div class="transition-overlay"></div>
+</div>
+
+<script is:inline>
+  // Page order for slide direction
+  const pageOrder = {
+    "/": 1, // leftmost
+    "/projects": 2,
+    "/posts": 3,
+    "/about": 4, // rightmost
+  };
+
+  // If I'm not a genius I don't know what I am. This effectively
+  // manipulates the transition overlay to force a direction. E.g.
+  // while we're moving from the Index page (leftmost on navbar) to
+  // the about page (rightmost) it'll be bidirectional. Awesome right?
+  function getSlideDirection(currentPath, targetPath) {
+    const currentPos = pageOrder[currentPath] || 1;
+    const targetPos = pageOrder[targetPath] || 1;
+
+    if (targetPos > currentPos) {
+      return "slide-left"; // Target is to the right, slide from left
+    } else if (targetPos < currentPos) {
+      return "slide-right"; // Target is to the left, slide from right
+    } else {
+      return "fade-in"; // Same position or unknown, just fade
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const transition = document.getElementById("page-transition");
+    const overlay = transition?.querySelector(".transition-overlay");
+
+    if (!transition || !overlay) {
+      console.warn("PageTransition: Elements not found");
+      return;
+    }
+
+    console.log("PageTransition: Initialized");
+
+    // Handle link clicks with slide effect
+    document.querySelectorAll('a[href^="/"]').forEach((link) => {
+      link.addEventListener("click", (e) => {
+        const href = link.getAttribute("href");
+        const currentPath = window.location.pathname;
+
+        console.log(`Navigating from ${currentPath} to ${href}`);
+
+        // Skip if same page
+        if (href === currentPath) return;
+
+        e.preventDefault();
+
+        // Determine slide direction
+        const direction = getSlideDirection(currentPath, href);
+        console.log(`Slide direction: ${direction}`);
+
+        // Apply slide class and trigger animation
+        overlay.className = `transition-overlay ${direction}`;
+
+        // Use requestAnimationFrame for smoother animation
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            window.location.href = href;
+          }, 300); // Longer for visibility
+        });
+      });
+    });
+
+    // Reset on page load
+    overlay.className = "transition-overlay";
+  });
+</script>
+
+<style lang="scss">
+  .page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  .transition-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); // more visible for testing
+    backdrop-filter: blur(4px);
+    transition: all 0.4s ease-in-out;
+    opacity: 0;
+    transform: translateX(0);
+
+    &.slide-left {
+      transform: translateX(-100%);
+      opacity: 1;
+    }
+
+    &.slide-right {
+      transform: translateX(100%);
+      opacity: 1;
+    }
+
+    &.fade-in {
+      opacity: 0.7;
+      transform: translateX(0);
+    }
+  }
+</style>
