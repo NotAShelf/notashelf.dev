@@ -51,7 +51,7 @@
     "prettier": "3.7.4",
     "prettier-plugin-astro": "0.14.1",
     "prettier-plugin-astro-organize-imports": "^0.4.11",
-    "svelte": "^5.46.1",
+    "svelte": "^5.46.4",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.50.1",
     "vitest": "^4.0.16"
