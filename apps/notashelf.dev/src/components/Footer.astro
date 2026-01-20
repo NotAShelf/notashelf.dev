@@ -20,7 +20,7 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
             href="https://nixwebr.ing/prev/notashelf"
             title="Previous site in the Nix webring"
             aria-label="Previous site"
-            external={true}
+            externalInNewTab={false}
           >
             <Icon name="chevron-left" class="icon" />
           </Link>
@@ -30,7 +30,7 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
               class="webring-logo"
               title="Visit a random site in the Nix webring"
               aria-label="Random site"
-              external={true}
+              externalInNewTab={false}
             >
               <Icon
                 name="nix-webring"
@@ -52,7 +52,7 @@ const gitEnv = import.meta.env.GIT_ENV || "development";
             href="https://nixwebr.ing/next/notashelf"
             title="Next site in the Nix webring"
             aria-label="Next site"
-            external={true}
+            externalInNewTab={false}
           >
             <Icon name="chevron-right" class="icon" />
           </Link>
