@@ -8,6 +8,7 @@ packages:
   - packages/remark-em-dash
 
 onlyBuiltDependencies:
+  - '@parcel/watcher'
   - '@swc/core'
   - esbuild
   - sharp
