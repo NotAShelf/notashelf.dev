@@ -1,8 +1,0 @@
-{
-  "title": "syntax-gaslighting.nvim",
-  "description": "Gaslighting is not even a real word, you're crazy.",
-  "sourceUrl": "https://github.com/NotAShelf/syntax-gaslighting.nvim",
-  "tags": ["Neovim", "Plugin", "Lua"],
-  "active": true,
-  "featurable": true
-}

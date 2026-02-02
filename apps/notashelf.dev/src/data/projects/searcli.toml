@@ -1,0 +1,6 @@
+active      = true
+description = "Experimental CLI wrapper around Searxng HTTP API"
+sourceUrl   = "https://github.com/NotAShelf/searcli"
+startDate   = 2025-03-16
+tags        = [ "cli", "search", "searxng", "Rust" ]
+title       = "searcli"

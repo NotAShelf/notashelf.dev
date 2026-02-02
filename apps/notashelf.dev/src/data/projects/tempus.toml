@@ -1,0 +1,6 @@
+active      = true
+description = "Tiny, simple, portable terminal timer utility with style"
+sourceUrl   = "https://github.com/NotAShelf/tempus"
+startDate   = 2025-12-01
+tags        = [ "timer", "terminal", "CLI", "Rust" ]
+title       = "tempus"

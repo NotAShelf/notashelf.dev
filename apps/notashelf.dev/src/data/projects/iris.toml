@@ -1,0 +1,6 @@
+active      = true
+description = "Small, robust and quick webserver in C"
+sourceUrl   = "https://github.com/NotAShelf/iris"
+startDate   = 2025-03-04
+tags        = [ "webserver", "C", "HTTP" ]
+title       = "iris"

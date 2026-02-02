@@ -1,0 +1,6 @@
+active      = true
+description = "Small, configurable utility program for generating license files from embedded templates"
+sourceUrl   = "https://github.com/NotAShelf/licenseit"
+startDate   = 2025-08-31
+tags        = [ "license", "CLI", "generator", "Go" ]
+title       = "licenseit"

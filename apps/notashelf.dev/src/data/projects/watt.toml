@@ -1,0 +1,6 @@
+active      = true
+description = "Modern CPU frequency and power management utility for Linux"
+sourceUrl   = "https://github.com/NotAShelf/watt"
+startDate   = 2025-05-25
+tags        = [ "linux", "battery", "cpu" ]
+title       = "Watt"

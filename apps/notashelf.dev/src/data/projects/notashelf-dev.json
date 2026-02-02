@@ -1,9 +1,0 @@
-{
-  "title": "notashelf.dev",
-  "description": "My very own web sandbox, serves as my personal website and blog.",
-  "sourceUrl": "https://github.com/notashelf/notashelf.dev",
-  "startDate": "2022-06-1",
-  "tags": ["astro", "nix", "svelte", "react", "Rust", "WASM", "blog"],
-  "active": true,
-  "featurable": false
-}

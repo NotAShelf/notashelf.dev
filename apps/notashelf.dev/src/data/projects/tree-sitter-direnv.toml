@@ -1,0 +1,6 @@
+active      = true
+description = "Treesitter grammar for Direnv"
+sourceUrl   = "https://github.com/NotAShelf/tree-sitter-direnv"
+startDate   = 2025-06-08
+tags        = [ "treesitter", "direnv", "grammar", "JavaScript" ]
+title       = "tree-sitter-direnv"

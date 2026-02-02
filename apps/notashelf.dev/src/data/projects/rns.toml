@@ -1,0 +1,6 @@
+active      = true
+description = "Experimental library for enabling Neovim configuration in Rust, C, Zig, Assembly, etc."
+sourceUrl   = "https://github.com/NotAShelf/rns"
+startDate   = 2025-04-24
+tags        = [ "neovim", "Rust", "C", "Zig", "plugin" ]
+title       = "rns"

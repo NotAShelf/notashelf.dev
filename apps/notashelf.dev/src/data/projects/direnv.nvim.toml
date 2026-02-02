@@ -1,0 +1,7 @@
+active      = true
+description = "Neovim companion for Direnv"
+featurable  = true
+sourceUrl   = "https://github.com/notashelf/direnv.nvim"
+tags        = [ "Neovim", "Plugin", "Direnv", "Lua" ]
+title       = "direnv.nvim"
+startDate   = 2024-07-28

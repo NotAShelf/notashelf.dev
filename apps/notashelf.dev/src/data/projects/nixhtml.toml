@@ -1,0 +1,6 @@
+active      = true
+description = "Write static sites with pure Nix, and nothing but pure Nix."
+sourceUrl   = "https://github.com/NotAShelf/niXhtml"
+startDate   = 2025-04-28
+tags        = [ "nix", "nix-website", "static-site-generator" ]
+title       = "niXhtml"

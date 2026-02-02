@@ -1,0 +1,7 @@
+active      = true
+description = "Privacy and security oriented Firefox configuration for Home-manager"
+featurable  = true
+sourceUrl   = "https://github.com/schizofox/schizofox"
+tags        = [ "Nix", "Firefox", "Home-manager" ]
+title       = "Schizofox"
+startDate = 2024-04-20

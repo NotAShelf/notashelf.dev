@@ -1,0 +1,6 @@
+active      = true
+description = "Microscoping Base64 encode/decode library in pure C, for embedded systems"
+sourceUrl   = "https://github.com/NotAShelf/bsix"
+startDate   = 2024-11-17
+tags        = [ "C", "base64", "library", "embedded" ]
+title       = "bsix"

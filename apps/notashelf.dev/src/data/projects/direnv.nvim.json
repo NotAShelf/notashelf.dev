@@ -1,8 +1,0 @@
-{
-  "title": "direnv.nvim",
-  "description": "Neovim companion for Direnv",
-  "sourceUrl": "https://github.com/notashelf/direnv.nvim",
-  "tags": ["Neovim", "Plugin", "Direnv", "Lua"],
-  "active": true,
-  "featurable": true
-}

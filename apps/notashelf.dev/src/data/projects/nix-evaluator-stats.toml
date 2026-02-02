@@ -1,0 +1,7 @@
+active      = true
+description = "Dashboard for tracking Nix evaluator performance and statistics"
+featurable  = true
+sourceUrl   = "https://github.com/NotAShelf/nix-evaluator-stats"
+startDate   = 2026-01-31
+tags        = [ "dashboard", "nix", "nix-profiler", "TypeScript" ]
+title       = "nix-evaluator-stats"

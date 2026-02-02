@@ -15,7 +15,7 @@ const posts = defineCollection({
 });
 
 const projects = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.json", base: `./src/data/projects` }),
+  loader: glob({ pattern: "**/[^_]*.toml", base: `./src/data/projects` }),
   schema: () =>
     z.object({
       title: z.string(),

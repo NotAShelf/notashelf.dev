@@ -1,0 +1,6 @@
+active      = true
+description = "Stupid simple utility for linting your flake inputs"
+sourceUrl   = "https://github.com/NotAShelf/flint"
+startDate = 2025-06-03
+tags        = [ "nix", "flake", "linter", "Go" ]
+title       = "flint"

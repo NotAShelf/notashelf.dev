@@ -1,0 +1,7 @@
+active      = true
+description = "Nix Packages collection and NixOS"
+featurable  = true
+sourceUrl   = "https://github.com/nixos/nixpkgs"
+tags        = [ "Nix" ]
+title       = "Nixpkgs"
+startDate = 2012-02-13

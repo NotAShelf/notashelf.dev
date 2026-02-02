@@ -1,0 +1,7 @@
+active      = true
+description = "Stylish graphical console greeter for greetd, built with Ratatui"
+featurable  = true
+sourceUrl   = "https://github.com/NotAShelf/tuigreet"
+startDate   = 2026-01-22
+tags        = [ "greeter", "linux", "ratatui", "tui", "Rust" ]
+title       = "tuigreet"

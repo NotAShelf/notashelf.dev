@@ -1,8 +1,0 @@
-{
-  "title": "Tailray",
-  "description": "Rust implementation of Tailscale systray.",
-  "sourceUrl": "https://github.com/notashelf/Tailray",
-  "tags": ["Rust", "Tailscale", "Systray"],
-  "active": true,
-  "featurable": true
-}

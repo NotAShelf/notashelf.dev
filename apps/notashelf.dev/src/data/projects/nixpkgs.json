@@ -1,8 +1,0 @@
-{
-  "title": "Nixpkgs",
-  "description": "Nix Packages collection and NixOS",
-  "sourceUrl": "https://github.com/nixos/nixpkgs",
-  "tags": ["Nix"],
-  "active": true,
-  "featurable": true
-}

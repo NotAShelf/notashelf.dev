@@ -1,8 +1,0 @@
-{
-  "title": "NH",
-  "description": "Yet another Nix CLI helper",
-  "sourceUrl": "https://github.com/nix-community/nh",
-  "startDate": "2025-07-01",
-  "tags": ["nix", "nixos", "CLI", "utility", "terminal"],
-  "active": true
-}

@@ -1,0 +1,6 @@
+active      = true
+description = "raf's (fork of) Aylur's GTK Shell "
+sourceUrl   = "https://github.com/NotAShelf/rags"
+startDate   = 2025-08-03
+tags        = [ "linux", "wayland", "gtk", "desktop" ]
+title       = "RAGS"

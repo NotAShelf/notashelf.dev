@@ -1,0 +1,6 @@
+active      = true
+description = "Modern companion plugin for statix, the Nix linter"
+sourceUrl   = "https://github.com/NotAShelf/statix.nvim"
+startDate   = 2025-01-02
+tags        = [ "neovim", "plugin", "Lua", "nix", "linter" ]
+title       = "statix.nvim"

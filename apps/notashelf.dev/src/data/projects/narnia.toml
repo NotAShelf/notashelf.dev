@@ -1,0 +1,6 @@
+active      = true
+description = "Terminal utility for looking up Nix store paths in binary caches and viewing their NAR info"
+sourceUrl   = "https://github.com/NotAShelf/narnia"
+startDate   = 2025-09-24
+tags        = [ "nix", "NAR", "binary-cache", "C" ]
+title       = "narnia"

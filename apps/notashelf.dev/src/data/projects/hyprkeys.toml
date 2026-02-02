@@ -1,0 +1,7 @@
+active      = false
+description = "Powerful and easy to use keyboard utility designed for my favorite Wayland Compositor, Hyprland."
+featurable  = false
+sourceUrl   = "https://github.com/hyprland-community/Hyprkeys"
+tags        = [ "Go", "Wayland", "Hyprland", "Utility" ]
+title       = "Hyprkeys"
+startDate = 2024-06-15

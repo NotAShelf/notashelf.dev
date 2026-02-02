@@ -1,8 +1,0 @@
-{
-  "title": "Wallpkgs",
-  "description": "Easy-to-install wallpapers collections, designed to install with Nix",
-  "sourceUrl": "https://github.com/notashelf/wallpkgs",
-  "tags": ["Nix"],
-  "active": true,
-  "featurable": true
-}

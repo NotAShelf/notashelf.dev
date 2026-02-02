@@ -1,8 +1,0 @@
-{
-  "title": "batmon",
-  "description": "Dead simple battery monitor in Go, with the ability to emit events on change.",
-  "sourceUrl": "https://github.com/notashelf/batmon",
-  "tags": ["Go", "battery", "monitor", "Linux"],
-  "active": false,
-  "featurable": false
-}

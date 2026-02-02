@@ -1,0 +1,6 @@
+active      = true
+description = "Minimalist secret scanner for Git repositories"
+sourceUrl   = "https://github.com/NotAShelf/inquisitor"
+startDate   = 2025-06-11
+tags        = [ "security", "secret-scanner", "Go" ]
+title       = "inquisitor"

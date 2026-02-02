@@ -1,8 +1,0 @@
-{
-  "title": "MicrOS",
-  "description": "Experimental operating system based on Nixpkgs module system, bringing Runit to NixOS",
-  "sourceUrl": "https://github.com/snugnug/micros",
-  "startDate": "2025-01-29",
-  "tags": ["nix", "nixos", "linux", "embedded"],
-  "active": true
-}

@@ -1,0 +1,6 @@
+active      = true
+description = "GitHub CLI extension to display GitHub notifications"
+sourceUrl   = "https://github.com/NotAShelf/gh-notify"
+startDate   = 2025-08-17
+tags        = [ "cli", "gh-extension", "github-api", "Go" ]
+title       = "gh-notify"

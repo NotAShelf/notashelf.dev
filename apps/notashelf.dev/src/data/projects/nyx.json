@@ -1,9 +1,0 @@
-{
-  "title": "Nyx",
-  "description": "First child of chaos, and my ever-evolving NixOS configuration",
-  "sourceUrl": "https://github.com/notashelf/nyx",
-  "startDate": "2022-11-03",
-  "tags": ["nixos", "linux", "sysadmin"],
-  "active": true,
-  "featurable": false
-}

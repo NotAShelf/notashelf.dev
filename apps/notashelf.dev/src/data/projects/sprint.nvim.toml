@@ -1,0 +1,7 @@
+active      = false
+description = "Robust command runner for Neovim."
+featurable  = true
+sourceUrl   = "https://github.com/NotAShelf/sprint.nvim"
+tags        = [ "Neovim", "Plugin", "Lua", "Command Runner" ]
+title       = "sprint.nvim"
+startDate = 2025-01-15

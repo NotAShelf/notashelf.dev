@@ -1,8 +1,0 @@
-{
-  "title": "Microfetch",
-  "description": "Microscopic fetch tool in Rust, for NixOS systems, with special emphasis on speed",
-  "sourceUrl": "https://github.com/NotAShelf/microfetch",
-  "startDate": "2025-08-15",
-  "tags": ["nix", "nixos", "fetch", "CLI"],
-  "active": true
-}

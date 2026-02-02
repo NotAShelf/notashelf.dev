@@ -1,8 +1,0 @@
-{
-  "title": "Schizofox",
-  "description": "Privacy and security oriented Firefox configuration for Home-manager",
-  "sourceUrl": "https://github.com/schizofox/schizofox",
-  "tags": ["Nix", "Firefox", "Home-manager"],
-  "active": true,
-  "featurable": true
-}

@@ -1,0 +1,7 @@
+active      = true
+description = "Rust implementation of Tailscale systray."
+featurable  = true
+sourceUrl   = "https://github.com/notashelf/Tailray"
+tags        = [ "Rust", "Tailscale", "Systray" ]
+title       = "Tailray"
+startDate   = 2024-06-10

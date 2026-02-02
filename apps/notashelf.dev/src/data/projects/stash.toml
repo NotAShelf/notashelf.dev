@@ -1,0 +1,6 @@
+active      = true
+description = "Wayland clipboard manager with fast persistent history and multi-media support"
+sourceUrl   = "https://github.com/NotAShelf/Stash"
+startDate   = 2025-08-14
+tags        = [ "linux", "wayland" ]
+title       = "Stash"

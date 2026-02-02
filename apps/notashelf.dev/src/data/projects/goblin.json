@@ -1,8 +1,0 @@
-{
-  "title": "Goblin",
-  "description": "termbin-inspired paste service to replace Fiche, written in Go.",
-  "sourceUrl": "https://github.com/notashelf/goblin",
-  "tags": ["Go", "Paste Service", "CLI"],
-  "active": false,
-  "featurable": false
-}

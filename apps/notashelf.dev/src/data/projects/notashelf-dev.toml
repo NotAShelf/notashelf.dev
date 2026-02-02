@@ -1,0 +1,7 @@
+active      = true
+description = "My very own web sandbox, serves as my personal website and blog."
+featurable  = false
+sourceUrl   = "https://github.com/notashelf/notashelf.dev"
+startDate   = 2022-06-01
+tags        = [ "astro", "nix", "svelte", "react", "Rust", "WASM", "blog" ]
+title       = "notashelf.dev"

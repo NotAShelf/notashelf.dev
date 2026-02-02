@@ -1,0 +1,6 @@
+active      = true
+description = "Home-baked Iosevka builds, with Nix"
+sourceUrl   = "https://github.com/NotAShelf/Ioshelfka"
+startDate   = 2025-01-11
+tags        = [ "font", "iosevka", "nerdfont", "nix" ]
+title       = "Ioshelfka"

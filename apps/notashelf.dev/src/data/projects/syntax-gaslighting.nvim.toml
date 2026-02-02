@@ -1,0 +1,7 @@
+active      = true
+description = "Gaslighting is not even a real word, you're crazy."
+featurable  = true
+sourceUrl   = "https://github.com/NotAShelf/syntax-gaslighting.nvim"
+tags        = [ "Neovim", "Plugin", "Lua" ]
+title       = "syntax-gaslighting.nvim"
+startDate   = 2025-04-15

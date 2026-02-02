@@ -1,0 +1,6 @@
+active      = true
+description = "Personal Neovim plugin to highlight and open links"
+sourceUrl   = "https://github.com/NotAShelf/Nodus"
+startDate   = 2024-11-05
+tags        = [ "neovim", "plugin", "Lua" ]
+title       = "Nodus"

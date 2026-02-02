@@ -1,8 +1,0 @@
-{
-  "title": "sprint.nvim",
-  "description": "Robust command runner for Neovim.",
-  "sourceUrl": "https://github.com/NotAShelf/sprint.nvim",
-  "tags": ["Neovim", "Plugin", "Lua", "Command Runner"],
-  "active": false,
-  "featurable": true
-}
