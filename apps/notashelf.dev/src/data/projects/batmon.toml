@@ -2,6 +2,6 @@ active      = false
 description = "Dead simple battery monitor in Go, with the ability to emit events on change."
 featurable  = false
 sourceUrl   = "https://github.com/notashelf/batmon"
+startDate   = 2025-03-15
 tags        = [ "Go", "battery", "monitor", "Linux" ]
 title       = "batmon"
-startDate = 2025-03-15

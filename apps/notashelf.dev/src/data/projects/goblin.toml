@@ -2,6 +2,6 @@ active      = false
 description = "termbin-inspired paste service to replace Fiche, written in Go."
 featurable  = false
 sourceUrl   = "https://github.com/notashelf/goblin"
+startDate   = 2025-01-10
 tags        = [ "Go", "Paste Service", "CLI" ]
 title       = "Goblin"
-startDate = 2025-01-10

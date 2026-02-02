@@ -2,6 +2,6 @@ active      = true
 description = "Easy-to-install wallpapers collections, designed to install with Nix"
 featurable  = true
 sourceUrl   = "https://github.com/notashelf/wallpkgs"
+startDate   = 2024-09-01
 tags        = [ "Nix" ]
 title       = "Wallpkgs"
-startDate = 2024-09-01

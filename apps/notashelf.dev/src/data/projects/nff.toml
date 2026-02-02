@@ -2,6 +2,6 @@ active      = false
 description = "Experimental nftables configuration beautifier in Python."
 featurable  = false
 sourceUrl   = "https://github.com/notashelf/nff"
+startDate   = 2025-02-28
 tags        = [ "Python", "nftables", "Networking" ]
 title       = "nff"
-startDate = 2025-02-28

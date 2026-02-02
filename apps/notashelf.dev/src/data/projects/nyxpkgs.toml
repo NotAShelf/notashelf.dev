@@ -2,6 +2,6 @@ active      = true
 description = "Collection of packages not found in Nixpkgs"
 featurable  = true
 sourceUrl   = "https://github.com/notashelf/nyxexprs"
+startDate   = 2023-11-03
 tags        = [ "Nix" ]
 title       = "Nyxpkgs"
-startDate = 2023-11-03

@@ -1,0 +1,4 @@
+description = "Simply, the Nix User Group. A user group for enthusiastic Nix users that I have founded to focus efforts on shared projects."
+isIcon      = false
+logo        = "snug-logo.png"
+name        = "SNUG"

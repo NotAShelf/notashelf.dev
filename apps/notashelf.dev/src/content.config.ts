@@ -29,7 +29,7 @@ const projects = defineCollection({
 });
 
 const affiliations = defineCollection({
-  loader: glob({ pattern: "*.json", base: "./src/data/affiliations" }),
+  loader: glob({ pattern: "*.toml", base: "./src/data/affiliations" }),
   schema: z.object({
     logo: z.string().optional(),
     logoIcon: z.string().optional(),

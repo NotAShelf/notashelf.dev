@@ -1,6 +1,6 @@
 active      = true
 description = "Experimental Rust bindings for the pure C API of Nix, the build tool"
 sourceUrl   = "https://github.com/NotAShelf/nix-bindings"
-startDate = 2025-07-20
+startDate   = 2025-07-20
 tags        = [ "nix", "nix-bindings", "nix-lang", "Rust", "FFI" ]
 title       = "nix-bindings"
