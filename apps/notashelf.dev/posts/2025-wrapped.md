@@ -2,7 +2,7 @@
 title: "2025 Wrapped & 2026 Wishlist"
 description: "Projects shipped, things learned, and what I want less of in 2026"
 date: 2025-12-31
-keywords: []
+keywords: ["thoughts", "programming"]
 ---
 
 Howdy, it seems creating something with "wrapped" in the name is a ritual this
@@ -59,7 +59,7 @@ ViperML (who considers the project complete and is no longer interested in
 maintaining it as per his original vision) to continue its maintenance as time
 goes on. I was a contributor to nh before this happened, so I am quite familiar
 with the codebase already. This gradual change in maintainers has covered the
-4.0, 4.1 and 4.2 releases as I continue to publish more bugfixes and feature
+4.0, 4.1 and 4.2 releases as I continue to publish more bug fixes and feature
 additions. If you are not familiar with nh, I recommend that you check it out as
 it is quite a handy CLI for managing NixOS systems. It will continue to improve
 over the time as new updates come along :)
@@ -68,10 +68,10 @@ We have also released v0.8 for [nvf]! It was a long time coming and was doubted
 by many, but after just over a year, the release is out. This update brings the
 Nix-for-Neovim approach of nvf to a whole new level with more robust LSP
 configurations, many plugin additions, new documentation and more! The reason
-that it took this long, of course, is that I was on a _tiny_ sidequest writing a
-documentation generator for my Nix projects! You may or may not be aware that I
-have a lot of ongoing projects related to Nix, and documentation is most often a
-very high priority. Unfortunately I find the ecosystem _very_ lacking, and I
+that it took this long, of course, is that I was on a _tiny_ side-quest writing
+a documentation generator for my Nix projects! You may or may not be aware that
+I have a lot of ongoing projects related to Nix, and documentation is most often
+a very high priority. Unfortunately I find the ecosystem _very_ lacking, and I
 just had to create something of my own. The first half of 2025 was mostly spent
 working on [ndg], our in-house documentation generator at [feel-co]. While this
 lives in feel-co and has been designed for feel-co (and my own) projects, it is
@@ -79,12 +79,12 @@ a project for _any_ Nix module system looking to document its options in a
 stylish manner. Try it, it grew on me despite the hellish CSS and Javascript
 misadventures.
 
-Another noteworthy project, which ndg was actually designed _for_, is [Hjem].
-I've been bothered by Home Manager's poor file management primitives for a long
-while, and all this rage ultimately bubbled up into our own in-house module
-system for managing one's `$HOME`, elegantly. Powered by SMFH, a manifest based
-file linker made by my good bald friend Gerg-L and designed for atomicity &
-correctness, Hjem has received many new features such as brand new
+Another noteworthy project, which ndg was actually initially designed _for_, is
+[Hjem]. I've been bothered by Home Manager's poor file management primitives for
+a long while, and all this rage ultimately bubbled up into our own in-house
+module system for managing one's `$HOME`, elegantly. Powered by SMFH, a manifest
+based file linker made by my good bald friend Gerg-L and designed for atomicity
+& correctness, Hjem has received many new features such as brand new
 documentation, much better module interfaces, and Darwin support---which many
 were excited for. It has come a very long way over the past year, and I am happy
 to report that it is nearing "completion." Of course, it's doubtful we'll stop
@@ -106,9 +106,9 @@ Some other projects worth mentioning are:
 
 - [MicrOS] got its initial push in January --- Nixpkgs modules + runit instead
   of Systemd. It's still extremely niche, still requires manual prayers to boot
-  on real hardware, still mine. This is a long-term project that I am hoping to
-  develop more in 2026. If you are one of those nutjobs that are against
-  Systemd, your feedback would be appreciated.
+  on real hardware, and still mine. This is a long-term project that I am hoping
+  to develop more in 2026. If you are one of those nutjobs that are against
+  Systemd, your feedback would be appreciated. Contributions even more so.
 - The byproduct of a most unfortunate naming conflict, [Stash] has gotten a bit
   of attention around August and has taken its forever place in my Wayland
   desktop as a feature-rich clipboard "manager" with persistent history and
@@ -275,7 +275,7 @@ Software will keep being disappointing.\
 We'll keep trying to disappoint it back a little less.
 
 If things get better, thank the people who still care.\
-If they get worse... blame webdevs. Always blame webdevs.
+If they get worse... well, blame webdevs. Always blame webdevs.
 
 I'm looking back with bittersweetness but I cherish a lot of things, and a lot
 of... _you_. I've met a many amazing people over 2025 that I am happy to call
@@ -283,4 +283,4 @@ of... _you_. I've met a many amazing people over 2025 that I am happy to call
 you are appreciated my dear reader, and see you next year, or; see you when I've
 got something worth saying. Have a nice one.
 
-- raf
+--- raf
