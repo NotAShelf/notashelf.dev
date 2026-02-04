@@ -16,6 +16,11 @@ export default getViteConfig({
     },
   },
 
+  // Force Vite pre-bundle the WASM utils
+  optimizeDeps: {
+    include: ["wasm-utils"],
+  },
+
   // @ts-expect-error: something about Vitest not being compatible. Blame Astro.
   test: {
     name: "notashelf.dev",
