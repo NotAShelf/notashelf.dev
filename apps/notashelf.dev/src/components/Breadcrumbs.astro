@@ -1,0 +1,91 @@
+---
+const pathname = Astro.url.pathname;
+const segments = pathname.split("/").filter(Boolean);
+
+const routeNames = {
+  posts: "Posts",
+  projects: "Projects",
+  about: "About",
+  archive: "Archive",
+};
+
+const breadcrumbs = [{ name: "Home", url: "/" }];
+
+let currentPath = "";
+segments.forEach((segment, index) => {
+  currentPath += `/${segment}`;
+  const name =
+    routeNames[segment] || segment.charAt(0).toUpperCase() + segment.slice(1);
+  const isLast = index === segments.length - 1;
+  breadcrumbs.push({
+    name,
+    url: currentPath,
+    isLast,
+  });
+});
+---
+
+{
+  breadcrumbs.length > 1 && (
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        {breadcrumbs.map((crumb, index) => (
+          <li>
+            {index > 0 && <span class="separator">/</span>}
+            {crumb.isLast ? (
+              <span class="current" aria-current="page">
+                {crumb.name}
+              </span>
+            ) : (
+              <a href={crumb.url}>{crumb.name}</a>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+<style lang="scss">
+  @use "../styles/variables" as *;
+  @use "../styles/global" as *;
+
+  .breadcrumbs {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+
+    ol {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+    }
+
+    .separator {
+      margin: 0 0.5rem;
+      color: $text-subtle;
+    }
+
+    a {
+      color: $text-subtle;
+      text-decoration: none;
+      transition: color 0.2s;
+
+      &:hover {
+        color: $secondary;
+      }
+    }
+
+    .current {
+      color: $secondary;
+      font-weight: 600;
+    }
+  }
+</style>

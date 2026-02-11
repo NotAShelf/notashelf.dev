@@ -1,6 +1,8 @@
 ---
+import Breadcrumbs from "@components/Breadcrumbs.astro";
 import Footer from "@components/Footer.astro";
 import Navigation from "@components/Navigation.astro";
+import PageTransition from "@components/PageTransition.astro";
 import SEO from "@components/SEO.astro";
 
 export interface Props {
@@ -51,7 +53,7 @@ const {
         --primary: #{$primary};
         --secondary: #{$secondary}; /* 14.7:1 contrast ratio */
         --background: #{$primary};
-        --text-subtle: #{$text-subtle}; /* 4.6:1 contrast ratio - improved from #999999 */
+        --text-subtle: #{$text-subtle}; /* 4.6:1 contrast ratio */
         --font-family-primary: #{$font-family-primary};
       }
 
@@ -78,19 +80,19 @@ const {
 
     <div class="page-container">
       <Navigation />
-
-      <main class="content-wrapper">
+      <Breadcrumbs />
+      <main class="content-wrapper" transition:animate="fade">
         <slot />
       </main>
-
       <Footer />
     </div>
+    <PageTransition />
 
     <!-- Load page utilities asynchronously -->
     <script>
       document.addEventListener("DOMContentLoaded", async () => {
         try {
-          await import("../scripts/page-utils.ts");
+          await import("../scripts/page-utils");
         } catch (error) {
           console.warn("Failed to load page utilities:", error);
         }
