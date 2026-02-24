@@ -6,18 +6,27 @@ keywords: ["thoughts", "programming"]
 ---
 
 Every once in a while I come across the "NixOS is not reproducible" post across
-some platform posted or _re_-posted to be snarky or to get a point across. I
-find the article entirely boring and shallow, of course, and I will avoid both
-linking or diving into it but it gave me the idea for this post.
+some platform posted or _re_-posted with a smirk, i.e., to be snarky or to get a
+specific point across. I find the article entirely boring and shallow, of
+course, and I will avoid both linking or diving into it but it gave me the idea
+for this post: _most critiques of reproducibility treat it as a technical
+inconvenience rather than a structural question of power_.
 
 The idea was half-baked until a while ago, up until a somewhat recent discussion
 with someone much more knowledgable in my field---Political Science---and we
 have began exploring the ideas of bringing concepts from software development to
-policymaking. This is important, because while software _can_ be reproducible
-human behaviour cannot. Much like artificial intelligence, humans tend to
-respond to identical questions with different answers depending on _way_ too
-many factors (much beyond LLMs) and thus it struck me as an interesting concept
-to worth exploring.
+policymaking. This is important because software can, under sufficiently
+constrained conditions, be reproducible. Human behavior cannot.
+
+Much like artificial intelligence, or more specifically LLMs, humans answer the
+same question differently across contexts, incentives, moods, and institutional
+environments. Code, under sufficiently constrained conditions, does not. That
+asymmetry matters to me a lot; political systems struggle precisely because
+human agents are not reproducible. We build constitutions, procedures, courts,
+and audit mechanisms to compensate for that instability. When software becomes
+infrastructure, the question is no longer technical. It is institutional. Do we
+treat compilation as personality driven discretion, or as rule bound
+transformation?
 
 This is going to be a long post, and it's barely distilled from various trains
 of thoughts so I ask that you bear with me. Admittedly I could've done a better
@@ -32,10 +41,10 @@ software development is an incredibly simple and straightforward process where
 you wrte a few lines of code, feed it to the compiler, and get an executable.
 
 When you put it like that it _does_ feel like a straightforward mechanical
-process, a simple translation from human-readable text to machine-executable
-instructions. But in that brief moment of compilation, a profound philosophical
-and political shift occurs. You are no longer dealing with logic; you are
-dealing with faith.
+process, almost deterministic, and like a simple translation from human-readable
+text to machine-executable instructions. But in that brief moment of
+compilation, a profound philosophical and political shift occurs. You are no
+longer dealing with logic; you are dealing with faith. It is institutional.
 
 Not so long ago we've narrowly avoided a catastrophic collapse via the XZ Utils
 backdoor where a malicious actor spent years gaining the trust of a burnt-out
@@ -43,7 +52,9 @@ open-source maintainer and eventually slipped a highly sophisticated backdoor
 into a widely used compression library. I'm mildly upset that this has come to
 be, and I do feel sympathy for the burnt-out maintainer that inadvertently
 allowed this to happen, but I'm more so interested in the brilliance of the
-stack---which was not in the source code itself.
+stack---which was not in the source code itself, so a downstream consumer
+inspecting source alone would not necessarily detect what the resulting binary
+would do.
 
 The backdoor, unbeknownst to some, was hidden in the _test files_ and injected
 during the build process. If you read the source code repository everything
@@ -53,7 +64,9 @@ interested in as a downstream consumer.
 
 Thus, we come to the terrifying realization that _auditing source code is an
 illusion of security if you cannot prove the binary came from that exact
-source_.
+source_. Whenever a system's output depends on hidden context, whoever controls
+that context holds discretionary power. In political terms, discretion without
+audit is sovereignty.
 
 ### The Philosopher's Backdoor
 
@@ -61,7 +74,8 @@ Before you get bored and start scrolling reels, let me remind you for a brief
 second that I did not mention the "NixOS is not reproducible" post without a
 reason. As consumers of software at various degrees---some more blindly and some
 less willingly than others---we are _constantly_ exposed to such threats. XZ is
-not an edge case, but a manifestation of one of the edge cases that came to be.
+not an edge case, but a manifestation of one of the many cases that came to be.
+
 Nix itself is a _reproducible build tool_, and due to various factors at play
 the XZ vulnerability was entirely avoided, [^1] but there are _many_ package
 managers and build tools that do little to guarantee reproducible builds.
@@ -93,7 +107,14 @@ branch of philosophy concerned with _how we know what we know_.
 
 Thompson proved that in computing, you can't _know_ anything for sure unless you
 wrote all the software, including the compiler and the operating system, from
-scratch yourself.
+scratch yourself. Therefore, source-level inspection alone cannot ground trust
+in a system. If the compiler or toolchain is already compromised, clean source
+code is insufficient. The practical response is not that everyone must write an
+operating system from scratch, but that trust must be rooted in a verifiable
+bootstrap chain. Techniques such as diverse double compilation attempt to break
+the self-propagating loop he described. The lesson is not that knowledge is
+impossible, but that trust in software is layered and must be made explicit and,
+where possible, independently reconstructed.
 
 ### The Priesthood of the Binary
 
@@ -108,11 +129,19 @@ server. You are trusting that the developer’s machine wasn't compromised, that
 the CI/CD pipeline wasn't hijacked, and that no one slipped a quiet extra line
 of code into the binary before signing it. I can go on.
 
-Historically, this has created a technological priesthood. The "priests" (tech
-giants, package maintainers, build farms) hold the sacred power of compilation.
-The "laity" (users) must blindly accept the artifacts handed down to them. In a
-democratic digital society, "Trust me, bro" is an unacceptable governance model
-for foundational infrastructure.
+Historically, this has concentrated authority in those who control artifact
+production, and if I may be a little artistic, created a technological
+priesthood. The "priests" (tech giants, package maintainers, build farms) hold
+the sacred power of compilation. The "laity" (users) must blindly accept the
+artifacts handed down to them. In a democratic digital society, "Trust me, bro"
+is an unacceptable governance model for foundational infrastructure.
+
+The asymmetry itself lies in who controls the transformation process and who can
+meaningfully audit it. In political terms, this resembles delegated authority
+without routine review. Reproducibility does not abolish delegation, but it
+introduces the functional equivalent of audit or judicial review: any
+independent party can reconstruct the transformation and compare results.
+Authority remains, but it becomes contestable rather than opaque.
 
 ### Compilation as a Historical Event vs. Mathematical Truth
 
@@ -139,9 +168,16 @@ reproducible builds is to strip the environment out of the equation. By
 standardizing build paths, forcing deterministic behavior in compilers, and
 mocking timestamps (often using the `SOURCE_DATE_EPOCH` standard), developers
 can ensure that compiling the same source code _always_ results in a bit-for-bit
-identical binary, regardless of who compiles it, where, or when. When a build is
-reproducible, compilation ceases to be a historical event and becomes a
-mathematical truth.
+identical binary, regardless of who compiles it, where, or when.
+
+When a build is reproducible, compilation ceases to be merely a historical event
+and becomes a constrained transformation. Given a defined toolchain and
+environment, identical inputs yield identical outputs. This does not eliminate
+the broader trust chain. Compilers, hardware, firmware, and the bootstrap
+process itself still anchor the system in inherited assumptions. What
+reproducibility does is narrow the surface of discretionary variation. It
+converts one layer of the system from opaque historical contingency into
+something that can be independently verified and mechanically compared.
 
 ### The Democratization of Verification
 
@@ -151,16 +187,28 @@ introduced a C compiler _entirely_ with their frontier model, Claude, which can
 compile the Linux kernel, but not a basic "Hello world" program or most
 moderately advanced C programs despite costing thousands of dollars.
 
-Why is this important? Well, with my above explanation of "priesthood" and the
-concept of "mathematical" truth I'm sure you immediately grasp the point I'm
-getting to, but to put it plainly I believe we have arrived as a less
-deterministic environment, even less than before, where entropy is not only in
-the build result but also in the source.
-
 [^4]: If anyone wishes to challenge this label, please bring me the receipt for
     every purchase and the resulting training data. I would be happy to revise
     my claim then, maybe something to less tame such as "indeterministic
     warcrime company" or something.
+
+If compilation introduces entropy through environment, LLM-generated code
+introduces entropy at the level of authorship itself.
+
+Why is this important? Well, with my above explanation of "priesthood" and the
+concept of "mathematical truth" I'm sure you immediately grasp the point I'm
+getting to, but to put it plainly I believe we have arrived as a less
+deterministic environment, even less than before, where entropy is not only in
+the build result but also in the source.
+
+The same prompt does not reliably produce the same source. The provenance of
+specific lines becomes probabilistic rather than traceable to a human decision.
+This compounds the existing problem: reproducible builds can constrain
+transformation from source to binary, but they cannot stabilize a stochastic
+origin of source. The result is a system in which indeterminism operates both
+before and during compilation. If reproducibility is a mechanism for
+constraining discretionary variation, then stochastic code generation represents
+a structural expansion of that variation upstream.
 
 The social and political implications of this shift are massive. If a build is
 reproducible, we no longer need a priesthood. Not only do we not _need_ one, but
@@ -169,9 +217,15 @@ I think it is about time we actively reject it.
 Anyone with a laptop can download the source code, run the compiler, and hash
 the resulting binary. If their hash matches the hash of the binary provided by
 the official maintainer, cryptographic proof is established: _No one tampered
-with this binary._ The chain of trust is broken and replaced with a web of
-independent, decentralized verification. It is the scientific
-method---reproducibility of results---applied to software distribution.
+with this binary._ The chain of trust is not abolished but restructured. Instead
+of a linear delegation from maintainer to user, reproducibility enables parallel
+verification by independent actors. In institutional terms, artifact production
+remains centralized, but verification becomes decentralized. This resembles the
+separation of powers more than the elimination of power. The maintainer or build
+system performs an executive function by producing artifacts. Independent
+rebuilders perform an oversight function by validating that transformation. The
+legitimacy of the artifact no longer rests solely on the authority of its
+producer, but on the reproducibility of its production.
 
 As software eats the world, governing everything from our banking systems to our
 pacemakers and our voting machines, the gap between source code and binary is
@@ -190,3 +244,22 @@ compromised dependency or CI pipeline can infect millions of devices
 simultaneously, the verification is not merely a nice to have. Verification is
 _existential_, because it affects everything that you do. It is the ultimate
 defense against the dark arts of the digital age.
+
+## Closing Thoughts
+
+This has been a very long opinion essay on... well, a lot of things actually.
+Theoretical auditability, actual audit participation, elimination of trust,
+_redistribution_ of truth, epistemic certainty, institutional constraint and
+more. I plan to continue writing about those topics, focusing _especially_ on
+the "priesthood" component next time around, but I do hope that you enjoyed this
+one.
+
+What interests me is not whether reproducibility makes us pure, but whether it
+changes who must be believed and under what conditions. Software is now
+infrastructure, and infrastructure is governance by other means. If we are going
+to live inside systems that mediate finance, medicine, communication, and
+political process, then the mechanics of their construction cannot remain
+mystical or personality bound. They must be contestable. Reproducibility is not
+the end of trust, nor the end of power, but it is a demand that both be
+structured, visible, and subject to reconstruction. That, at minimum, is a
+political stance worth defending.
