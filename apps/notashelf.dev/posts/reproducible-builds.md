@@ -175,8 +175,18 @@ method---reproducibility of results---applied to software distribution.
 
 As software eats the world, governing everything from our banking systems to our
 pacemakers and our voting machines, the gap between source code and binary is
-the most dangerous shadow in modern society. Reproducible software isn't just
-about catching bugs; it’s about aligning our digital infrastructure with the
-democratic ideals of transparency, accountability, and verifiable truth.
+the most dangerous shadow in modern society. As such I want to make it clear
+that reproducible software is not just about pedantry or catching bugs, but
+about aligning digital infrastructure with the democratic ideals of
+transparency, accountability and verifiable truth.
 
-It is the ultimate defense against the dark arts of the digital age.
+When any independent party can verify that the binary running on their machine
+was produced from the exact source code they audited, we transform software
+distribution from an act of faith into an act of verification. The maintainer no
+longer needs to be trusted---only the source code and the build process need to
+be truthworthy. This shifts the entire paradigm from "trust the developer", or;
+"trust me, bro" to "verify the artifact" and thus, in an area where a single
+compromised dependency or CI pipeline can infect millions of devices
+simultaneously, the verification is not merely a nice to have. Verification is
+_existential_, because it affects everything that you do. It is the ultimate
+defense against the dark arts of the digital age.
