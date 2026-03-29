@@ -32,22 +32,22 @@ The **apps** directory contains, and will continue to contain, web applications
 such as my website and blog. If I plan to host more static sites under my
 domain, that is also where those new sites will go. The **packages** directory
 contains packages, utilities or other home-made dependencies used in the web
-applications. This, for now, includes my Vite plugins, Astro integrations and
-WASM components. **scripts** directory is bit of a wildcard, because it contains
-Node scripts I wrote for fun and comfort, it's probably not good reference.
-Lastly, the **nix** directory is for packaging and to keep Nix tooling out of
-repository root as much as possible.The top-level `flake.nix` acts as the entry
-point for packaging, though `pnpm` is utilized to an extent in the repository,
-and can be leveraged for rapid development builds.
-
-Markdown sources of my writings, blog posts, and similar content can be found in
-`apps/notashelf.dev/`. Namely, the `posts` directory contains Markdown and MDX
-sources for my posts.
+applications. This, for now, includes my Vite plugins and Astro integrations.
+**scripts** directory, on another hand, is bit of a wildcard, because it
+contains Node scripts I wrote for fun and comfort, it's probably not good
+reference. Lastly, the **nix** directory is for packaging and to keep Nix
+tooling out of repository root as much as possible.The top-level `flake.nix`
+acts as the entry point for packaging, though `pnpm` is utilized to an extent in
+the repository, and can be leveraged for rapid development builds.
 
 Astro components utilized in the final site are defined in
 `apps/notashelf.dev/src`, alongside my layouts, stylesheets and so on.
 Remark/Vite plugins, Astro integrations and other components will always be
 located in the `packages` directory.
+
+Markdown sources of my writings, blog posts, and similar content can be found in
+`apps/notashelf.dev/`. Namely, the `posts` directory contains Markdown and MDX
+sources for my posts.
 
 ### Apps
 
@@ -79,10 +79,6 @@ time being, it contains three distinct packages.
 - [vite-copyright-replace](./packages/vite-copyright-replace) is a Vite plugin
   to replace a placeholder with the current year to keep license notices
   up-to-date without using Javascript to infer it from the browser's clock.
-- [wasm-utils](./packages/wasm-utils/) contains my personal WASM utilities that
-  are leveraged in [apps/notashelf.dev](./apps/notashelf.dev/) to offload
-  compute-heavy operations to smaller, faster WebAssembly modules. This is an
-  experiment more than anything, but there _have_ been performance gains.
 
 ## Stack
 
@@ -92,9 +88,7 @@ integrate Typescript (and frameworks or libraries!) into our stack, so I will be
 avoiding _vanilla_ Javascript as much as possible. The decision to opt into
 Astro and this specific stack does hurt portability, a little, but I do not
 intend to switch as it seems future-proof enough not to warrant any more
-rewrites. Svelte and WASM (built with wasm-pack) have been added to the stack as
-experiments, but they provide microscopic performance gains in very specific
-circumstances.
+rewrites. Svelte has been added to the stack for clientside interactivity.
 
 ### Background
 
@@ -129,14 +123,6 @@ Main reasons I've chosen the stack I did
     - Maximum control of the build tooling
 - **Svelte**
   - Excellent clientside hydration performance
-- **WASM**
-  - Fast
-  - Fun to work with
-  - Allows writing not-web languages for the web [^1]
-
-[^1]: You still have to interface with this somehow, but it can be used to defer
-    the most resource intensive or cognitively complex operations to another
-    language or framework.
 
 ## Contributing
 
@@ -170,9 +156,7 @@ integration, which you would be recommended to use.
 
 If you choose _not_ to use Nix, then you will need to install several
 dependencies. Most notably, you will need `nodejs` and `pnpm` installed with
-your package manager as a bare minimum. You will also want `cargo`, `gcc`, and
-`wasm-pack` to build the website, which requires my
-[wasm-utils](./packages/wasm-utils/) to be built.
+your package manager.
 
 - There are pnpm scripts exported in the repository root that you can use to
   build things. E.g., `pnpm run build:web` will build the web components.
@@ -183,8 +167,7 @@ your package manager as a bare minimum. You will also want `cargo`, `gcc`, and
   the production build.
 
 Alternatively there is a Nix package provided as `site`, which can be built with
-`nix build .`. The WASM component is not exposed as its own package, but is
-built automatically when building the default package.
+`nix build .`.
 
 #### Testing
 
@@ -213,7 +196,7 @@ made available under the **Mozilla Public License v2.0**, as
 [their](./packages/astro-email-obfuscation/LICENSE)
 [respective](./packages/remark-em-dash/LICENSE)
 [license](./packages/astro-purge-css/LICENSE)
-[files](./packages/wasm-utils/LICENSE).
+[files](./packages/vite-copyright-replace/LICENSE).
 
 Please do not modify or redistribute post contents without my express
 permission. For any code taken directly (which I know to be happening), an
