@@ -23,12 +23,12 @@
     "@astrojs/ts-plugin": "^1.10.6",
     "@esbuild/linux-x64": "0.27.2",
     "@mdx-js/mdx": "^3.1.1",
-    "astro": "^5.17.1",
-    "astro-email-obfuscation": "link:../../packages/astro-email-obfuscation",
+    "astro": "^5.18.1",
+    "astro-email-obfuscation": "workspace:*",
     "astro-expressive-code": "^0.41.6",
     "astro-icon": "^1.1.5",
-    "astro-plausible": "link:../../packages/astro-plausible",
-    "astro-purge-css": "link:../../packages/astro-purge-css",
+    "astro-plausible": "workspace:*",
+    "astro-purge-css": "workspace:*",
     "autoprefixer": "^10.4.24",
     "cssnano": "^7.1.2",
     "glob": "^13.0.0",
@@ -43,7 +43,7 @@
     "rehype-external-links": "^3.0.0",
     "rehype-stringify": "^10.0.1",
     "remark": "^15.0.1",
-    "remark-em-dash": "link:../../packages/remark-em-dash",
+    "remark-em-dash": "workspace:*",
     "remark-gfm": "^4.0.1",
     "remark-mdx": "^3.1.1",
     "remark-parse": "^11.0.0",
@@ -58,10 +58,7 @@
     "unified": "^11.0.5",
     "unist-util-visit": "^5.1.0",
     "vfile": "^6.0.3",
-    "vite-copyright-replace": "link:../../packages/vite-copyright-replace",
-    "vite-plugin-top-level-await": "^1.6.0",
-    "vite-plugin-wasm": "^3.5.0",
-    "wasm-utils": "link:../../packages/wasm-utils/pkg"
+    "vite-copyright-replace": "workspace:*"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.6"

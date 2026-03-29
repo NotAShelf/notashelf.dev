@@ -132,13 +132,13 @@ const posts = sortedPosts.slice(0, postsPerPage);
 
 <script>
   import type { PostEntry } from "../../lib/types";
-  import { WasmPostSearchUI } from "../../scripts/wasm-post-search-ui";
+  import { PostSearchUI } from "../../scripts/post-search-ui";
 
   document.addEventListener("DOMContentLoaded", async () => {
-    // Pass all posts data to the WASM search UI
+    // Pass all posts data to the search UI
     const allPosts: PostEntry[] = [];
 
-    // Extract post data from DOM elements for WASM
+    // Extract post data from DOM elements
     document.querySelectorAll(".post-dropdown-item").forEach((el) => {
       const element = el as HTMLElement;
       const postId = element.getAttribute("data-post-id");
@@ -189,8 +189,8 @@ const posts = sortedPosts.slice(0, postsPerPage);
       }
     });
 
-    // Initialize WASM search UI
-    const searchUI = new WasmPostSearchUI(allPosts);
+    // Initialize search UI
+    const searchUI = new PostSearchUI(allPosts);
     await searchUI.init();
   });
 </script>

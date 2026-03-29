@@ -1,107 +1,11 @@
 /**
- * Application-specific post search functionality
- * Wraps WASM search engine with business logic and state management
+ * Application-specific post search state management
  */
-
-import {
-  wasmSearchEngine,
-  type PostData,
-  type SearchResult,
-  type SearchStats,
-} from "../../lib/wasm";
-import type { PostEntry } from "../../lib/types";
 
 export interface SearchState {
   searchTerm: string;
   activeTag: string;
   viewAll: boolean;
-}
-
-export class PostSearch {
-  private searchEngine = wasmSearchEngine;
-  private isInitialized = false;
-  private allPosts: PostEntry[] = [];
-
-  async init(posts: PostEntry[]): Promise<void> {
-    if (this.isInitialized) return;
-
-    await this.searchEngine.init();
-    this.searchEngine.clear();
-    this.allPosts = posts;
-
-    for (const post of posts) {
-      const postData: PostData = {
-        id: post.id,
-        title: post.data.title,
-        description: post.data.description,
-        keywords: post.data.keywords || [],
-      };
-      this.searchEngine.addPost(postData);
-    }
-
-    this.isInitialized = true;
-  }
-
-  search(query: string, maxResults: number = 50): SearchResult[] {
-    if (!this.isInitialized || !query.trim()) return [];
-    try {
-      return this.searchEngine.search(query, maxResults);
-    } catch {
-      return [];
-    }
-  }
-
-  searchByTag(tag: string): SearchResult[] {
-    if (!this.isInitialized || !tag.trim()) return [];
-    try {
-      return this.searchEngine.searchByTag(tag);
-    } catch {
-      return [];
-    }
-  }
-
-  getPostsFromResults(results: SearchResult[]): PostEntry[] {
-    const postsMap = new Map(this.allPosts.map((post) => [post.id, post]));
-    return results
-      .map((result) => postsMap.get(result.id))
-      .filter(Boolean) as PostEntry[];
-  }
-
-  combinedSearch(
-    searchTerm: string,
-    activeTag: string,
-    maxResults: number = 50,
-  ): PostEntry[] {
-    let results: SearchResult[] = [];
-
-    if (searchTerm.trim()) {
-      results = this.search(searchTerm, maxResults);
-      if (activeTag.trim()) {
-        results = results.filter((result) =>
-          result.keyword_matches.some((keyword: string) =>
-            keyword.toLowerCase().includes(activeTag.toLowerCase()),
-          ),
-        );
-      }
-    } else if (activeTag.trim()) {
-      results = this.searchByTag(activeTag);
-    } else {
-      return this.allPosts;
-    }
-
-    return this.getPostsFromResults(results);
-  }
-
-  getStats(): SearchStats {
-    if (!this.isInitialized) {
-      return { total_posts: 0, indexed_words: 0, indexed_keywords: 0 };
-    }
-    try {
-      return this.searchEngine.getStats();
-    } catch {
-      return { total_posts: 0, indexed_words: 0, indexed_keywords: 0 };
-    }
-  }
 }
 
 /**
@@ -207,12 +111,3 @@ export class PostSearchState {
     }
   }
 }
-
-// Export singleton instance
-export const postSearch = new PostSearch();
-
-// Export types for convenience
-export type { PostData, SearchResult, SearchStats, PostEntry };
-
-// Export default
-export default PostSearch;

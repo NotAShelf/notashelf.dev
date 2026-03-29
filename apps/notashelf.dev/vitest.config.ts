@@ -12,13 +12,7 @@ export default getViteConfig({
       "@lib": path.resolve(__dirname, "./src/lib"),
       "@data": path.resolve(__dirname, "./src/data"),
       "@scripts": path.resolve(__dirname, "./src/scripts"),
-      "wasm-utils": path.resolve(__dirname, "../../packages/wasm-utils/pkg"),
     },
-  },
-
-  // Force Vite pre-bundle the WASM utils
-  optimizeDeps: {
-    include: ["wasm-utils"],
   },
 
   // @ts-expect-error: something about Vitest not being compatible. Blame Astro.

@@ -4,12 +4,6 @@
   # Node
   nodejs-slim,
   pnpm,
-  # WASM
-  cargo,
-  rustc,
-  wasm-pack,
-  lld,
-  rustfmt,
   taplo,
   # Testing/Linting
   typos,
@@ -25,14 +19,7 @@ in
       nodejs-slim
       pnpm
 
-      # WASM
-      cargo
-      rustc
-      wasm-pack
-      lld
-
-      # Rust & TOML formatting
-      (rustfmt.override {asNightly = true;})
+      # TOML formatting
       taplo
 
       # To run 'typos' on my content every once in a while

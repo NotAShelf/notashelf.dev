@@ -1,6 +1,5 @@
-import { existsSync, readdirSync, statSync } from "fs";
+import { existsSync, readdirSync } from "fs";
 import { join } from "path";
-import { spawn } from "child_process";
 import { readFile } from "fs/promises";
 
 /**
@@ -40,10 +39,7 @@ export function resolveWorkspaceDirs(globs, rootDir) {
       if (existsSync(base)) {
         for (const name of readdirSync(base)) {
           const dir = join(base, name);
-          if (
-            existsSync(join(dir, "package.json")) ||
-            existsSync(join(dir, "Cargo.toml"))
-          ) {
+          if (existsSync(join(dir, "package.json"))) {
             dirs.push(dir);
           }
         }
@@ -56,96 +52,4 @@ export function resolveWorkspaceDirs(globs, rootDir) {
     }
   }
   return dirs;
-}
-
-/**
- * Finds WASM packages in a given root directory.
- * @param {string} rootDir
- * @returns {string[]} - Absolute paths to WASM package directories.
- */
-export function findWasmPackages(rootDir) {
-  const pkgsDir = join(rootDir, "packages");
-  if (!existsSync(pkgsDir)) return [];
-  return readdirSync(pkgsDir)
-    .map((name) => join(pkgsDir, name))
-    .filter(
-      (dir) =>
-        existsSync(join(dir, "Cargo.toml")) && existsSync(join(dir, "src")),
-    );
-}
-
-/**
- * Returns the latest mtime in a directory tree.
- * @param {string} dir
- * @returns {number}
- */
-function latestMtime(dir) {
-  let m = 0;
-  for (const e of readdirSync(dir, { withFileTypes: true })) {
-    const p = join(dir, e.name);
-    m = Math.max(m, e.isDirectory() ? latestMtime(p) : statSync(p).mtimeMs);
-  }
-  return m;
-}
-
-/**
- * Determines if a WASM package needs to be rebuilt.
- * @param {string} wasmDir
- * @returns {boolean}
- */
-function needsBuild(wasmDir) {
-  const src = join(wasmDir, "src");
-  const pkg = join(wasmDir, "pkg");
-  if (!existsSync(pkg)) return true;
-  let srcTime = existsSync(src) ? latestMtime(src) : 0;
-  for (const f of ["Cargo.toml", "Cargo.lock"])
-    if (existsSync(join(wasmDir, f)))
-      srcTime = Math.max(srcTime, statSync(join(wasmDir, f)).mtimeMs);
-  return srcTime > latestMtime(pkg);
-}
-
-/**
- * Builds a single WASM package asynchronously.
- * @param {string} wasmDir
- * @param {boolean} dev
- * @returns {Promise<boolean>}
- */
-export function buildWasm(wasmDir, dev = false) {
-  return new Promise((resolve) => {
-    if (!existsSync(wasmDir)) return resolve(false);
-    if (!needsBuild(wasmDir)) {
-      console.log(`[wasm] Up to date: ${wasmDir}`);
-      return resolve(false);
-    }
-    console.log(`[wasm] Building: ${wasmDir}`);
-    const args = [
-      "build",
-      "--target",
-      "web",
-      "--out-dir",
-      "pkg",
-      "--out-name",
-      "wasm-utils",
-    ];
-    if (dev) args.push("--dev");
-    const p = spawn("wasm-pack", args, { cwd: wasmDir, stdio: "inherit" });
-    p.on("close", (code) => {
-      if (code !== 0) console.warn(`[wasm] Build failed: ${wasmDir}`);
-      resolve(code === 0);
-    });
-    p.on("error", (err) => {
-      console.warn(`[wasm] Error: ${err.message}`);
-      resolve(false);
-    });
-  });
-}
-
-/**
- * Builds all WASM packages in parallel.
- * @param {string[]} wasmDirs
- * @param {boolean} dev
- * @returns {Promise<void>}
- */
-export async function buildAllWasm(wasmDirs, dev = false) {
-  await Promise.all(wasmDirs.map((dir) => buildWasm(dir, dev)));
 }

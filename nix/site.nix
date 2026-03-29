@@ -7,61 +7,8 @@
   nodejs,
   fetchPnpmDeps,
   pnpmConfigHook,
-  # Required for building WASM utilities
-  rustPlatform,
-  cargo,
-  rustc,
-  wasm-pack,
-  lld,
-  binaryen,
-  wasm-bindgen-cli_0_2_106,
 }: let
   fs = lib.fileset;
-
-  wasmUtils = let
-    cargoToml = lib.importTOML ../packages/wasm-utils/Cargo.toml;
-    pname = cargoToml.package.name;
-    version = cargoToml.package.version;
-  in
-    rustPlatform.buildRustPackage {
-      inherit pname version;
-      src = let
-        sp = ../packages/wasm-utils;
-      in
-        fs.toSource {
-          root = sp;
-          fileset = fs.intersection (fs.fromSource (lib.sources.cleanSource sp)) (
-            fs.unions [
-              (sp + /src)
-
-              (sp + /Cargo.toml)
-              (sp + /Cargo.lock)
-            ]
-          );
-        };
-
-      nativeBuildInputs = [
-        wasm-pack
-        lld
-        binaryen
-        wasm-bindgen-cli_0_2_106
-      ];
-
-      copyLibs = true;
-      doCheck = true;
-      checkInputs = [cargo rustc];
-
-      cargoLock.lockFile = ../packages/wasm-utils/Cargo.lock;
-
-      env.WASM_PACK_CACHE = ".wasm-pack-cache";
-
-      postBuild = ''
-        mkdir -p $out/lib
-        wasm-pack build --release --target web \
-          --out-dir $out --out-name wasm-utils
-      '';
-    };
-
   buildDate = builtins.concatStringsSep "-" (builtins.match "(.{4})(.{2})(.{2}).*" self.lastModifiedDate);
 in
   stdenv.mkDerivation (finalAttrs: {
@@ -93,15 +40,6 @@ in
         );
       };
 
-    # PNPM expects WASM utilities inside packages/wasm-utils/pkgs, however, we
-    # cannot tell it to look at the Nix build output of wasm-utils package.
-    # Instead we create the expected directory structure, and symlink to our
-    # WASM utilities build output.
-    postPatch = ''
-      mkdir -p packages/wasm-utils
-      ln -sf ${wasmUtils.outPath} packages/wasm-utils/pkg
-    '';
-
     nativeCheckInputs = [
       nodejs
       pnpm
@@ -114,7 +52,7 @@ in
     # to fetch deps for and build. Alas, NodeJS.
     pnpmDeps = fetchPnpmDeps {
       inherit (finalAttrs) pname src pnpmInstallFlags;
-      hash = "sha256-7WRXtfSGxfHVoEKBvRG4Wgv/8t4D4zj/8GRnVeh5Mco=";
+      hash = "sha256-EUyn01Ap0Fj2FoZeDLtd+SiNRiuU8kvmnoytiv7TESc=";
       fetcherVersion = 3; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
     };
 

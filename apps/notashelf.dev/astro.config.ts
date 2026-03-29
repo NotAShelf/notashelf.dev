@@ -25,9 +25,6 @@ import remarkGfm from "remark-gfm";
 import remarkToc from "remark-toc";
 import rehypeExternalLinks from "rehype-external-links";
 
-import wasm from "vite-plugin-wasm";
-import topLevelAwait from "vite-plugin-top-level-await";
-
 // https://astro.build/config
 export default defineConfig({
   site: "https://notashelf.dev",
@@ -229,11 +226,6 @@ export default defineConfig({
       // Replaces copyright variables during the build process. This is more performant
       // compared to embedding some minor JS code to replace it dynamically.
       copyrightYearPlugin(),
-
-      // WASM support for Vite. WASM is a sandbox experiment.
-      // <https://www.npmjs.com/package/vite-plugin-wasm>
-      wasm(),
-      topLevelAwait(),
     ],
 
     // Aggressively optimise Vite's build process. Terser is 1-3% slower, but it produces
@@ -266,13 +258,6 @@ export default defineConfig({
 
         format: {
           comments: true,
-        },
-      },
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            wasm: ["wasm-utils"],
-          },
         },
       },
     },

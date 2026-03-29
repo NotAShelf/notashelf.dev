@@ -3,12 +3,6 @@
   nodejs,
   pnpm,
   eslint,
-  rustc,
-  cargo,
-  wasm-pack,
-  wasm-bindgen-cli,
-  binaryen,
-  lld,
 }:
 writeShellApplication {
   name = "ci";
@@ -16,12 +10,6 @@ writeShellApplication {
     nodejs
     pnpm
     eslint
-    rustc
-    cargo
-    wasm-pack
-    wasm-bindgen-cli
-    binaryen
-    lld
   ];
   text = ''
     set -euo pipefail
@@ -34,8 +22,6 @@ writeShellApplication {
     # Print environment info for debugging
     echo "Node version: $(node --version)"
     echo "PNPM version: $(pnpm --version)"
-    echo "Rust version: $(rustc --version)"
-    echo "Cargo version: $(cargo --version)"
 
     # Install dependencies with "CI-optimized" flags
     echo "Installing dependencies..."

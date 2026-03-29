@@ -28,7 +28,6 @@ export default defineConfig({
         ".github",
         "nix",
         "scripts", // we don't really want to test those
-        "packages/wasm-utils", // we can't actually test the output of this
         // Config files
         "**/*.config.{js, mjs, ts}",
         "**/vitest.workspace.ts",

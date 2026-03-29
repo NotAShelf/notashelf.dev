@@ -1,15 +1,10 @@
 packages:
-  - apps/notashelf.dev
-  - packages/wasm-utils
-  - packages/astro-plausible
-  - packages/astro-email-obfuscation
-  - packages/vite-copyright-replace
-  - packages/vite-purge-css
-  - packages/remark-em-dash
+  - apps/*
+  - packages/*
 
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@swc/core'
   - esbuild
   - sharp
-  - wasm-pack
+

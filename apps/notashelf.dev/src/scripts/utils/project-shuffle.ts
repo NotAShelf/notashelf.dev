@@ -1,9 +1,7 @@
 /**
  * Client-side project shuffling utility for static deployments
- * Handles random project selection and DOM manipulation without WASM dependencies
+ * Handles random project selection and DOM manipulation
  */
-
-import { wasmProjectUtils } from "../../lib/wasm";
 
 interface ShuffleConfig {
   targetCount: number;
@@ -14,7 +12,7 @@ export class ProjectShuffle {
   private isInitialized = false;
 
   /**
-   * Fisher-Yates shuffle algorithm fallback (no WASM)
+   * Fisher-Yates shuffle algorithm
    */
   private shuffleArray<T>(array: T[]): T[] {
     const shuffled = [...array];
@@ -35,24 +33,11 @@ export class ProjectShuffle {
   }
 
   /**
-   * Get random indices using WASM or fallback
+   * Get random indices for a given total and sample count
    */
-  private async getRandomIndices(
-    totalCount: number,
-    sampleCount: number,
-  ): Promise<number[]> {
-    try {
-      await wasmProjectUtils.init();
-      const selectedIndices = wasmProjectUtils.randomSample(
-        JSON.stringify(Array.from({ length: totalCount }, (_, i) => i)),
-        sampleCount,
-      );
-      return JSON.parse(selectedIndices) as number[];
-    } catch (error) {
-      console.warn("WASM shuffling failed, using fallback:", error);
-      const indices = Array.from({ length: totalCount }, (_, i) => i);
-      return this.randomSample(indices, sampleCount);
-    }
+  private getRandomIndices(totalCount: number, sampleCount: number): number[] {
+    const indices = Array.from({ length: totalCount }, (_, i) => i);
+    return this.randomSample(indices, sampleCount);
   }
 
   /**
@@ -84,10 +69,10 @@ export class ProjectShuffle {
   /**
    * Shuffle projects in featured layout (.projects-grid)
    */
-  private async shuffleFeaturedProjects(
+  private shuffleFeaturedProjects(
     projectsGrid: Element,
     targetCount: number,
-  ): Promise<void> {
+  ): void {
     const projectCards = Array.from(projectsGrid.children);
     if (projectCards.length <= targetCount) return;
 
@@ -95,7 +80,7 @@ export class ProjectShuffle {
       `Shuffling featured projects: ${projectCards.length} -> ${targetCount}`,
     );
 
-    const selectedIndices = await this.getRandomIndices(
+    const selectedIndices = this.getRandomIndices(
       projectCards.length,
       targetCount,
     );
@@ -126,10 +111,10 @@ export class ProjectShuffle {
   /**
    * Shuffle projects in recent layout (.recent-projects-container)
    */
-  private async shuffleRecentProjects(
+  private shuffleRecentProjects(
     recentContainer: Element,
     targetCount: number,
-  ): Promise<void> {
+  ): void {
     const topRow = recentContainer.querySelector(".top-row");
     const bottomRow = recentContainer.querySelector(".bottom-row");
 
@@ -147,7 +132,7 @@ export class ProjectShuffle {
       `Shuffling recent projects: ${allCards.length} -> ${targetCount}`,
     );
 
-    const selectedIndices = await this.getRandomIndices(
+    const selectedIndices = this.getRandomIndices(
       allCards.length,
       targetCount,
     );
@@ -185,7 +170,7 @@ export class ProjectShuffle {
   /**
    * Shuffle projects in any layout
    */
-  public async shuffleProjects(): Promise<void> {
+  public shuffleProjects(): void {
     const config = this.getShuffleConfig();
     if (!config) {
       console.log("No valid shuffle context found, skipping");
@@ -195,7 +180,7 @@ export class ProjectShuffle {
     // Handle featured projects (homepage)
     const projectsGrid = document.querySelector(".projects-grid");
     if (projectsGrid && config.mode === "featured") {
-      await this.shuffleFeaturedProjects(projectsGrid, config.targetCount);
+      this.shuffleFeaturedProjects(projectsGrid, config.targetCount);
       return;
     }
 
@@ -204,7 +189,7 @@ export class ProjectShuffle {
       ".recent-projects-container",
     );
     if (recentContainer && config.mode === "recent") {
-      await this.shuffleRecentProjects(recentContainer, config.targetCount);
+      this.shuffleRecentProjects(recentContainer, config.targetCount);
       return;
     }
 
@@ -213,7 +198,7 @@ export class ProjectShuffle {
       const projectCards = Array.from(projectsGrid.children) as HTMLElement[];
       if (projectCards.length <= config.targetCount) return;
 
-      const selectedIndices = await this.getRandomIndices(
+      const selectedIndices = this.getRandomIndices(
         projectCards.length,
         config.targetCount,
       );
@@ -235,7 +220,7 @@ export class ProjectShuffle {
   /**
    * Initialize and perform shuffling
    */
-  private async initializeShuffle(): Promise<void> {
+  private initializeShuffle(): void {
     if (this.isInitialized) {
       console.log("Shuffle already initialized, skipping");
       return;
@@ -243,7 +228,7 @@ export class ProjectShuffle {
 
     console.log("Initializing project shuffle...");
 
-    await this.shuffleProjects();
+    this.shuffleProjects();
     this.isInitialized = true;
     console.log("Project shuffle initialization complete");
   }
@@ -251,26 +236,21 @@ export class ProjectShuffle {
   /**
    * Setup client-side shuffling with proper timing
    */
-  public async setupClientSideShuffling(): Promise<void> {
+  public setupClientSideShuffling(): void {
     console.log("Setting up client-side project shuffling");
     console.log("Document ready state:", document.readyState);
 
-    const shuffle = async () => {
+    const shuffle = () => {
       // Use setTimeout to ensure DOM is fully rendered
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      await this.initializeShuffle();
+      setTimeout(() => this.initializeShuffle(), 100);
     };
 
     if (document.readyState === "loading") {
       console.log("Waiting for DOM to load");
-      document.addEventListener("DOMContentLoaded", () => {
-        shuffle().catch((error) => {
-          console.error("Failed to initialize shuffle:", error);
-        });
-      });
+      document.addEventListener("DOMContentLoaded", shuffle);
     } else {
       console.log("DOM already loaded, shuffling immediately");
-      await shuffle();
+      shuffle();
     }
   }
 }
