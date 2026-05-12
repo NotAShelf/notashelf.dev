@@ -264,8 +264,8 @@ importers:
         version: 6.3.1(@types/node@25.7.0)(jiti@2.7.0)(rollup@4.60.3)(sass@1.99.0)(terser@5.47.1)(yaml@2.9.0)
     devDependencies:
       '@types/jsdom':
-        specifier: ^28.0.2
-        version: 28.0.2
+        specifier: ^28.0.3
+        version: 28.0.3
       '@types/node':
         specifier: ^25.7.0
         version: 25.7.0
@@ -1941,8 +1941,8 @@ packages:
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
 
-  '@types/jsdom@28.0.2':
-    resolution: {integrity: sha512-zZYItekplnGirFhVDrcB0+103TMakXfKfIp7uECxaFzFG3Ws5kYQSwVb1d4pQfJMMjQda6pfuZxueAv9CMiJbw==}
+  '@types/jsdom@28.0.3':
+    resolution: {integrity: sha512-/HQ2uFoetFTXuye8vzIcHw2z6Fwi7Hi/qcgC+RoS9NCyewiqxhVGqlG+ViGB6lkax481R6dmhf1I7lIGlzJStQ==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -7059,7 +7059,7 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  '@types/jsdom@28.0.2':
+  '@types/jsdom@28.0.3':
     dependencies:
       '@types/node': 25.7.0
       '@types/tough-cookie': 4.0.5
@@ -7102,7 +7102,7 @@ snapshots:
 
   '@types/sax@1.2.7':
     dependencies:
-      '@types/node': 24.12.4
+      '@types/node': 25.7.0
 
   '@types/tough-cookie@4.0.5': {}
 
