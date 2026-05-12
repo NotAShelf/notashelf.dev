@@ -21,12 +21,12 @@ asking me why I think Go is designed by people who understand language design
 very well, but refuse to follow established and beloved conventions. I am still
 behind this statement and throughout this post you will see exactly why I
 believe this. I have read much of the spec and the proposals. I have read, or at
-least try to read, the team's stated reasoning & surrounding memos. The blog
+least tried to read, the team's stated reasoning and surrounding memos. The blog
 posts about why the things are the way they are and the such. Their defenses,
 arguments, and more.
 
 What follows is a case. It is _my_ case about why I think Go is a terrible*
-language. This is, put most simply, is my attempt at a precise, specific and
+language. This is, put most simply, my attempt at a precise, specific, and
 deliberately uncharitable document where the language deserves what is coming.
 It is about why Go is a failure of a design philosophy dressed up and paraded
 around as pragmatism.
@@ -41,7 +41,7 @@ one truly vile for Zig. For now, let's talk about Go and its design choices.
 ## Failure by Design
 
 The first thing I want to talk about, and perhaps the lowest hanging fruit that
-everyone reaches for is the error handling patterns of Go. This is simply
+everyone reaches for, is the error handling patterns of Go. This is simply
 because it really is that bad. I think the designers fully understood
 exceptions, sum types, and structured error propagation. Quite sure they not
 only understand those patterns, but also see the individual beauty of it. They
@@ -73,9 +73,9 @@ func process(path string) error {
 }
 ```
 
-The actual logic (open, read, parse and store) is four lines. FOUR. The error
+The actual logic (open, read, parse, and store) is four lines. FOUR. The error
 plumbing, however, is _twelve_. The ratio of structural signal noise is, if my
-math is correct, 3:1 and this is called explicit. Now compare it to Rust, where
+math is correct, 3:1, and this is called explicit. Now compare it to Rust, where
 `?` propagates errors with identical semantics but doesn't consume your screen
 free estate.
 
@@ -215,15 +215,15 @@ is too heavy of a footgun to hand loaded to the users.
 ## Let's Talk Generics
 
 The generics situation deserves its own section, and its own _extended_
-treatment because it is _such_ a perfect illustration of team's priorities. Go
-1.0 shipped sometime in 2012 without generics. Which is fine. Then, for almost a
-decade, the team _explicitly_ argued that code duplication is **PERFECTLY FINE**
-and was preferable to abstraction, actually. The result was `interface{}` abuse
-everywhere, reflection-based helpers, and the unfortunate `go generate`
-pipelines that turned code generation into a first-class workflow. The library
-itself either duplicated implementations for each concrete type, or punted to
-`interface{}` and runtime assertions. If you are a user, you were told to
-copy-paste sort functions.
+treatment because it is _such_ a perfect illustration of the team's priorities.
+Go 1.0 shipped sometime in 2012 without generics. Which is fine. Then, for
+almost a decade, the team _explicitly_ argued that code duplication is
+**PERFECTLY FINE** and was preferable to abstraction, actually. The result was
+`interface{}` abuse everywhere, reflection-based helpers, and the unfortunate
+`go generate` pipelines that turned code generation into a first-class workflow.
+The library itself either duplicated implementations for each concrete type, or
+punted to `interface{}` and runtime assertions. If you were a user, you were
+told to copy-paste sort functions.
 
 This is supposed to be _pragmatic_, in case you haven't noticed.
 
@@ -271,7 +271,7 @@ cannot _accidentally_ implement a trait. If you change a trait's definition, the
 compiler tells you exactly which `impl` blocks need updating. The contract is in
 the source, not inferred from the method set.
 
-## But The Concurrency!
+## But The Concurrency
 
 Go's concurrency model is one of its marketed features and perhaps the first to
 be mentioned in response when you criticize Go. It is also where the gap between
@@ -280,7 +280,7 @@ appearance and reality is widest.
 Goroutines are _genuinely_ cheap.
 
 The "share memory by communicating" slogan gestures at CSP and the channels
-_may_ look principled, however, as if to really rub salt in the wound the
+_may_ look principled, however, as if to really rub salt in the wound, the
 language provides _none_ of the static guarantees that would make any of it
 actually robust. Data races are runtime errors at best: the race detector is
 opt-in via `go test -race`, disabled in production by default, and only catches
@@ -302,8 +302,8 @@ lifecycle tied to any scope. A function can return while the goroutines it
 spawned are still running, still holding references to state that should have
 been released, possibly blocked forever on a channel that will never receive.
 Goroutine leaks are _trivially_ easy to produce. The standard mitigation is
-`context.Context`, but passing it is optional and checking the cancellation
-signal is optional and nothing enforces either. Kotlin coroutines have lexically
+`context.Context`, but passing it is optional, checking the cancellation signal
+is optional, and nothing enforces either. Kotlin coroutines have lexically
 scoped lifetimes built into the runtime. Go has documentation asking you to be
 careful.
 
@@ -341,7 +341,7 @@ you're doing. Rust's `Drop` triggers at block exit without any special syntax.
 The resource is released when the owning variable goes out of scope and that's
 the end of it.
 
-## At Least It's Simple!
+## At Least It's Simple
 
 I think the first and most trivial element of confusion will come from how Go
 programs will be _structured_. I find it to be the exact opposite, however, as
@@ -449,11 +449,11 @@ There is no language-level handle on it. Go's GC has improved dramatically and
 achieves sub-millisecond pause times in common workloads, but stop-the-world
 pauses still occur, and under heavy allocation pressure or with large heaps the
 pause behavior becomes less predictable. For trading systems, real-time control,
-audio pipelines, anything with hard latency requirements, a GC is disqualifying
-regardless of how good it is, because "very short pause" and "no pause" are not
-the same thing. Rust has no GC. Stack allocation is the default. Heap allocation
-is explicit through `Box<T>`, `Arc<T>`, `Vec<T>`. You know where every
-allocation is because, well you know, you put it there.
+audio pipelines, or anything with hard latency requirements, a GC is
+disqualifying regardless of how good it is, because "very short pause" and "no
+pause" are not the same thing. Rust has no GC. Stack allocation is the default.
+Heap allocation is explicit through `Box<T>`, `Arc<T>`, `Vec<T>`. You know where
+every allocation is because, well, you put it there.
 
 This is, if anything, where the section should land: Go is simple only if
 "simple" means fewer visible concepts on the surface. Once the program has to
@@ -490,16 +490,16 @@ and convention to avoid in Go, and discipline and conventions fail under time
 pressure, team growth, and the ordinary entropy of a large codebase.
 
 The defense of Go is that all of this is manageable. With experienced teams,
-with good code review, with staticcheck in CI, with the race detector in test
-runs and context used consistently, Go codebases can be safe and maintainable.
-This is true. The question is why the language demands that entire investment of
-infrastructure and discipline to achieve properties that Rust, Haskell, Kotlin,
-and Swift provide structurally. Go was designed to solve Google's specific
-operational problems: fast compilation, easy onboarding for programmers of
-widely varying experience, readable code review at massive scale just to name a
-few. And sure, these _are_ real goals, held with clear intent. The original team
-understood exactly what they were leaving out. They made deliberate tradeoffs,
-consistently applied.
+with good code review, with staticcheck in CI, and with the race detector in
+test runs and context used consistently, Go codebases can be safe and
+maintainable. This is true. The question is why the language demands that entire
+investment of infrastructure and discipline to achieve properties that Rust,
+Haskell, Kotlin, and Swift provide structurally. Go was designed to solve
+Google's specific operational problems: fast compilation, easy onboarding for
+programmers of widely varying experience, and readable code review at massive
+scale, just to name a few. And sure, these _are_ real goals, held with clear
+intent. The original team understood exactly what they were leaving out. They
+made deliberate tradeoffs, consistently applied.
 
 _The problem_, however, is that optimizing for easy onboarding means in this
 case (and many others) optimizing against correctness. A language you can learn
