@@ -1,26 +1,37 @@
-import { existsSync, readdirSync } from "fs";
+import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import { readFile } from "fs/promises";
 
 /**
- * Reads the workspaces from the nearest package.json.
- * @param {string} rootDir - The root directory to search for package.json.
+ * Reads the workspaces from the nearest package.json or pnpm-workspace.yaml.
+ * @param {string} rootDir - The root directory to search.
  * @returns {Promise<string[]>} - Array of workspace globs.
  */
 export async function getWorkspaces(rootDir) {
   const pkgPath = join(rootDir, "package.json");
-  let pkg;
   try {
-    pkg = JSON.parse(await readFile(pkgPath, "utf8"));
+    const pkg = JSON.parse(await readFile(pkgPath, "utf8"));
+    if (pkg && Array.isArray(pkg.workspaces)) {
+      return pkg.workspaces;
+    }
   } catch {
-    return [];
+    // package.json may not exist or be unreadable
   }
-  if (pkg && Array.isArray(pkg.workspaces)) {
-    return pkg.workspaces;
+
+  const workspaceYamlPath = join(rootDir, "pnpm-workspace.yaml");
+  try {
+    const yaml = readFileSync(workspaceYamlPath, "utf8");
+    const packages = yaml.match(/^packages:\s*\n((?:\s*-\s*.+\n?)*)/m);
+    if (packages && packages[1]) {
+      return packages[1]
+        .split("\n")
+        .map((line) => line.trim().replace(/^-\s*/, ""))
+        .filter(Boolean);
+    }
+  } catch {
+    // pnpm-workspace.yaml may not exist
   }
-  if (pkg && pkg.workspaces && Array.isArray(pkg.workspaces.packages)) {
-    return pkg.workspaces.packages;
-  }
+
   return [];
 }
 
