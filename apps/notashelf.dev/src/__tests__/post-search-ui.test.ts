@@ -121,9 +121,19 @@ function buildDOM() {
   viewLabel.textContent = "View";
 
   document.body.append(
-    form, resetBtn, allTagBtn, jsTagBtn, tsTagBtn,
-    noResults, postList, postListAll, pagination,
-    viewToggle, paginationIcon, allIcon, viewLabel,
+    form,
+    resetBtn,
+    allTagBtn,
+    jsTagBtn,
+    tsTagBtn,
+    noResults,
+    postList,
+    postListAll,
+    pagination,
+    viewToggle,
+    paginationIcon,
+    allIcon,
+    viewLabel,
   );
 }
 
@@ -211,7 +221,9 @@ describe("post-search-ui", () => {
       const searchUI = new PostSearchUI(mockPosts);
       await searchUI.init();
 
-      const searchInput = document.getElementById("search-input") as HTMLInputElement;
+      const searchInput = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement;
       expect(searchInput.value).toBe("test query");
     });
 
@@ -220,7 +232,9 @@ describe("post-search-ui", () => {
       const searchUI = new PostSearchUI(mockPosts);
       await searchUI.init();
 
-      const searchInput = document.getElementById("search-input") as HTMLInputElement;
+      const searchInput = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement;
       searchInput.value = "javascript";
       searchInput.dispatchEvent(new Event("input"));
       vi.advanceTimersByTime(300);
@@ -234,7 +248,9 @@ describe("post-search-ui", () => {
       const searchUI = new PostSearchUI(mockPosts);
       await searchUI.init();
 
-      const searchForm = document.getElementById("search-form") as HTMLFormElement;
+      const searchForm = document.getElementById(
+        "search-form",
+      ) as HTMLFormElement;
       const event = new Event("submit");
       const preventDefaultSpy = vi.spyOn(event, "preventDefault");
       searchForm.dispatchEvent(event);
@@ -246,8 +262,12 @@ describe("post-search-ui", () => {
       const searchUI = new PostSearchUI(mockPosts);
       await searchUI.init();
 
-      const searchInput = document.getElementById("search-input") as HTMLInputElement;
-      const clearButton = document.getElementById("clear-search") as HTMLButtonElement;
+      const searchInput = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement;
+      const clearButton = document.getElementById(
+        "clear-search",
+      ) as HTMLButtonElement;
       searchInput.value = "test";
       clearButton.dispatchEvent(new Event("click"));
       expect(searchInput.value).toBe("");
@@ -258,7 +278,9 @@ describe("post-search-ui", () => {
       const searchUI = new PostSearchUI(mockPosts);
       await searchUI.init();
 
-      const tagButton = document.querySelector('[data-tag="javascript"]') as HTMLButtonElement;
+      const tagButton = document.querySelector(
+        '[data-tag="javascript"]',
+      ) as HTMLButtonElement;
       tagButton.dispatchEvent(new Event("click"));
       expect(tagButton.classList.contains("active")).toBe(true);
     });
@@ -268,13 +290,18 @@ describe("post-search-ui", () => {
       const searchUI = new PostSearchUI(mockPosts);
       await searchUI.init();
 
-      const viewToggle = document.getElementById("view-toggle") as HTMLButtonElement;
+      const viewToggle = document.getElementById(
+        "view-toggle",
+      ) as HTMLButtonElement;
       viewToggle.dispatchEvent(new Event("click"));
 
       const postList = document.querySelector(".post-list") as HTMLElement;
-      const postListAll = document.querySelector(".post-list-all") as HTMLElement;
+      const postListAll = document.querySelector(
+        ".post-list-all",
+      ) as HTMLElement;
       expect(
-        postList.style.display === "none" || postListAll.style.display === "none",
+        postList.style.display === "none" ||
+          postListAll.style.display === "none",
       ).toBe(true);
     });
 
@@ -283,9 +310,15 @@ describe("post-search-ui", () => {
       const searchUI = new PostSearchUI(mockPosts);
       await searchUI.init();
 
-      const searchInput = document.getElementById("search-input") as HTMLInputElement;
-      const resetButton = document.getElementById("reset-filters") as HTMLButtonElement;
-      const tagButton = document.querySelector('[data-tag="javascript"]') as HTMLButtonElement;
+      const searchInput = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement;
+      const resetButton = document.getElementById(
+        "reset-filters",
+      ) as HTMLButtonElement;
+      const tagButton = document.querySelector(
+        '[data-tag="javascript"]',
+      ) as HTMLButtonElement;
 
       searchInput.value = "test";
       tagButton.classList.add("active");
@@ -300,7 +333,9 @@ describe("post-search-ui", () => {
       const searchUI = new PostSearchUI(mockPosts);
       await searchUI.init();
 
-      const paginationLink = document.querySelector(".pagination-link") as HTMLAnchorElement;
+      const paginationLink = document.querySelector(
+        ".pagination-link",
+      ) as HTMLAnchorElement;
       paginationLink.dispatchEvent(new Event("click"));
       expect(mockPostSearchState.setSearchState).toHaveBeenCalled();
     });
@@ -313,7 +348,9 @@ describe("post-search-ui", () => {
       (searchUI as any).isViewingAll = true;
       (searchUI as any).initializeCachedElements();
 
-      const searchInput = document.getElementById("search-input") as HTMLInputElement;
+      const searchInput = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement;
       searchInput.value = "xyznonexistent";
       (searchUI as any).performSearch();
 
@@ -337,7 +374,9 @@ describe("post-search-ui", () => {
       const searchUI = new PostSearchUI(mockPosts);
       await searchUI.init();
 
-      const searchInput = document.getElementById("search-input") as HTMLInputElement;
+      const searchInput = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement;
       const performSearchSpy = vi.spyOn(searchUI as any, "performSearch");
 
       searchInput.value = "";
@@ -364,12 +403,16 @@ describe("post-search-ui", () => {
       await searchUI.init();
 
       (searchUI as any).isViewingAll = true;
-      const searchInput = document.getElementById("search-input") as HTMLInputElement;
+      const searchInput = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement;
       searchInput.value = "test";
       (searchUI as any).performSearch();
 
       const postList = document.querySelector(".post-list") as HTMLElement;
-      const postListAll = document.querySelector(".post-list-all") as HTMLElement;
+      const postListAll = document.querySelector(
+        ".post-list-all",
+      ) as HTMLElement;
       expect(postList.style.display).toBe("none");
       expect(postListAll.style.display).toBe("");
     });
@@ -390,7 +433,9 @@ describe("post-search-ui", () => {
       document.querySelector(".post-list-all")?.append(extra);
 
       (searchUI as any).isViewingAll = true;
-      const searchInput = document.getElementById("search-input") as HTMLInputElement;
+      const searchInput = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement;
       searchInput.value = "test";
       expect(() => (searchUI as any).performSearch()).not.toThrow();
     });
@@ -401,7 +446,9 @@ describe("post-search-ui", () => {
       await searchUI.init();
 
       (searchUI as any).isViewingAll = false;
-      const tagButton = document.querySelector('[data-tag="javascript"]') as HTMLButtonElement;
+      const tagButton = document.querySelector(
+        '[data-tag="javascript"]',
+      ) as HTMLButtonElement;
       const updateViewModeSpy = vi.spyOn(searchUI as any, "updateViewMode");
 
       tagButton.dispatchEvent(new Event("click"));
@@ -415,7 +462,9 @@ describe("post-search-ui", () => {
       const searchUI = new PostSearchUI(mockPosts);
       await searchUI.init();
 
-      const allTagButton = document.querySelector('[data-tag=""]') as HTMLButtonElement;
+      const allTagButton = document.querySelector(
+        '[data-tag=""]',
+      ) as HTMLButtonElement;
       const performSearchSpy = vi.spyOn(searchUI as any, "performSearch");
       allTagButton.dispatchEvent(new Event("click"));
 
@@ -428,7 +477,9 @@ describe("post-search-ui", () => {
       const searchUI = new PostSearchUI(mockPosts);
       await searchUI.init();
 
-      const paginationIcon = document.getElementById("pagination-icon") as HTMLElement;
+      const paginationIcon = document.getElementById(
+        "pagination-icon",
+      ) as HTMLElement;
       const allIcon = document.getElementById("all-icon") as HTMLElement;
       const viewLabel = document.getElementById("view-label") as HTMLElement;
 

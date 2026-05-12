@@ -1,5 +1,4 @@
 import { PostSearchState } from "./utils/post-search";
-import type { PostEntry } from "@lib/types";
 
 interface DOMElements {
   searchInput: HTMLInputElement;
@@ -30,8 +29,7 @@ export class PostSearchUI {
     all: NodeListOf<HTMLLIElement> | null;
   } = { paginated: null, all: null };
 
-  // allPosts kept for API compatibility
-  constructor(_allPosts: PostEntry[] = []) {
+  constructor() {
     this.elements = this.getDOMElements();
   }
 
@@ -53,7 +51,9 @@ export class PostSearchUI {
     ): T => {
       const el = document.querySelector(selector) as T | null;
       if (!el) {
-        console.warn(`Required element "${selector}" not found, using fallback`);
+        console.warn(
+          `Required element "${selector}" not found, using fallback`,
+        );
         const fallback = document.createElement("div") as unknown as T;
         fallback.hidden = true;
         return fallback;
@@ -126,12 +126,17 @@ export class PostSearchUI {
     this.elements.searchForm = clone(this.elements.searchForm);
     // Re-query form children from the cloned form to avoid stale references
     this.elements.searchInput =
-      (this.elements.searchForm.querySelector("#search-input") as HTMLInputElement | null) ??
-      (this.elements.searchForm.querySelector("[type=text]") as HTMLInputElement | null) ??
+      (this.elements.searchForm.querySelector(
+        "#search-input",
+      ) as HTMLInputElement | null) ??
+      (this.elements.searchForm.querySelector(
+        "[type=text]",
+      ) as HTMLInputElement | null) ??
       this.elements.searchInput;
     this.elements.clearButton =
-      (this.elements.searchForm.querySelector("#clear-search") as HTMLButtonElement | null) ??
-      this.elements.clearButton;
+      (this.elements.searchForm.querySelector(
+        "#clear-search",
+      ) as HTMLButtonElement | null) ?? this.elements.clearButton;
     this.elements.resetButton = clone(this.elements.resetButton);
     if (this.elements.viewToggle) {
       this.elements.viewToggle = clone(this.elements.viewToggle);

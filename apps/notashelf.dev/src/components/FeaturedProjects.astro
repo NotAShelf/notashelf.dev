@@ -17,7 +17,7 @@ const activeProjects = allProjects.filter((project) => project.data.active);
 const inactiveProjects = allProjects.filter((project) => !project.data.active);
 
 // Select projects based on mode
-let displayProjects: ProjectEntry[] = [];
+let displayProjects: ProjectEntry[];
 
 if (mode === "featured") {
   // For featured mode: Get ALL projects available for client-side selection

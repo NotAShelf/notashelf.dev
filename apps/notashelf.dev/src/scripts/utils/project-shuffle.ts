@@ -132,10 +132,7 @@ export class ProjectShuffle {
       `Shuffling recent projects: ${allCards.length} -> ${targetCount}`,
     );
 
-    const selectedIndices = this.getRandomIndices(
-      allCards.length,
-      targetCount,
-    );
+    const selectedIndices = this.getRandomIndices(allCards.length, targetCount);
 
     const selectedCards = selectedIndices
       .map((index) => allCards[index])
