@@ -14,13 +14,13 @@
     }
   },
   "peerDependencies": {
-    "astro": "^5.8.0"
+    "astro": "^5.8.0 || ^6.0.0"
   },
   "dependencies": {
-    "cssnano": "^7.0.7",
-    "glob": "^11.0.2",
-    "postcss": "^8.5.3",
-    "purgecss": "^7.0.2"
+    "cssnano": "^8.0.1",
+    "glob": "^13.0.6",
+    "postcss": "^8.5.14",
+    "purgecss": "^8.0.0"
   },
   "scripts": {
     "build": "tsc",
@@ -29,10 +29,10 @@
     "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "@types/node": "^22.15.21",
-    "astro": "^5.9.4",
-    "typescript": "^5.9.2",
-    "vitest": "^3.2.4"
+    "@types/node": "^25.7.0",
+    "astro": "^6.3.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.6"
   },
   "keywords": [
     "astro",

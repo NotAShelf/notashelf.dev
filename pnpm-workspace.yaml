@@ -8,3 +8,8 @@ onlyBuiltDependencies:
   - esbuild
   - sharp
 
+peerDependencyRules:
+  allowedVersions:
+    eslint: "10"
+    typescript: "6"
+

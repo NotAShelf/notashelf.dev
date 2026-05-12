@@ -2,7 +2,7 @@
 const { affiliation } = Astro.props;
 
 // Dynamically import the logo from src/images
-let logoSrc: string | undefined = undefined;
+let logoSrc: string | undefined;
 try {
   logoSrc = (await import(`../images/${affiliation.logo}`)).default;
 } catch {
