@@ -38,7 +38,7 @@
     "postcss": "^8.5.14",
     "postcss-cli": "^11.0.1",
     "postcss-normalize": "^13.0.1",
-    "postcss-preset-env": "^11.2.1",
+    "postcss-preset-env": "^11.3.0",
     "purgecss": "^8.0.0",
     "rehype-external-links": "^3.0.0",
     "rehype-stringify": "^10.0.1",
