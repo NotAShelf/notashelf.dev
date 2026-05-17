@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-import { join, dirname } from "path";
+import { join, dirname, isAbsolute } from "path";
 import { fileURLToPath } from "url";
 import { spawn } from "child_process";
-import { readFileSync } from "fs";
+import { readFileSync, cpSync, mkdtempSync, rmSync } from "fs";
 import { getWorkspaces, resolveWorkspaceDirs } from "./utils/workspace.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -18,6 +18,7 @@ function parseArgs(argv) {
   let workspaceName = undefined;
   let npmScript = "build";
   let extraArgs = [];
+  let outDir = undefined;
   for (let i = 2; i < argv.length; ++i) {
     if (argv[i] === "--all") {
       all = true;
@@ -26,17 +27,16 @@ function parseArgs(argv) {
     } else if (!npmScript && !argv[i].startsWith("--")) {
       npmScript = argv[i];
     } else if (argv[i] === "--outDir" && argv[i + 1]) {
-      extraArgs.push("--outDir", argv[i + 1]);
-      i++;
+      outDir = argv[++i];
     } else if (argv[i].startsWith("--outDir=")) {
-      extraArgs.push(argv[i]);
+      outDir = argv[i].slice("--outDir=".length);
     }
   }
-  return { all, workspaceName, npmScript, extraArgs };
+  return { all, workspaceName, npmScript, extraArgs, outDir };
 }
 
 async function main() {
-  const { all, workspaceName, npmScript, extraArgs } = parseArgs(process.argv);
+  const { all, workspaceName, npmScript, extraArgs, outDir } = parseArgs(process.argv);
 
   const workspaceGlobs = await getWorkspaces(rootDir);
   const workspaceDirs = resolveWorkspaceDirs(workspaceGlobs, rootDir);
@@ -67,15 +67,38 @@ async function main() {
     process.exit(1);
   }
 
+  // Astro uses rename() internally to move prerendered assets into outDir.
+  // If outDir is outside the build root (e.g. a Nix store path), rename()
+  // fails with EXDEV across mount boundaries. Build into a local temp dir
+  // first, then copy the result to the real outDir.
+  const crossDevice =
+    outDir !== undefined &&
+    isAbsolute(outDir) &&
+    !outDir.startsWith(rootDir + "/");
+
   // Build each selected workspace and collect results
   const results = [];
   for (const wsDir of targets) {
     const wsPkgName =
       getWorkspacePkgName(wsDir) || wsDir.replace(rootDir + "/", "");
+    let tempDir = null;
     try {
-      await runWorkspaceBuild(wsDir, [npmScript, ...extraArgs]);
+      let buildOutDir = outDir;
+      if (crossDevice) {
+        tempDir = mkdtempSync(join(wsDir, ".build-out-"));
+        buildOutDir = tempDir;
+      }
+      const outDirArgs =
+        buildOutDir !== undefined ? ["--outDir", buildOutDir] : [];
+      await runWorkspaceBuild(wsDir, [npmScript, ...extraArgs, ...outDirArgs]);
+      if (tempDir) {
+        cpSync(tempDir, outDir, { recursive: true });
+        rmSync(tempDir, { recursive: true, force: true });
+        tempDir = null;
+      }
       results.push({ name: wsPkgName, status: "success" });
     } catch (err) {
+      if (tempDir) rmSync(tempDir, { recursive: true, force: true });
       results.push({ name: wsPkgName, status: "fail", error: err });
     }
   }
