@@ -26,6 +26,9 @@ importers:
       purgecss:
         specifier: ^8.0.0
         version: 8.0.0
+      svelte:
+        specifier: ^5.55.5
+        version: 5.55.5(@typescript-eslint/types@8.59.3)
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -105,9 +108,6 @@ importers:
       prettier-plugin-astro-organize-imports:
         specifier: ^0.4.12
         version: 0.4.12(prettier-plugin-astro@0.14.1)(prettier@3.8.3)
-      svelte:
-        specifier: ^5.55.5
-        version: 5.55.5(@typescript-eslint/types@8.59.3)
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
