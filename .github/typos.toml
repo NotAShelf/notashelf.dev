@@ -1,5 +1,5 @@
 default.extend-ignore-words-re = [
-  "moreso",  # this is a valid word.
-  "ratatui", # this is a project name
+  "moreso",      # this is a valid word.
+  "(?i)ratatui", # this is a project name
 ]
 files.extend-exclude = [ "flake.lock" ]
