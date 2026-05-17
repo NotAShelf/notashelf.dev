@@ -52,7 +52,7 @@ in
     # to fetch deps for and build. Alas, NodeJS.
     pnpmDeps = fetchPnpmDeps {
       inherit (finalAttrs) pname src pnpmInstallFlags;
-      hash = "sha256-7SdXmb8Q0llurQEiDdeBD3OrJktS7po9SH4nmoq0zKk=";
+      hash = "sha256-Cs8e4AoWpHHESlinyW4xSezwSwwIKcjJUO+PxM9Yd6w=";
       fetcherVersion = 3; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
     };
 
@@ -65,7 +65,8 @@ in
     buildPhase = ''
       runHook preBuild
 
-      pnpm run build:web --outDir $out
+      mkdir -p $out/share/web
+      pnpm run build:web --outDir $out/share/web
 
       runHook postBuild
     '';
