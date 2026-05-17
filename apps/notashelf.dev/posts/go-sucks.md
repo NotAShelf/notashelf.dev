@@ -7,7 +7,7 @@ keywords: ["thoughts", "programming", "software"]
 
 I'll start with a disclaimer that I know will bother some of you. Maybe bother
 you _a lot_, or maybe make you laugh: this is not a screed from someone who
-doesn't understand Go. You wish it was, and frankly, I wish it was.
+doesn't understand Go. You wish it were, and frankly, I wish it was.
 Unfortunately for me, I have written Go in the past and I have also shipped Go
 to "prod" in the past. In fact, I continue to write Go when I'm too lazy or
 tired to care about correctness---for reasons we'll talk about shortly. It is
@@ -74,10 +74,10 @@ func process(path string) error {
 ```
 
 The actual logic (open, read, parse, and store) is four lines. FOUR. The error
-plumbing, however, is _twelve_. The ratio of structural signal noise is, if my
-math is correct, 3:1, and this is called explicit. Now compare it to Rust, where
-`?` propagates errors with identical semantics but doesn't consume your screen
-free estate.
+plumbing, however, is _twelve_. The signal-to-noise ratio is, if my math is
+correct, 3:1, and this is called explicit. Now compare it to Rust, where `?`
+propagates errors with identical semantics but doesn't consume your screen free
+estate.
 
 ```rust
 fn process(path: &str) -> Result<(), Error> {
@@ -210,7 +210,7 @@ a value passed to a function must not be mutated. Go has `const` for _primitive
 literals_ and that's it. Everything else is just... mutable. The alternative to
 immutability guarantees is "just don't mutate things!" is once again convention,
 or advice. There is no guarantee, and for a language catering to beginners this
-is too heavy of a footgun to hand loaded to the users.
+is too heavy of a footgun to hand _loaded_ to the users.
 
 ## Let's Talk Generics
 
@@ -234,7 +234,7 @@ non-generic type that introduces its own parameters, which rules out a wide
 class of useful designs. You cannot write, for example,
 `func (r *Repository) FindAll[T Entity]() ([]T, error)`.
 
-Your work around must be either making the entire struct generic, which may be
+Your workaround must be either making the entire struct generic, which may be
 structurally wrong, or moving to a free function, which discards the method set.
 Neither is satisfactory, and Rust has no such restriction. Type inference is
 local and frequently fails on anything involving interfaces or composite types,
