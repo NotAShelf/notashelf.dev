@@ -4,7 +4,7 @@
 class PostTableOfContents {
   private static readonly HEADING_SELECTOR =
     ".post-content h2, .post-content h3";
-  private static readonly TOC_ITEM_SELECTOR = ".toc-item";
+  private static readonly TOC_ITEM_SELECTOR = ".toc-item, .toc-sidebar-item";
   private static readonly ACTIVE_CLASS = "active";
   private static readonly SCROLL_OFFSET = 70;
 
@@ -35,41 +35,33 @@ class PostTableOfContents {
     headings: HTMLHeadingElement[],
     tocItems: HTMLAnchorElement[],
   ): IntersectionObserver {
-    const observerOptions: IntersectionObserverInit = {
-      rootMargin: "-80px 0px -30% 0px",
-      threshold: 0,
+    const visible = new Set<HTMLHeadingElement>();
+
+    const activate = () => {
+      // Always pick the topmost visible heading (first in document order)
+      const active = headings.find((h) => visible.has(h));
+      if (!active) return;
+      tocItems.forEach((item) => item.classList.remove(this.ACTIVE_CLASS));
+      tocItems
+        .filter((item) => item.getAttribute("href") === `#${active.id}`)
+        .forEach((item) => item.classList.add(this.ACTIVE_CLASS));
     };
 
     const observer = new IntersectionObserver(
       (entries: IntersectionObserverEntry[]) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const headingElement = entry.target as HTMLHeadingElement;
-            const headingId = headingElement.id;
-            const tocItem = tocItems.find(
-              (item) => item.getAttribute("href") === `#${headingId}`,
-            );
-
-            if (tocItem) {
-              // Remove active class from all items
-              tocItems.forEach((item) =>
-                item.classList.remove(this.ACTIVE_CLASS),
-              );
-
-              // Add active class to current item
-              tocItem.classList.add(this.ACTIVE_CLASS);
-            }
+            visible.add(entry.target as HTMLHeadingElement);
+          } else {
+            visible.delete(entry.target as HTMLHeadingElement);
           }
         });
+        activate();
       },
-      observerOptions,
+      { rootMargin: "-80px 0px -30% 0px", threshold: 0 },
     );
 
-    // Observe each heading
-    headings.forEach((heading) => {
-      observer.observe(heading);
-    });
-
+    headings.forEach((h) => observer.observe(h));
     return observer;
   }
 

@@ -88,8 +88,37 @@ const postSrc =
   date={date}
   showBackgroundGrid={false}
 >
+  <div
+    id="reading-progress"
+    role="progressbar"
+    aria-label="Reading progress"
+    aria-valuemin={0}
+    aria-valuemax={100}
+    aria-valuenow={0}
+  >
+  </div>
+  {
+    showToc && (
+      <nav class="toc-sidebar" aria-hidden="true" aria-label="Page navigation">
+        {headings.map((heading) => (
+          <a
+            href={`#${heading.id}`}
+            class={`toc-sidebar-item level-${heading.level}`}
+          >
+            {heading.text}
+          </a>
+        ))}
+      </nav>
+    )
+  }
+
+  <button class="back-to-top" aria-label="Back to top">↑</button>
+
   <article class="post">
-    <h1 class="post-title">{title}</h1>
+    <h1 class="post-title" id="post-title">
+      <a href="#post-title" class="title-anchor" aria-label="Link to title">#</a
+      >{title}
+    </h1>
 
     <div class="post-meta">
       <div class="meta-left">
@@ -148,8 +177,11 @@ const postSrc =
       )
     }
 
-    <div class="post-content">
-      <slot />
+    <div class="post-content-wrapper">
+      <div class="post-content">
+        <slot />
+      </div>
+      <div class="sidenotes-container" aria-label="Sidenotes"></div>
     </div>
 
     <div class="post-footer">
@@ -161,11 +193,42 @@ const postSrc =
 </BaseLayout>
 
 <script>
+  import "../scripts/post-enhancements.ts";
   import "../scripts/post-toc.ts";
+
+  const bar = document.getElementById("reading-progress");
+  if (bar) {
+    const update = () => {
+      const scrollTop = window.scrollY;
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      bar.style.width = `${pct}%`;
+      bar.setAttribute("aria-valuenow", String(Math.round(pct)));
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+  }
 </script>
 
 <style lang="scss">
   @use "../styles/global" as *;
+
+  #reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: $text-subtle;
+    z-index: 200;
+    transition: width 0.1s linear;
+    pointer-events: none;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
 
   .post {
     max-width: $content-width;
@@ -181,6 +244,7 @@ const postSrc =
     font-size: 2.5rem;
     margin-bottom: 1rem;
     line-height: 1.2;
+    position: relative;
   }
 
   .post-meta {

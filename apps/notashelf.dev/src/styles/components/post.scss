@@ -11,21 +11,6 @@ pre {
   position: relative;
   background-color: color.scale($primary, $lightness: 3%) !important;
 
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(
-      to right,
-      $border-light,
-      $text-subtle,
-      $border-light
-    );
-  }
-
   code {
     background: transparent;
     padding: 0;
@@ -351,11 +336,148 @@ a.footnote-ref {
   &.level-3 {
     padding-left: 1.5rem;
     font-size: 0.85rem;
+  }
+}
 
-    &::before {
-      content: "→";
-      margin-right: 0.3rem;
-      opacity: 0.5;
-    }
+// Title anchor
+.title-anchor {
+  position: absolute;
+  right: calc(100% + 0.35rem);
+  top: 50%;
+  transform: translateY(-50%);
+  color: $text-subtle;
+  text-decoration: none;
+  font-weight: normal;
+  font-size: 0.7em;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  white-space: nowrap;
+
+  .post-title:hover & {
+    opacity: 0.6;
+  }
+
+  &:hover {
+    opacity: 1 !important;
+  }
+}
+
+// Sidebar TOC
+.toc-sidebar {
+  position: fixed;
+  left: max(1rem, calc(50vw - 40ch - 14rem));
+  top: 6rem;
+  width: 12rem;
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+
+  &.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (max-width: 1400px) {
+    display: none;
+  }
+}
+
+.toc-sidebar-item {
+  display: block;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  text-decoration: none;
+  padding: 0.2rem 0;
+  color: $text-subtle;
+  transition: color 0.15s ease;
+
+  &:link,
+  &:visited {
+    color: $text-subtle;
+  }
+
+  &:hover {
+    color: $text-muted;
+  }
+
+  &.active,
+  &.active:link,
+  &.active:visited {
+    color: $secondary;
+  }
+
+  &.level-3 {
+    padding-left: 0.75rem;
+    font-size: 0.75rem;
+  }
+}
+
+// Sidenotes
+.post-content-wrapper {
+  position: relative;
+}
+
+.sidenotes-container {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 2rem);
+  width: 220px;
+  pointer-events: none;
+}
+
+.sidenote {
+  position: absolute;
+  width: 100%;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: $text-subtle;
+  pointer-events: auto;
+  scroll-margin-top: 80px;
+
+  p {
+    margin: 0;
+  }
+
+  .sidenote-num {
+    font-size: 0.7rem;
+    color: $text-muted;
+    margin-right: 0.2rem;
+  }
+}
+
+// Back to top button
+.back-to-top {
+  @include rounded-border;
+  @include smooth-transition(background-color);
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 0.4rem 0.75rem;
+  background: $button-bg;
+  border: 1px solid $border-light;
+  color: $text-muted;
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    background-color 0.15s ease;
+  z-index: 50;
+
+  &.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  &:hover {
+    background: $button-bg-hover;
+    color: $secondary;
   }
 }

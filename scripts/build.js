@@ -36,7 +36,9 @@ function parseArgs(argv) {
 }
 
 async function main() {
-  const { all, workspaceName, npmScript, extraArgs, outDir } = parseArgs(process.argv);
+  const { all, workspaceName, npmScript, extraArgs, outDir } = parseArgs(
+    process.argv,
+  );
 
   const workspaceGlobs = await getWorkspaces(rootDir);
   const workspaceDirs = resolveWorkspaceDirs(workspaceGlobs, rootDir);
