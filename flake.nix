@@ -1,19 +1,13 @@
 {
-  inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-
-    # <https://github.com/nix-systems/nix-systems>
-    systems.url = "github:nix-systems/default-linux";
-  };
-
+  inputs.nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
   outputs = {
     nixpkgs,
     self,
     ...
-  } @ inputs: let
+  }: let
     inherit (nixpkgs) legacyPackages lib;
 
-    systems = import inputs.systems;
+    systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];
     forEachSystem = lib.genAttrs systems;
     pkgsForEach = legacyPackages;
   in {
