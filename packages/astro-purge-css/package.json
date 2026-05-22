@@ -19,7 +19,7 @@
   "dependencies": {
     "cssnano": "^8.0.1",
     "glob": "^13.0.6",
-    "postcss": "^8.5.14",
+    "postcss": "^8.5.15",
     "purgecss": "^8.0.0"
   },
   "scripts": {
