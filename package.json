@@ -27,7 +27,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@types/eslint": "^9.6.1",
     "@types/postcss-normalize": "^9.0.4",
-    "@types/react": "^19.2.14",
+    "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
     "@types/unist": "^3.0.3",
     "@typescript-eslint/eslint-plugin": "^8.59.3",
