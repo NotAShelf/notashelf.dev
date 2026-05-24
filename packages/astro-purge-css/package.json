@@ -19,7 +19,7 @@
   "dependencies": {
     "cssnano": "^8.0.1",
     "glob": "^13.0.6",
-    "postcss": "^8.5.14",
+    "postcss": "^8.5.15",
     "purgecss": "^8.0.0"
   },
   "scripts": {
@@ -29,10 +29,10 @@
     "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "@types/node": "^25.7.0",
-    "astro": "^6.3.3",
+    "@types/node": "^25.9.1",
+    "astro": "^6.3.7",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.6"
+    "vitest": "^4.1.7"
   },
   "keywords": [
     "astro",
