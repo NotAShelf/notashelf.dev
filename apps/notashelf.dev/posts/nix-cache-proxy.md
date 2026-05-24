@@ -73,7 +73,7 @@ disk. ncro does not retain payload data once it is streamed through.
 
 ## What's Actually In It
 
-[architechture diagram]: https://github.com/feel-co/ncro/blob/main/docs/architecture.md#architecture
+[architecture diagram]: https://github.com/feel-co/ncro/blob/main/docs/architecture.md#architecture
 
 The interesting parts are the ones the [architecture diagram] (which you might
 or might not have paid attention to) doesn't show:
