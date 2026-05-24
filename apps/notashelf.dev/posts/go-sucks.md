@@ -2,6 +2,7 @@
 title: "Why I think Go is a Terrible Language"
 description: "Rants and Ramblings on this little known language known as Go"
 date: "2026-04-26"
+updated: "2026-05-24"
 keywords: ["thoughts", "programming", "software"]
 ---
 
@@ -29,14 +30,15 @@ What follows is a case. It is _my_ case about why I think Go is a terrible*
 language. This is, put most simply, my attempt at a precise, specific, and
 deliberately uncharitable document where the language deserves what is coming.
 It is about why Go is a failure of a design philosophy dressed up and paraded
-around as pragmatism.
-
-It is my pleasure to say that this is not one for beginners who seek
-reassurance. This is also not for experts who are extremely comfortable with
-their language. My goal is not changing your mind, but making my case out in the
-open. This is also not a hate mail towards Go, but a strongly worded opinion
-essay. I intend to write something truly wholesome for Rust in the future, and
-one truly vile for Zig. For now, let's talk about Go and its design choices.
+around as pragmatism. The post itself is not to dictate whether you should use
+Go or not. I'll make it very clear that I franky could not care less about what
+_you_ use. The post itself is to organize my thoughts, leave a structured and
+developed list of my arguments for those interested in why I don't like the
+language. This is also not for experts who are extremely comfortable with their
+language. My goal is not changing your mind, but making my case out in the open.
+This is also not a hate mail towards Go, but a strongly worded opinion essay. I
+intend to write something truly wholesome for Rust in the future, and one truly
+vile for Zig. For now, let's talk about Go and its design choices.
 
 ## Failure by Design
 
@@ -161,6 +163,8 @@ the method doesn't reference the receiver. A `nil` slice has `len 0`, and **is
 safe to range over**. A `nil` map panics on write but not on read. A `nil`
 channel blocks forever on receive or send. A closed channel panics on send.
 
+[Discipline]: https://www.youtube.com/watch?v=wHxOiAz4NF8
+
 That was a lot of `nil`s in one sentence. Phew. Anywho, the point is that those
 are not rules derived from a single principle, but a collection of special cases
 to memorize, and getting any one of them wrong produces a runtime panic with no
@@ -169,9 +173,8 @@ failures run _much_ deeper than just `nil`. Go has no sum types, no exhaustive
 matching, no non-nullable types, no const generics, no immutability _by
 default_. There are basic tools for making illegal states unrepresentable, and
 the designers knew this. They then explicitly rejected them in favor of runtime
-discipline. As much as I like
-[Discipline](https://www.youtube.com/watch?v=wHxOiAz4NF8), that is no substitute
-for proper language design.
+discipline. As much as I like [Discipline], that is no substitute for proper
+language design.
 
 The absence of sum types is the most damaging. In Rust you typically write:
 
@@ -211,6 +214,46 @@ literals_ and that's it. Everything else is just... mutable. The alternative to
 immutability guarantees is "just don't mutate things!" is once again convention,
 or advice. There is no guarantee, and for a language catering to beginners this
 is too heavy of a footgun to hand _loaded_ to the users.
+
+The type system's gaps extend into territory the standard critique rarely
+reaches. `encoding/json` unmarshals all numbers into `float64` when the target
+is `interface{}`, silently losing precision on integers exceeding the 53-bit
+IEEE 754 mantissa. The integer `9007199254740993` becomes
+`9.007199254740992e+15`. The fix is `Decoder.UseNumber()`, but the default path
+discards data with no warning. A `nil` slice marshals to `null` while an empty
+slice marshals to `[]`; a `nil` map marshals to `null` while an empty map
+marshals to `{}`. The distinction between "this field is absent" and "this field
+is present but empty" is semantically meaningful in many APIs, yet the language
+provides no way to declare which meaning a given value carries. The
+differentiation depends on a runtime property indistinguishable from emptiness
+in every other context.
+
+`panic(nil)` is indistinguishable from no panic at all. `recover()` returns
+`nil` when the panic value was `nil`, so a deferred recovery cannot tell whether
+it caught a `panic(nil)` or nothing happened. `recover()` itself only works when
+called directly inside a deferred function---wrapping it in a helper silently
+breaks it, with no compiler warning and no lint to catch the error. Comparing
+two `interface{}` values with `==` panics at runtime if the underlying types are
+incomparable, such as maps or slices, because the type information is erased at
+the comparison site. The compiler cannot protect you because the concrete type
+is gone.
+
+Until Go 1.22 in 2024, loop variables were reused across iterations:
+
+```go
+for _, item := range items {
+    go func() {
+        process(item) // every goroutine sees the last item
+    }()
+}
+```
+
+This was a known problem from the Go 1.0 proposals and fixed only after twelve
+years. The language team initially defended the behavior as consistent with the
+spec. The spec was wrong. Twelve years of production incidents before a
+language-level fix is institutional reluctance to acknowledge a design
+decision---reusing a loop variable for efficiency---produced a persistent,
+well-understood bug surface.
 
 ## Let's Talk Generics
 
@@ -270,6 +313,35 @@ explicit `impl Trait for Type` declarations. The intent is in the code. You
 cannot _accidentally_ implement a trait. If you change a trait's definition, the
 compiler tells you exactly which `impl` blocks need updating. The contract is in
 the source, not inferred from the method set.
+
+Now, a common counterargument is the consumer-side interface pattern: you define
+a narrow interface at the call site with only the methods you need, the compiler
+verifies the caller provides something that fits, and changing the interface
+surfaces every call site that needs updating. On its own terms this is
+reasonable. For protocol handlers and I/O pipelines---the domains Go was
+designed for---accepting "anything that has a `Read` method" is genuinely
+cleaner than requiring every type to declare its lineage. The problem is that
+this pattern coexists with _producer-side interfaces_ defined once and consumed
+everywhere: `json.Marshaler`, `fmt.Stringer`, `database/sql.Scanner`,
+`encoding.TextMarshaler`. These carry behavioral contracts that are not encoded
+in the type system. If you add a `MarshalJSON() ([]byte, error)` method to a
+struct for internal logging purposes, `json.Marshal` will call it instead of
+using reflection. Your JSON output changes silently---not a compile error, not a
+test failure unless you happen to have coverage on that exact path. The encoding
+packages are built around structural detection: `json.Marshal` checks for
+`Marshaler`, then `TextMarshaler`, then falls through to reflection.
+`fmt.Sprintf` checks for `Stringer`. `database/sql` checks for `Scanner`. Add
+the right method name, and the behaviour of your program changes at a distance
+without your knowledge or consent.
+
+This problem compounds over time through interface pollution. Because types
+satisfy interfaces implicitly, a type that grows methods through maintenance may
+begin satisfying interfaces it never previously matched. A data transfer object
+that acquires a `Write([]byte) (int, error)` method because someone embedded a
+buffer for convenience is now an `io.Writer`. Code that accepted an `io.Writer`
+will accept this DTO, and the mismatch between "this is a writable buffer" and
+"this is a data object that happens to have a Write method" becomes a design
+problem the type system cannot surface.
 
 ## But The Concurrency
 
@@ -340,6 +412,38 @@ workaround that exists because the primitive isn't expressive enough for what
 you're doing. Rust's `Drop` triggers at block exit without any special syntax.
 The resource is released when the owning variable goes out of scope and that's
 the end of it.
+
+Less discussed are the channel semantics themselves, which form a matrix of
+runtime behaviors with no unifying principle. A send on a nil channel blocks
+forever. A receive from a nil channel blocks forever. Closing a nil channel
+panics. Sending on a closed channel panics. Receiving from a closed channel
+returns the zero value immediately. Closing a closed channel panics. Six
+distinct runtime behaviors for three states of a single construct, every one of
+them a runtime event with no compile-time guard. The language that prides itself
+on simplicity forces you to memorize this table.
+
+`time.After` is another trapdoor. Used in a `select` loop it allocates a new
+timer on every iteration, and the timer is not garbage collected until it fires.
+Under load, the number of pending timers grows without bound. The fix is
+`time.NewTimer` and explicit `Stop()`, but the library offers the footgun as the
+shorter path and hopes the developer reads the caveat in the documentation.
+Likewise, `sync.WaitGroup` is a raw counter with `Add` and `Done` and no static
+enforcement that the two balance. Call `Done` one extra time across a goroutine
+boundary and the program panics with `sync: negative WaitGroup counter`, a
+message that tells you the counter went negative but not which goroutine drove
+it there. Rust's `WaitGroup` does not exist because `std::sync::Arc` and scoped
+threads make the pattern unnecessary. When you need it, `Crossbeam` provides one
+with static drop guards. Go gives you a volatile integer.
+
+`net/http` ships with `ServeHTTP(ResponseWriter, *Request)` returning nothing.
+Every error path inside every handler must be handled inline instead of
+propagated to middleware that converts errors to responses. The community has
+reinvented
+`type HandlerWithError func(http.ResponseWriter, *http.Request)
+error` in
+roughly every Go web framework ever written. The standard library chose a
+signature that every non-trivial user must wrap or replace to achieve basic
+error composition.
 
 ## At Least It's Simple
 
@@ -548,3 +652,33 @@ choosing and why. It was a clear set of priorities, consistently applied, that
 produced a language optimized for a narrow set of operational concerns at the
 direct expense of correctness. The gap between what Go lets you build and what
 you can actually prove about what you built is not a bug in Go. It is Go.
+
+And that gap exists for a reason. Go was designed for Google's specific
+operational constraints circa 2009--2012: a monorepo with two billion lines of
+code, tens of thousands of engineers with widely varying experience, a build
+graph where every second of compilation time multiplied across the organization.
+Fast compilation, mechanical readability, and low abstraction were not aesthetic
+choices. They were operational requirements. The language satisfies them. The
+problem is that nearly every Go user is not Google. They do not have Google's
+SRE culture absorbing the cost of runtime failures. They do not have the code
+review bandwidth that makes convention-based correctness feasible at scale. For
+them the tradeoffs Go made for Google become liabilities. The fast compilation
+matters less than the bugs the language fails to prevent. The onboarding speed
+matters less than the invariants you cannot encode. Go was designed for an
+organization whose scale is unique in the industry and marketed as a
+general-purpose language. The mismatch between the design target and the actual
+user base is the root cause of most of the frustrations catalogued here.
+
+None of this means Go is useless, or that writing Go is malpractice. The runtime
+is excellent. The toolchain is fast enough to be aspirational. The standard
+library is coherent within the constraints of the language. Generics removed the
+worst of the `interface{}` abuse. The race detector catches real bugs. Go
+succeeds at what it was designed for: fast compilation, rapid onboarding, and
+readable code at massive scale. But what it was designed for is narrower than
+its user base assumes, and a language optimized for one organization's
+operational problems at the direct expense of correctness is---for most other
+users---a language that makes wrong programs easy to write. The ceiling was
+chosen knowingly. The question is whether you want to live under it, and whether
+you think the tradeoff of knowing how to deal with a language's quirks is worth
+not picking a language with considerably less quirks.
+
