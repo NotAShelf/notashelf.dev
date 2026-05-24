@@ -13,6 +13,7 @@
     "baseUrl": ".",
     "paths": {
       "astro-email-obfuscation": ["packages/astro-email-obfuscation"],
+      "astro-mathjax": ["packages/astro-mathjax"],
       "astro-plausible": ["packages/astro-plausible"],
       "astro-purge-css": ["packages/astro-purge-css"],
       "remark-em-dash": ["packages/remark-em-dash"],
@@ -22,6 +23,7 @@
   "references": [
     { "path": "./apps/notashelf.dev" },
     { "path": "./packages/astro-email-obfuscation" },
+    { "path": "./packages/astro-mathjax" },
     { "path": "./packages/astro-plausible" },
     { "path": "./packages/astro-purge-css" },
     { "path": "./packages/remark-em-dash" },

@@ -1,0 +1,51 @@
+{
+  "name": "astro-mathjax",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "MathJax math rendering for Astro via remark-math and rehype-mathjax",
+  "author": "NotAShelf",
+  "license": "MPL-2.0",
+  "main": "index.ts",
+  "types": "index.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.ts"
+    }
+  },
+  "files": [
+    "index.ts",
+    "index.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "astro",
+    "astro-integration",
+    "math",
+    "mathjax",
+    "remark",
+    "rehype"
+  ],
+  "peerDependencies": {
+    "astro": "^5.8.0 || ^6.0.0"
+  },
+  "dependencies": {
+    "remark-math": "^6.0.0",
+    "rehype-mathjax": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.7"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -8,6 +8,7 @@ import partytown from "@astrojs/partytown";
 import svelte from "@astrojs/svelte";
 
 // Personal integrations or plugins
+import mathjax from "astro-mathjax";
 import plausible from "astro-plausible";
 import purgeCss from "astro-purge-css";
 import emailObfuscation from "astro-email-obfuscation";
@@ -93,6 +94,7 @@ export default defineConfig({
       },
     }),
     svelte(),
+    mathjax(),
     mdx({
       gfm: true,
       smartypants: true,
