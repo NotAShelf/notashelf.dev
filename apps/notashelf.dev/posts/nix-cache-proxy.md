@@ -53,7 +53,7 @@ static and request-local.
 
 ## ncro, Briefly
 
-[ncro]: https://github.com/notashelf/ncro
+[ncro]: https://github.com/feel-co/ncro
 
 [ncro]---Nix Cache Route Optimizer, pronounced Necro---is a small HTTP proxy
 that sits between `nix-daemon` and your substituters. It is about three thousand
