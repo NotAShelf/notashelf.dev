@@ -8,34 +8,40 @@ keywords: ["software", "programming", "nix"]
 Nix's substituter model is one of those designs that is _almost_ right, but
 isn't _exactly_ there. It is simple in itself: you list a few binary caches in
 `nix.conf`, the daemon walks them in order, and if the path you want is anywhere
-on the internet a build doesn't have to happen on your laptop. The binary cache
-is often listed as a _strength_ of NixOS , but it's actually a strength of Nix
-and a bare minimum for something like NixOS to work for users. Which is to say
-that it's actually perfectly fine until you have a large enough multi-cache
-setup for your configuration's dependencies, or in rarer cases, your projects
-dependencies. By which I mean multiple binary cache instances because you
-decided to fetch massive C++ and Rust projects from the internet.
+on the internet a build doesn't have to happen on your poor laptop from 2001.
+The binary cache system is often listed as a _strength_ of NixOS , but it's
+actually a _strength of Nix_, and a bare minimum for something like NixOS to
+work for its users. Which is to say that it's actually perfectly fine until you
+have a large enough multi-cache setup for your configuration's dependencies, or
+in rarer cases, your projects dependencies. By which I mean multiple binary
+cache instances because you decided to fetch massive C++ and Rust projects from
+the internet that need to be built, on your system.
 
-In such a case the first cache in your list is almost always
-`https://cache.nixos.org`. It is fast, it is global, and it does not have your
-overlay's packages. The second tends to be something like the `nix-community`
-cache, because you usually pull something really useful [^1] from the
-nix-community organization. In less common cases you also add a third party
-project's Cachix and occasionally, if you're technical enough, your homelab's
-private cache. In such a setup every narinfo lookup walks that list. Every
-`nix-shell -p hello` becomes a serialized scan across four hosts on three
+In the case of a rather complex setup, the first cache in your substituter list
+is almost always `https://cache.nixos.org`. It is fast, it is global, and it has
+the binary substitutions for your system to be built in a few minutes. It does
+not, however, have your overlay's packages. The second tends to be something
+like the `nix-community` cache, because you usually pull something really useful
+[^1] from the nix-community organization or just hope it has some overlay
+packages that you need in your obscure hardware setup. In less common cases you
+also add a third party project's Cachix (or a similar 3rd party) and
+occasionally, if you're technical (or dedicated) enough, your homelab's private
+cache. In such a setup, every narinfo lookup walks that _rather large_ list.
+Every `nix-shell -p hello` becomes a serialized scan across four hosts on three
 continents because Nix has no concept of _which substituter is most likely to
 answer for this path_. It just asks them all, in the order you wrote them down,
 one after the other.
 
-[^1]: Cough [nh](https://github.com/nix-community/nh) cough. It's useful, it's
-    large, and it's annoying to build if you're building from the master branch
-    because Rust is just like that.
+[^1]: _Cough_ [nh](https://github.com/nix-community/nh) _cough_. It's useful,
+    it's large, and it's annoying to build if you're building from the master
+    branch because Rust is just like that. I can also list Hyprland in the
+    things I fetch from its own flake and hope the cache has it working. What? I
+    like my software fresh.
 
 ## The Shape of the Problem
 
-To explain why a proxy is the right answer, you have to be honest about what
-Nix's substituter logic _is_:
+To explain why a proxy is the right answer, you---or rather, I---have to be
+honest about what Nix's substituter logic _is_:
 
 - A loop over `substituters`, in order.
 - For each: `HEAD /<hash>.narinfo`. If 200, fetch and use it. If 404, continue.
@@ -57,7 +63,11 @@ static and request-local.
 
 [ncro]---Nix Cache Route Optimizer, pronounced Necro---is a small HTTP proxy
 that sits between `nix-daemon` and your substituters. It is about three thousand
-lines of clean, performant Rust code. It does three things:
+[^2] lines of clean, performant Rust code. It does three things:
+
+[^2]: A bit more than that now, but the tool itself is feature-complete and
+    functional. Not sure if I'll stop tinkering with the tool, but the scope is
+    well-defined by itself.
 
 1. On a narinfo lookup, it _races_ all configured upstreams in parallel with
    `HEAD` and remembers which one won.
