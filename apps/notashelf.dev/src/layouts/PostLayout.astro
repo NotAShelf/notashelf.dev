@@ -220,6 +220,12 @@ const sourceHref = `${postSrc}/blob/${gitRevision}/${
 <style lang="scss">
   @use "../styles/global" as *;
 
+  @media (min-width: 1250px) {
+    :global(.footnotes) {
+      display: none;
+    }
+  }
+
   #reading-progress {
     position: fixed;
     top: 0;

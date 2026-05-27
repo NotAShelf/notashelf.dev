@@ -428,6 +428,10 @@ a.footnote-ref {
   left: calc(100% + 2rem);
   width: 220px;
   pointer-events: none;
+
+  @media (max-width: 1249px) {
+    display: none;
+  }
 }
 
 .sidenote {

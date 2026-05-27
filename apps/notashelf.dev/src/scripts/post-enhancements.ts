@@ -16,9 +16,6 @@ function initSidenotes(): void {
   );
   if (!refs.length) return;
 
-  // Only activate on screens wide enough to show sidenotes
-  if (window.innerWidth < 1250) return;
-
   refs.forEach((ref) => {
     const targetId = ref.getAttribute("href")?.slice(1);
     if (!targetId) return;
@@ -30,20 +27,34 @@ function initSidenotes(): void {
     clone.querySelector(".data-footnote-backref")?.remove();
 
     const num = ref.textContent?.trim() ?? "";
-
     const aside = document.createElement("aside");
     aside.className = "sidenote";
-    aside.id = targetId; // transfer id so #user-content-fn-N scrolls here
     aside.innerHTML = `<sup class="sidenote-num">${num}</sup> ${clone.innerHTML.trim()}`;
-
-    // Remove id from original li so the hash no longer points into the hidden section
-    fnLi.removeAttribute("id");
-
     aside.style.top = `${getTopRelative(ref, wrapper)}px`;
     container.appendChild(aside);
   });
 
-  footnotesSection.style.display = "none";
+  // Mirror the CSS breakpoint directly; 1250px matches max-width:1249px boundary.
+  const sidenoteActive = window.matchMedia("(min-width: 1250px)").matches;
+
+  if (sidenoteActive) {
+    // Transfer ids now that we know sidenotes are shown
+    document.querySelectorAll<HTMLElement>(".sidenote").forEach((aside, i) => {
+      const ref = refs[i];
+      if (!ref) return;
+      const targetId = ref.getAttribute("href")?.slice(1);
+      if (!targetId) return;
+      const fnLi = document.getElementById(targetId); // find li first
+      aside.id = targetId;
+      fnLi?.removeAttribute("id");
+    });
+
+    document
+      .querySelectorAll(
+        '.toc-item[href="#footnote-label"], .toc-sidebar-item[href="#footnote-label"]',
+      )
+      .forEach((el) => el.remove());
+  }
 }
 
 function initBackToTop(): void {
