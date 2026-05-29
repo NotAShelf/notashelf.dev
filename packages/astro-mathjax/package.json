@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "remark-math": "^6.0.0",
-    "rehype-mathjax": "^4.0.0"
+    "rehype-mathjax": "^7.1.0"
   },
   "devDependencies": {
     "@types/node": "^25.9.1",
