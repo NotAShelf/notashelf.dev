@@ -2,12 +2,13 @@ import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 
 const posts = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./posts" }),
+  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "../../content/posts" }),
   schema: z.object({
     title: z.string().max(99),
     description: z.string().optional(),
     date: z.coerce.date(),
     updated: z.coerce.date().optional(),
+    category: z.string().default("uncategorized"),
     keywords: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
     archived: z.boolean().optional().default(false),

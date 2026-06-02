@@ -21,7 +21,7 @@ const frontmatter = convertedData || {
 };
 ---
 
-<PostLayout frontmatter={frontmatter}>
+<PostLayout frontmatter={frontmatter} sourcePath={entry.filePath}>
   <ArchiveBanner />
   <Content />
 </PostLayout>

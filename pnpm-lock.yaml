@@ -144,6 +144,9 @@ importers:
       '@mdx-js/mdx':
         specifier: ^3.1.1
         version: 3.1.1
+      '@notashelf/content':
+        specifier: workspace:*
+        version: link:../../content
       astro:
         specifier: ^6.3.7
         version: 6.3.7(@types/node@25.9.1)(jiti@2.7.0)(rollup@4.60.4)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
@@ -259,6 +262,8 @@ importers:
       '@astrojs/check':
         specifier: ^0.9.9
         version: 0.9.9(prettier-plugin-astro@0.14.1)(prettier@3.8.3)(typescript@6.0.3)
+
+  content: {}
 
   packages/astro-email-obfuscation:
     dependencies:

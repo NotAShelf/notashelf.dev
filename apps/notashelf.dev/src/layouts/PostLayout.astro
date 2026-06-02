@@ -11,9 +11,10 @@ export interface Props {
     updated?: string;
     keywords?: string[];
   };
+  sourcePath?: string;
 }
 
-const { frontmatter } = Astro.props;
+const { frontmatter, sourcePath } = Astro.props;
 const { title, description, date, updated, keywords = [] } = frontmatter;
 
 // Format date if it exists
@@ -79,6 +80,11 @@ const gitRevision = import.meta.env.GIT_REV || "main";
 // or default to the site source
 const postSrc =
   import.meta.env.SITE_SRC || "https://github.com/notashelf/notashelf.dev";
+
+const normalizedSourcePath = sourcePath?.replace(/^(\.\.\/)+/, "");
+const sourceHref = `${postSrc}/blob/${gitRevision}/${
+  normalizedSourcePath ?? `content/posts/${slug}.${fileExtension}`
+}`;
 ---
 
 <BaseLayout
@@ -136,7 +142,7 @@ const postSrc =
         }
         <span class="reading-time">{readingTime} min read</span>
         <a
-          href={`${postSrc}/blob/${gitRevision}/apps/notashelf.dev/posts/${slug}.${fileExtension}`}
+          href={sourceHref}
           class="source-link"
           target="_blank"
           rel="noopener noreferrer"

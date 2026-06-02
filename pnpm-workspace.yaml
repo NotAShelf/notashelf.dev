@@ -1,6 +1,7 @@
 packages:
   - apps/*
   - packages/*
+  - content
 
 onlyBuiltDependencies:
   - '@parcel/watcher'
@@ -12,4 +13,3 @@ peerDependencyRules:
   allowedVersions:
     eslint: "10"
     typescript: "6"
-
