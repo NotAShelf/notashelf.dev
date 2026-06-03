@@ -417,6 +417,28 @@ a.footnote-ref {
   }
 }
 
+// Mermaid diagrams
+// Rendered client-side by post-enhancements.ts. Mermaid sets
+// data-processed="true" on the element once it has injected the SVG, so we
+// hide the raw source text until then to avoid a flash of unrendered code.
+pre.mermaid {
+  background: transparent;
+  padding: 0;
+  margin: 1.5rem 0;
+  text-align: center;
+  overflow-x: auto;
+
+  &:not([data-processed]) {
+    color: transparent;
+    user-select: none;
+  }
+
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
 // Sidenotes
 .post-content-wrapper {
   position: relative;
