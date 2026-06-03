@@ -2,21 +2,21 @@
 title: "Can I Build a Build System To Build My Builds?"
 description: "Who Builds the Build System That Builds Builds?"
 date: 2026-06-03
-keywords: ["software", "programming"]
+keywords: ["software", "programming", "thoughts"]
 ---
 
 [Circus]: https://github.com/manic-systems/circus/
 [Manic Systems]: https://github.com/manic-systems
 [feel-co]: https://github.com/feel-co
 
-Hope you've been well. I was on vacation for the past 10~ days or so, which gave
-me ample time to work on a few side-projects that I wanted to get out of my way
-for the future. One of those projects, which I've worked on full time during my
-vacation, was [Circus]---a modern CI system for Nix that'll handle our building
-and caching primarily at [Manic Systems] and [feel-co] for our vast repertoire
-of Rust projects. I kind of have a love/hate relationship with this project and
-perhaps I will cover this project by itself in a different post, but what
-matters today for the purposes of this post is that this project, through
+Hope you've been well. I have been on vacation for the past 10~ days or so,
+which gave me ample time to work on a few side-projects that I wanted to get out
+of my way for the future. One of those projects, which I've worked on full time
+during my vacation, was [Circus]---a modern CI system for Nix that'll handle our
+building and caching primarily at [Manic Systems] and [feel-co] for our vast
+repertoire of Rust projects. I kind of have a love/hate relationship with this
+project and perhaps I will cover this project by itself in a different post, but
+what matters today for the purposes of this post is that this project, through
 torture and joy, taught me there are a fair bit of things _fundamentally wrong_
 with Nix. This post, in turn, is an organized dump of my thoughts (both rational
 and irrational) about building a build system. I _really doubt_ I will _ever_
@@ -368,22 +368,23 @@ three systems and what a serious successor would have to do differently:
 
 <!--markdownlint-disable MD013-->
 
-| Concern               | Nix                                        | Bazel                                | Buck2                                | What a successor must add                                |
-| --------------------- | ------------------------------------------ | ------------------------------------ | ------------------------------------ | -------------------------------------------------------- |
-| Action identity       | derivation hash (input-addressed)          | action key over inputs + command     | action key + DICE graph              | key includes policy, effects, output contract, rule ver. |
-| Effects / impurity    | binary: pure or fixed-output               | mostly forbidden; sandbox by default | mostly forbidden; sandbox by default | typed capability set, declared and scoped per action     |
-| Hermeticity           | binary claim                               | binary claim                         | binary claim                         | a ratchet (H0–H5), enforceable by policy                 |
-| Cache trust           | binary signature on store paths            | per-instance config                  | per-instance config                  | signed proof record returned alongside bytes             |
-| Build plan as object  | derivation graph (yes, but opaque to user) | analysis cache (internal)            | DICE state (internal)                | first-class artifact: diffable, signable, executable     |
-| Cross-language story  | strong, via derivations                    | strong, via rules                    | strong, via rules                    | same, plus typed importers with confidence labels        |
-| Surface <-> semantics | leaks heavily (flakes, overlays, attrs)    | rules ≈ semantics; Starlark surface  | rules ≈ semantics; Starlark surface  | surface lowers into a versioned IR; IR is the contract   |
-| Migration story       | rewrite or wrap                            | rewrite or `genrule`                 | rewrite or `genrule`                 | importers + foreign targets + hermeticity ratchet        |
-| Explanation           | weak (`why-depends`, eval traces)          | medium (`aquery`, `cquery`)          | medium (`buck2 audit`, `buck2 log`)  | first-class: `why-rebuilt`, `why-cached`, plan diff      |
+| Concern               | Nix                                                | Bazel                                | Buck2                                | What a successor must add                                |
+| --------------------- | -------------------------------------------------- | ------------------------------------ | ------------------------------------ | -------------------------------------------------------- |
+| Action identity       | derivation hash (input-addressed)                  | action key over inputs + command     | action key + DICE graph              | key includes policy, effects, output contract, rule ver. |
+| Effects / impurity    | binary: pure or fixed-output                       | mostly forbidden; sandbox by default | mostly forbidden; sandbox by default | typed capability set, declared and scoped per action     |
+| Hermeticity           | binary claim                                       | binary claim                         | binary claim                         | typed claim set, predicates expressed in policy          |
+| Cache trust           | binary signature on store paths                    | per-instance config                  | per-instance config                  | signed proof record returned alongside bytes             |
+| Build plan as object  | derivation graph (introspectable, not user-facing) | analysis cache (internal)            | DICE state (internal)                | first-class artifact: diffable, signable, executable     |
+| Cross-language story  | strong, via derivations                            | strong, via rules                    | strong, via rules                    | same, plus typed importers with confidence labels        |
+| Surface <-> semantics | leaks heavily (flakes, overlays, attrs)            | rules ≈ semantics; Starlark surface  | rules ≈ semantics; Starlark surface  | surface lowers into a versioned IR; IR is the contract   |
+| Migration story       | rewrite or wrap                                    | rewrite or `genrule`                 | rewrite or `genrule`                 | importers + foreign targets + claim-driven policy        |
+| Explanation           | weak (`why-depends`, eval traces)                  | medium (`aquery`, `cquery`)          | medium (`buck2 audit`, `buck2 log`)  | first-class: `why-rebuilt`, `why-cached`, plan diff      |
 
 <!--markdownlint-enable MD013-->
 
-The point is not "Forge wins every column.", because it doesn't. The point is
-that no existing system fills every column today, so the design space is real.
+The point is not "Forge wins every column.", because it doesn't. It cannot. The
+point is that no existing system fills every column today, so the design space
+is real.
 
 ## Future-proofing (It Ain't Plugins)
 
@@ -475,10 +476,10 @@ I envision the structure as something like this:
 flowchart TD
     subgraph forge["Forge"]
         direction TB
-        ui["Interface --- CLI, IDE, CI, graph/plan explorer (evolves fast)"]
-        lang["User language --- modules, packages, targets, policies (stable, readable)"]
-        rules["Rule engine --- typed rules, providers, toolchains (stable, extensible)"]
-        kernel["Kernel --- IR, actions, store, cache, effects, policy, proof checker (specified, boring)"]
+        ui["Interface: CLI, IDE, CI, graph/plan explorer (evolves fast)"]
+        lang["User language: modules, packages, targets, policies (stable, readable)"]
+        rules["Rule engine: typed rules, providers, toolchains (stable, extensible)"]
+        kernel["Kernel: IR, actions, store, cache, effects, policy, proof checker (specified, boring)"]
 
         ui --> lang
         lang --> rules
@@ -689,71 +690,207 @@ That is a useful error. It teaches the model while fixing the build. You could
 even make "possible fixes" a part of the interface so that you don't have to go
 back to the "oh the error messages such" meme.
 
-## Hermeticity As a Ratchet
+### Declared, Observed, And The Same Type
+
+> A reviewer working on a related design framed this effectively as "what
+> properties could have affected the impurity of a build", which is the cleanest
+> one-line statement of the idea I've come across.)
+
+`effects = [ ... ]` declares an upper bound: the impurities an action is
+_permitted_ to perform. After the action runs, the builder attests a lower
+bound: the impurities the sandbox actually saw. Both are values of the same
+type, and policy compares them:
+
+```plaintext
+require observed subset_of declared
+forbid  observed contains Network(_)        when policy is release
+forbid  observed contains HostPathWrite(_)  always
+```
+
+The observed list is only half of the story. The other half is the conditions
+the action ran _under_: was it sandboxed, was the toolchain pinned, were inputs
+and outputs declared, was it reproduced, who signed it. Those are attestations,
+not effects. The builder didn't _do_ them, but instead, it did everything else
+_under_ them.
+
+Hermeticity is the union of the two. Effects say what happened. Attestations say
+under what conditions. Together they say what could and could not have happened,
+and that is the only definition of hermeticity that survives contact with a real
+build.
+
+## Hermeticity As a Claim Set
 
 Hermeticity is often preached badly. People talk as if the only respectable
-build is perfectly hermetic and everyone else is an animal. Well, I often share
-this view of first-class vs lower-class build states but this is not a proper
-migration strategy. It is a way to be correct in an empty room, or maybe a way
-to empty the room so you can speak alone.
+build is perfectly hermetic and everyone else is an animal. I have some sympathy
+for that view in private, but it is not a migration strategy. It is a way to be
+correct in an empty room, or maybe a way to empty the room so you can speak
+alone. In the initial draft of this post, I have proposed a ratchet; an ordinal
+H0..H5, nice and tidy. A review comment (ccorrectly) observed that the ratchet
+is the wrong primitive. Hermeticity is not one-dimensional. "Sandboxed on a
+Linux host" and "no network" and "host tool `/usr/bin/protoc`" and "reproduced
+by two independent builders" are not points on a line, but independent facts
+about a build, and compressing them into a single ordinal throws away the
+structure that policy actually needs to make decisions.
 
-Learning from those mistakes, Forge should treat hermeticity as a ratchet. A
-build can start weak and become stronger over time. The system should
-distinguish levels clearly.
+Therefore the right primitive should be a typed _claim set_. Each build emits a
+record of what was true about it. The "level" is a derived view, which is useful
+for humans, never load-bearing.
+
+### Claims
+
+A claim is a typed proposition about a build, attested by the builder that
+produced it. There are two families, matching the effect/attestation split from
+the previous section:
 
 <!--markdownlint-disable MD013-->
 
-| Level | Meaning                                                | Typical use                      |
-| ----- | ------------------------------------------------------ | -------------------------------- |
-| H0    | Untracked shell execution                              | quick wrapping, legacy discovery |
-| H1    | Declared outputs, weak or inferred inputs              | early migration                  |
-| H2    | Declared inputs and outputs, sandboxed local execution | normal development               |
-| H3    | Declared toolchains and effects, remote-cache safe     | CI                               |
-| H4    | Reproduced and policy-clean with signed provenance     | release                          |
-| H5    | Independently reproduced, audited, long-term archival  | critical supply-chain artifacts  |
+```plaintext
+-- effects: what the action did. Same vocabulary as the declared
+-- `effects = [...]` field; this is the observed counterpart.
+Effect
+  = NetworkFixed    { host  :: String, digest :: Hash }
+  | NoNetwork
+  | HostPathRead    { path  :: Path }
+  | HostPathWrite   { path  :: Path }     -- almost always a red flag
+  | HostTool        { name  :: String, digest :: Hash }
+  | EnvObserved     { vars  :: [String] }
+  | SecretRead      { id    :: SecretId }
+  | Clock
+  | Randomness
+  | ProcessSpawn
 
-<!--markdownlint-enable MD013-->
+-- attestations: under what conditions the action ran. Emitted by the
+-- builder, not declared by the user.
+Attestation
+  = Sandboxed       { kind  :: Sandbox }  -- Sandbox = Bubblewrap | Gvisor | Firejail | Foreign
+  | ToolchainPinned { id    :: ToolchainId, digest :: Hash }
+  | InputsDeclared
+  | OutputsDeclared
+  | ReproducedBy    { builders :: [BuilderId] }
+  | SignedBy        { builder  :: BuilderId, key :: KeyId }
+  | TimeBounded     { wall  :: Duration, cpu :: Duration }
+  | Foreign         { description :: String }
 
-While this system is rather... complex and possibly a bit annoying to work with,
-it is meaningful for the _average_ user because slapping the labels "hermetic"
-and "not hermetic" on something is way too coarse. A project migrating from
-CMake or shell scripts may reasonably begin at H1. A release artifact should not
-remain there. They already weren't hermetic, so what's the harm?
+type Claim    = Effect | Attestation
+type ClaimSet = Set Claim
+```
 
-The system should say:
+<!--markdownlint-ENABLE MD013-->
+
+Every action that runs produces a `ClaimSet`. The set is what the system caches,
+signs, archives, and shows to the user. There is no separate "hermeticity
+field"; the claim set _is_ the hermeticity record.
+
+### Policy Reads Claims, Not Levels
+
+Policy operates on the claim set directly. The release policy from earlier
+becomes:
 
 ```plaintext
-Built //app:server at H2.
+policy release {
+  require Sandboxed(_)
+  require NoNetwork
+  require InputsDeclared
+  require OutputsDeclared
+  require ToolchainPinned(_, _)
+  require ReproducedBy(builders) where len(builders) >= 2
+  require SignedBy(_, _) in trusted_keys
 
-Not H3 because:
-- uses host tool /usr/bin/protoc
-- reads environment variable LANG
-- toolchain identity is not pinned
+  forbid HostPathWrite(_)
+  forbid HostTool(_, _) unless declared
+}
+```
 
-Upgrade path:
+Each clause is a predicate over the claim set. The checker walks the set once,
+evaluates the predicates, returns either acceptance or a list of named failures.
+There is no ordinal arithmetic, no "is H4 enough", no implicit coupling between
+unrelated properties. If a user wants two reproductions but does not care about
+sandboxing, they say so directly. If a user wants a sandbox but no network is
+fine, they say _that_ directly. Two policies that disagree on one axis no longer
+have to pretend they agreed on a number.
+
+### The Level Is A View, Not A Truth
+
+That said: showing a user a `ClaimSet` with twelve entries every time they build
+is hostile. Labels still belong in the interface, they just do not belong in the
+substrate. A project (or the default Forge UX, or a policy) defines a function
+from claim sets to a label:
+
+```plaintext
+level :: ClaimSet -> Label
+level cs
+  | cs contains [Sandboxed(_), NoNetwork, InputsDeclared, OutputsDeclared,
+                 ToolchainPinned(_,_), ReproducedBy(bs) where len bs >= 2,
+                 SignedBy(_,_)]                                       = "release-clean"
+  | cs contains [Sandboxed(_), InputsDeclared, OutputsDeclared,
+                 ToolchainPinned(_,_)]                                = "ci-clean"
+  | cs contains [Sandboxed(_), InputsDeclared, OutputsDeclared]       = "dev-sandboxed"
+  | cs contains [InputsDeclared, OutputsDeclared]                     = "dev"
+  | otherwise                                                         = "weak"
+```
+
+These labels are conveniences. They are not what the cache keys on, not what the
+policy reads, and not what the signature attests. If a project wants different
+labels they redefine `level`; if a project wants no labels at all, they delete
+it. The system does not care. Therefore, a normal build should produce output
+along these lines:
+
+```plaintext
+Built //app:server.
+
+Claims:
+- Sandboxed(Bubblewrap)
+- InputsDeclared
+- OutputsDeclared
+- HostTool(/usr/bin/protoc, sha256:...)
+- EnvObserved(LANG)
+- (ToolchainPinned not present)
+
+UX label: dev-sandboxed.
+
+Release policy would reject this build because:
+- HostTool(/usr/bin/protoc) is not declared
+- EnvObserved(LANG) is not in the declared environment
+- ToolchainPinned is missing
+
+Suggested fixes:
 - replace host protoc with toolchain protobuf.protoc
 - declare LANG or force locale to C.UTF-8
 - pin cc_toolchain linux-x86_64-gcc-14
 ```
 
-Again, while this is slightly more complex, this is strictly better than purity
-sermons and better than silence. The ratchet should be enforceable by policy:
+The error names individual claims that failed individual predicates. It does not
+say "you are at H2 and you need H4", because that sentence is ultimately
+uninformative, which is to say it does not tell the user _what_ to fix, and the
+answer it implies is wrong as often as it is right.
 
-```plaintext
-policy ci {
-  require hermeticity >= H3
-}
+### Why This Is Better Than The Ratchet
 
-policy release {
-  require hermeticity >= H4
-  forbid effect.network
-  require provenance.signed
-  require reproducible.builders >= 2
-}
-```
+Three reasons, each of which I learned the hard way (by the age-old method of
+hindsight) by writing the ordinal version first.
 
-This gives projects room to breathe without letting weak builds masquerade as
-strong ones.
+1. **Composability.** Two builds can be incomparable. One was reproduced by
+   three builders but used a host `protoc`; another was fully pinned but
+   reproduced once. Under the ordinal model both round to "H2-ish" and the user
+   is told to keep ratcheting; under the claim-set model the policy says clearly
+   which property is missing and which is satisfied. Incomparable builds stay
+   incomparable, and the system does not have to lie to maintain a total order.
+2. **No redundant predicates.** The release policy already wanted to talk about
+   network, sandbox, signatures, and reproductions individually. The ordinal
+   `hermeticity >= H4` was redundant noise on top of those checks, and a
+   contradiction between them had no defined resolution. Reading claims directly
+   eliminates the contradiction.
+3. **Signing has something to sign.** A build signature should attest to a
+   specific record of what was true, not to a number. The claim set _is_ the
+   record. The build certificate is the claim set plus a signature over its
+   hash; it is also the same object a transparency log would archive. This is
+   the certificate-shaped replacement for the narinfo format that adisbladis has
+   been designing in parallel: structured claims, signed end-to-end, archived in
+   a transparency log, queryable forever. The two designs converge on the same
+   primitive because there is only one primitive that works.
+
+The ratchet is dead. Long live the claim set; let levels exist in the interface
+and nowhere else.
 
 ## Cache Correctness, Or; Making It Usable
 
@@ -794,7 +931,7 @@ these lines:
 action_key(a) = H(
   schema:      H(a.rule.schema_version),
   evaluator:   H(a.rule.id, a.rule.version),
-  inputs:      merkle({ name -> H(content) for name, content in a.inputs }),
+  inputs:      merkle({ name: H(content) for name, content in a.inputs }),
   toolchain:   H(a.toolchain.id, a.toolchain.digest),
   platform:    H(canonical(a.platform.constraints)),
   env:         H(canonical(a.declared_env)),
@@ -814,11 +951,9 @@ shared.
 
 While working on [ncro](https://github.com/feel-co/ncro) as a Nix cache proxy
 (which _wildly_ improves cache behaviour with rotation and path filters) and our
-CI [Circus](https://github.com/manic-systems/circus/) something that occurred to
-me is that Nix caches communicate very little with their consumers.
-
-In the case of Forge, a cache hit should return more than bytes. It should
-return a proof record. Assume you've invoked:
+CI [Circus] something that occurred to me is that Nix caches communicate very
+little with their consumers. In the case of Forge, a cache hit should return
+more than bytes. It should return a proof record. Assume you've invoked:
 
 ```bash
 # Query a cache's information endpoint directly
@@ -965,7 +1100,403 @@ is source identity, the plan is build identity. They are related, but not the
 same. Is this distinction pedantic? Yes, but only until you need it. Then it
 becomes obvious.
 
+### Plans At Rest, Plans In Motion
+
+The seven points above describe a plan _at rest_. A plan is a value, and a value
+can be serialized, signed, diffed. This is the right model for release: compute
+the plan once, sign it, ship it, do not let it change.
+
+For development, the model is wrong. A developer is not in the business of
+producing one plan per day; they edit a file, glance at the output, edit again.
+If every keystroke requires re-running analysis from scratch, the build system
+has reinvented the slow compiler the developer was trying to escape. The plan
+needs a second mode, not a separate object, This should also be different view
+of the same DAG. A very... roundabout and genius-in-an-insane-way- framing here
+is signals. A derivation is a signal: a value that knows its dependencies and
+fires when any of them changes. A build graph is a DAG of signals. In release
+mode you take a snapshot of the signal graph at a moment in time and call that
+snapshot _the plan_. In dev mode you subscribe to the signal graph and watch
+values propagate as the filesystem changes underneath you. Same DAG, same action
+keys, same content-addressed actions; different consumption pattern.
+
+```mermaid
+flowchart LR
+    src["source: main.rs (signal)"] --> compile["rust.binary (signal)"]
+    serde["dep: serde (signal)"] --> compile
+    compile --> image["oci.image (signal)"]
+    image --> plan["plan snapshot (release mode)"]
+    image --> live["live view (dev mode: IDE, dashboard)"]
+```
+
+Concretely, an edit to `main.rs` invalidates the source signal; the compile
+signal recomputes its action key; if the new key has a cache hit the artifact
+appears instantly; if not, the action runs and the new artifact propagates
+downstream. The propagation is structural; Forge already knows the DAG, the
+action keys, and the cache; signals are not new machinery, they are the existing
+machinery viewed as _push_ instead of _pull_.
+
+This is what Bazel's `ibazel`, Buck2's BXL watchers, and `nix-shell`
+file-watchers all approximate poorly. Each of them bolts a file-watcher onto a
+pull-based engine and re-runs as much of the build as the engine can be coaxed
+into skipping. A native signal model does this directly: the DAG _is_ the
+dependency graph for the signal engine, with no separate invalidation map to
+maintain or drift out of sync.
+
+The thing to be careful of is that signals only feel reactive if analysis is
+cheap. Type-checking, policy evaluation, and hermeticity analysis have to be
+sub-millisecond per node, or the dev loop degrades into the same wait the
+watcher was meant to avoid. This is a real contstraint in engineering this, and
+just a footnote (hence I didn't make it a footnote.) It is the reason the
+declaration register has to compile to the expression register cheaply, and the
+reason rule code has to be terminating in a bounded way. The signal model is
+what makes those constraints _earn their keep_.
+
+### What To Do When Eval Needs Build (IFD For Short)
+
+The seven-point list above also assumes the plan can be fully computed before
+any action runs. Nix breaks this assumption with Import-From-Derivation: a
+derivation must be _built_ so its output can be _evaluated_ as part of producing
+more plan. Forge cannot ignore this case. Codegen, schema compilation, generated
+rule sets, language servers that read derived files ---these are IFD-shaped in
+spirit even when they do not call themselves that. Three options exist; the
+first two work by refusing to admit that eval and build are interleaved, and the
+third works by admitting it:
+
+1. **Forbid IFD.** Bazel's choice, modulo `genrule` workarounds. Clean, simple,
+   quietly broken for any workflow whose schema lives in a generated file. Real
+   codebases hit this constantly and route around it with checked-in generated
+   artifacts, which has its own well-documented misery (stale generated files,
+   merge conflicts in machine output, codegen drift).
+2. **Stage the plan.** The plan is not one object but a sequence: `plan_0` is
+   what we can compute without any builds; executing `plan_0` produces inputs
+   that unlock more evaluation; the result is `plan_1`; repeat to a fixed point.
+   This is what Nix actually does, dressed in the language of eval-build
+   interleaving.
+3. **Treat the plan as a signal that fires multiple times.** Each IFD edge is a
+   signal that, when its source derivation builds, unblocks a downstream signal
+   in the eval graph. The "plan" is the current value of that signal, and it
+   stabilizes when no more eval is pending.
+
+(2) and (3) are the same idea expressed twice: a staged plan _is_ a signal that
+has fired N times. The signal framing stops pretending the staging is hidden ---
+the plan is not a static object, it is a value that converges. In release mode
+you wait for convergence and then sign the final value; in dev mode you watch it
+converge and react along the way.
+
+The cost is that "the plan" stops being a single hash. It becomes a sequence of
+hashes, one per stabilization step, and the release artifact must carry the
+final hash plus enough provenance to prove the path it took to get there. This
+is more work than I would like to claim is easy, but it is the price of
+admitting IFD exists. Pretending it does not exist is how Bazel users end up
+checking generated code into Git and how Nix users end up debugging eval traces
+at midnight and banning IFDs in official platforms.
+
+So: the plan is an immutable value when sampled, a signal when watched, and a
+staged signal when IFD is involved. The DAG and the action keys are the same in
+all three views. The interface changes; the substrate does not.
+
+## Graphs That Behave
+
+Build graphs are DAGs. Yes that's all.
+
+No it isn't. What I mean to say is that this is not just a stylistic preference,
+and it is not something to relax under pressure. Cycles in a build graph are
+bugs that prove the system cannot decide what depends on what. A cycle says "A
+needs B, B needs A, please figure it out"---there is no answer that is also a
+build. Systems that tolerate cycles in their build graphs do so by silently
+picking some execution order and praying nobody notices when it changes. Make
+has this problem. Recursive make has it worse, and the workarounds for recursive
+make are a small subgenre of build-systems literature. [^miller]
+
+[^miller]: Peter Miller, _Recursive Make Considered Harmful_. AUUG 1998.
+    <https://accu.org/journals/overload/14/71/miller_2004/>. The argument is
+    that recursive make breaks the DAG into local fragments, each consistent
+    only with respect to its own scope; the union is not a DAG and has no global
+    topological order. The paper is older than most of its readers but still
+    describes the failure mode accurately.
+
+The DAG property is what makes the rest of this design tractable in the first
+place:
+
+- A topological order gives a deterministic schedule. Without one, "parallel
+  build" is just "race condition that mostly wins".
+- A subgraph hash gives an action key. You cannot hash a cycle without a
+  fixpoint, and fixpoints in build systems are how you get builds that compile
+  themselves twice and call it incremental.
+- Memoization gives caching. Caching is only safe over a structure with no
+  cycles; otherwise you're storing answers to questions that depend on their own
+  answers.
+- The proof of "this artifact came from these inputs by these actions" is
+  finite. A cycle makes the proof infinite, which means it does not exist.
+
+Cycles must be a hard error at analysis time, not a runtime surprise. If a user
+genuinely needs mutual recursion between two libraries, the right answer is one
+library, not two libraries with a load-bearing lie about their boundary.
+Sometimes the build system's most useful feature is its refusal.
+
+Conditional edges still produce a DAG. They produce a DAG that is a function of
+configuration: per-configuration the graph is acyclic; across configurations it
+remains acyclic because configurations do not share node identity. (We'll get to
+this when we discuss configuration.) Generated sources are also fine: the output
+of one action becomes the input of another, and the graph simply extends beyond
+what the source tree alone declares. The trap is when generation depends on a
+target that depends on the generation. That is a cycle, and the system must say
+so. Bazel calls this a load-time cycle and refuses to proceed; this is correct,
+even when it is annoying.
+
+```mermaid
+flowchart LR
+    src["source: lib.rs"] --> compile["action: compile"]
+    gen["action: codegen"] --> generated["generated: schema.rs"]
+    generated --> compile
+    compile --> lib["artifact: liblib.rlib"]
+    schema_src["source: schema.proto"] --> gen
+```
+
+That graph is a DAG. The next one is not, and the system must reject it before
+any action runs:
+
+```mermaid
+flowchart LR
+    a["target: A"] --> b["target: B"]
+    b --> c["target: C"]
+    c --> a
+```
+
+The reader will note that "the build graph must be a DAG" is one of those claims
+that sounds like a tautology until you watch a real build system fail to enforce
+it. Most build failures attributed to "flaky CI" turn out, on inspection, to be
+undeclared edges and unenforced acyclicity. A build system that takes its graph
+seriously is a build system that takes everything else seriously by consequence.
+
 ## Lingua Usoris
+
+A build system needs a language. The language is what the user types, what the
+rule author extends, and what the tools read. Pick badly and every later choice
+is paying interest on that mistake. Worse, the language is the only part of a
+build system that users _see_. The action graph, the cache, the sandbox are all
+invisible until something breaks. The language is the build system, as far as
+most users are concerned. So, eventually, we have to stop theorizing and ask
+yourselves what should the language be? Could it be... Lisp? No.
+
+Here is a bunch of candidates that I've "considered" (they all crossed my mind
+at some point I'll give them that) to some extent:
+
+### Starlark
+
+Python-shaped, deterministic, no I/O, no recursion, no `while` loops, no
+exceptions, no classes. Used by Bazel and Buck2. Boring on purpose. Its strength
+is that ten thousand engineers can read it without training; its weakness is
+that it inherits Python's failure modes around dynamic typing the moment a rule
+grows beyond fifty lines. Starlark is the safe answer. It is also the answer
+that quietly admits the system is just "Python that does not crash production".
+
+The thing Starlark gets right is termination; every Starlark program halts,
+which means analysis time is bounded, which means the build system can give you
+a deadline rather than a prayer. That alone disqualifies most general purpose
+languages.
+
+### Nix (as in Nixlang)
+
+Lazy, functional, untyped. Beautiful in isolation; load-bearing global
+mutability through overlays in practice. Laziness is correct for build
+systems---you should not evaluate the parts of the graph you do not need---but
+the lack of types means rule authors discover their mistakes at evaluation,
+which on a real codebase happens minutes into a build, far from the offending
+line.
+
+Nix is correct about laziness, but wrong about types and ambiguous about
+modularity. Which makes it a fine prototype language and an exhausting
+production one. The fact that Nixpkgs works at all is a triumph of collective
+discipline over a language that does not enforce any. We should take the
+laziness and leave the rest.
+
+### Lisp (Scheme, Racket, Clojure)
+
+A homoiconic language for a system whose central artifact is itself a tree of
+nodes is, on paper, the right answer. Macros let rule authors extend the
+language without writing a compiler. Racket has Typed Racket; Clojure has
+clojure.spec; Scheme has whichever module system its current implementation
+believes in this week. The downside is sociological, not technical: thirty years
+of "Lisp is the right answer" have failed to make Lisp the answer anyone reaches
+for. A build system that requires its users to first accept Lisp will not be
+reached for either. This is a sociological argument, and that is exactly why it
+is decisive. The build system you do not adopt has no users, no matter how
+elegant its macros.
+
+### Unison
+
+Unison was pointed out to me during storyboarding and discussion. I haven't
+looked into Unison but I have to admit there is something... vaguely intriguing
+about it for the lack of a better expression. Content-addressed code, where
+every function is identified by the hash of its AST, not by a name in a file.
+The structural match with a build system is almost too good---Unison's runtime
+_is_ a build system in disguise, the same way Nix's evaluator is a build system
+in disguise. Both achieve their elegance by collapsing two problems into one.
+
+The problem with Unison as the user language is timing. Unison is young, its
+ecosystem is small, and adopting it means asking users to learn a build system
+_and_ a new language at the same time. A build system should hide its cleverness
+behind a familiar surface, not require its users to share its enthusiasm. We can
+borrow the idea (content-addressed actions are already in the design) without
+borrowing the language.
+
+### A bespoke language
+
+Tempting. If you know me, you know how close I am to just doing this.
+
+The argument in favor is relatively basic: only a purpose-built language can
+express hermeticity levels, effect permissions, providers, output contracts, and
+policy as first-class concepts without grafting them onto a host language's type
+system.
+
+However the cost for this is _extremely_ high as every bespoke build language
+ends up reimplementing strings, integers, lists, hashing, error messages, an
+LSP, and a formatter, badly, in addition to its actual job. Nix's evaluator is
+most of Nix, and rest of the tooling sucks. Starlark is most of Bazel. A bespoke
+build language is a language project pretending to be a build system, and
+language projects take a decade.
+
+There _is_ a narrower case for bespoke that is more direct; a small DSL embedded
+in a host language, where the DSL handles only the things the host cannot
+type-check (effects, hermeticity, policy) and delegates everything else
+(arithmetic, string formatting, control flow) to the host. This is how SQL
+embeds in Rust via `sqlx`, or how regular expressions embed everywhere. The
+bespoke part is small because the bespoke part is the only part that needs to be
+bespoke.
+
+### Verdict
+
+One language, two registers, one evaluation model. Call it _Fog_ as an
+abbreviation of Forge for as long as the name amuses us; we will rename it
+before release.
+
+The evaluation model is Starlark's. It is deterministic, terminating, no I/O, no
+exceptions, no recursion that the evaluator cannot bound. To that we add gradual
+types and an effect system that lives in the type signatures of rule outputs.
+This part is not negotiable, because everything downstream (caching,
+parallelism, proof, policy) assumes evaluation halts and produces a total value.
+
+The _surface_ has two registers, because builds files and rule bodies are
+different kinds of writing and ought to look different:
+
+- **Declaration register.** Block-shaped: `name = kind { key = value, ... }`.
+  This is what users see in build files. It reads as data because it _is_ data:
+  a description of what should exist, not a procedure for producing it. Closer
+  in look to HCL or a Nix attrset than to Python; closer in semantics to
+  Starlark.
+- **Expression register.** Conventional: bindings, function calls, `if`, list
+  comprehensions, `return`. This is what rule authors write inside a rule body,
+  and what users occasionally reach for when computing a value (a `select` over
+  configuration, a glob, a string format).
+
+Both registers are the same language, with the same type checker, the same
+evaluator, the same termination guarantee. The declaration register is strictly
+a subset of the expression register; every block desugars into an expression
+that constructs the same value. A user who learns the declaration register first
+can read the expression register without relearning anything.
+
+There is no third language for configuration---configuration is a typed value in
+this dialect. There is no fourth language for policy---policy is a typed
+predicate over plans, written in this dialect.
+
+The point of two registers is not segregation. It is that the rule body needs to
+_express_ things (effects, action contracts, providers) that the build file does
+not need to _write_, only to _consume_. Different vocabularies, same grammar, no
+cliff between writing a build file and writing a rule. Just a little slope.
+
+<!--markdownlint-disable MD013-->
+
+| Candidate      | Termination guarantee | Type system             | Familiar to users                       | Ecosystem maturity | Verdict                                                 |
+| -------------- | --------------------- | ----------------------- | --------------------------------------- | ------------------ | ------------------------------------------------------- |
+| Starlark       | yes                   | dynamic                 | yes (Python-ish)                        | proven (Bazel)     | evaluation model, needs types and a declaration surface |
+| Nix            | yes (lazy)            | dynamic                 | no                                      | proven (Nixpkgs)   | take laziness, leave the rest                           |
+| Lisp / Racket  | yes (in dialect)      | optional (Typed Racket) | no                                      | mature             | technically fine, socially dead                         |
+| Unison         | yes                   | strong, inferred        | no                                      | young              | borrow the idea, not the language                       |
+| Bespoke (full) | yes (by construction) | designed-in             | no                                      | none               | a decade of yak-shaving                                 |
+| Forgelang      | yes                   | gradual, effect-aware   | yes (block surface, Starlark semantics) | none (yet)         | the bet we are making                                   |
+
+<!--markdownlint-enable MD013-->
+
+What the table says, once stripped of the polite framing, is that we are
+choosing Starlark's evaluation model with types and a declaration-friendly
+surface, not inventing a language. Good. Inventing a language is how build
+systems become research projects. The interesting work is in the type system and
+the effect system, not in the parser. The grammar is a one-week problem that
+pretends to be a one-year problem; we should refuse the pretence.
+
+This is what Bazel and Buck2 got right and what Nix got wrong. Nix's "everything
+is a function returning a derivation" is elegant; it is also why nobody can tell
+you what a Nix expression _means_ without evaluating it. A build language should
+be one you can type-check without running, and one whose error messages point at
+the line you typed rather than at a thunk six levels deep.
+
+### Surface
+
+The verdict above settles _what_ the language is. The remaining question is what
+it _looks like_ on the page, because the surface is what every user encounters
+before they read a word of the type system or the rule API.
+
+Before the example, the types. Every rule, every provider, every block has a
+signature, and the signature is the contract the user is filling in when they
+write the block. Written in Haskell-ish notation so the shape stands out:
+
+```plaintext
+-- a rule is a typed function from a record of attributes to a list of providers
+rust.binary
+  :: { main       :: Path
+     , deps       :: [Package]
+     , toolchain  :: Toolchain
+     , edition    :: Optional Edition
+     , effects    :: [Effect]      -- default []
+     }
+  -> Package providing [Binary, RuntimeClosure]
+
+oci.image
+  :: { entrypoint :: Package providing [Binary]
+     , base       :: Image
+     , files      :: Map Path Artifact
+     }
+  -> Image
+
+-- a policy is a typed predicate over plans
+release
+  :: Plan -> Verdict
+
+-- a select is a function from a config value to a value of any type a
+select
+  :: forall a. Config c => c -> Map c a -> a
+```
+
+The declaration block `package server = rust.binary { ... }` is then exactly the
+act of supplying that record. The type checker reads the block, looks up the
+signature, and tells the user at edit time whether they've named the right
+fields with the right types, all before any action runs, any cache is queried,
+or any builder is contacted. This is the part Nix famously does not do, and the
+part Bazel does only via convention.
+
+The two registers, side by side. Same value, same type, same evaluator. The left
+form is what users will type ninety-nine percent of the time:
+
+```plaintext
+# declaration register
+package server = rust.binary {
+  main = "src/server/main.rs"
+  deps = [core]
+  toolchain = rust_stable
+}
+
+# expression register (equivalent)
+let server: Package = rust.binary(
+  main = "src/server/main.rs",
+  deps = [core],
+  toolchain = rust_stable,
+)
+```
+
+The declaration register is sugar over the expression register, in the same way
+JSX is sugar over `React.createElement`. The compiler reads one, the human reads
+the other, and they agree on the value.
 
 Your build system's _lingua franca_ should be boring. The _user language_ should
 be boring. This is not because users cannot handle power. It is because build
@@ -1030,16 +1561,22 @@ Policy. A release policy might look like this:
 
 ```plaintext
 policy release {
-  require hermeticity >= H4
-  forbid effect.network
-  forbid effect.host_path
-  require provenance.signed_by in ["ci-release"]
-  require cache.trust in ["remote-ci-verified"]
-  require reproducible.builders >= 2
+  require Sandboxed(_)
+  require NoNetwork
+  require InputsDeclared
+  require OutputsDeclared
+  require ToolchainPinned(_, _)
+  require ReproducedBy(builders) where len(builders) >= 2
+  require SignedBy("ci-release", _)
+
+  forbid HostPathWrite(_)
+  forbid HostTool(_, _) unless declared
+
+  cache.trust = ["remote-ci-verified"]
 
   license {
     allow = ["MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause"]
-    deny = ["GPL-3.0"]
+    deny  = ["GPL-3.0"]
   }
 }
 ```
@@ -1061,7 +1598,7 @@ foreign legacy_bundle = shell.action {
     env("PATH")
   ]
 
-  hermeticity = H1
+  accept_claims = [Foreign("legacy shell build")]
   cache = "local-only"
 }
 ```
@@ -1072,10 +1609,19 @@ release build.
 The system should say:
 
 ```plaintext
-Built //legacy:legacy_bundle at H1.
+Built //legacy:legacy_bundle.
+
+Claims: Foreign("legacy shell build"), HostPathRead("."), HostTool("bash", ...),
+        HostTool("tar", ...), EnvObserved("PATH")
+UX label: weak.
 
 This target cannot enter //release:server_release because release policy requires:
-- H4 or above
+- Sandboxed(_)              (missing)
+- NoNetwork                  (missing)
+- InputsDeclared             (missing)
+- ToolchainPinned(_, _)      (missing)
+- ReproducedBy(>= 2)         (missing)
+- SignedBy("ci-release", _)  (missing)
 ```
 
 That is the right kind of friction, or as I would like to call it, investment.
@@ -1122,10 +1668,10 @@ rule rust.binary(attrs) -> providers {
     effects = []
   }
 
-  return {
+  return [
     Binary(path = compiled.binary),
-    RuntimeClosure(files = [compiled.binary] + rust_libs.runtime_files)
-  }
+    RuntimeClosure(files = [compiled.binary] + rust_libs.runtime_files),
+  ]
 }
 ```
 
@@ -1194,8 +1740,8 @@ Then rules may select behavior explicitly:
 
 ```plaintext
 rust.flags = select mode {
-  "debug" => ["-C", "debuginfo=2"]
-  "release" => ["-C", "opt-level=3"]
+  "debug":   ["-C", "debuginfo=2"],
+  "release": ["-C", "opt-level=3"],
 }
 ```
 
@@ -1212,19 +1758,172 @@ configuration:
 ```
 
 Local overrides should exist, and _they should be made easy_ because real
-development needs them. But they should be marked as local and should affect
-hermeticity.
+development needs them. But they should be marked as local, and the resulting
+claim set should record the override as a foreign tool with the path it points
+at, so policy and signing see the override for what it is.
 
 ```plaintext
 local override rust_stable {
-  path = "/home/me/rust/build/bin/rustc"
-  hermeticity = H1
+  path           = "/home/me/rust/build/bin/rustc"
+  emits_claims   = [HostTool("rustc", ...), Foreign("local rustc override")]
 }
 ```
 
 That might be useful when, e.g., developing a compiler. It is not acceptable for
 release unless a policy explicitly allows it. Again, the principle is not
 purity. The principle is accounting.
+
+## Runtimes
+
+A build system that compiles only solves half the problem. The other half is
+what is needed to _run_ the output. A Rust binary is mostly self-contained:
+statically linked, minimal libc dependency, no runtime to ship. A Go binary is
+the same shape, with its own runtime baked into the executable. A JVM
+application is the opposite: bytecode that requires a JRE, a classpath, JVM
+flags, sometimes a module layer, sometimes a security manager. A Python program
+needs an interpreter, a `sys.path`, a set of installed packages, and frequently
+a virtualenv layout. A Node program wants a `node` binary and a `node_modules`
+graph. Each of these is a runtime, and runtimes are not all the same shape.
+
+The naive approach is to let the build system stop at compilation and hand the
+artifact off to whatever runtime happens to be installed on the host. This is
+how most build systems work today, and it is why so much CI configuration
+consists of "install JDK 17, then run our build": the build is hermetic, the
+environment is not, and the deployment is a prayer. The build system produces an
+artifact; the runtime is somebody else's problem; the "somebody else" is
+invariably a tired SRE at 02:00.
+
+So: once everything is in the IR, does Forge _bypass_ the underlying runtimes,
+or does it _target them back_? Neither. The IR does not care which runtime an
+artifact eventually executes under, and it does not need to. What it cares about
+is that the runtime is named, typed, and pinned, exactly like a compiler is. The
+IR carries runtimes as data, not as cases.
+
+### Runtimes Are Providers
+
+Just as `RustLibrary` carries metadata about a compiled library,
+`JvmApplication` carries metadata about a JVM application: required JRE version
+range, classpath shape, main class, JVM arguments, modules. The artifact and its
+runtime are not two unrelated objects. They are a single value with two faces,
+and the type system describes both.
+
+```plaintext
+RuntimeClosure
+  :: { files       :: [Artifact]
+     , entrypoint  :: Optional Path
+     , env         :: Map String String
+     , runtime     :: Runtime
+     }
+
+Runtime
+  = Native                                       -- needs only an OS loader and libc
+  | Jvm     { version :: VersionRange
+            , args    :: [String]
+            , modules :: [Module]
+            }
+  | Cpython { version :: VersionRange
+            , site_packages :: [Artifact]
+            }
+  | Node    { version :: VersionRange
+            , node_modules :: Artifact
+            }
+  | Wasm    { engine  :: VersionRange }
+  | Foreign { description :: String
+            , hermeticity :: Hermeticity
+            }
+```
+
+This is a sum type, not a stringly-typed `runtime: "jvm"`. The type checker can
+refuse a release whose runtime tag is `Foreign`. An OCI image rule can assemble
+the correct base layer by reading the `runtime` field. A sandboxed test action
+can declare the runtime as an input and have its action key reflect a JRE
+upgrade automatically, without any per-language special case in the cache.
+
+The IR does not branch. A test that runs a JVM application is still an action
+with declared inputs (test class files, the JRE archive, the classpath jar) and
+declared effects (usually none). The fact that one of its inputs is a JRE is
+just another typed input, hashed and pinned like `cc`. From the IR's
+perspective, the JRE is no different from `cc`. From the user's perspective, a
+JVM application is still a `package`. The `Runtime` sum type is the bridge ---
+it lets users name what they need without dragging interpreter-discovery code
+into the rule layer.
+
+### A Worked Example
+
+```plaintext
+package server = jvm.application {
+  main    = "com.example.Server"
+  sources = glob("src/main/java/**/*.java")
+  jdk     = toolchains.openjdk_21
+  deps    = [logback, postgres_jdbc]
+}
+
+test server_smoke = jvm.test {
+  app   = server
+  cases = glob("src/test/java/**/*.java")
+  -- the test action takes the application's RuntimeClosure as an input;
+  -- the JRE digest enters the action key automatically.
+}
+```
+
+The action key for `server_smoke` includes the JDK digest, the classpath digest,
+the test sources, and nothing else. Upgrading the JDK invalidates the test
+cache. Downgrading the JDK invalidates the test cache. Adding a JVM flag to the
+application invalidates the test cache. There is no environment variable that
+can secretly change the result, because the runtime is not read from any
+environment variable: it is the value in the typed graph, not a string in the
+shell that launched the build.
+
+### Polyglot Composition
+
+Providers make polyglot boundaries safe. A Go service that links a small Python
+script for code generation does not inherit a Python runtime. The codegen step
+produces an `Artifact`. The Go build reads that artifact. The resulting Go
+binary has its own `RuntimeClosure` with `runtime = Native` and no Python
+anywhere in its closure. The Python interpreter is an input to _one action_
+(codegen), not a contaminating presence in the dependency closure of every
+downstream consumer.
+
+When a project genuinely runs heterogeneous workloads side by side (a JVM
+service and a Python worker in the same container, say), the OCI rule reads both
+`RuntimeClosure` values and assembles a layer that contains both runtimes:
+
+```plaintext
+image services = oci.image {
+  base     = oci.scratch
+  contains = [server, worker]   -- server :: Jvm, worker :: Cpython
+}
+```
+
+Forge sees both runtimes by reading their providers, pulls the corresponding
+pinned base layers, and the image's action key includes both. An upgrade to
+either runtime invalidates the image. A change to the Python interpreter does
+not invalidate the JVM service's tests, because the two runtimes are independent
+values in the typed graph.
+
+### The Foreign Escape Hatch
+
+The escape hatch, as ever, is `foreign`. If a runtime is too weird to model (a
+proprietary embedded VM, a research language, a custom JVM fork with a security
+manager no provider currently describes), the user declares it as
+`Foreign { description, hermeticity }`. The system reports that the artifact's
+runtime is not fully described, the build still produces the artifact, the cache
+still keys on what it knows, and the release policy can refuse the artifact for
+production.
+
+This is better than pretending. The system does not bypass itself; it admits
+ignorance and prices it. The cost of an unmodeled runtime is paid at the policy
+boundary, not at 02:00 on a Sunday.
+
+### Summary
+
+The IR does not branch per runtime. The providers do. Runtimes are typed values
+carried alongside artifacts, the same way licenses, hermeticity levels, and
+effect sets are. A build that compiles Rust, Java, Python, and TypeScript
+produces four typed artifacts with four different `RuntimeClosure` values, all
+participating in the same action graph, all subject to the same policy, all
+cached under the same key shape. The build system does not learn the runtimes.
+It carries them.
 
 ## External Dependencies
 
@@ -1273,17 +1972,19 @@ The system should report the strength of the import.
 
 ```plaintext
 Imported 143 Cargo packages.
-Hermeticity: H3
-Reason:
-- all sources pinned by checksum
-- build scripts sandboxed
-- network disabled after fetch phase
+Claims (union over imported actions):
+- NetworkFixed(..., digest matched)  for all sources
+- Sandboxed(Bubblewrap)              for all build scripts
+- NoNetwork                          after fetch phase
+UX label: ci-clean.
 
 Imported 92 Python packages.
-Hermeticity: H2
-Reason:
-- 7 wheels contain platform-specific native extensions
-- 2 packages lack complete license metadata
+Claims:
+- NetworkFixed(..., digest matched)  for 85 of 92
+- Sandboxed(Bubblewrap)              for all install actions
+- Foreign("platform-specific wheel") for 7 packages
+- License metadata incomplete         for 2 packages
+UX label: dev-sandboxed.
 ```
 
 Lockfiles are useful, they provide a fair bit of information. Unfortunately,
@@ -1314,7 +2015,9 @@ perfect, but an honest model goes a long way. For example:
 Imported CMake project.
 Generated 42 targets.
 
-Hermeticity: H1
+Claims (union): HostTool("cc", ...), HostPathRead("/usr/include"),
+                EnvObserved("PATH", "CC", "CFLAGS"), Foreign("imported CMake")
+UX label: weak.
 
 Confidence:
 - source inputs: high
@@ -1339,13 +2042,13 @@ Alternatively we'd allow foreign targets:
 ```plaintext
 foreign bazel_target legacy_server {
   workspace = "../legacy"
-  target = "//server:bin"
+  target    = "//server:bin"
 
   outputs = {
     binary = artifact(type = "elf-executable")
   }
 
-  hermeticity = H1
+  accept_claims = [Foreign("imported Bazel target")]
 }
 ```
 
@@ -1381,9 +2084,9 @@ Fetched 812 external artifacts
 Local execution: enabled
 Remote cache: read-only
 Default platform: linux-x86_64
-Dev hermeticity target: H2
-CI hermeticity target: H3
-Release hermeticity target: H4
+Dev policy:     dev-sandboxed
+CI policy:      ci-clean
+Release policy: release-clean
 ```
 
 Give this a nice interface and watch it get eaten up. When something rebuilds:
@@ -1607,9 +2310,10 @@ the chain of custody around it. We could prove a lot of things without
 reinventing the wheel.
 
 [^slsa]: SLSA (Supply-chain Levels for Software Artifacts), <https://slsa.dev>.
-    Forge's hermeticity ratchet and provenance records map roughly onto SLSA
-    levels 1–4; if you ship Forge, claiming a SLSA level is a useful external
-    anchor.
+    Forge's claim set and provenance records subsume what SLSA levels 1-4 are
+    trying to express, with the structural detail that an ordinal can't carry.
+    If you ship Forge, mapping a claim set to a SLSA level is a useful external
+    anchor for parties who do not yet speak the claim language.
 
 [^intoto]: in-toto attestation framework, <https://in-toto.io>. The attestation
     schema is a reasonable wire format for what Forge would call a "proof
@@ -1645,7 +2349,7 @@ verify(plan, artifact, proof, policy) -> {ok, details} | {fail, reasons}:
     require policy.accepts(proof.signature)
     for required in policy.required_proofs:
         require required in proof.attestations  # e.g. reproduced_by >= 2
-    return ok with details = proof.attestations
+    return ok(details = proof.attestations)
 ```
 
 Each `require` is one bulleted item from the list above, with a precise failure
@@ -1700,10 +2404,10 @@ explicit instead of ambient.
 ## Maintainability
 
 Build definitions are _source code_. This is another fact that tends to get
-forgotten, and it appears to be forgotten blissfully --- but build files are
-reviewed, refactored, copied, abstracted, broken, deprecated, and misunderstood
-like any other code. Treating them as "configuration" is an easy way to deny
-them tooling. Therefore, Forge should provide:
+forgotten, and forgotten blissfully, but build files are reviewed, refactored,
+copied, abstracted, broken, deprecated, and misunderstood like any other code.
+Treating them as "configuration" is an easy way to deny them tooling. Therefore,
+Forge should provide:
 
 ```bash
 # First class formatting and linting built into the tool. Should be:
