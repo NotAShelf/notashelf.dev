@@ -32,7 +32,7 @@
     "@types/node": "^25.9.1",
     "astro": "^6.3.7",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.7"
+    "vitest": "^4.1.8"
   },
   "keywords": [
     "astro",
