@@ -23,6 +23,7 @@ feature. The repository structure is as follows:
 ```bash
 notashelf.dev/
  ├── apps # webapps
+ ├── content # sources for my writings
  ├── nix # nix packaging
  ├── packages # dependencies, local packages, etc.
  └── scripts # Node scripts involved in the build process
@@ -57,6 +58,13 @@ sources for my posts.
   using [Plausible Analytics](https://plausible.io). This site does not store
   any cookies. NGINX logs for the site are anonymized in a similar fashion to
   protect your privacy.
+
+### Content
+
+Workspace member containing the **Markdown sources** for my blogposts, separated
+from the main website for the purposes of separate linting and better
+visibility. Rendered versions of all blogposts are available on
+<https://notashelf.dev/posts>
 
 ### Packages
 

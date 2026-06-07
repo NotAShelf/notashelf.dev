@@ -29,6 +29,7 @@ in
         fileset = fs.intersection (fs.fromSource (lib.sources.cleanSource sp)) (
           fs.unions [
             ../apps
+            ../content
             ../packages
             ../scripts
 
