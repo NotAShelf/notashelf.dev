@@ -19,6 +19,8 @@ function initSidenotes(): void {
   // Only activate on screens wide enough to show sidenotes
   if (window.innerWidth < 1250) return;
 
+  const placed: HTMLElement[] = [];
+
   refs.forEach((ref) => {
     const targetId = ref.getAttribute("href")?.slice(1);
     if (!targetId) return;
@@ -41,9 +43,46 @@ function initSidenotes(): void {
 
     aside.style.top = `${getTopRelative(ref, wrapper)}px`;
     container.appendChild(aside);
+    placed.push(aside);
   });
 
+  // Prevent vertical overlap: when two refs sit close together in the prose,
+  // their sidenotes share an almost-identical `top` and stack on each other.
+  // Walk in DOM order and push each sidenote down past the previous one's
+  // bottom edge if needed.
+  const gap = 12;
+  for (let i = 1; i < placed.length; i++) {
+    const prev = placed[i - 1];
+    const curr = placed[i];
+    const prevTop = parseFloat(prev.style.top) || 0;
+    const prevBottom = prevTop + prev.offsetHeight + gap;
+    const currTop = parseFloat(curr.style.top) || 0;
+    if (currTop < prevBottom) {
+      curr.style.top = `${prevBottom}px`;
+    }
+  }
+
   footnotesSection.style.display = "none";
+}
+
+async function initMermaid(): Promise<void> {
+  const blocks = document.querySelectorAll<HTMLElement>("pre.mermaid");
+  if (!blocks.length) return;
+
+  const { default: mermaid } = await import("mermaid");
+  mermaid.initialize({
+    startOnLoad: false,
+    securityLevel: "strict",
+    theme: "dark",
+    fontFamily: "inherit",
+  });
+
+  try {
+    await mermaid.run({ nodes: Array.from(blocks) });
+  } catch (err) {
+    // Don't blow up the rest of the page if a single diagram is malformed.
+    console.error("mermaid render failed", err);
+  }
 }
 
 function initBackToTop(): void {
@@ -92,7 +131,11 @@ function initTitleAnchor(): void {
   });
 }
 
-window.addEventListener("load", initSidenotes);
+window.addEventListener("load", () => {
+  // Render mermaid diagrams first so sidenote anchors land on the final
+  // post-reflow positions, not the pre-render ones.
+  void initMermaid().finally(initSidenotes);
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   initBackToTop();

@@ -20,6 +20,10 @@ const frontmatter = convertedData || {
 };
 ---
 
-<PostLayout frontmatter={frontmatter} sourcePath={entry.filePath}>
+<PostLayout
+  frontmatter={frontmatter}
+  sourcePath={entry.filePath}
+  body={entry.body}
+>
   <Content />
 </PostLayout>

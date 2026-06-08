@@ -14,6 +14,7 @@ import purgeCss from "astro-purge-css";
 import emailObfuscation from "astro-email-obfuscation";
 import copyrightYearPlugin from "vite-copyright-replace";
 import remarkEmDash from "remark-em-dash";
+import remarkMermaid from "./src/plugins/remark-mermaid";
 
 // Third Party integrations or plugins
 import icon from "astro-icon";
@@ -99,6 +100,7 @@ export default defineConfig({
       gfm: true,
       smartypants: true,
       remarkPlugins: [
+        remarkMermaid,
         remarkEmDash,
         remarkGfm,
         [remarkToc, { heading: "contents" }],
@@ -188,6 +190,7 @@ export default defineConfig({
     gfm: true,
     smartypants: true,
     remarkPlugins: [
+      remarkMermaid,
       remarkEmDash,
       remarkGfm,
       [remarkToc, { heading: "contents" }],

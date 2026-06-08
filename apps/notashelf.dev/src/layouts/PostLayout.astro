@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { isSignificantUpdate } from "@lib/postUtils";
+import { estimateReadingTime } from "@lib/readingTime";
 import { Icon } from "astro-icon/components";
 
 export interface Props {
@@ -12,9 +13,10 @@ export interface Props {
     keywords?: string[];
   };
   sourcePath?: string;
+  body?: string;
 }
 
-const { frontmatter, sourcePath } = Astro.props;
+const { frontmatter, sourcePath, body } = Astro.props;
 const { title, description, date, updated, keywords = [] } = frontmatter;
 
 // Format date if it exists
@@ -41,10 +43,11 @@ const hasSignificantUpdate =
     ? isSignificantUpdate(new Date(date), new Date(updated))
     : false;
 
-// Calculate reading time based on content
+// Reading time. Prefer the raw markdown body (so code blocks, tables, and
+// mermaid diagrams aren't counted as prose); fall back to rendered HTML for
+// callers that don't pass a body.
 const content = await Astro.slots.render("default");
-const wordCount = content.split(/\s+/g).length;
-const readingTime = Math.max(1, Math.ceil(wordCount / 200)); // 200 words per minute
+const readingTime = estimateReadingTime(body ?? content);
 
 import he from "he";
 const { decode } = he;

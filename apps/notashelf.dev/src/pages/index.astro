@@ -2,6 +2,7 @@
 import FeaturedProjects from "@components/FeaturedProjects.astro";
 import PostSpotlight from "@components/PostSpotlight.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
+import { estimateReadingTime } from "@lib/readingTime";
 import { Icon } from "astro-icon/components";
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
@@ -16,14 +17,12 @@ const sortedPosts = allPosts
   )
   .slice(0, 6); // Get more posts to have options for randomization
 
-// Calculate reading time and create properly typed objects
-const featuredPosts = sortedPosts.map((post) => {
-  const wordCount = post.body ? post.body.split(/\s+/g).length : 0;
-  return {
-    ...post,
-    readingTime: Math.max(1, Math.ceil(wordCount / 200)),
-  };
-});
+// Reading time, computed from the raw markdown body so dense regions
+// (code blocks, tables, mermaid diagrams) don't get measured at prose pace.
+const featuredPosts = sortedPosts.map((post) => ({
+  ...post,
+  readingTime: estimateReadingTime(post.body ?? ""),
+}));
 
 // Deterministic selection for server-side rendering
 let spotlightPost = null;
