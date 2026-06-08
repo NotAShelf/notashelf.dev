@@ -59,15 +59,17 @@ static and request-local.
 
 ## ncro, Briefly
 
-[ncro]: https://github.com/feel-co/ncro
+[ncro]: https://github.com/manic-systems/ncro
 
-[ncro]---Nix Cache Route Optimizer, pronounced Necro---is a small HTTP proxy
+[ncro]---Nix Cache Route Optimizer, pronounced _Necro_---is a small HTTP proxy
 that sits between `nix-daemon` and your substituters. It is about three thousand
 [^2] lines of clean, performant Rust code. It does three things:
 
 [^2]: A bit more than that now, but the tool itself is feature-complete and
     functional. Not sure if I'll stop tinkering with the tool, but the scope is
-    well-defined by itself.
+    well-defined by itself. Even if it _does_ end up growing in size, it'll
+    remain similar in codebase size and simplicity. This make ncro future-proof
+    effortlessly.
 
 1. On a narinfo lookup, it _races_ all configured upstreams in parallel with
    `HEAD` and remembers which one won.
@@ -79,11 +81,12 @@ that sits between `nix-daemon` and your substituters. It is about three thousand
 That is the whole product. It is deliberately _not_ another
 [`ncps`](https://github.com/kalbasit/ncps), which mirrors caches to disk and
 gives you all the cache-invalidation grief that comes with mirroring caches to
-disk. ncro does not retain payload data once it is streamed through.
+disk. ncro does not retain payload data once it is streamed through. ncro does,
+however, fully leverage its position as a _proxy_.
 
 ## What's Actually In It
 
-[architecture diagram]: https://github.com/feel-co/ncro/blob/main/docs/architecture.md#architecture
+[architecture diagram]: https://github.com/manic-systems/ncro/blob/main/docs/architecture.md#architecture
 
 The interesting parts are the ones the [architecture diagram] (which you might
 or might not have paid attention to) doesn't show:
@@ -159,4 +162,6 @@ substituter logic could support this kind of behavior, but in practice it has
 remained a static ordered loop for years. A dedicated proxy is a practical way
 to add dynamic routing without patching the daemon itself.
 
-Perhaps it interests you too. Give it a try!
+Whether or not this interest you, I have really enjoyed working on ncro. Perhaps
+your needs are similar to mine, or it interests you too. In which case, why not
+[give it a try](https://github.com/manic-systems/ncro#quick-start)?
