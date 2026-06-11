@@ -27,15 +27,15 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@types/eslint": "^9.6.1",
     "@types/postcss-normalize": "^9.0.4",
-    "@types/react": "^19.2.15",
+    "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@types/unist": "^3.0.3",
-    "@typescript-eslint/eslint-plugin": "^8.59.4",
-    "@typescript-eslint/parser": "^8.59.4",
-    "@typescript-eslint/utils": "^8.59.4",
-    "@vitest/coverage-v8": "^4.1.7",
-    "@vitest/ui": "^4.1.7",
-    "eslint": "^10.4.0",
+    "@typescript-eslint/eslint-plugin": "^8.61.0",
+    "@typescript-eslint/parser": "^8.61.0",
+    "@typescript-eslint/utils": "^8.61.0",
+    "@vitest/coverage-v8": "^4.1.8",
+    "@vitest/ui": "^4.1.8",
+    "eslint": "^10.4.1",
     "eslint-plugin-astro": "^1.7.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-svelte": "3.17.1",
@@ -47,16 +47,16 @@
     "prettier-plugin-astro": "0.14.1",
     "prettier-plugin-astro-organize-imports": "^0.4.12",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.59.4",
-    "vitest": "^4.1.7"
+    "typescript-eslint": "^8.61.0",
+    "vitest": "^4.1.8"
   },
   "dependencies": {
-    "astro": "^6.3.7",
-    "cssnano": "^8.0.1",
+    "astro": "^6.4.6",
+    "cssnano": "^8.0.2",
     "glob": "^13.0.6",
     "he": "1.2.0",
     "postcss": "^8.5.15",
     "purgecss": "^8.0.0",
-    "svelte": "^5.55.9"
+    "svelte": "^5.56.3"
   }
 }
