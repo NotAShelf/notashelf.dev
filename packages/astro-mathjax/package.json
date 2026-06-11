@@ -41,7 +41,7 @@
     "rehype-mathjax": "^4.0.0"
   },
   "devDependencies": {
-    "@types/node": "^25.9.1",
+    "@types/node": "^25.9.3",
     "typescript": "^6.0.3",
     "vitest": "^4.1.7"
   },
