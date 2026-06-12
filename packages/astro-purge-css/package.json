@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.9.3",
-    "astro": "^6.3.7",
+    "astro": "^6.4.6",
     "typescript": "^6.0.3",
     "vitest": "^4.1.7"
   },
