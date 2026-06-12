@@ -10,7 +10,7 @@ importers:
     dependencies:
       astro:
         specifier: ^6.4.6
-        version: 6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+        version: 6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
       cssnano:
         specifier: ^8.0.2
         version: 8.0.2(postcss@8.5.15)
@@ -116,13 +116,13 @@ importers:
         version: 8.61.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
       vitest:
         specifier: ^4.1.8
-        version: 4.1.8(@types/node@25.9.3)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+        version: 4.1.8(@types/node@25.9.3)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
 
   apps/notashelf.dev:
     dependencies:
       '@astrojs/mdx':
         specifier: ^6.0.3
-        version: 6.0.3(astro@6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+        version: 6.0.3(astro@6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
       '@astrojs/partytown':
         specifier: ^2.1.7
         version: 2.1.7
@@ -134,7 +134,7 @@ importers:
         version: 3.7.3
       '@astrojs/svelte':
         specifier: ^8.1.2
-        version: 8.1.2(@types/node@25.9.3)(astro@6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))(jiti@2.7.0)(sass@1.100.0)(svelte@5.55.9(@typescript-eslint/types@8.61.0))(terser@5.48.0)(typescript@6.0.3)(yaml@2.9.0)
+        version: 8.1.2(@types/node@25.9.3)(astro@6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))(jiti@2.7.0)(sass@1.101.0)(svelte@5.55.9(@typescript-eslint/types@8.61.0))(terser@5.48.0)(typescript@6.0.3)(yaml@2.9.0)
       '@astrojs/ts-plugin':
         specifier: ^1.10.9
         version: 1.10.9
@@ -149,13 +149,13 @@ importers:
         version: link:../../content
       astro:
         specifier: ^6.4.6
-        version: 6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+        version: 6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
       astro-email-obfuscation:
         specifier: workspace:*
         version: link:../../packages/astro-email-obfuscation
       astro-expressive-code:
         specifier: ^0.43.1
-        version: 0.43.1(astro@6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+        version: 0.43.1(astro@6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
       astro-icon:
         specifier: ^1.1.5
         version: 1.1.5
@@ -229,8 +229,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       sass:
-        specifier: ^1.100.0
-        version: 1.100.0
+        specifier: ^1.101.0
+        version: 1.101.0
       sharp:
         specifier: ^0.34.5
         version: 0.34.5
@@ -269,7 +269,7 @@ importers:
     dependencies:
       astro:
         specifier: ^5.0.0 || ^6.0.0
-        version: 6.3.1(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+        version: 6.3.1(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
     devDependencies:
       '@types/jsdom':
         specifier: ^28.0.3
@@ -285,13 +285,13 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.7
-        version: 4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+        version: 4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
 
   packages/astro-mathjax:
     dependencies:
       astro:
         specifier: ^5.8.0 || ^6.0.0
-        version: 6.3.7(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+        version: 6.3.7(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
       rehype-mathjax:
         specifier: ^4.0.0
         version: 4.0.3
@@ -307,13 +307,13 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.7
-        version: 4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+        version: 4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
 
   packages/astro-plausible:
     dependencies:
       astro:
         specifier: ^5.8.0 || ^6.0.0
-        version: 6.3.1(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+        version: 6.3.1(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
     devDependencies:
       '@types/node':
         specifier: ^25.9.3
@@ -323,7 +323,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.7
-        version: 4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+        version: 4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
 
   packages/astro-purge-css:
     dependencies:
@@ -345,13 +345,13 @@ importers:
         version: 25.9.3
       astro:
         specifier: ^6.4.6
-        version: 6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+        version: 6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
       vitest:
         specifier: ^4.1.7
-        version: 4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+        version: 4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
 
   packages/remark-em-dash:
     dependencies:
@@ -382,20 +382,20 @@ importers:
         version: 11.0.5
       vitest:
         specifier: ^4.1.7
-        version: 4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+        version: 4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
 
   packages/vite-copyright-replace:
     dependencies:
       vite:
         specifier: ^6.0.0 || ^7.0.0
-        version: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+        version: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
     devDependencies:
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
       vitest:
         specifier: ^4.1.7
-        version: 4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+        version: 4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
 
 packages:
 
@@ -3683,8 +3683,8 @@ packages:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
 
-  immutable@5.1.5:
-    resolution: {integrity: sha512-t7xcm2siw+hlUM68I+UEOK+z84RzmN59as9DZ7P1l0994DKUWV7UXBMQZVxaoMSRQ+PBZbHCOoBt7a2wxOMt+A==}
+  immutable@5.1.6:
+    resolution: {integrity: sha512-q1swsS8K7L8usSHuOqF2TAoCCkonYz0SG38wLAggaa4Wml70zixIvt2ql4coQ2C2B3hTjltJry4r6bULwgAXLQ==}
 
   imurmurhash@0.1.4:
     resolution: {integrity: sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==}
@@ -5176,8 +5176,8 @@ packages:
   sass-formatter@0.7.9:
     resolution: {integrity: sha512-CWZ8XiSim+fJVG0cFLStwDvft1VI7uvXdCNJYXhDvowiv+DsbD1nXLiQ4zrE5UBvj5DWZJ93cwN0NX5PMsr1Pw==}
 
-  sass@1.100.0:
-    resolution: {integrity: sha512-B5j0rYMlinhhOo9tjQebMVVn0TfyXAF+wB3b2ggZUuJ/is/Y+7+JGjirAMxHZ9Z3hIP98NPfamlAkBHa1lAaXQ==}
+  sass@1.101.0:
+    resolution: {integrity: sha512-OL3GoQyoUdDt843DpVmDO6y2k1sc5IhUDSpu8XucEI+35neq5QivZ1iuegnpraEVTJXlQGK1gl27zKcTLEPbQw==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -6393,13 +6393,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/mdx@6.0.3(astro@6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))':
+  '@astrojs/mdx@6.0.3(astro@6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))':
     dependencies:
       '@astrojs/internal-helpers': 0.10.0
       '@astrojs/markdown-remark': 7.2.0
       '@mdx-js/mdx': 3.1.1
       acorn: 8.17.0
-      astro: 6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+      astro: 6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
       es-module-lexer: 2.1.0
       estree-util-visit: 2.0.0
       hast-util-to-html: 9.0.5
@@ -6438,15 +6438,15 @@ snapshots:
       stream-replace-string: 2.0.0
       zod: 4.4.3
 
-  '@astrojs/svelte@8.1.2(@types/node@25.9.3)(astro@6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))(jiti@2.7.0)(sass@1.100.0)(svelte@5.55.9(@typescript-eslint/types@8.61.0))(terser@5.48.0)(typescript@6.0.3)(yaml@2.9.0)':
+  '@astrojs/svelte@8.1.2(@types/node@25.9.3)(astro@6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))(jiti@2.7.0)(sass@1.101.0)(svelte@5.55.9(@typescript-eslint/types@8.61.0))(terser@5.48.0)(typescript@6.0.3)(yaml@2.9.0)':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 6.2.4(svelte@5.55.9(@typescript-eslint/types@8.61.0))(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
-      astro: 6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+      '@sveltejs/vite-plugin-svelte': 6.2.4(svelte@5.55.9(@typescript-eslint/types@8.61.0))(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
+      astro: 6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
       svelte: 5.55.9(@typescript-eslint/types@8.61.0)
       svelte2tsx: 0.7.56(svelte@5.55.9(@typescript-eslint/types@8.61.0))(typescript@6.0.3)
       typescript: 6.0.3
-      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
-      vitefu: 1.1.3(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
+      vitefu: 1.1.3(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
     transitivePeerDependencies:
       - '@types/node'
       - jiti
@@ -8022,28 +8022,28 @@ snapshots:
       '@stryker-mutator/util': 9.6.1
       semver: 7.8.4
       tslib: 2.8.1
-      vitest: 4.1.8(@types/node@25.9.3)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+      vitest: 4.1.8(@types/node@25.9.3)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
 
   '@sveltejs/acorn-typescript@1.0.10(acorn@8.16.0)':
     dependencies:
       acorn: 8.16.0
 
-  '@sveltejs/vite-plugin-svelte-inspector@5.0.2(@sveltejs/vite-plugin-svelte@6.2.4(svelte@5.55.9(@typescript-eslint/types@8.61.0))(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)))(svelte@5.55.9(@typescript-eslint/types@8.61.0))(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))':
+  '@sveltejs/vite-plugin-svelte-inspector@5.0.2(@sveltejs/vite-plugin-svelte@6.2.4(svelte@5.55.9(@typescript-eslint/types@8.61.0))(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)))(svelte@5.55.9(@typescript-eslint/types@8.61.0))(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 6.2.4(svelte@5.55.9(@typescript-eslint/types@8.61.0))(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+      '@sveltejs/vite-plugin-svelte': 6.2.4(svelte@5.55.9(@typescript-eslint/types@8.61.0))(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
       obug: 2.1.2
       svelte: 5.55.9(@typescript-eslint/types@8.61.0)
-      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
 
-  '@sveltejs/vite-plugin-svelte@6.2.4(svelte@5.55.9(@typescript-eslint/types@8.61.0))(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))':
+  '@sveltejs/vite-plugin-svelte@6.2.4(svelte@5.55.9(@typescript-eslint/types@8.61.0))(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 5.0.2(@sveltejs/vite-plugin-svelte@6.2.4(svelte@5.55.9(@typescript-eslint/types@8.61.0))(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)))(svelte@5.55.9(@typescript-eslint/types@8.61.0))(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+      '@sveltejs/vite-plugin-svelte-inspector': 5.0.2(@sveltejs/vite-plugin-svelte@6.2.4(svelte@5.55.9(@typescript-eslint/types@8.61.0))(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)))(svelte@5.55.9(@typescript-eslint/types@8.61.0))(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
       deepmerge: 4.3.1
       magic-string: 0.30.21
       obug: 2.1.2
       svelte: 5.55.9(@typescript-eslint/types@8.61.0)
-      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
-      vitefu: 1.1.3(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
+      vitefu: 1.1.3(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
 
   '@testing-library/jest-dom@6.9.1':
     dependencies:
@@ -8269,7 +8269,7 @@ snapshots:
       obug: 2.1.2
       std-env: 4.1.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+      vitest: 4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
     optional: true
 
   '@vitest/coverage-v8@4.1.8(vitest@4.1.8)':
@@ -8284,7 +8284,7 @@ snapshots:
       obug: 2.1.2
       std-env: 4.1.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.8(@types/node@25.9.3)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+      vitest: 4.1.8(@types/node@25.9.3)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
 
   '@vitest/expect@4.1.7':
     dependencies:
@@ -8304,21 +8304,21 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.7(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))':
+  '@vitest/mocker@4.1.7(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))':
     dependencies:
       '@vitest/spy': 4.1.7
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
 
-  '@vitest/mocker@4.1.8(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))':
+  '@vitest/mocker@4.1.8(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))':
     dependencies:
       '@vitest/spy': 4.1.8
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
 
   '@vitest/pretty-format@4.1.7':
     dependencies:
@@ -8365,7 +8365,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vitest: 4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+      vitest: 4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
     optional: true
 
   '@vitest/ui@4.1.8(vitest@4.1.8)':
@@ -8377,7 +8377,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vitest: 4.1.8(@types/node@25.9.3)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+      vitest: 4.1.8(@types/node@25.9.3)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
 
   '@vitest/utils@4.1.7':
     dependencies:
@@ -8589,9 +8589,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  astro-expressive-code@0.43.1(astro@6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)):
+  astro-expressive-code@0.43.1(astro@6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)):
     dependencies:
-      astro: 6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+      astro: 6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
       rehype-expressive-code: 0.43.1
 
   astro-icon@1.1.5:
@@ -8602,7 +8602,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  astro@6.3.1(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0):
+  astro@6.3.1(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0):
     dependencies:
       '@astrojs/compiler': 4.0.0
       '@astrojs/internal-helpers': 0.9.0
@@ -8654,8 +8654,8 @@ snapshots:
       unist-util-visit: 5.1.0
       unstorage: 1.17.5
       vfile: 6.0.3
-      vite: 7.3.3(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
-      vitefu: 1.1.3(vite@7.3.3(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+      vite: 7.3.3(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
+      vitefu: 1.1.3(vite@7.3.3(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
       xxhash-wasm: 1.1.0
       yargs-parser: 22.0.0
       zod: 4.4.3
@@ -8695,7 +8695,7 @@ snapshots:
       - uploadthing
       - yaml
 
-  astro@6.3.7(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0):
+  astro@6.3.7(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0):
     dependencies:
       '@astrojs/compiler': 4.0.0
       '@astrojs/internal-helpers': 0.9.1
@@ -8747,8 +8747,8 @@ snapshots:
       unist-util-visit: 5.1.0
       unstorage: 1.17.5
       vfile: 6.0.3
-      vite: 7.3.3(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
-      vitefu: 1.1.3(vite@7.3.3(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+      vite: 7.3.3(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
+      vitefu: 1.1.3(vite@7.3.3(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
       xxhash-wasm: 1.1.0
       yargs-parser: 22.0.0
       zod: 4.4.3
@@ -8788,7 +8788,7 @@ snapshots:
       - uploadthing
       - yaml
 
-  astro@6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0):
+  astro@6.4.6(@types/node@25.9.3)(jiti@2.7.0)(rollup@4.61.1)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0):
     dependencies:
       '@astrojs/compiler': 4.0.0
       '@astrojs/internal-helpers': 0.10.0
@@ -8840,8 +8840,8 @@ snapshots:
       unist-util-visit: 5.1.0
       unstorage: 1.17.5
       vfile: 6.0.3
-      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
-      vitefu: 1.1.3(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
+      vitefu: 1.1.3(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
       xxhash-wasm: 1.1.0
       yargs-parser: 22.0.0
       zod: 4.4.3
@@ -10216,7 +10216,7 @@ snapshots:
 
   ignore@7.0.5: {}
 
-  immutable@5.1.5: {}
+  immutable@5.1.6: {}
 
   imurmurhash@0.1.4: {}
 
@@ -12216,10 +12216,10 @@ snapshots:
     dependencies:
       suf-log: 2.5.3
 
-  sass@1.100.0:
+  sass@1.101.0:
     dependencies:
       chokidar: 5.0.0
-      immutable: 5.1.5
+      immutable: 5.1.6
       source-map-js: 1.2.1
     optionalDependencies:
       '@parcel/watcher': 2.5.6
@@ -12917,7 +12917,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite@7.3.3(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0):
+  vite@7.3.3(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0):
     dependencies:
       esbuild: 0.27.7
       fdir: 6.5.0(picomatch@4.0.4)
@@ -12929,11 +12929,11 @@ snapshots:
       '@types/node': 25.9.3
       fsevents: 2.3.3
       jiti: 2.7.0
-      sass: 1.100.0
+      sass: 1.101.0
       terser: 5.48.0
       yaml: 2.9.0
 
-  vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0):
+  vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0):
     dependencies:
       esbuild: 0.27.7
       fdir: 6.5.0(picomatch@4.0.4)
@@ -12945,22 +12945,22 @@ snapshots:
       '@types/node': 25.9.3
       fsevents: 2.3.3
       jiti: 2.7.0
-      sass: 1.100.0
+      sass: 1.101.0
       terser: 5.48.0
       yaml: 2.9.0
 
-  vitefu@1.1.3(vite@7.3.3(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)):
+  vitefu@1.1.3(vite@7.3.3(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)):
     optionalDependencies:
-      vite: 7.3.3(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+      vite: 7.3.3(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
 
-  vitefu@1.1.3(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)):
+  vitefu@1.1.3(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)):
     optionalDependencies:
-      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
 
-  vitest@4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)):
+  vitest@4.1.7(@types/node@25.9.3)(@vitest/coverage-v8@4.1.7)(@vitest/ui@4.1.7)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)):
     dependencies:
       '@vitest/expect': 4.1.7
-      '@vitest/mocker': 4.1.7(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+      '@vitest/mocker': 4.1.7(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
       '@vitest/pretty-format': 4.1.7
       '@vitest/runner': 4.1.7
       '@vitest/snapshot': 4.1.7
@@ -12977,7 +12977,7 @@ snapshots:
       tinyexec: 1.2.2
       tinyglobby: 0.2.16
       tinyrainbow: 3.1.0
-      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 25.9.3
@@ -12988,10 +12988,10 @@ snapshots:
     transitivePeerDependencies:
       - msw
 
-  vitest@4.1.8(@types/node@25.9.3)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)):
+  vitest@4.1.8(@types/node@25.9.3)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.8)(happy-dom@20.9.0)(jsdom@29.1.1)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)):
     dependencies:
       '@vitest/expect': 4.1.8
-      '@vitest/mocker': 4.1.8(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0))
+      '@vitest/mocker': 4.1.8(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0))
       '@vitest/pretty-format': 4.1.8
       '@vitest/runner': 4.1.8
       '@vitest/snapshot': 4.1.8
@@ -13008,7 +13008,7 @@ snapshots:
       tinyexec: 1.2.4
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.100.0)(terser@5.48.0)(yaml@2.9.0)
+      vite: 7.3.5(@types/node@25.9.3)(jiti@2.7.0)(sass@1.101.0)(terser@5.48.0)(yaml@2.9.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 25.9.3
