@@ -34,7 +34,7 @@
     "autoprefixer": "^10.5.0",
     "cssnano": "^8.0.2",
     "glob": "^13.0.6",
-    "happy-dom": "^20.9.0",
+    "happy-dom": "^20.10.6",
     "hast-util-to-string": "^3.0.1",
     "he": "1.2.0",
     "postcss": "^8.5.15",

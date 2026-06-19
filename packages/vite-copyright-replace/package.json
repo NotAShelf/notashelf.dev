@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "typescript": "^6.0.3",
-    "vitest": "^4.1.7"
+    "vitest": "^4.1.9"
   },
   "peerDependencies": {
     "vite": "^6.0.0 || ^7.0.0"
