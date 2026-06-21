@@ -21,17 +21,40 @@ updates:
           - "@typescript-eslint/*"
           - "prettier"
           - "prettier-plugin-*"
+      types:
+        patterns:
+          - "typescript"
+          - "@types/*"
       test:
         patterns:
           - "vitest"
           - "@vitest/*"
           - "@stryker-mutator/*"
+          - "@testing-library/*"
           - "jsdom"
           - "happy-dom"
-      types:
+      markdown:
         patterns:
-          - "typescript"
-          - "@types/*"
+          - "remark"
+          - "remark-*"
+          - "rehype-*"
+          - "@mdx-js/*"
+          - "unified"
+          - "unist-util-*"
+          - "mdast-util-*"
+          - "hast-util-*"
+          - "micromark*"
+          - "vfile"
+          - "slugify"
+          - "he"
+      styles:
+        patterns:
+          - "postcss"
+          - "postcss-*"
+          - "autoprefixer"
+          - "cssnano"
+          - "purgecss"
+          - "sass"
 
   - package-ecosystem: github-actions
     directory: "/"
@@ -42,4 +65,3 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
-
