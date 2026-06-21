@@ -8,7 +8,6 @@
   fetchPnpmDeps,
   pnpmConfigHook,
 }: let
-  fs = lib.fileset;
   buildDate = builtins.concatStringsSep "-" (builtins.match "(.{4})(.{2})(.{2}).*" self.lastModifiedDate);
 in
   stdenv.mkDerivation (finalAttrs: {
@@ -19,6 +18,7 @@ in
       else buildDate;
 
     src = let
+      fs = lib.fileset;
       sp = ../.;
     in
       fs.toSource {
@@ -28,15 +28,15 @@ in
         # are good to include, but linter/formatter configs are not necessary.
         fileset = fs.intersection (fs.fromSource (lib.sources.cleanSource sp)) (
           fs.unions [
-            ../apps
-            ../content
-            ../packages
-            ../scripts
+            (sp + /apps)
+            (sp + /content)
+            (sp + /packages)
+            (sp + /scripts)
 
-            ../package.json
-            ../tsconfig.json
-            ../pnpm-lock.yaml
-            ../pnpm-workspace.yaml
+            (sp + /package.json)
+            (sp + /tsconfig.json)
+            (sp + /pnpm-lock.yaml)
+            (sp + /pnpm-workspace.yaml)
           ]
         );
       };
@@ -53,7 +53,7 @@ in
     # to fetch deps for and build. Alas, NodeJS.
     pnpmDeps = fetchPnpmDeps {
       inherit (finalAttrs) pname src pnpmInstallFlags;
-      hash = "sha256-jIQGYom/yaXifcc38Q/PX3YdiN9wVHNG5npjdXTbokM=";
+      hash = "sha256-wwqCMURGe++xRucDGB/zoGdHYc2FIOBwPlT/cvEyl2c=";
       fetcherVersion = 3; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
     };
 
