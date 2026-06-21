@@ -29,10 +29,10 @@
     "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "@types/node": "^25.9.3",
-    "astro": "^6.4.6",
+    "@types/node": "^26.0.0",
+    "astro": "^6.4.8",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.7"
+    "vitest": "^4.1.9"
   },
   "keywords": [
     "astro",
