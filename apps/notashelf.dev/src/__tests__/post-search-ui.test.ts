@@ -61,10 +61,10 @@ function buildDOM() {
   li1p.dataset.postId = "post-1";
   li1p.dataset.keywords = "javascript,testing";
   const t1p = document.createElement("div");
-  t1p.className = "post-title";
+  t1p.className = "card-title";
   t1p.textContent = "JavaScript Testing";
   const d1p = document.createElement("div");
-  d1p.className = "post-description";
+  d1p.className = "card-description";
   d1p.textContent = "Learn about testing in JavaScript";
   li1p.append(t1p, d1p);
   postList.append(li1p);
@@ -77,10 +77,10 @@ function buildDOM() {
   li1a.dataset.postId = "post-1";
   li1a.dataset.keywords = "javascript,testing";
   const t1a = document.createElement("div");
-  t1a.className = "post-title";
+  t1a.className = "card-title";
   t1a.textContent = "JavaScript Testing";
   const d1a = document.createElement("div");
-  d1a.className = "post-description";
+  d1a.className = "card-description";
   d1a.textContent = "Learn about testing in JavaScript";
   li1a.append(t1a, d1a);
   const li2a = document.createElement("li");
@@ -88,10 +88,10 @@ function buildDOM() {
   li2a.dataset.postId = "post-2";
   li2a.dataset.keywords = "typescript,development";
   const t2a = document.createElement("div");
-  t2a.className = "post-title";
+  t2a.className = "card-title";
   t2a.textContent = "TypeScript Guide";
   const d2a = document.createElement("div");
-  d2a.className = "post-description";
+  d2a.className = "card-description";
   d2a.textContent = "TypeScript development guide";
   li2a.append(t2a, d2a);
   postListAll.append(li1a, li2a);
@@ -427,7 +427,7 @@ describe("post-search-ui", () => {
       extra.dataset.postId = "no-title";
       extra.dataset.keywords = "test";
       const descOnly = document.createElement("div");
-      descOnly.className = "post-description";
+      descOnly.className = "card-description";
       descOnly.textContent = "Description only";
       extra.append(descOnly);
       document.querySelector(".post-list-all")?.append(extra);

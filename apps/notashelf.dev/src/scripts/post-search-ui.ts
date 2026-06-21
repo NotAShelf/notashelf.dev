@@ -247,8 +247,8 @@ export class PostSearchUI {
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
     itemsToFilter.forEach((post) => {
-      const titleEl = post.querySelector(".post-title");
-      const descEl = post.querySelector(".post-description");
+      const titleEl = post.querySelector(".card-title");
+      const descEl = post.querySelector(".card-description");
       if (!titleEl) return;
 
       const title = titleEl.textContent?.toLowerCase() || "";

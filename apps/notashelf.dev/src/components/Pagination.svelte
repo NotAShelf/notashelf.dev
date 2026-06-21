@@ -44,6 +44,9 @@
     >
       <svg
         class="chevron-icon"
+        width="1em"
+        height="1em"
+        fill="currentColor"
         viewBox="0 0 640 640"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
@@ -85,6 +88,9 @@
     >
       <svg
         class="chevron-icon"
+        width="1em"
+        height="1em"
+        fill="currentColor"
         viewBox="0 0 640 640"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"

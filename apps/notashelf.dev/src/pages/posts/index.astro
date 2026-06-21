@@ -142,10 +142,10 @@ const posts = sortedPosts.slice(0, postsPerPage);
     document.querySelectorAll(".post-dropdown-item").forEach((el) => {
       const element = el as HTMLElement;
       const postId = element.getAttribute("data-post-id");
-      const title = element.querySelector(".post-title")?.textContent;
+      const title = element.querySelector(".card-title")?.textContent;
       const description =
-        element.querySelector(".post-description")?.textContent;
-      const timeElement = element.querySelector(".post-date");
+        element.querySelector(".card-description")?.textContent;
+      const timeElement = element.querySelector("time");
       const keywords = element.getAttribute("data-keywords")?.split(",") || [];
 
       // Extract actual date from the datetime attribute or fallback gracefully
