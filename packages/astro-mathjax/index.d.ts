@@ -8,7 +8,6 @@ export interface MathJaxSvgOptions {
 
 export interface AstroMathJaxOptions {
   svg?: MathJaxSvgOptions;
-  includeMdx?: boolean;
 }
 
 export default function mathjax(

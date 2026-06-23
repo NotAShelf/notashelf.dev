@@ -404,16 +404,32 @@ export default function astroEmailObfuscation(
       ".path",
     ];
 
+    // Local/non-internet TLDs that appear in SSH hosts but never in real emails
+    const localDomainSuffixes = [
+      ".local", // mDNS / Avahi / Bonjour
+      ".lan", // common home-network convention
+      ".home", // common home-network convention
+      ".internal", // corp/cloud internal DNS
+      ".corp", // corporate internal
+      ".localhost", // RFC 2606 reserved
+      ".test", // RFC 2606 reserved
+      ".invalid", // RFC 2606 reserved
+      ".arpa", // infrastructure / reverse DNS
+    ];
+
     // Email regex; must have a dot in the domain part (avoids SSH user@host)
     // Group 1: local part, Group 2: domain part
-    // This helps catch sensitive information while allowing not-so-sensitive
-    // SSH addresses such as me@machine without a domain.
     const emailPattern =
       /\b([A-Za-z0-9](?:[A-Za-z0-9._%+-]*[A-Za-z0-9])?)@([A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?\.[A-Za-z]{2,})\b/g;
 
     // Check if domain ends with a systemd suffix
     function isSystemdUnit(domain: string): boolean {
       return systemdSuffixes.some((suffix) => domain.endsWith(suffix));
+    }
+
+    // Check if domain is a local/non-internet hostname (SSH targets, etc.)
+    function isLocalDomain(domain: string): boolean {
+      return localDomainSuffixes.some((suffix) => domain.endsWith(suffix));
     }
 
     // Process mailto links if target includes "link"
@@ -428,6 +444,7 @@ export default function astroEmailObfuscation(
             matchParts &&
             validateEmail(email) &&
             !isSystemdUnit(matchParts[2]) &&
+            !isLocalDomain(matchParts[2]) &&
             !excludeAddressesSet.has(email)
           ) {
             emailCount++;
@@ -466,6 +483,7 @@ export default function astroEmailObfuscation(
               if (
                 !validateEmail(full) ||
                 isSystemdUnit(domain) ||
+                isLocalDomain(domain) ||
                 excludeAddressesSet.has(full)
               ) {
                 return full;

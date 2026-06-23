@@ -36,7 +36,7 @@
     "static-site"
   ],
   "peerDependencies": {
-    "astro": "^5.0.0 || ^6.0.0"
+    "astro": "^7.0.0"
   },
   "devDependencies": {
     "@types/jsdom": "^28.0.3",

@@ -28,7 +28,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "peerDependencies": {
-    "astro": "^5.8.0 || ^6.0.0"
+    "astro": "^7.0.0"
   },
   "keywords": [
     "astro",

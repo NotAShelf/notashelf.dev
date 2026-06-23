@@ -1,5 +1,6 @@
 import remarkMath from "remark-math";
 import rehypeMathjaxSvg from "rehype-mathjax/svg";
+import { unified, isUnifiedProcessor } from "@astrojs/markdown-remark";
 import type { AstroIntegration } from "astro";
 
 export interface MathJaxSvgOptions {
@@ -10,12 +11,6 @@ export interface MathJaxSvgOptions {
 
 export interface AstroMathJaxOptions {
   svg?: MathJaxSvgOptions;
-  /**
-   * Math applies to MDX automatically in Astro 5 (MDX inherits markdown plugins).
-   * This option is kept for future compatibility but has no runtime effect.
-   * @default true
-   */
-  includeMdx?: boolean;
 }
 
 export default function mathjax(
@@ -26,13 +21,32 @@ export default function mathjax(
   return {
     name: "astro-mathjax",
     hooks: {
-      "astro:config:setup": ({ updateConfig }) => {
-        updateConfig({
-          markdown: {
-            remarkPlugins: [remarkMath],
-            rehypePlugins: [[rehypeMathjaxSvg, svg]],
-          },
-        });
+      "astro:config:setup": ({ config, updateConfig }) => {
+        const existing = (config.markdown as any)?.processor;
+        if (existing && isUnifiedProcessor(existing)) {
+          const opts = existing.options;
+          updateConfig({
+            markdown: {
+              processor: unified({
+                ...opts,
+                remarkPlugins: [...(opts.remarkPlugins ?? []), remarkMath],
+                rehypePlugins: [
+                  ...(opts.rehypePlugins ?? []),
+                  [rehypeMathjaxSvg, svg],
+                ],
+              }),
+            },
+          });
+        } else {
+          updateConfig({
+            markdown: {
+              processor: unified({
+                remarkPlugins: [remarkMath],
+                rehypePlugins: [[rehypeMathjaxSvg, svg]],
+              }),
+            },
+          });
+        }
       },
     },
   };

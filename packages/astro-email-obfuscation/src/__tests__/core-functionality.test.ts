@@ -566,6 +566,93 @@ describe("Core Functionality", () => {
     });
   });
 
+  describe("SSH / Local Hostname Detection", () => {
+    const sshCases = [
+      "root@server.local",
+      "user@homeserver.lan",
+      "deploy@machine.home",
+      "admin@proxy.internal",
+      "ci@builder.corp",
+      "git@pi.hole",
+    ];
+
+    it.each(sshCases)(
+      "should not obfuscate SSH-style host %s in text",
+      async (host) => {
+        const integration = astroEmailObfuscation({
+          method: "rot18",
+          dev: true,
+        });
+        const buildHook = integration.hooks["astro:build:done"];
+
+        const htmlContent = `<html><body><p>Run: ssh ${host}</p></body></html>`;
+
+        mockFs.readdir.mockResolvedValue([
+          {
+            name: "test.html",
+            isDirectory: () => false,
+            isFile: () => true,
+          } as any,
+        ]);
+        mockFs.readFile.mockImplementation((filePath: any) => {
+          if (filePath.includes("decoder.js"))
+            return Promise.resolve("// decoder");
+          return Promise.resolve(htmlContent);
+        });
+
+        let processedContent = "";
+        mockFs.writeFile.mockImplementation((_: any, content: any) => {
+          processedContent = content;
+          return Promise.resolve();
+        });
+
+        await buildHook(mockBuildContext);
+
+        expect(processedContent).toContain(host);
+        expect(processedContent).not.toContain("rot18-email");
+      },
+    );
+
+    it("should still obfuscate real emails when SSH hosts are present", async () => {
+      const integration = astroEmailObfuscation({ method: "rot18", dev: true });
+      const buildHook = integration.hooks["astro:build:done"];
+
+      const htmlContent = `
+        <html><body>
+          <p>SSH: ssh root@server.local</p>
+          <p>Email: contact@example.com</p>
+        </body></html>
+      `;
+
+      mockFs.readdir.mockResolvedValue([
+        {
+          name: "mixed.html",
+          isDirectory: () => false,
+          isFile: () => true,
+        } as any,
+      ]);
+      mockFs.readFile.mockImplementation((filePath: any) => {
+        if (filePath.includes("decoder.js"))
+          return Promise.resolve("// decoder");
+        return Promise.resolve(htmlContent);
+      });
+
+      let processedContent = "";
+      mockFs.writeFile.mockImplementation((_: any, content: any) => {
+        processedContent = content;
+        return Promise.resolve();
+      });
+
+      await buildHook(mockBuildContext);
+
+      expect(processedContent).toContain("root@server.local");
+      expect(processedContent).toContain("rot18-email");
+      expect(mockLogger.info).toHaveBeenCalledWith(
+        expect.stringContaining("1 emails processed"),
+      );
+    });
+  });
+
   describe("Development Mode", () => {
     it("should skip processing in development mode by default", async () => {
       const originalEnv = process.env.NODE_ENV;

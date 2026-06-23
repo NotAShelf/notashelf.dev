@@ -3,6 +3,7 @@ import { defineConfig } from "astro/config";
 
 // First party integrations
 import mdx from "@astrojs/mdx";
+import { unified } from "@astrojs/markdown-remark";
 import sitemap from "@astrojs/sitemap";
 import partytown from "@astrojs/partytown";
 import svelte from "@astrojs/svelte";
@@ -95,24 +96,7 @@ export default defineConfig({
     }),
     svelte(),
     mathjax(),
-    mdx({
-      gfm: true,
-      smartypants: true,
-      remarkPlugins: [
-        remarkEmDash,
-        remarkGfm,
-        [remarkToc, { heading: "contents" }],
-      ],
-      rehypePlugins: [
-        [
-          rehypeExternalLinks,
-          {
-            target: "_blank",
-            rel: ["nofollow", "noopener", "noreferrer"],
-          },
-        ],
-      ],
-    }),
+    mdx(),
 
     // Home-Baked Integrations
     plausible({
@@ -185,23 +169,24 @@ export default defineConfig({
   ],
 
   markdown: {
-    gfm: true,
-    smartypants: true,
-    remarkPlugins: [
-      remarkEmDash,
-      remarkGfm,
-      [remarkToc, { heading: "contents" }],
-    ],
-
-    rehypePlugins: [
-      [
-        rehypeExternalLinks,
-        {
-          target: "_blank",
-          rel: ["nofollow", "noopener", "noreferrer"],
-        },
+    processor: unified({
+      gfm: true,
+      smartypants: true,
+      remarkPlugins: [
+        remarkEmDash,
+        remarkGfm,
+        [remarkToc, { heading: "contents" }],
       ],
-    ],
+      rehypePlugins: [
+        [
+          rehypeExternalLinks,
+          {
+            target: "_blank",
+            rel: ["nofollow", "noopener", "noreferrer"],
+          },
+        ],
+      ],
+    }),
   },
 
   // Prefetch configuration

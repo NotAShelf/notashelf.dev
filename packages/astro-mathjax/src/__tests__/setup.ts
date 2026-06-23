@@ -11,7 +11,7 @@ export const mockLogger = {
   debug: vi.fn(),
 };
 
-export function createMockSetupContext() {
+export function createMockSetupContext(processor?: object) {
   return {
     command: "build" as const,
     isRestart: false,
@@ -19,8 +19,7 @@ export function createMockSetupContext() {
     config: {
       integrations: [],
       markdown: {
-        remarkPlugins: [],
-        rehypePlugins: [],
+        ...(processor ? { processor } : {}),
       },
     },
     updateConfig: vi.fn(),
