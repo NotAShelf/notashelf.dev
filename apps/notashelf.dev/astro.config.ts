@@ -113,7 +113,20 @@ export default defineConfig({
     }),
 
     purgeCss({
-      safelist: ["safe-class", "archive-banner", "visible", "animate"],
+      safelist: [
+        "safe-class",
+        "archive-banner",
+        "visible",
+        "animate",
+        // PostToc.svelte: applied via class="" template strings and class:active directive
+        "toc-item",
+        "toc-sidebar-item",
+        "level-2",
+        "level-3",
+        "active",
+        // PostSearch.svelte: class:disabled on pagination links
+        "disabled",
+      ],
       blocklist: ["blocked-class"],
       postcss: {
         options: {

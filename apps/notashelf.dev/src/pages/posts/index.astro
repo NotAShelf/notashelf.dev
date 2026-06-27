@@ -13,8 +13,6 @@ const filteredPosts = allPosts.filter(
 );
 const sortedPosts = getSortedPosts(filteredPosts);
 
-const postsPerPage = 5;
-const totalPages = Math.ceil(sortedPosts.length / postsPerPage);
 const currentPage = 1;
 
 const serialize = (post: PostEntry) => ({
@@ -30,53 +28,24 @@ const serialize = (post: PostEntry) => ({
   ),
 });
 
-const pagedPosts = sortedPosts.slice(0, postsPerPage).map(serialize);
 const allPostsData = sortedPosts.map(serialize);
 const allTags = [
-  ...new Set(sortedPosts.flatMap((post: PostEntry) => post.data.keywords || [])),
+  ...new Set(
+    sortedPosts.flatMap((post: PostEntry) => post.data.keywords || []),
+  ),
 ].sort() as string[];
 ---
 
 <BaseLayout title="Blog Posts" description="Collection of blog posts">
-  <div class="posts-header">
-    <h1 class="page-title">Blog Posts</h1>
-    <a href="/archive" class="archive-link">
-      <Icon name="box-archive" /> View Archive
-    </a>
-  </div>
-
   <PostSearch
-    pagedPosts={pagedPosts}
     allPosts={allPostsData}
     currentPage={currentPage}
-    totalPages={totalPages}
     baseUrl="/posts"
     allTags={allTags}
     client:load
-  />
+  >
+    <a href="/archive" class="archive-link" slot="archive-link">
+      <Icon name="box-archive" /> View Archive
+    </a>
+  </PostSearch>
 </BaseLayout>
-
-<style lang="scss">
-  @use "sass:color";
-  @use "../../styles/global" as *;
-
-  .posts-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 1.5rem;
-  }
-
-  .page-title {
-    margin-bottom: 0;
-  }
-
-  .archive-link {
-    @include button-base;
-    @include icon-size(0.9rem);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-  }
-</style>

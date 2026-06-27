@@ -339,6 +339,33 @@ a.footnote-ref {
   }
 }
 
+// Archive link — global so slot-rendered content gets styles before Svelte hydrates
+.archive-link {
+  @include button-base;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+
+  svg {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+}
+
+// Needs higher specificity than `main a:link` (0,1,2) to avoid teal override
+main .archive-link {
+  &:link,
+  &:visited {
+    color: $secondary;
+  }
+
+  &:hover {
+    background-color: $button-bg-hover;
+    color: $secondary;
+  }
+}
+
 // Title anchor
 .title-anchor {
   position: absolute;
