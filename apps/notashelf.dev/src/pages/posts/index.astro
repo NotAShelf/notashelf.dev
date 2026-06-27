@@ -1,5 +1,5 @@
 ---
-import Pagination from "@components/Pagination.svelte";
+import Pagination from "@components/Pagination.astro";
 import PostList from "@components/PostList.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getSortedPosts } from "@lib/postUtils";
@@ -125,7 +125,6 @@ const posts = sortedPosts.slice(0, postsPerPage);
       currentPage={currentPage}
       totalPages={totalPages}
       baseUrl="/posts"
-      client:load
     />
   </div>
 </BaseLayout>
