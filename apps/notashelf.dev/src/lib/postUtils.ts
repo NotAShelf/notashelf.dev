@@ -9,6 +9,26 @@ export async function getPostStaticPaths() {
   }));
 }
 
+export async function getActivePostStaticPaths() {
+  const postEntries = await getCollection("posts");
+  return postEntries
+    .filter((entry: PostEntry) => !entry.data.archived && !entry.data.draft)
+    .map((entry: PostEntry) => ({
+      params: { slug: entry.id },
+      props: { entry },
+    }));
+}
+
+export async function getArchivedPostStaticPaths() {
+  const postEntries = await getCollection("posts");
+  return postEntries
+    .filter((entry: PostEntry) => entry.data.archived)
+    .map((entry: PostEntry) => ({
+      params: { slug: entry.id },
+      props: { entry },
+    }));
+}
+
 // Define interface for post data with dates
 export interface PostData {
   title: string;

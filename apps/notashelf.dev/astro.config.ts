@@ -113,7 +113,7 @@ export default defineConfig({
     }),
 
     purgeCss({
-      safelist: ["safe-class"],
+      safelist: ["safe-class", "archive-banner", "visible", "animate"],
       blocklist: ["blocked-class"],
       postcss: {
         options: {

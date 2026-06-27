@@ -1,12 +1,12 @@
 ---
 import PostLayout from "@layouts/PostLayout.astro";
-import { convertPostDates, getPostStaticPaths } from "@lib/postUtils";
+import { convertPostDates, getActivePostStaticPaths } from "@lib/postUtils";
 import type { PostEntry } from "@lib/types";
 import { render } from "astro:content";
 
 export const prerender = true;
 export async function getStaticPaths() {
-  return getPostStaticPaths();
+  return getActivePostStaticPaths();
 }
 
 const { entry } = Astro.props as { entry: PostEntry };
