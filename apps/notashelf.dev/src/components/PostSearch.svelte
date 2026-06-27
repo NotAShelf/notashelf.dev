@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
 
   export interface PostData {
     id: string;
@@ -11,12 +11,11 @@
     hasSignificantUpdate: boolean;
   }
 
-  export let pagedPosts: PostData[];
   export let allPosts: PostData[];
   export let currentPage: number;
-  export let totalPages: number;
   export let baseUrl: string;
   export let allTags: string[];
+  export let pageTitle: string = "Blog Posts";
 
   const STORAGE_KEY = "post-search-state";
   const DISPLAYED_PAGES = 5;
@@ -26,6 +25,22 @@
   let isViewingAll = false;
   let isRecentlyUpdated = false;
   let debounceTimer: ReturnType<typeof setTimeout>;
+
+  let postsListEl: HTMLUListElement | null = null;
+  let dynamicPerPage = 5;
+  let localPage = currentPage;
+
+  async function updatePerPage() {
+    await tick();
+    if (!postsListEl) return;
+    const listTop = postsListEl.getBoundingClientRect().top;
+    const firstCard = postsListEl.querySelector(".post-dropdown-item") as HTMLElement | null;
+    const cardHeight = firstCard
+      ? firstCard.getBoundingClientRect().height +
+        parseFloat(window.getComputedStyle(firstCard).marginBottom || "10")
+      : 120;
+    dynamicPerPage = Math.max(1, Math.floor((window.innerHeight - listTop - 20) / cardHeight));
+  }
 
   onMount(() => {
     try {
@@ -37,6 +52,9 @@
         if (typeof state.viewAll === "boolean") isViewingAll = state.viewAll;
       }
     } catch {}
+    updatePerPage();
+    window.addEventListener("resize", updatePerPage);
+    return () => window.removeEventListener("resize", updatePerPage);
   });
 
   function saveState() {
@@ -71,16 +89,22 @@
 
   $: isFiltering =
     isViewingAll || !!searchQuery.trim() || !!activeTag || isRecentlyUpdated;
-  $: displayPosts = isFiltering ? filteredPosts : pagedPosts;
-  $: showPagination = !isFiltering && totalPages > 1;
+  $: dynTotalPages = Math.max(1, Math.ceil(allPosts.length / dynamicPerPage));
+  $: clampedPage = Math.max(1, Math.min(localPage, dynTotalPages));
+  $: dynPagedPosts = allPosts.slice(
+    (clampedPage - 1) * dynamicPerPage,
+    clampedPage * dynamicPerPage,
+  );
+  $: displayPosts = isFiltering ? filteredPosts : dynPagedPosts;
+  $: showPagination = !isFiltering && dynTotalPages > 1;
 
   $: startPage = (() => {
-    let s = Math.max(1, currentPage - Math.floor(DISPLAYED_PAGES / 2));
-    const e = Math.min(totalPages, s + DISPLAYED_PAGES - 1);
+    let s = Math.max(1, clampedPage - Math.floor(DISPLAYED_PAGES / 2));
+    const e = Math.min(dynTotalPages, s + DISPLAYED_PAGES - 1);
     if (e - s + 1 < DISPLAYED_PAGES) s = Math.max(1, e - DISPLAYED_PAGES + 1);
     return s;
   })();
-  $: endPage = Math.min(totalPages, startPage + DISPLAYED_PAGES - 1);
+  $: endPage = Math.min(dynTotalPages, startPage + DISPLAYED_PAGES - 1);
   $: pageNumbers = Array.from(
     { length: endPage - startPage + 1 },
     (_, i) => startPage + i,
@@ -143,19 +167,25 @@
     });
   }
 
-  function getPageUrl(page: number): string {
-    return page === 1 ? baseUrl : `${baseUrl}/${page}`;
+  function goToPage(page: number) {
+    localPage = Math.max(1, Math.min(page, dynTotalPages));
+    const url = localPage === 1 ? baseUrl : `${baseUrl}/${localPage}`;
+    history.pushState({ page: localPage }, "", url);
+    saveState();
   }
 </script>
 
-<div class="view-toggle-row">
-  <button
-    class="view-toggle"
-    class:active={isViewingAll}
-    on:click={toggleViewAll}
-    title="Toggle view mode"
-    aria-label="Toggle between paginated and all posts view"
-  >
+<div class="posts-header">
+  <h1 class="page-title">{pageTitle}</h1>
+  <div class="header-actions">
+    <slot name="archive-link" />
+    <button
+      class="view-toggle"
+      class:active={isViewingAll}
+      on:click={toggleViewAll}
+      title="Toggle view mode"
+      aria-label="Toggle between paginated and all posts view"
+    >
     {#if isViewingAll}
       <svg
         class="icon"
@@ -185,7 +215,8 @@
       </svg>
       View All
     {/if}
-  </button>
+    </button>
+  </div>
 </div>
 
 <div class="filters-container">
@@ -283,7 +314,7 @@
     >
   </div>
 {:else}
-  <ul class="post-list">
+  <ul class="post-list" bind:this={postsListEl}>
     {#each displayPosts as post (post.id)}
       <li class="post-dropdown-item">
         <a href={`/posts/${post.id}`} class="dropdown-link">
@@ -316,14 +347,13 @@
 
 {#if showPagination}
   <nav class="pagination" aria-label="Pagination">
-    <a
-      href={currentPage > 1 ? getPageUrl(currentPage - 1) : "#"}
+    <button
       class="pagination-link prev"
-      class:disabled={currentPage <= 1}
+      class:disabled={clampedPage <= 1}
       aria-label="Previous page"
-      aria-disabled={currentPage <= 1}
-      tabindex={currentPage <= 1 ? -1 : 0}
-      on:click={saveState}
+      aria-disabled={clampedPage <= 1}
+      disabled={clampedPage <= 1}
+      on:click={() => goToPage(clampedPage - 1)}
     >
       <svg
         class="chevron-icon"
@@ -337,44 +367,40 @@
           d="M169.4 297.4C156.9 309.9 156.9 330.2 169.4 342.7L361.4 534.7C373.9 547.2 394.2 547.2 406.7 534.7C419.2 522.2 419.2 501.9 406.7 489.4L237.3 320L406.6 150.6C419.1 138.1 419.1 117.8 406.6 105.3C394.1 92.8 373.8 92.8 361.3 105.3L169.3 297.3z"
         />
       </svg>
-    </a>
+    </button>
 
     {#if startPage > 1}
-      <a href={getPageUrl(1)} class="pagination-link" on:click={saveState}>1</a>
+      <button class="pagination-link" on:click={() => goToPage(1)}>1</button>
       {#if startPage > 2}
         <span class="pagination-ellipsis">...</span>
       {/if}
     {/if}
 
     {#each pageNumbers as page (page)}
-      <a
-        href={getPageUrl(page)}
+      <button
         class="pagination-link"
-        class:active={currentPage === page}
-        aria-current={currentPage === page ? "page" : undefined}
-        on:click={saveState}
-      >{page}</a>
+        class:active={clampedPage === page}
+        aria-current={clampedPage === page ? "page" : undefined}
+        on:click={() => goToPage(page)}
+      >{page}</button>
     {/each}
 
-    {#if endPage < totalPages}
-      {#if endPage < totalPages - 1}
+    {#if endPage < dynTotalPages}
+      {#if endPage < dynTotalPages - 1}
         <span class="pagination-ellipsis">...</span>
       {/if}
-      <a
-        href={getPageUrl(totalPages)}
-        class="pagination-link"
-        on:click={saveState}>{totalPages}</a
+      <button class="pagination-link" on:click={() => goToPage(dynTotalPages)}
+        >{dynTotalPages}</button
       >
     {/if}
 
-    <a
-      href={currentPage < totalPages ? getPageUrl(currentPage + 1) : "#"}
+    <button
       class="pagination-link next"
-      class:disabled={currentPage >= totalPages}
+      class:disabled={clampedPage >= dynTotalPages}
       aria-label="Next page"
-      aria-disabled={currentPage >= totalPages}
-      tabindex={currentPage >= totalPages ? -1 : 0}
-      on:click={saveState}
+      aria-disabled={clampedPage >= dynTotalPages}
+      disabled={clampedPage >= dynTotalPages}
+      on:click={() => goToPage(clampedPage + 1)}
     >
       <svg
         class="chevron-icon"
@@ -388,7 +414,7 @@
           d="M471.1 297.4C483.6 309.9 483.6 330.2 471.1 342.7L279.1 534.7C266.6 547.2 246.3 547.2 233.8 534.7C221.3 522.2 221.3 501.9 233.8 489.4L403.2 320L233.9 150.6C221.4 138.1 221.4 117.8 233.9 105.3C246.4 92.8 266.7 92.8 279.2 105.3L471.2 297.3z"
         />
       </svg>
-    </a>
+    </button>
   </nav>
 {/if}
 
@@ -396,11 +422,26 @@
   @use "sass:color";
   @use "../styles/variables" as vars;
 
-  .view-toggle-row {
+  .posts-header {
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: 1rem;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 3rem;
+    margin-bottom: 1.5rem;
   }
+
+  .page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
 
   .view-toggle {
     display: flex;
@@ -408,7 +449,7 @@
     gap: 0.5rem;
     font-size: 0.9rem;
     color: color.scale(vars.$secondary, $lightness: -20%);
-    background-color: transparent;
+    background-color: vars.$button-bg;
     padding: 0.4rem 0.8rem;
     border-radius: 4px;
     border: none;
@@ -416,7 +457,11 @@
     font-family: inherit;
     transition: all 0.2s ease;
 
-    &:hover,
+    &:hover {
+      background-color: vars.$button-bg-hover;
+      color: vars.$secondary;
+    }
+
     &.active {
       background-color: vars.$button-bg;
       color: vars.$secondary;
