@@ -1,5 +1,5 @@
 ---
-import Pagination from "@components/Pagination.svelte";
+import Pagination from "@components/Pagination.astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getSortedPosts } from "@lib/postUtils";
 import type { PostEntry } from "@lib/types";
@@ -85,7 +85,6 @@ const posts = archivedPosts.slice(startIndex, endIndex);
         currentPage={currentPage}
         totalPages={totalPages}
         baseUrl="/archive"
-        client:load
       />
     )
   }

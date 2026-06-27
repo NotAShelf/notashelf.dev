@@ -1,4 +1,5 @@
 ---
+import PostToc from "@components/PostToc.svelte";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { isSignificantUpdate } from "@lib/postUtils";
 import { Icon } from "astro-icon/components";
@@ -106,14 +107,7 @@ const sourceHref = `${postSrc}/blob/${gitRevision}/${
   {
     showToc && (
       <nav class="toc-sidebar" aria-hidden="true" aria-label="Page navigation">
-        {headings.map((heading) => (
-          <a
-            href={`#${heading.id}`}
-            class={`toc-sidebar-item level-${heading.level}`}
-          >
-            {heading.text}
-          </a>
-        ))}
+        <PostToc headings={headings} itemClass="toc-sidebar-item" client:load />
       </nav>
     )
   }
@@ -169,14 +163,7 @@ const sourceHref = `${postSrc}/blob/${gitRevision}/${
           <details class="toc" open>
             <summary>Table of Contents</summary>
             <nav class="toc-list">
-              {headings.map((heading) => (
-                <a
-                  href={`#${heading.id}`}
-                  class={`toc-item level-${heading.level}`}
-                >
-                  {heading.text}
-                </a>
-              ))}
+              <PostToc headings={headings} itemClass="toc-item" client:load />
             </nav>
           </details>
         </div>
@@ -200,7 +187,6 @@ const sourceHref = `${postSrc}/blob/${gitRevision}/${
 
 <script>
   import "../scripts/post-enhancements.ts";
-  import "../scripts/post-toc.ts";
 
   const bar = document.getElementById("reading-progress");
   if (bar) {
