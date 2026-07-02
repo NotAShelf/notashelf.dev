@@ -109,7 +109,6 @@ const bottomRowProjects = displayProjects.slice(3);
 </script>
 
 <style lang="scss">
-  @use "sass:color";
   @use "../styles/global" as *;
 
   .projects-display {
@@ -211,31 +210,6 @@ const bottomRowProjects = displayProjects.slice(3);
     }
   }
 
-  .project-card {
-    background-color: color.scale($primary, $lightness: 6%);
-    border-radius: 8px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    border: 1px solid color.scale($primary, $lightness: -1%);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    &:hover {
-      transform: translateY(-4px);
-      background-color: color.scale($primary, $lightness: 9%);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-    }
-
-    &.inactive {
-      opacity: 0.7;
-
-      &:hover {
-        opacity: 0.9;
-      }
-    }
-  }
-
   .pre-shuffle-hide {
     display: none !important;
   }
@@ -244,119 +218,6 @@ const bottomRowProjects = displayProjects.slice(3);
     visibility: hidden !important;
     opacity: 0 !important;
     pointer-events: none !important;
-  }
-
-  .project-content {
-    padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .project-title {
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-    line-height: 1.4;
-
-    a {
-      color: $secondary;
-      text-decoration: none;
-      transition: color 0.2s ease;
-
-      &:hover {
-        color: color.scale($primary, $lightness: 40%);
-      }
-    }
-  }
-
-  .project-meta {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.75rem;
-    font-size: 0.8rem;
-    gap: 0.75rem;
-  }
-
-  .project-date {
-    color: color.scale($secondary, $lightness: -15%);
-  }
-
-  .status-badge {
-    @include rounded-border;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.7rem;
-    font-weight: 500;
-
-    &.active {
-      background-color: color.scale($primary, $lightness: 10%);
-      color: $secondary;
-    }
-
-    &.inactive {
-      background-color: color.scale($primary, $lightness: -2%);
-      color: color.scale($secondary, $lightness: -15%);
-    }
-  }
-
-  .description-container {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .project-description {
-    margin-bottom: 0.75rem;
-    font-size: 0.9rem;
-    color: color.scale($secondary, $lightness: -8%);
-    line-height: 1.5;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-  }
-
-  .project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .project-tag {
-    @include rounded-border;
-    background-color: color.scale($primary, $lightness: 4%);
-    color: color.scale($secondary, $lightness: -5%);
-    padding: 0.2rem 0.5rem;
-    font-size: 0.7rem;
-
-    &.more {
-      background-color: color.scale($primary, $lightness: 2%);
-      font-size: 0.65rem;
-    }
-  }
-
-  .view-project {
-    @include interactive-link;
-    margin-top: auto;
-    font-weight: 600;
-    font-size: 0.85rem;
-    align-self: flex-start;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-
-    &:hover {
-      color: color.scale($secondary, $lightness: 20%);
-
-      .arrow-icon {
-        transform: translateX(4px);
-      }
-    }
-
-    .arrow-icon {
-      @include smooth-transition(transform);
-    }
   }
 
   .see-all {
@@ -372,7 +233,7 @@ const bottomRowProjects = displayProjects.slice(3);
     font-size: 0.9rem;
     font-weight: 600;
     padding: 0.5rem 1rem;
-    background-color: color.scale($primary, $lightness: 8%);
+    background-color: $card-bg-alt;
 
     .arrow-icon {
       margin-left: 0.3rem;
@@ -380,7 +241,7 @@ const bottomRowProjects = displayProjects.slice(3);
     }
 
     &:hover {
-      background-color: color.scale($primary, $lightness: 12%);
+      background-color: $card-hover-bg-alt;
 
       .arrow-icon {
         transform: translateX(4px);
@@ -392,6 +253,10 @@ const bottomRowProjects = displayProjects.slice(3);
     font-size: 1.1em;
     width: 0.9em;
     height: 0.9em;
+  }
+
+  :global(.arrow-icon:hover) {
+    transform: none;
   }
 
   @media (max-width: 768px) {

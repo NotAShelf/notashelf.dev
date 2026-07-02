@@ -1,4 +1,6 @@
 ---
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+
 const secondaryNavItems = [
   { title: "Projects", url: "/projects" },
   { title: "Posts", url: "/posts" },
@@ -9,15 +11,24 @@ const secondaryNavItems = [
 <div class="nav-outer">
   <div class="nav-wrapper">
     <div class="nav-left">
-      <a class="nav-button" href="/">Index</a>
+      <a class={`nav-button ${currentPath === "/" ? "active" : ""}`} href="/">
+        Index
+      </a>
     </div>
     <div class="nav-right">
       {
-        secondaryNavItems.map((item, index) => (
-          <a class="nav-button" href={item.url} data-key={`nav-${index}`}>
-            {item.title}
-          </a>
-        ))
+        secondaryNavItems.map((item, index) => {
+          const isActive = currentPath.startsWith(item.url);
+          return (
+            <a
+              class={`nav-button ${isActive ? "active" : ""}`}
+              href={item.url}
+              data-key={`nav-${index}`}
+            >
+              {item.title}
+            </a>
+          );
+        })
       }
     </div>
   </div>
@@ -45,7 +56,7 @@ const secondaryNavItems = [
     width: 100%;
     max-width: 80ch;
     margin: 0 auto;
-    padding: 1rem 0;
+    padding: 1.25rem 0;
     box-sizing: border-box;
   }
 
@@ -64,16 +75,26 @@ const secondaryNavItems = [
     font-size: 16px;
     line-height: 1.5;
     font-weight: 800;
-    color: $secondary;
+    color: color.scale($secondary, $lightness: -10%);
     background: transparent;
     text-decoration: none;
     border: none;
-    margin: 0 5px;
+    margin: 0 8px;
     cursor: pointer;
     white-space: nowrap;
+    padding-bottom: 2px;
+    border-bottom: 2px solid transparent;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease;
 
     &:hover {
-      color: color.scale($secondary, $lightness: 5%);
+      color: $secondary;
+    }
+
+    &.active {
+      color: $secondary;
+      border-bottom-color: rgba(255, 255, 255, 0.25);
     }
   }
 

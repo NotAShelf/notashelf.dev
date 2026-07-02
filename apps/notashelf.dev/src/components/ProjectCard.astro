@@ -80,21 +80,12 @@ const formatDate = (date?: Date) => {
   @use "../styles/global" as *;
 
   .project-card {
-    background-color: color.scale($primary, $lightness: 6%);
-    border-radius: 8px;
+    @include card-surface;
     overflow: hidden;
-    transition: all 0.3s ease;
-    border: 1px solid color.scale($primary, $lightness: -1%);
     height: 100%;
     display: flex;
     flex-direction: column;
     width: 100%;
-
-    &:hover {
-      transform: translateY(-4px);
-      background-color: color.scale($primary, $lightness: 9%);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-    }
 
     &.inactive {
       opacity: 0.7;
@@ -118,9 +109,7 @@ const formatDate = (date?: Date) => {
     line-height: 1.4;
 
     a {
-      color: $secondary;
-      text-decoration: none;
-      transition: color 0.2s ease;
+      @include interactive-link;
 
       &:hover {
         color: color.scale($primary, $lightness: 40%);
@@ -137,23 +126,20 @@ const formatDate = (date?: Date) => {
   }
 
   .project-date {
-    color: color.scale($secondary, $lightness: -15%);
+    color: $text-date;
   }
 
   .status-badge {
-    @include rounded-border;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.7rem;
-    font-weight: 500;
+    @include pill-tag;
 
     &.active {
-      background-color: color.scale($primary, $lightness: 10%);
+      background-color: $pill-bg;
       color: $secondary;
     }
 
     &.inactive {
-      background-color: color.scale($primary, $lightness: -2%);
-      color: color.scale($secondary, $lightness: -15%);
+      background-color: $pill-dim;
+      color: $text-date;
     }
   }
 
@@ -166,7 +152,7 @@ const formatDate = (date?: Date) => {
   .project-description {
     margin-bottom: 0.75rem;
     font-size: 0.9rem;
-    color: color.scale($secondary, $lightness: -8%);
+    color: $text-project-desc;
     line-height: 1.5;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -183,14 +169,12 @@ const formatDate = (date?: Date) => {
   }
 
   .project-tag {
-    @include rounded-border;
-    background-color: color.scale($primary, $lightness: 4%);
-    color: color.scale($secondary, $lightness: -5%);
-    padding: 0.2rem 0.5rem;
-    font-size: 0.7rem;
+    @include pill-tag;
+    background-color: $tag-bg;
+    color: $text-tag;
 
     &.more {
-      background-color: color.scale($primary, $lightness: 2%);
+      background-color: $tag-bg-hover;
       font-size: 0.65rem;
     }
   }
@@ -206,7 +190,7 @@ const formatDate = (date?: Date) => {
     gap: 0.3rem;
 
     &:hover {
-      color: color.scale($secondary, $lightness: 20%);
+      color: $text-link-bright;
 
       .arrow-icon {
         transform: translateX(4px);
@@ -222,5 +206,9 @@ const formatDate = (date?: Date) => {
     font-size: 1.1em;
     width: 0.9em;
     height: 0.9em;
+  }
+
+  :global(.arrow-icon:hover) {
+    transform: none;
   }
 </style>

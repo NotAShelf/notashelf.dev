@@ -54,7 +54,9 @@ if (featuredPosts.length >= 3) {
           sizes="(max-width: 480px) 100px, 120px"
         />
       </div>
-      <h1 class="reveal-text">Howdy! Welcome to my personal website.</h1>
+      <h1 id="hero-heading" class="reveal-text">
+        Howdy! Welcome to my personal website.
+      </h1>
       <p class="intro">
         This is where I share my projects, ideas, thoughts and notes on topics
         that I find interesting, difficult, obscure or otherwise worth sharing.
@@ -64,7 +66,8 @@ if (featuredPosts.length >= 3) {
         mathematics. I hope you find something useful or interesting here!
       </p>
       <div class="cta-buttons">
-        <a href="/posts" class="cta-button primary">Blog Posts</a>
+        <a href="/posts" class="cta-button secondary">Blog Posts</a>
+        <a href="/projects" class="cta-button secondary">My Projects</a>
         <a href="/about" class="cta-button secondary">About Me</a>
       </div>
     </div>
@@ -95,6 +98,32 @@ if (featuredPosts.length >= 3) {
 </BaseLayout>
 
 <script>
+  const greetings = [
+    "Howdy! Welcome to my personal website.",
+    "Hello there! You've reached notashelf.dev.",
+    "Hey! Thanks for stopping by.",
+    "Howdy! Make yourself at home.",
+    "Oh, hello! Didn't see you there.",
+    "Welcome! You've found your way here.",
+    "Hey there! Glad you found this corner of the web.",
+  ];
+
+  const headingAnimations = [
+    "reveal-text",
+    "reveal-text-up",
+    "reveal-text-fade",
+  ];
+
+  const heading = document.getElementById("hero-heading");
+  if (heading) {
+    const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+    const animClass =
+      headingAnimations[Math.floor(Math.random() * headingAnimations.length)];
+
+    heading.textContent = greeting;
+    heading.className = animClass;
+  }
+
   import "../scripts/page-utils.ts";
   import { projectShuffle } from "../scripts/utils/project-shuffle";
 
@@ -141,8 +170,54 @@ if (featuredPosts.length >= 3) {
       width: 100%;
       height: 100%;
       background: color.scale($primary, $lightness: -2%);
-      transform: translateX(-100%);
       animation: reveal 1.2s cubic-bezier(0.77, 0, 0.18, 1) forwards;
+    }
+  }
+
+  .reveal-text-up {
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: color.scale($primary, $lightness: -2%);
+      animation: revealUp 1.2s cubic-bezier(0.77, 0, 0.18, 1) forwards;
+    }
+  }
+
+  .reveal-text-fade {
+    opacity: 0;
+    filter: blur(8px);
+    animation: revealFade 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+
+  @keyframes revealFade {
+    0% {
+      opacity: 0;
+      filter: blur(8px);
+      transform: translateY(4px);
+    }
+    100% {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes revealUp {
+    0% {
+      transform: translateY(100%);
+    }
+    50% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-100%);
     }
   }
 
@@ -197,7 +272,7 @@ if (featuredPosts.length >= 3) {
   }
 
   h1 {
-    margin: 1.25rem 0 0.75rem;
+    margin: 1.25rem 0 2rem;
     font-size: 1.8rem;
     font-weight: 700;
     letter-spacing: -0.02em;
@@ -211,15 +286,19 @@ if (featuredPosts.length >= 3) {
 
     :global(img) {
       border-radius: 50%;
-      border: 3px solid color.scale($primary, $lightness: 15%);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      box-shadow:
+        0 0 0 6px rgba(255, 255, 255, 0.03),
+        0 6px 16px rgba(0, 0, 0, 0.2);
       transition:
         transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
         box-shadow 0.3s ease;
 
       &:hover {
         transform: scale(1.05) rotate(-2deg);
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+        box-shadow:
+          0 0 0 6px rgba(255, 255, 255, 0.03),
+          0 10px 24px rgba(0, 0, 0, 0.25);
       }
     }
   }
@@ -231,9 +310,10 @@ if (featuredPosts.length >= 3) {
 
   .intro {
     line-height: 1.6;
-    margin: 0 auto 1.5rem;
-    color: color.scale($secondary, $lightness: -10%);
+    margin: 0 auto 2.5rem;
+    color: $text-muted;
     font-size: 1rem;
+    max-width: 60ch;
     padding: 0 1rem;
   }
 
@@ -253,6 +333,7 @@ if (featuredPosts.length >= 3) {
     transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: hidden;
+
     &::after {
       content: "";
       position: absolute;
@@ -260,7 +341,7 @@ if (featuredPosts.length >= 3) {
       left: 0;
       width: 100%;
       height: 0;
-      background: $border-light;
+      background: rgba(255, 255, 255, 0.08);
       transition: height 0.2s ease;
       z-index: -1;
     }
@@ -270,11 +351,12 @@ if (featuredPosts.length >= 3) {
     }
 
     &.primary {
-      background-color: color.scale($primary, $lightness: 10%);
+      background-color: $button-bg;
       color: $secondary;
 
       &:hover {
         transform: translateY(-2px);
+        background-color: $button-bg-hover;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
       }
 
@@ -284,13 +366,14 @@ if (featuredPosts.length >= 3) {
     }
 
     &.secondary {
-      background-color: $button-bg;
-      color: $secondary;
-      border: 1px solid $border-light;
+      background-color: transparent;
+      color: $text-muted;
+      border: 1px solid rgba(255, 255, 255, 0.08);
 
       &:hover {
         transform: translateY(-2px);
-        background-color: $button-bg-hover;
+        color: $secondary;
+        border-color: rgba(255, 255, 255, 0.15);
       }
 
       &:active {
@@ -301,7 +384,7 @@ if (featuredPosts.length >= 3) {
 
   .scroll-arrow {
     position: absolute;
-    bottom: 50px;
+    bottom: 20px;
     left: 0;
     right: 0;
     margin: 0 auto;

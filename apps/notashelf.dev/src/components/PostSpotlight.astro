@@ -67,7 +67,6 @@ const formatDate = (date: Date) => {
 </div>
 
 <style lang="scss">
-  @use "sass:color";
   @use "../styles/global" as *;
 
   .featured-content {
@@ -80,16 +79,12 @@ const formatDate = (date: Date) => {
   }
 
   .spotlight-post {
-    background: linear-gradient(
-      135deg,
-      color.scale($primary, $lightness: 6%),
-      color.scale($primary, $lightness: 8%)
-    );
-    border-radius: 8px;
+    background: linear-gradient(135deg, $card-bg, $card-bg-alt);
+    border-radius: $radius-xl;
     padding: 1.25rem;
     text-decoration: none;
     color: $secondary;
-    transition: all 0.3s ease;
+    @include smooth-transition(all, 0.3s);
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -111,12 +106,12 @@ const formatDate = (date: Date) => {
         $border-light
       );
       transform: translateY(-100%);
-      transition: transform 0.3s ease;
+      @include smooth-transition(transform, 0.3s);
     }
 
     &:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      @include soft-shadow("high");
 
       &::before {
         transform: translateY(0);
@@ -142,14 +137,14 @@ const formatDate = (date: Date) => {
       font-size: 0.8rem;
 
       time {
-        color: color.scale($secondary, $lightness: -20%);
+        color: $text-meta;
       }
 
       .reading-time {
         margin-left: 1rem;
         padding-left: 1rem;
-        border-left: 1px solid $border-light;
-        color: color.scale($secondary, $lightness: -20%);
+        @include light-border(left);
+        color: $text-meta;
       }
     }
 
@@ -168,7 +163,7 @@ const formatDate = (date: Date) => {
       font-size: 0.9rem;
       line-height: 1.5;
       margin: 0;
-      color: color.scale($secondary, $lightness: -10%);
+      color: $text-description;
     }
   }
 
@@ -182,12 +177,12 @@ const formatDate = (date: Date) => {
   }
 
   .side-post {
-    background-color: color.scale($primary, $lightness: 6%);
-    border-radius: 8px;
+    background-color: $card-bg;
+    border-radius: $radius-xl;
     padding: 1rem;
     text-decoration: none;
     color: $secondary;
-    transition: all 0.3s ease;
+    @include smooth-transition(all, 0.3s);
     position: relative;
     overflow: hidden;
     flex: 1;
@@ -205,12 +200,16 @@ const formatDate = (date: Date) => {
       background: $button-bg;
       border-radius: 50%;
       transform: translate(50%, 50%) scale(0);
-      transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+      @include smooth-transition(
+        transform,
+        0.5s,
+        cubic-bezier(0.19, 1, 0.22, 1)
+      );
     }
 
     &:hover {
       transform: translateY(-2px) translateX(2px);
-      background-color: color.scale($primary, $lightness: 8%);
+      background-color: $card-bg-alt;
 
       &::after {
         transform: translate(50%, 50%) scale(15);
@@ -218,7 +217,8 @@ const formatDate = (date: Date) => {
     }
 
     &.first {
-      border-left: 3px solid $border-light;
+      @include light-border(left);
+      border-left-width: 3px;
     }
 
     &.second {
@@ -242,14 +242,14 @@ const formatDate = (date: Date) => {
       font-size: 0.75rem;
 
       time {
-        color: color.scale($secondary, $lightness: -20%);
+        color: $text-meta;
       }
 
       .reading-time {
         margin-left: 0.8rem;
         padding-left: 0.8rem;
-        border-left: 1px solid $border-light;
-        color: color.scale($secondary, $lightness: -20%);
+        @include light-border(left);
+        color: $text-meta;
       }
     }
   }

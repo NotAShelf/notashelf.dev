@@ -125,7 +125,7 @@ const formatDate = (date: Date | undefined) => {
   }
 
   .page-description {
-    color: color.scale($secondary, $lightness: -10%);
+    color: $text-description;
     margin-bottom: 0.5rem;
     font-size: 1.1rem;
     max-width: 60ch;
@@ -146,11 +146,11 @@ const formatDate = (date: Date | undefined) => {
   }
 
   .project-card {
-    background-color: color.scale($primary, $lightness: 6%);
-    border-radius: 8px;
+    background-color: $card-bg;
+    border-radius: $radius-xl;
     overflow: hidden;
-    transition: all 0.3s ease;
-    border: 1px solid color.scale($primary, $lightness: -1%);
+    @include smooth-transition(all, 0.3s);
+    border: 1px solid $card-border;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -159,8 +159,8 @@ const formatDate = (date: Date | undefined) => {
 
     &:hover {
       transform: translateY(-4px);
-      background-color: color.scale($primary, $lightness: 9%);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      background-color: $card-hover-bg;
+      @include soft-shadow("project");
       border-color: color.scale($primary, $lightness: 20%);
     }
 
@@ -221,7 +221,7 @@ const formatDate = (date: Date | undefined) => {
   }
 
   .project-date {
-    color: color.scale($secondary, $lightness: -15%);
+    color: $text-date;
   }
 
   .description-container {
@@ -233,7 +233,7 @@ const formatDate = (date: Date | undefined) => {
   .project-description {
     margin-bottom: 1rem;
     font-size: 0.95rem;
-    color: color.scale($secondary, $lightness: -8%);
+    color: $text-project-desc;
     line-height: 1.5;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -243,20 +243,17 @@ const formatDate = (date: Date | undefined) => {
   }
 
   .status-badge {
-    @include rounded-border;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 500;
+    @include pill-tag;
 
     &.active {
-      background-color: color.scale($primary, $lightness: 10%);
+      background-color: $pill-bg;
       color: $secondary;
       border: 1px solid color.scale($primary, $lightness: 15%);
     }
 
     &.inactive {
-      background-color: color.scale($primary, $lightness: -2%);
-      color: color.scale($secondary, $lightness: -15%);
+      background-color: $pill-dim;
+      color: $text-date;
       border: 1px solid color.scale($primary, $lightness: 0%);
     }
   }
@@ -269,15 +266,15 @@ const formatDate = (date: Date | undefined) => {
   }
 
   .project-tag {
-    @include rounded-border;
-    background-color: color.scale($primary, $lightness: 4%);
-    color: color.scale($secondary, $lightness: -5%);
+    @include pill-tag;
+    background-color: $tag-bg;
+    color: $text-tag;
     padding: 0.25rem 0.6rem;
     font-size: 0.75rem;
-    transition: all 0.2s ease;
+    @include smooth-transition;
 
     &:hover {
-      background-color: color.scale($primary, $lightness: 8%);
+      background-color: $card-bg-alt;
       transform: translateY(-1px);
     }
   }
