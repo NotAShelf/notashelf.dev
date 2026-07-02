@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
+  import { SvelteSet } from "svelte/reactivity";
 
   export interface Heading {
     id: string;
@@ -20,7 +21,7 @@
 
     if (!els.length) return;
 
-    const visible = new Set<string>();
+    const visible = new SvelteSet<string>();
 
     observer = new IntersectionObserver(
       (entries) => {

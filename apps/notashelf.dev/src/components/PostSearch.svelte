@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
+  import { SvelteDate } from "svelte/reactivity";
 
   export interface PostData {
     id: string;
@@ -51,7 +52,9 @@
         if (typeof state.activeTag === "string") activeTag = state.activeTag;
         if (typeof state.viewAll === "boolean") isViewingAll = state.viewAll;
       }
-    } catch {}
+    } catch {
+      // sessionStorage unavailable
+    }
     updatePerPage();
     window.addEventListener("resize", updatePerPage);
     return () => window.removeEventListener("resize", updatePerPage);
@@ -63,13 +66,15 @@
         STORAGE_KEY,
         JSON.stringify({ searchTerm: searchQuery, activeTag, viewAll: isViewingAll }),
       );
-    } catch {}
+    } catch {
+      // sessionStorage unavailable
+    }
   }
 
   $: filteredPosts = (() => {
     let result = allPosts;
     if (isRecentlyUpdated) {
-      const cutoff = new Date();
+      const cutoff = new SvelteDate();
       cutoff.setDate(cutoff.getDate() - 30);
       result = result.filter((p) => p.updated && new Date(p.updated) >= cutoff);
     }
@@ -156,7 +161,9 @@
     isViewingAll = false;
     try {
       sessionStorage.removeItem(STORAGE_KEY);
-    } catch {}
+    } catch {
+      // sessionStorage unavailable
+    }
   }
 
   function formatDate(iso: string): string {
