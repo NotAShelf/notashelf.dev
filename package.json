@@ -51,7 +51,7 @@
     "vitest": "^4.1.9"
   },
   "dependencies": {
-    "astro": "^7.0.2",
+    "astro": "^7.0.6",
     "cssnano": "^8.0.2",
     "glob": "^13.0.6",
     "he": "1.2.0",
