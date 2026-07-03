@@ -12,6 +12,10 @@ updates:
           - "astro"
           - "@astrojs/*"
           - "astro-*"
+      svelte:
+        patterns:
+          - "svelte"
+          - "svelte-*"
       lint:
         patterns:
           - "eslint"
@@ -55,13 +59,34 @@ updates:
           - "cssnano"
           - "purgecss"
           - "sass"
+      build:
+        patterns:
+          - "vite"
+          - "vite-*"
+          - "@vitejs/*"
+          - "terser"
+          - "sharp"
+          - "glob"
+          - "fs-extra"
+      runtime:
+        patterns:
+          - "he"
+          - "slugify"
 
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: daily
     open-pull-requests-limit: 15
+    groups:
+      actions:
+        patterns:
+          - "*"
   - package-ecosystem: nix
     directory: "/"
     schedule:
       interval: weekly
+    groups:
+      nix:
+        patterns:
+          - "*"
