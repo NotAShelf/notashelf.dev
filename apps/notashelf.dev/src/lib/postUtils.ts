@@ -1,5 +1,6 @@
 import { getCollection } from "astro:content";
 import type { PostEntry } from "./types";
+import { ARCHIVE_POSTS_PER_PAGE } from "./postConstants";
 
 export async function getPostStaticPaths() {
   const postEntries = await getCollection("posts");
@@ -131,4 +132,42 @@ export function getSortedPosts(posts: PostEntry[]): PostEntry[] {
     const dateB = getEffectiveDate(b);
     return dateB.getTime() - dateA.getTime();
   });
+}
+
+export async function getArchivedPosts(): Promise<PostEntry[]> {
+  const postEntries = await getCollection("posts");
+  return getSortedPosts(
+    postEntries.filter((entry) => entry.data.archived && !entry.data.draft),
+  );
+}
+
+export function getArchivePage(posts: PostEntry[], currentPage: number) {
+  const totalPages = Math.ceil(posts.length / ARCHIVE_POSTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ARCHIVE_POSTS_PER_PAGE;
+  const endIndex = startIndex + ARCHIVE_POSTS_PER_PAGE;
+
+  return {
+    currentPage,
+    totalPages,
+    posts: posts.slice(startIndex, endIndex),
+  };
+}
+
+export function serializePostForSearch(post: PostEntry) {
+  return {
+    id: post.id,
+    title: post.data.title,
+    description: post.data.description,
+    keywords: post.data.keywords || [],
+    date: post.data.date.toISOString(),
+    updated: post.data.updated?.toISOString(),
+    hasSignificantUpdate: isSignificantUpdate(
+      new Date(post.data.date),
+      post.data.updated ? new Date(post.data.updated) : undefined,
+    ),
+  };
+}
+
+export function getPostTags(posts: PostEntry[]): string[] {
+  return [...new Set(posts.flatMap((post) => post.data.keywords || []))].sort();
 }

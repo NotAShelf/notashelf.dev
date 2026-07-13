@@ -1,6 +1,12 @@
 <script lang="ts">
-  import { onMount, tick } from "svelte";
+  import { onMount } from "svelte";
   import { SvelteDate } from "svelte/reactivity";
+  import { POSTS_PER_PAGE } from "@lib/postConstants";
+  import {
+    clearPostSearchState,
+    loadPostSearchState,
+    savePostSearchState,
+  } from "@scripts/utils/post-search";
 
   export interface PostData {
     id: string;
@@ -18,7 +24,6 @@
   export let allTags: string[];
   export let pageTitle: string = "Blog Posts";
 
-  const STORAGE_KEY = "post-search-state";
   const DISPLAYED_PAGES = 5;
 
   let searchQuery = "";
@@ -27,48 +32,23 @@
   let isRecentlyUpdated = false;
   let debounceTimer: ReturnType<typeof setTimeout>;
 
-  let postsListEl: HTMLUListElement | null = null;
-  let dynamicPerPage = 5;
   let localPage = currentPage;
 
-  async function updatePerPage() {
-    await tick();
-    if (!postsListEl) return;
-    const listTop = postsListEl.getBoundingClientRect().top;
-    const firstCard = postsListEl.querySelector(".post-dropdown-item") as HTMLElement | null;
-    const cardHeight = firstCard
-      ? firstCard.getBoundingClientRect().height +
-        parseFloat(window.getComputedStyle(firstCard).marginBottom || "10")
-      : 120;
-    dynamicPerPage = Math.max(1, Math.floor((window.innerHeight - listTop - 20) / cardHeight));
-  }
-
   onMount(() => {
-    try {
-      const saved = sessionStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const state = JSON.parse(saved);
-        if (typeof state.searchTerm === "string") searchQuery = state.searchTerm;
-        if (typeof state.activeTag === "string") activeTag = state.activeTag;
-        if (typeof state.viewAll === "boolean") isViewingAll = state.viewAll;
-      }
-    } catch {
-      // sessionStorage unavailable
-    }
-    updatePerPage();
-    window.addEventListener("resize", updatePerPage);
-    return () => window.removeEventListener("resize", updatePerPage);
+    const state = loadPostSearchState();
+    searchQuery = state.searchTerm;
+    activeTag = state.activeTag;
+    isViewingAll = state.viewAll;
+    isRecentlyUpdated = state.recentlyUpdated;
   });
 
   function saveState() {
-    try {
-      sessionStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({ searchTerm: searchQuery, activeTag, viewAll: isViewingAll }),
-      );
-    } catch {
-      // sessionStorage unavailable
-    }
+    savePostSearchState({
+      searchTerm: searchQuery,
+      activeTag,
+      viewAll: isViewingAll,
+      recentlyUpdated: isRecentlyUpdated,
+    });
   }
 
   $: filteredPosts = (() => {
@@ -94,11 +74,11 @@
 
   $: isFiltering =
     isViewingAll || !!searchQuery.trim() || !!activeTag || isRecentlyUpdated;
-  $: dynTotalPages = Math.max(1, Math.ceil(allPosts.length / dynamicPerPage));
+  $: dynTotalPages = Math.max(1, Math.ceil(allPosts.length / POSTS_PER_PAGE));
   $: clampedPage = Math.max(1, Math.min(localPage, dynTotalPages));
   $: dynPagedPosts = allPosts.slice(
-    (clampedPage - 1) * dynamicPerPage,
-    clampedPage * dynamicPerPage,
+    (clampedPage - 1) * POSTS_PER_PAGE,
+    clampedPage * POSTS_PER_PAGE,
   );
   $: displayPosts = isFiltering ? filteredPosts : dynPagedPosts;
   $: showPagination = !isFiltering && dynTotalPages > 1;
@@ -159,11 +139,7 @@
     activeTag = "";
     isRecentlyUpdated = false;
     isViewingAll = false;
-    try {
-      sessionStorage.removeItem(STORAGE_KEY);
-    } catch {
-      // sessionStorage unavailable
-    }
+    clearPostSearchState();
   }
 
   function formatDate(iso: string): string {
@@ -321,7 +297,7 @@
     >
   </div>
 {:else}
-  <ul class="post-list" bind:this={postsListEl}>
+  <ul class="post-list">
     {#each displayPosts as post (post.id)}
       <li class="post-dropdown-item">
         <a href={`/posts/${post.id}`} class="dropdown-link">

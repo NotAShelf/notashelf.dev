@@ -1,7 +1,11 @@
 ---
 import PostSearch from "@components/PostSearch.svelte";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { getSortedPosts, isSignificantUpdate } from "@lib/postUtils";
+import {
+  getPostTags,
+  getSortedPosts,
+  serializePostForSearch,
+} from "@lib/postUtils";
 import type { PostEntry } from "@lib/types";
 import { Icon } from "astro-icon/components";
 import { getCollection } from "astro:content";
@@ -15,25 +19,8 @@ const sortedPosts = getSortedPosts(filteredPosts);
 
 const currentPage = 1;
 
-const serialize = (post: PostEntry) => ({
-  id: post.id,
-  title: post.data.title,
-  description: post.data.description,
-  keywords: post.data.keywords || [],
-  date: post.data.date.toISOString(),
-  updated: post.data.updated?.toISOString(),
-  hasSignificantUpdate: isSignificantUpdate(
-    new Date(post.data.date),
-    post.data.updated ? new Date(post.data.updated) : undefined,
-  ),
-});
-
-const allPostsData = sortedPosts.map(serialize);
-const allTags = [
-  ...new Set(
-    sortedPosts.flatMap((post: PostEntry) => post.data.keywords || []),
-  ),
-].sort() as string[];
+const allPostsData = sortedPosts.map(serializePostForSearch);
+const allTags = getPostTags(sortedPosts);
 ---
 
 <BaseLayout title="Blog Posts" description="Collection of blog posts">

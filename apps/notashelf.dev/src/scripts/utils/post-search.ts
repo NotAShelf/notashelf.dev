@@ -1,113 +1,51 @@
-/**
- * Application-specific post search state management
- */
-
-export interface SearchState {
+export interface PostSearchState {
   searchTerm: string;
   activeTag: string;
   viewAll: boolean;
+  recentlyUpdated: boolean;
 }
 
-/**
- * Manage search state persistence across page navigation
- */
-export class PostSearchState {
-  private static readonly STORAGE_KEY = "post-search-state";
+export const POST_SEARCH_STORAGE_KEY = "post-search-state";
 
-  /**
-   * Check if we're running in a browser environment with sessionStorage support
-   */
-  private static isBrowser(): boolean {
-    return (
-      typeof window !== "undefined" &&
-      typeof window.sessionStorage !== "undefined"
-    );
+export const DEFAULT_POST_SEARCH_STATE: PostSearchState = {
+  searchTerm: "",
+  activeTag: "",
+  viewAll: false,
+  recentlyUpdated: false,
+};
+
+function isPostSearchState(value: unknown): value is PostSearchState {
+  if (value === null || typeof value !== "object") return false;
+
+  const state = value as Record<string, unknown>;
+  return (
+    typeof state.searchTerm === "string" &&
+    typeof state.activeTag === "string" &&
+    typeof state.viewAll === "boolean" &&
+    typeof state.recentlyUpdated === "boolean"
+  );
+}
+
+export function loadPostSearchState(): PostSearchState {
+  try {
+    const saved = sessionStorage.getItem(POST_SEARCH_STORAGE_KEY);
+    if (!saved) return DEFAULT_POST_SEARCH_STATE;
+
+    const parsed = JSON.parse(saved);
+    return isPostSearchState(parsed) ? parsed : DEFAULT_POST_SEARCH_STATE;
+  } catch {
+    return DEFAULT_POST_SEARCH_STATE;
   }
+}
 
-  /**
-   * Save the current search state to `sessionStorage`
-   */
-  static setSearchState(
-    searchTerm: string,
-    activeTag: string,
-    viewAll: boolean,
-  ): void {
-    if (!this.isBrowser()) {
-      return; // Skip on server-side
-    }
+export function savePostSearchState(state: PostSearchState): void {
+  try {
+    sessionStorage.setItem(POST_SEARCH_STORAGE_KEY, JSON.stringify(state));
+  } catch {}
+}
 
-    const state: SearchState = { searchTerm, activeTag, viewAll };
-    try {
-      sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(state));
-    } catch (e) {
-      console.error("Failed to save search state:", e);
-    }
-  }
-
-  /**
-   * Get the saved search state from `sessionStorage`
-   */
-  static getSearchState(): SearchState {
-    const defaultState: SearchState = {
-      searchTerm: "",
-      activeTag: "",
-      viewAll: false,
-    };
-
-    if (!this.isBrowser()) {
-      return defaultState; // Return default state on server-side
-    }
-
-    try {
-      const state = sessionStorage.getItem(this.STORAGE_KEY);
-      if (!state) return defaultState;
-
-      const parsedState = JSON.parse(state);
-
-      // Validate the parsed state matches SearchState interface
-      if (!this.isValidSearchState(parsedState)) {
-        console.warn("Invalid search state format in sessionStorage");
-        return defaultState;
-      }
-
-      return parsedState;
-    } catch (e) {
-      console.error("Failed to retrieve search state:", e);
-      return defaultState;
-    }
-  }
-
-  /**
-   * Type guard to validate if an object conforms to SearchState interface
-   */
-  private static isValidSearchState(obj: unknown): obj is SearchState {
-    if (obj === null || typeof obj !== "object") {
-      return false;
-    }
-
-    const record = obj as Record<string, unknown>;
-    return (
-      "searchTerm" in record &&
-      typeof record.searchTerm === "string" &&
-      "activeTag" in record &&
-      typeof record.activeTag === "string" &&
-      "viewAll" in record &&
-      typeof record.viewAll === "boolean"
-    );
-  }
-
-  /**
-   * Clear the saved search state
-   */
-  static clearSearchState(): void {
-    if (!this.isBrowser()) {
-      return; // Skip on server-side
-    }
-
-    try {
-      sessionStorage.removeItem(this.STORAGE_KEY);
-    } catch (e) {
-      console.error("Failed to clear search state:", e);
-    }
-  }
+export function clearPostSearchState(): void {
+  try {
+    sessionStorage.removeItem(POST_SEARCH_STORAGE_KEY);
+  } catch {}
 }
