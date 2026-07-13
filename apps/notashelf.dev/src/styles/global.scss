@@ -19,8 +19,8 @@
   transition: opacity 0.1s ease;
 }
 
-// Force Expressive Code codeblock border color
-// Refuses to follow the configuration otherwise...
+// Force Expressive Code codeblock border color. It *refuses* to follow the actual
+// configuration in `astro.config.ts` otherwise...
 .ec-codeblock,
 .ec-frame {
   border: 1px solid #191919 !important;

@@ -202,9 +202,9 @@ blockquote.admonition {
   }
 }
 
-// Enhanced footnotes
-// Default styles provided by marked-gfm are quite barebones
-// and look out of place with my own design. Lets fix that.
+// "Enhanced" footnotes. The default styles provided by marked-gfm are quite
+// barebones, and they look out of place with my own design language. Lets
+// fix that with a bit of CSS.
 .footnotes {
   margin-top: 3rem;
   padding-top: 1rem;
@@ -213,12 +213,12 @@ blockquote.admonition {
   color: $text-muted;
 
   hr {
-    display: none; // Hide the default horizontal rule
+    display: none; // hide the default horizontal rule
   }
 
   ol {
     padding-left: 1.5rem;
-    margin-top: 1.5rem; // Space after the heading
+    margin-top: 1.5rem; // space after the heading
   }
 
   li {
@@ -353,7 +353,8 @@ a.footnote-ref {
   }
 }
 
-// Needs higher specificity than `main a:link` (0,1,2) to avoid teal override
+// Needs higher specificity than `main a:link` (0,1,2) to avoid previous override
+// for link colors.
 main .archive-link {
   &:link,
   &:visited {

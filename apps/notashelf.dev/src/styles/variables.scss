@@ -1,11 +1,15 @@
 @use "sass:color";
 
-// Theme colors
+// Primary theme colors. The base palette of this website has been intentionally
+// simple since day one: I'm not interested in weird colors or absurd color combinations
+// that flash visitors.
 $primary: #111111; // dark background
 $secondary: #f0f0f0; // light text / headings (14.7:1 contrast ratio)
-$hover-color: #75b5aa; // teal accent for links
+$hover-color: #5dade2; // blue accent for links
 
-// Extended color palette with WCAG AAA compliant contrast ratios
+// We extend the color palette a little bit with WCAG AAA compliant contrast ratios
+// for the sake of a bit more detail. Those come in handy for pages that don't have
+// too much content and therefore look bland.
 $text-muted: #cfcfcf; // body text
 $text-subtle: #9a9a9a; // secondary / muted text
 $border-light: #212121; // light borders
@@ -33,7 +37,7 @@ $text-tag: color.scale($secondary, $lightness: -5%);
 $text-project-desc: color.scale($secondary, $lightness: -8%);
 $text-link-bright: color.scale($secondary, $lightness: 20%);
 
-$grid-pattern: rgba(255, 255, 255, 0.04); // subtle grid pattern
+$grid-pattern: rgba(255, 255, 255, 0.04); // somewhat subtle grid pattern for the background
 
 // Semantic colors with proper contrast
 $success-color: #58d68d; // green for success states (4.8:1)
@@ -84,7 +88,8 @@ $radius-md: 4px;
 $radius-lg: 6px;
 $radius-xl: 8px;
 
-// Common mixins to reduce duplication
+// Common mixins to reduce duplication in components where I regularly
+// reinvent the same wheel in different shapes.
 @mixin button-base {
   padding: 0.4rem 0.8rem;
   border-radius: 4px;
@@ -196,8 +201,7 @@ $radius-xl: 8px;
   }
 }
 
-// Pill/tag label, this looks small rounded badge
-// but it also looks kind of ugly.
+// Pill/tag label, this looks small rounded badge but it also looks kind of ugly.
 // TODO: revisit, eventually
 @mixin pill-tag {
   @include rounded-border;

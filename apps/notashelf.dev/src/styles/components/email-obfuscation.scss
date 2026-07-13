@@ -1,6 +1,6 @@
 @use "../variables" as *;
 
-/* Hide decoy elements */
+// Hide decoy elements
 .email-decoy,
 .email-noise {
   display: none !important;
@@ -20,12 +20,12 @@
   }
 }
 
-/* Ensure fragments display inline */
+// Ensure fragments display inline
 .email-frag {
   display: inline;
 }
 
-/* Style for elements with data-obfuscated-email attribute */
+// Style for elements with data-obfuscated-email attribute
 [data-obfuscated-email] {
   cursor: pointer;
   color: inherit;
