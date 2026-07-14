@@ -57,18 +57,23 @@ if (featuredPosts.length >= 3) {
       <h1 id="hero-heading" class="reveal-text">
         Howdy! Welcome to my personal website.
       </h1>
-      <p class="intro">
-        This is where I share my projects, ideas, thoughts, obsessions and notes
-        on things that I find particularly interesting, difficult, obscure or
-        otherwise worth sharing with the world. Everything I do, in one place.
-        Most of my writings are on Linux, Nix, NixOS, System Administration and
-        Software Development. While I try to avoid the dogma of writing about
-        <i>how</i> to do things, I enjoy talking about the process of actually doing
-        things. In the future I intend to expand the scope of this website and my
-        writing to cover areas outside of programming, software and technology in
-        general. History, philosophy and mathematics are all neat candidates for what
-        it might be. Either way, I hope you find something useful here!
-      </p>
+      <div class="intro">
+        <p>
+          This is where I share my projects, ideas, thoughts, obsessions and
+          notes on things that I find particularly interesting, difficult,
+          obscure or otherwise worth sharing with the world. Everything I do, in
+          one place.
+        </p>
+        <p>
+          Most of my writings are on Linux, Nix, NixOS, System Administration
+          and Software Development. While I try to avoid the dogma of writing
+          about <i>how</i> to do things, I enjoy talking about the process of actually
+          doing things. In the future I intend to expand the scope of this website
+          and my writing to cover areas outside of programming, software and technology
+          in general. History, philosophy and mathematics are all neat candidates
+          for what it might be. Either way, I hope you find something useful here!
+        </p>
+      </div>
       <div class="cta-buttons">
         <a href="/posts" class="cta-button secondary">Blog Posts</a>
         <a href="/projects" class="cta-button secondary">My Projects</a>
@@ -257,7 +262,7 @@ if (featuredPosts.length >= 3) {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    max-width: 65ch;
+    max-width: 82ch;
     width: 100%;
     position: relative;
   }
@@ -300,12 +305,26 @@ if (featuredPosts.length >= 3) {
   }
 
   .intro {
-    line-height: 1.6;
+    max-width: 78ch;
     margin: 0 auto 2.5rem;
     color: $text-muted;
-    font-size: 1rem;
-    max-width: 60ch;
-    padding: 0 1rem;
+    font-size: 0.98rem;
+    line-height: 1.65;
+    text-align: center;
+    text-wrap: pretty;
+
+    p {
+      margin: 0;
+
+      & + p {
+        margin-top: 1rem;
+      }
+    }
+
+    i {
+      color: $secondary;
+      font-style: italic;
+    }
   }
 
   .cta-buttons {
@@ -485,6 +504,11 @@ if (featuredPosts.length >= 3) {
       h1 {
         font-size: 1.6rem;
       }
+    }
+
+    .intro {
+      max-width: 100%;
+      font-size: 0.95rem;
     }
 
     .profile-picture {
