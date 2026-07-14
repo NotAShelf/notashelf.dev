@@ -28,11 +28,11 @@
     "remark": "^14.0.0 || ^15.0.0"
   },
   "devDependencies": {
-    "@types/node": "^26.0.0",
+    "@types/node": "^26.1.1",
     "remark": "^15.0.1",
     "remark-parse": "^11.0.0",
     "remark-stringify": "^11.0.0",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.1.0",
     "vitest": "^4.1.9"

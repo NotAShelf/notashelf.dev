@@ -53,7 +53,7 @@ in
     # to fetch deps for and build. Alas, NodeJS.
     pnpmDeps = fetchPnpmDeps {
       inherit (finalAttrs) pname src pnpmInstallFlags;
-      hash = "sha256-/5g4JoI3H2918PmUYW/3kjobVT+dfRXFY1ioWt/u1sY=";
+      hash = "sha256-ZxF/j0kn8yjGxs8ZQBZDQbFBuXQX+z1YojloXAZvKI0=";
       fetcherVersion = 3; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
     };
 
