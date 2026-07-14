@@ -14,7 +14,7 @@ const sortedPosts = allPosts
   .sort(
     (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
   )
-  .slice(0, 6); // Get more posts to have options for randomization
+  .slice(0, 6);
 
 // Calculate reading time and create properly typed objects
 const featuredPosts = sortedPosts.map((post) => {
@@ -58,12 +58,16 @@ if (featuredPosts.length >= 3) {
         Howdy! Welcome to my personal website.
       </h1>
       <p class="intro">
-        This is where I share my projects, ideas, thoughts and notes on topics
-        that I find interesting, difficult, obscure or otherwise worth sharing.
-        Most of my writings are on Linux, Nix, NixOS or System Administration. I
-        also intend to write about other topics I find interesting, outside of
-        programming and technology, such as history, philosophy, and
-        mathematics. I hope you find something useful or interesting here!
+        This is where I share my projects, ideas, thoughts, obsessions and notes
+        on things that I find particularly interesting, difficult, obscure or
+        otherwise worth sharing with the world. Everything I do, in one place.
+        Most of my writings are on Linux, Nix, NixOS, System Administration and
+        Software Development. While I try to avoid the dogma of writing about
+        <i>how</i> to do things, I enjoy talking about the process of actually doing
+        things. In the future I intend to expand the scope of this website and my
+        writing to cover areas outside of programming, software and technology in
+        general. History, philosophy and mathematics are all neat candidates for what
+        it might be. Either way, I hope you find something useful here!
       </p>
       <div class="cta-buttons">
         <a href="/posts" class="cta-button secondary">Blog Posts</a>
@@ -98,12 +102,15 @@ if (featuredPosts.length >= 3) {
 </BaseLayout>
 
 <script>
+  // 7 greetings and 3 animations gives us plenty of fresh looks on the front
+  // page. Worth noting we can't use *build*-time randomization here because
+  // it breaks determinism. I'm sorry, clients.
   const greetings = [
     "Howdy! Welcome to my personal website.",
     "Hello there! You've reached notashelf.dev.",
     "Hey! Thanks for stopping by.",
     "Howdy! Make yourself at home.",
-    "Oh, hello! Didn't see you there.",
+    "Oh, hello! Welcome to my place on the internet.",
     "Welcome! You've found your way here.",
     "Hey there! Glad you found this corner of the web.",
   ];
@@ -123,23 +130,7 @@ if (featuredPosts.length >= 3) {
     heading.textContent = greeting;
     heading.className = animClass;
   }
-
-  import "../scripts/page-utils.ts";
-  import { projectShuffle } from "../scripts/utils/project-shuffle";
-
-  async function initializeProjectShuffle() {
-    console.log("Initializing project shuffle...");
-    try {
-      await projectShuffle.setupClientSideShuffling();
-      console.log("Project shuffle initialized successfully");
-    } catch (error) {
-      console.warn("Failed to initialize project shuffle:", error);
-    }
-  }
-
-  initializeProjectShuffle();
 </script>
-
 <style lang="scss">
   @use "../styles/global" as *;
   @use "sass:color";

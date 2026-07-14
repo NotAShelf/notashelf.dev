@@ -2,43 +2,72 @@
  * @vitest-environment happy-dom
  */
 
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import ProjectShuffle from "../scripts/utils/project-shuffle";
 
-// Mock the project shuffle utility
-const mockSetupClientSideShuffling = vi.fn();
-vi.mock("../scripts/utils/project-shuffle", () => ({
-  projectShuffle: {
-    setupClientSideShuffling: mockSetupClientSideShuffling,
-  },
-}));
+function addCards(container: Element, count: number) {
+  for (let i = 0; i < count; i++) {
+    const card = document.createElement("div");
+    card.className = "project-card pre-shuffle-hide";
+    card.dataset.index = String(i);
+    container.appendChild(card);
+  }
+}
 
-describe("project-shuffle integration", () => {
+describe("ProjectShuffle", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    // Reset module registry to ensure fresh imports
-    vi.resetModules();
+    vi.useFakeTimers();
+    document.body.innerHTML = "";
+    window.history.replaceState({}, "", "/");
   });
 
-  it("should initialize project shuffle successfully", async () => {
-    mockSetupClientSideShuffling.mockResolvedValue(undefined);
+  it("shows three shuffled cards on the homepage featured grid", () => {
+    const section = document.createElement("section");
+    section.dataset.shuffleMode = "featured";
+    section.dataset.shuffleCount = "3";
 
-    // Import the project shuffle utility directly
-    const { projectShuffle } = await import("../scripts/utils/project-shuffle");
-    await projectShuffle.setupClientSideShuffling();
+    const grid = document.createElement("div");
+    grid.className = "projects-grid pre-shuffle-hide-grid";
+    addCards(grid, 8);
+    section.appendChild(grid);
+    document.body.appendChild(section);
 
-    expect(mockSetupClientSideShuffling).toHaveBeenCalled();
+    new ProjectShuffle().setupClientSideShuffling();
+    vi.runAllTimers();
+
+    expect(grid.children).toHaveLength(3);
+    expect(grid.classList.contains("pre-shuffle-hide-grid")).toBe(false);
+    expect(
+      Array.from(grid.children).every(
+        (child) => !child.classList.contains("pre-shuffle-hide"),
+      ),
+    ).toBe(true);
   });
 
-  it("should handle initialization errors gracefully", async () => {
-    const error = new Error("Project shuffle initialization failed");
-    mockSetupClientSideShuffling.mockRejectedValue(error);
+  it("shows five shuffled cards on the about page recent layout", () => {
+    window.history.replaceState({}, "", "/about");
 
-    const { projectShuffle } = await import("../scripts/utils/project-shuffle");
+    const section = document.createElement("section");
+    section.id = "projects-display";
+    section.dataset.shuffleMode = "recent";
+    section.dataset.shuffleCount = "5";
+    const container = document.createElement("div");
+    container.className = "recent-projects-container pre-shuffle-hide-grid";
+    const top = document.createElement("div");
+    top.className = "top-row";
+    const bottom = document.createElement("div");
+    bottom.className = "bottom-row";
+    addCards(top, 4);
+    addCards(bottom, 4);
+    container.append(top, bottom);
+    section.appendChild(container);
+    document.body.appendChild(section);
 
-    try {
-      await projectShuffle.setupClientSideShuffling();
-    } catch (err) {
-      expect(err).toEqual(error);
-    }
+    new ProjectShuffle().setupClientSideShuffling();
+    vi.runAllTimers();
+
+    expect(top.children).toHaveLength(3);
+    expect(bottom.children).toHaveLength(2);
+    expect(container.classList.contains("pre-shuffle-hide-grid")).toBe(false);
   });
 });

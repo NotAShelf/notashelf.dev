@@ -5,7 +5,8 @@
 
 interface ShuffleConfig {
   targetCount: number;
-  mode: "featured" | "recent" | "projects";
+  mode: "featured" | "recent";
+  root: Element;
 }
 
 export class ProjectShuffle {
@@ -40,30 +41,15 @@ export class ProjectShuffle {
     return this.randomSample(indices, sampleCount);
   }
 
-  /**
-   * Determine shuffle configuration based on context
-   */
   private getShuffleConfig(): ShuffleConfig | null {
-    const pathname = window.location.pathname;
-    const isFeaturedSection =
-      document.querySelector("#projects-display") !== null;
-    const isProjectsPage = pathname.includes("/projects");
+    const root = document.querySelector<HTMLElement>("[data-shuffle-mode]");
+    if (!root) return null;
 
-    console.log("Shuffle context:", {
-      pathname,
-      isFeaturedSection,
-      isProjectsPage,
-    });
+    const mode = root.dataset.shuffleMode;
+    const targetCount = Number(root.dataset.shuffleCount);
+    if ((mode !== "featured" && mode !== "recent") || !targetCount) return null;
 
-    if (isFeaturedSection && pathname === "/") {
-      return { targetCount: 3, mode: "featured" };
-    } else if (isProjectsPage) {
-      return { targetCount: 6, mode: "projects" };
-    } else if (pathname === "/about") {
-      return { targetCount: 5, mode: "recent" };
-    }
-
-    return null;
+    return { mode, targetCount, root };
   }
 
   /**
@@ -75,10 +61,6 @@ export class ProjectShuffle {
   ): void {
     const projectCards = Array.from(projectsGrid.children);
     if (projectCards.length <= targetCount) return;
-
-    console.log(
-      `Shuffling featured projects: ${projectCards.length} -> ${targetCount}`,
-    );
 
     const selectedIndices = this.getRandomIndices(
       projectCards.length,
@@ -102,10 +84,6 @@ export class ProjectShuffle {
 
     // Remove grid hide class after shuffle is complete
     (projectsGrid as HTMLElement).classList.remove("pre-shuffle-hide-grid");
-
-    console.log(
-      `Featured shuffle complete: showing ${selectedCards.length} projects`,
-    );
   }
 
   /**
@@ -127,10 +105,6 @@ export class ProjectShuffle {
     ];
 
     if (allCards.length <= targetCount) return;
-
-    console.log(
-      `Shuffling recent projects: ${allCards.length} -> ${targetCount}`,
-    );
 
     const selectedIndices = this.getRandomIndices(allCards.length, targetCount);
 
@@ -158,10 +132,6 @@ export class ProjectShuffle {
 
     // Remove grid hide class after shuffle is complete
     (recentContainer as HTMLElement).classList.remove("pre-shuffle-hide-grid");
-
-    console.log(
-      `Recent shuffle complete: showing ${selectedCards.length} projects`,
-    );
   }
 
   /**
@@ -170,47 +140,23 @@ export class ProjectShuffle {
   public shuffleProjects(): void {
     const config = this.getShuffleConfig();
     if (!config) {
-      console.log("No valid shuffle context found, skipping");
       return;
     }
 
     // Handle featured projects (homepage)
-    const projectsGrid = document.querySelector(".projects-grid");
+    const projectsGrid = config.root.querySelector(".projects-grid");
     if (projectsGrid && config.mode === "featured") {
       this.shuffleFeaturedProjects(projectsGrid, config.targetCount);
       return;
     }
 
     // Handle recent projects (about page)
-    const recentContainer = document.querySelector(
+    const recentContainer = config.root.querySelector(
       ".recent-projects-container",
     );
     if (recentContainer && config.mode === "recent") {
       this.shuffleRecentProjects(recentContainer, config.targetCount);
       return;
-    }
-
-    // Handle projects page (hide/show pattern)
-    if (projectsGrid && config.mode === "projects") {
-      const projectCards = Array.from(projectsGrid.children) as HTMLElement[];
-      if (projectCards.length <= config.targetCount) return;
-
-      const selectedIndices = this.getRandomIndices(
-        projectCards.length,
-        config.targetCount,
-      );
-
-      projectCards.forEach((card, index) => {
-        if (selectedIndices.includes(index)) {
-          card.style.display = "";
-        } else {
-          card.style.display = "none";
-        }
-      });
-
-      console.log(
-        `Projects page shuffle complete: showing ${config.targetCount} out of ${projectCards.length} projects`,
-      );
     }
   }
 
@@ -219,34 +165,25 @@ export class ProjectShuffle {
    */
   private initializeShuffle(): void {
     if (this.isInitialized) {
-      console.log("Shuffle already initialized, skipping");
       return;
     }
 
-    console.log("Initializing project shuffle...");
-
     this.shuffleProjects();
     this.isInitialized = true;
-    console.log("Project shuffle initialization complete");
   }
 
   /**
    * Setup client-side shuffling with proper timing
    */
   public setupClientSideShuffling(): void {
-    console.log("Setting up client-side project shuffling");
-    console.log("Document ready state:", document.readyState);
-
     const shuffle = () => {
       // Use setTimeout to ensure DOM is fully rendered
       setTimeout(() => this.initializeShuffle(), 100);
     };
 
     if (document.readyState === "loading") {
-      console.log("Waiting for DOM to load");
       document.addEventListener("DOMContentLoaded", shuffle);
     } else {
-      console.log("DOM already loaded, shuffling immediately");
       shuffle();
     }
   }

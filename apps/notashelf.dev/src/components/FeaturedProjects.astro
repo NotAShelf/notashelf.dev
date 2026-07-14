@@ -10,11 +10,19 @@ interface Props {
 }
 
 const { mode, title } = Astro.props;
+const shuffleCount = mode === "featured" ? 3 : 5;
 
 // Get all projects
 const allProjects = (await getCollection("projects")) as ProjectEntry[];
-const activeProjects = allProjects.filter((project) => project.data.active);
-const inactiveProjects = allProjects.filter((project) => !project.data.active);
+const featurableProjects = allProjects.filter(
+  (project) => project.data.featurable,
+);
+const activeProjects = featurableProjects.filter(
+  (project) => project.data.active,
+);
+const inactiveProjects = featurableProjects.filter(
+  (project) => !project.data.active,
+);
 
 // Select projects based on mode
 let displayProjects: ProjectEntry[];
@@ -42,7 +50,12 @@ const topRowProjects = displayProjects.slice(0, 3);
 const bottomRowProjects = displayProjects.slice(3);
 ---
 
-<section id="projects-display" class="projects-display fade-in">
+<section
+  id="projects-display"
+  class="projects-display fade-in"
+  data-shuffle-mode={mode}
+  data-shuffle-count={shuffleCount}
+>
   <h2 class="section-title">{title}</h2>
 
   {
@@ -92,14 +105,12 @@ const bottomRowProjects = displayProjects.slice(3);
   import { projectShuffle } from "../scripts/utils/project-shuffle";
 
   async function initializeProjectShuffle() {
-    console.log("Initializing project shuffle...");
     try {
       await projectShuffle.setupClientSideShuffling();
       // Remove .pre-shuffle-hide-grid from grid container after shuffle
       document.querySelectorAll(".pre-shuffle-hide-grid").forEach((grid) => {
         grid.classList.remove("pre-shuffle-hide-grid");
       });
-      console.log("Project shuffle initialized successfully");
     } catch (error) {
       console.warn("Failed to initialize project shuffle:", error);
     }
