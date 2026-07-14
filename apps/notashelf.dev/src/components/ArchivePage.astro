@@ -1,0 +1,86 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import type { PostEntry } from "@lib/types";
+import { Icon } from "astro-icon/components";
+import ArchivePostList from "./ArchivePostList.astro";
+import Pagination from "./Pagination.astro";
+
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  posts: PostEntry[];
+}
+
+const { currentPage, totalPages, posts } = Astro.props;
+const title = currentPage === 1 ? "Archive" : `Archive | Page ${currentPage}`;
+---
+
+<BaseLayout title={title} description="Archive of outdated blog posts">
+  <div class="posts-header">
+    <h1 class="page-title">Archive</h1>
+    <a href="/posts" class="posts-link">
+      <Icon name="box-archive" /> Back to Posts
+    </a>
+  </div>
+
+  <p class="archive-description">
+    Outdated posts that are kept for historical reference. The information in
+    these posts may no longer be accurate or relevant.
+  </p>
+
+  <ArchivePostList posts={posts} />
+
+  {
+    totalPages > 1 && (
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        baseUrl="/archive"
+      />
+    )
+  }
+</BaseLayout>
+
+<style lang="scss">
+  @use "../styles/global" as *;
+
+  .posts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1.5rem;
+  }
+
+  .page-title {
+    margin-bottom: 0;
+  }
+
+  .posts-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: $text-meta;
+    text-decoration: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: $radius-md;
+    @include smooth-transition;
+
+    &:hover {
+      background-color: $button-bg;
+      color: $secondary;
+    }
+
+    :global(svg) {
+      width: 0.9rem !important;
+      height: 0.9rem !important;
+    }
+  }
+
+  .archive-description {
+    color: $text-meta;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+</style>
