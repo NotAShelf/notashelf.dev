@@ -1,0 +1,38 @@
+name: "Project Catalog"
+permissions: read-all
+
+on:
+  pull_request:
+    paths:
+      - ".github/project-catalog-exemptions.json"
+      - ".github/workflows/project-catalog.yml"
+      - "apps/notashelf.dev/src/data/projects/**"
+      - "scripts/check-project-catalog.js"
+  push:
+    branches: [ "main" ]
+    paths:
+      - ".github/project-catalog-exemptions.json"
+      - ".github/workflows/project-catalog.yml"
+      - "apps/notashelf.dev/src/data/projects/**"
+      - "scripts/check-project-catalog.js"
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * 1"
+
+jobs:
+  check-project-catalog:
+    name: "Check project TOML freshness"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Check project catalog
+        run: node scripts/check-project-catalog.js
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

@@ -9,6 +9,7 @@
     "dev": "node scripts/dev.js notashelf.dev dev",
     "preview": "pnpm --filter ./apps/notashelf.dev run preview",
     "check": "pnpm --filter ./apps/notashelf.dev run check",
+    "check:projects": "node scripts/check-project-catalog.js",
     "fmt": "prettier . --write",
     "lint": "eslint **/*.{ts,js,astro,svelte}",
     "test": "vitest",
