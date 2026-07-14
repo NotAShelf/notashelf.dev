@@ -1,0 +1,21 @@
+---
+import ArchivePage from "@components/ArchivePage.astro";
+import { getArchivePage, getArchivedPosts } from "@lib/postUtils";
+
+export async function getStaticPaths() {
+  const archivedPosts = await getArchivedPosts();
+  const { totalPages } = getArchivePage(archivedPosts, 1);
+
+  return Array.from({ length: Math.max(0, totalPages - 1) }).map((_, i) => {
+    const page = i + 2;
+    return {
+      params: { page: String(page) },
+      props: getArchivePage(archivedPosts, page),
+    };
+  });
+}
+
+const page = Astro.props;
+---
+
+<ArchivePage {...page} />

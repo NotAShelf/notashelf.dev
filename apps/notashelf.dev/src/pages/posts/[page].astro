@@ -1,7 +1,12 @@
 ---
 import PostSearch from "@components/PostSearch.svelte";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { getSortedPosts, isSignificantUpdate } from "@lib/postUtils";
+import { POSTS_PER_PAGE } from "@lib/postConstants";
+import {
+  getPostTags,
+  getSortedPosts,
+  serializePostForSearch,
+} from "@lib/postUtils";
 import type { PostEntry } from "@lib/types";
 import { Icon } from "astro-icon/components";
 import { getCollection } from "astro:content";
@@ -13,25 +18,9 @@ export async function getStaticPaths() {
   );
   const sortedPosts = getSortedPosts(filteredPosts);
 
-  const totalPages = Math.ceil(sortedPosts.length / 5);
-
-  const serialize = (post: PostEntry) => ({
-    id: post.id,
-    title: post.data.title,
-    description: post.data.description,
-    keywords: post.data.keywords || [],
-    date: post.data.date.toISOString(),
-    updated: post.data.updated?.toISOString(),
-    hasSignificantUpdate: isSignificantUpdate(
-      new Date(post.data.date),
-      post.data.updated ? new Date(post.data.updated) : undefined,
-    ),
-  });
-
-  const allPostsData = sortedPosts.map(serialize);
-  const allTags = [
-    ...new Set(sortedPosts.flatMap((p: PostEntry) => p.data.keywords || [])),
-  ].sort() as string[];
+  const totalPages = Math.ceil(sortedPosts.length / POSTS_PER_PAGE);
+  const allPostsData = sortedPosts.map(serializePostForSearch);
+  const allTags = getPostTags(sortedPosts);
 
   return Array.from({ length: totalPages - 1 }).map((_, i) => {
     const pageNum = i + 2;
