@@ -34,7 +34,7 @@ ${disallowedUserAgents.map((agent) => `User-agent: ${agent}\nDisallow: /`).join(
 User-agent: *
 Disallow:
 
-Sitemap: ${import.meta.env.SITE}/sitemap.xml
+Sitemap: ${import.meta.env.SITE ?? "https://notashelf.dev"}/sitemap.xml
 `.trim();
 
   const resp = new Response(content);

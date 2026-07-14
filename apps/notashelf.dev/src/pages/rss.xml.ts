@@ -62,8 +62,7 @@ async function mdxToHtml(content: string): Promise<string> {
 
 // Fix relative URLs in HTML content
 function fixRelativeUrls(htmlContent: string, postUrl: string): string {
-  // Replace footnote references (e.g., #user-content-fn-1) with absolute URLs
-  // XXX: Hacky implementation. Wish I knew a better way of doing this.
+  // RSS readers need fragment-only footnote links resolved against the post URL.
   return htmlContent.replace(
     /(href|src)=("|')#([^"']*)("|')/g,
     `$1=$2${postUrl}#$3$4`,
@@ -94,14 +93,11 @@ export async function GET(): Promise<Response> {
     sortedPosts.map(async (post) => {
       // Decide if the post is MDX based on the file extension
       // or content type
-      const isMdx = post.id.endsWith(".mdx");
+      const isMdx = post.filePath?.endsWith(".mdx") ?? false;
 
-      // Treat post body as a string, provide fallback
-      // XXX: Custom content collections were much more trouble than
-      // what they were worth. This is what I would call a 'kitchen sink'
-      // implementation at best, but it works. Until it doesn't, probably.
+      // Treat post body as a string because RSS rendering works from source text.
       const postContent = post.body || "";
-      const postUrl = `${site}/posts/${post.id}`;
+      const postUrl = `${site}/${post.data.archived ? "archive" : "posts"}/${post.id}`;
 
       // Render the post content to HTML using the appropriate
       // processor

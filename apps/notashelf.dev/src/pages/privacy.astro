@@ -320,14 +320,4 @@ const effectiveDate = "April 5, 2024";
       padding: 1rem 0;
     }
   }
-
-  // HACK: add a hidden spacer to force consistent layout height
-  // Without this, navbar shifts a few pixels right when the page is loaded.
-  .privacy-policy::after {
-    content: "";
-    display: block;
-    height: 1px;
-    min-height: calc(100vh - 300px);
-    visibility: hidden;
-  }
 </style>

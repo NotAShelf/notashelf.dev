@@ -305,26 +305,6 @@ const skillCategories = [
   </section>
 </BaseLayout>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 },
-    );
-
-    document.querySelectorAll(".fade-in").forEach((el) => observer.observe(el));
-
-    document.querySelectorAll(".tech-badge").forEach(() => {});
-  });
-</script>
-
 <style lang="scss">
   @use "../styles/global" as *;
   @use "sass:color";
@@ -619,7 +599,7 @@ const skillCategories = [
     width: 50px;
     height: 50px;
     flex-shrink: 0;
-    color: color.scale($primary, $lightness: 15%);
+    color: $text-subtle;
     background: $button-bg;
     border-radius: 6px;
     padding: 8px;
@@ -687,7 +667,7 @@ const skillCategories = [
     svg {
       width: 18px;
       height: 18px;
-      color: color.scale($primary, $lightness: 15%);
+      color: $text-subtle;
     }
   }
 

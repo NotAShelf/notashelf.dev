@@ -10,10 +10,16 @@ class PageUtils {
   private static readonly THRESHOLD = 0.1;
 
   static init(): void {
-    document.addEventListener("DOMContentLoaded", () => {
+    const initialize = () => {
       this.initFadeElements();
       this.initScrollArrow();
-    });
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initialize, { once: true });
+    } else {
+      initialize();
+    }
   }
 
   static initFadeElements(): void {

@@ -41,11 +41,11 @@ const bannerId =
 const getTypeIcon = () => {
   switch (type) {
     case "warning":
-      return "exclamation-triangle";
+      return "circle-exclamation";
     case "success":
-      return "circle-check";
+      return "shield";
     default:
-      return "info-circle";
+      return "circle-info";
   }
 };
 ---
@@ -65,7 +65,7 @@ const getTypeIcon = () => {
             title={expanded ? "Collapse" : "Expand"}
           >
             <Icon
-              name={expanded ? "chevron-up" : "chevron-down"}
+              name="chevron-down"
               class="toggle-icon"
             />
           </button>

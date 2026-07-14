@@ -123,5 +123,20 @@ describe("PageUtils", () => {
       expect(initFadeElementsSpy).toHaveBeenCalled();
       expect(initScrollArrowSpy).toHaveBeenCalled();
     });
+
+    it("should initialize immediately after DOMContentLoaded has already fired", () => {
+      const initFadeElementsSpy = vi.spyOn(PageUtils, "initFadeElements");
+      const initScrollArrowSpy = vi.spyOn(PageUtils, "initScrollArrow");
+
+      Object.defineProperty(document, "readyState", {
+        value: "complete",
+        configurable: true,
+      });
+
+      PageUtils.init();
+
+      expect(initFadeElementsSpy).toHaveBeenCalled();
+      expect(initScrollArrowSpy).toHaveBeenCalled();
+    });
   });
 });
