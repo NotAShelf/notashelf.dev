@@ -40,7 +40,7 @@
     "eslint-plugin-astro": "^2.1.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-svelte": "3.20.0",
-    "fs-extra": "^11.3.5",
+    "fs-extra": "^11.3.6",
     "globals": "^17.7.0",
     "jiti": "^2.7.0",
     "jsdom": "^29.1.1",
