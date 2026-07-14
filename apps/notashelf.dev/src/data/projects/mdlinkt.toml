@@ -1,5 +1,6 @@
-active      = true
+active      = false
 description = "A CLI tool for checking for dead links in a markdown file"
+featurable  = false
 sourceUrl   = "https://github.com/NotAShelf/mdlinkt"
 startDate   = 2025-06-12
 tags        = [ "markdown", "link-checker", "CLI", "Go" ]

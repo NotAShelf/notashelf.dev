@@ -1,5 +1,6 @@
-active      = true
+active      = false
 description = "Small, robust and quick webserver in C"
+featurable  = false
 sourceUrl   = "https://github.com/NotAShelf/iris"
 startDate   = 2025-03-04
 tags        = [ "webserver", "C", "HTTP" ]

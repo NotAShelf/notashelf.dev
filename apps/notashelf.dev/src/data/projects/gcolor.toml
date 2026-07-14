@@ -1,5 +1,6 @@
-active      = true
+active      = false
 description = "Terminal color picker"
+featurable  = false
 sourceUrl   = "https://github.com/NotAShelf/gcolor"
 startDate   = 2025-06-11
 tags        = [ "color-picker", "terminal", "Go" ]

@@ -1,6 +1,6 @@
-active      = true
+active      = false
 description = "Simple, streamlined and pretty aggregator for systemd-analyze security."
-featurable  = true
+featurable  = false
 sourceUrl   = "https://github.com/NotAShelf/ssa"
 startDate   = 2025-03-01
 tags        = [ "Rust", "systemd", "security", "aggregator" ]

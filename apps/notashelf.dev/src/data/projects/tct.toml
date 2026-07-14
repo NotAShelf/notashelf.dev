@@ -1,5 +1,6 @@
-active      = true
+active      = false
 description = "Fast and minimal parallel TCP connection testing utility"
+featurable  = false
 sourceUrl   = "https://github.com/NotAShelf/tct"
 startDate   = 2025-06-18
 tags        = [ "TCP", "networking", "testing", "Go" ]

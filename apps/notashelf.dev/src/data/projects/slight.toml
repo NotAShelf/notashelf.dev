@@ -1,5 +1,6 @@
-active      = true
+active      = false
 description = "Smooth Light - Backlight and LED devices control for Linux"
+featurable  = false
 sourceUrl   = "https://github.com/NotAShelf/slight"
 startDate   = 2025-10-25
 tags        = [ "linux", "backlight", "LED", "Rust", "utility" ]

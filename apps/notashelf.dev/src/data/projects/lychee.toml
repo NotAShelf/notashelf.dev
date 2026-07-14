@@ -1,5 +1,6 @@
-active      = true
+active      = false
 description = "Simple, opinionated image viewer"
+featurable  = false
 sourceUrl   = "https://github.com/NotAShelf/lychee"
 startDate   = 2025-02-18
 tags        = [ "image-viewer", "Rust", "GUI" ]

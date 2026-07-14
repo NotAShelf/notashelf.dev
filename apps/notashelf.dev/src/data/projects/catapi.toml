@@ -1,6 +1,6 @@
-active      = true
+active      = false
 description = "Minimal API for serving pictures of your cats. Now with a convenient frontend."
-featurable  = true
+featurable  = false
 sourceUrl   = "https://github.com/notashelf/catApi"
 startDate   = 2024-08-20
 tags        = [ "Go", "API", "Frontend" ]

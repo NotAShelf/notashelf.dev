@@ -1,5 +1,6 @@
-active      = true
+active      = false
 description = "In case you forgot some of them"
+featurable  = false
 sourceUrl   = "https://github.com/NotAShelf/everysha256hash"
 startDate   = 2025-12-09
 tags        = [ "TypeScript", "hash", "web" ]
