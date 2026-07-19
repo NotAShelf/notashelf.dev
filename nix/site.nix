@@ -3,12 +3,13 @@
   lib,
   stdenv,
   # Used to build the website package
-  pnpm,
+  pnpm_11,
   nodejs,
   fetchPnpmDeps,
   pnpmConfigHook,
 }: let
   buildDate = builtins.concatStringsSep "-" (builtins.match "(.{4})(.{2})(.{2}).*" self.lastModifiedDate);
+  pnpm = pnpm_11;
 in
   stdenv.mkDerivation (finalAttrs: {
     pname = "notashelf-dev";
@@ -26,19 +27,17 @@ in
 
         # Filter everything outside of what's specified here. Configuration files
         # are good to include, but linter/formatter configs are not necessary.
-        fileset = fs.intersection (fs.fromSource (lib.sources.cleanSource sp)) (
-          fs.unions [
-            (sp + /apps)
-            (sp + /content)
-            (sp + /packages)
-            (sp + /scripts)
+        fileset = fs.unions [
+          (sp + /apps)
+          (sp + /content)
+          (sp + /packages)
+          (sp + /scripts)
 
-            (sp + /package.json)
-            (sp + /tsconfig.json)
-            (sp + /pnpm-lock.yaml)
-            (sp + /pnpm-workspace.yaml)
-          ]
-        );
+          (sp + /package.json)
+          (sp + /tsconfig.json)
+          (sp + /pnpm-lock.yaml)
+          (sp + /pnpm-workspace.yaml)
+        ];
       };
 
     nativeCheckInputs = [
@@ -52,9 +51,10 @@ in
     # If we could build just one workspace, we could also just specify a workspace here
     # to fetch deps for and build. Alas, NodeJS.
     pnpmDeps = fetchPnpmDeps {
+      inherit pnpm;
       inherit (finalAttrs) pname src pnpmInstallFlags;
-      hash = "sha256-/5g4JoI3H2918PmUYW/3kjobVT+dfRXFY1ioWt/u1sY=";
-      fetcherVersion = 3; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
+      hash = "sha256-tI21no+g3F85lN396kSwhofv9PBtkR9mgJ3N9CN53GI=";
+      fetcherVersion = 4; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
     };
 
     nativeBuildInputs = [
