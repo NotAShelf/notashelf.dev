@@ -1,6 +1,6 @@
 ---
 title: "Nix Evaluation Is a Scheduling Problem"
-description: "Why I built evix, and why the interesting part was never about talking to Nix"
+description: "Why I built Evix, and Rambling On Nix Evaluation"
 date: "2026-06-25"
 keywords: ["nix", "rust", "programming"]
 ---
@@ -8,14 +8,14 @@ keywords: ["nix", "rust", "programming"]
 Most, if not all, Nix tools I build (or at least, consider building) eventually
 want to do one little boring thing. They want _a list of derivations an
 expression produces_. Not necessarily a build log---I've got [a crate for that]
-already and those are relatively trivial to parse already and nor a closure but
-a **a list of jobs**. Those usually require their attribute paths, names,
-systems, `.drv` paths and outputs to be visible and _if_ you're building
-something like Hydra then you need those before you can decide what to build.
-I.e., those are the things a CI system needs before it can decide what changed.
-While I haven't quite tried, those are also things I imagine a deployment tool
-needs before it can decide whether the graph in front of it is the same
-abomination it saw five minutes.
+already and those are relatively trivial to parse already and not a closure but
+**a list of jobs**. Those usually require their attribute paths, names, systems,
+`.drv` paths and outputs to be visible and _if_ you're building something like
+Hydra then you need those before you can decide what to build. i.e., those are
+the things a CI system needs before it can decide what changed. While I haven't
+quite tried, those are also things I imagine a deployment tool needs before it
+can decide whether the graph in front of it is the same abomination it saw five
+minutes ago.
 
 This isn't exactly a problem statement, but it's more or less the problem I've
 had. Because it _sounds_ like a one-time cost, however, you eventually realize
@@ -52,27 +52,27 @@ initially started by slapping `nix-eval-jobs` on top of my problems and I _do
 not_ want to lead you to think it is bad software, [^1] but it's pretty much
 _not_ what I was looking for. There were still a lot of annoying gaps that would
 take too long to fill via traditional means and I _know_ it'd suck to do so
-because C++ sucks. Anyway my point is that it's a relatively good tool for
-finder for what a Nix job evaluator should find and [evix] still leans on it in
+because C++ sucks. Anyway, my point is that it's a relatively good tool for
+finding what a Nix job evaluator should find and [Evix] still leans on it in
 benchmarks because I acknowledge it, and I strive to be _better_ than it.
 
 [^1]: I'm pointing out so that you don't mistakenly think that I'm inherently
     negative to every project I aim to replace. I do have my reservations about
-    nix-eval-jobs and some of its development but it would be very easy and very
-    easy to dishonestly tell you evix is good because nix-eval-jobs is bad. The
-    main difference between the two projects ultimately boils down to the fact
-    that my eyes are on a different boundary. I wish to evaluate, keep the
-    graph, answer typed questions and let work happen on machines that are not
+    nix-eval-jobs and some of its development but it would be very easy to
+    dishonestly tell you Evix is good because nix-eval-jobs is bad. The main
+    difference between the two projects ultimately boils down to the fact that
+    my eyes are on a different boundary. I wish to evaluate, keep the graph,
+    answer typed questions and let work happen on machines that are not
     necessarily this one. Hope it is clear that this is not me discouraging you
-    to drop nix-eval-jobs because it is bad; this is me telling you why evix
+    to drop nix-eval-jobs because it is bad; this is me telling you why Evix
     exists and how it operates under different assumptions. Namely, regarding
     your needs.
 
-[evix]: https://github.com/manic-systems/evix
+## Enter, Evix
+
+[Evix]: https://github.com/manic-systems/evix
 [Circus]: https://github.com/manic-systems/circus
 [nix-bindings]: https://github.com/notashelf/nix-bindings
-
-## Enter, Evix
 
 Evix is what I wrote to solve my general woes around structured and persistent
 evaluations. It is a library-first async Nix evaluation engine that evaluates
@@ -110,10 +110,10 @@ flake. It evaluates one attribute path and returns one event. Hand it
 `packages.x86_64-linux.hello` and it navigates from the root value to that path
 through the Nix C API, auto-calling functions on the way when the configured
 arguments make that possible. Then it asks what it found. If the value is a
-derivation, evix reads the derivation name, target system, `.drv` path and
+derivation, Evix reads the derivation name, target system, `.drv` path and
 outputs. If requested, it also reads `meta`, input derivations from the `.drv`,
 Hydra-style `constituents`, and registers GC roots. If the value is an attribute
-set, evix does not recursively disappear into it. It returns the child names as
+set, Evix does not recursively disappear into it. It returns the child names as
 an event. If forcing the value throws, that is an error event. Nonfatal errors
 are part of the stream, not a reason to throw away the whole run.
 
@@ -125,7 +125,7 @@ consequently, you) can decide what to do with them. A byte stream can tell you
 something went wrong. A typed event can tell you where it went wrong and still
 let the rest of the graph arrive. Everybody wins!
 
-It helps to see the thing evix is walking. A flake output is usually a tree of
+It helps to see the thing Evix is walking. A flake output is usually a tree of
 attribute sets with derivations at the leaves, trimmed down to something like
 this:
 
@@ -166,7 +166,7 @@ empty queue, nothing in flight  → done
 ```
 
 > [!NOTE]
-> evix does not recurse into every attrset by default. It follows the same basic
+> Evix does not recurse into every attrset by default. It follows the same basic
 > idea tools like this usually follow: recurse at the root, and recurse into
 > attrsets that opt in with `recurseForDerivations`. There is a
 > `--force-recurse` option for the times you really do want to kick down every
@@ -184,10 +184,10 @@ to use parallelism. [^2]
 
 [^2]: [We used to have good things](https://www.imdb.com/title/tt0097742/).
 
-It's also worth talking about Evix's benchmark suite. I'm _yet_ to to benchmark
+It's also worth talking about Evix's benchmark suite. I'm _yet_ to benchmark
 Evix in more advanced production scenarios, but on the current _toy_[^3]
 benchmark fixture, which is designed to measure scheduling and evaluation
-overhead rather than build time, evix with one local worker sits around 318ms,
+overhead rather than build time, Evix with one local worker sits around 318ms,
 four local workers around 198ms, and eight local workers around 216ms.
 `nix-eval-jobs` with four workers is around 359ms on the same fixture.
 Remote-only evaluation over loopback with four workers lands around 269ms. [^4]
@@ -224,7 +224,7 @@ computing that still works.
     to have the misfortune of rebuilding on.
 
 After each attribute, the worker checks its maximum resident set size against a
-configured limit, 4 gbs by default. If the worker is over the line, it returns a
+configured limit, 4 GB by default. If the worker is over the line, it returns a
 `Restart` status and exits. The coordinator goes ahead and spawns a fresh worker
 and continues feeding the same queue. The graph is in the parent, so the graph
 survives. The worker's heap is in the worker, so the leak does not become a
@@ -313,14 +313,14 @@ nicer way of doing what Hydra does, and more reliable too.
 
 ## Workers That Aren't Here (They Are On Strike)
 
-A worker is an odd little thing that I decided mirror from Circus' distributed
-_agents_ design where a worker _receives an attribute path and returns an
-event_. Once you phrase it that way, there is no deep reason it has to be on the
-same machine as the coordinator---similar to Circus' agents. This is where evix
-stops being a local optimization and starts looking like a scheduler in the
-old-fashioned sense. It has a queue, and opinions about who should do what.
-Remote workers are TCP services speaking Cap'n Proto messages. Remember when I
-said distributed evaluation? Yeah that's exactly it.
+A worker is an odd little thing that I decided to mirror from Circus'
+distributed _agents_ design where a worker _receives an attribute path and
+returns an event_. Once you phrase it that way, there is no deep reason it has
+to be on the same machine as the coordinator---similar to Circus' agents. This
+is where Evix stops being a local optimization and starts looking like a
+scheduler in the old-fashioned sense. It has a queue, and opinions about who
+should do what. Remote workers are TCP services speaking Cap'n Proto messages.
+Remember when I said distributed evaluation? Yeah that's exactly it.
 
 A connection opens with a setup handshake containing the evaluation config,
 protocol version, token, and expected store directory. Then it repeats the small
@@ -360,14 +360,118 @@ This is, well, not remote building. Obviously. Evix is not copying build
 products around. It is evaluating and reporting derivations. If you want remote
 build output transfer, that belongs to Nix's builder model or to a CI system
 above `evix`, not to the evaluator pretending it also wants to be a builder when
-it grows up. Quite frankly this is the part of evix I like most, because it is
+it grows up. Quite frankly this is the part of Evix I like most, because it is
 not grand. It does not say "distributed systems" and then demand a control
 plane, a service mesh, and worse... YAML. It says the unit of work is already
 serializable, the event is already serializable, and a worker was already
 disposable. Put a socket between them. Make the protocol explicit. Refuse
 remotes that cannot mean the same store paths. Move on.
 
-<!-- TODO: what does Evix solve? -->
+## Talking To Nix Without Becoming A Shell Script
+
+Earlier in this post I've mentioned using Nix (and friends) in CI. If you don't
+remember this, it's fine---I'm aware I've been yapping for too long. Long story
+short, this entire endeavour---as expected from all the context and pain
+surrounding GHA--- was done using Bash. Which is to say that it's typically not
+too easy to perform Nix evaluations without calling `nix eval` or the C++ APIs.
+This is where I want to mention the other, "quiet" part of Evix. As mentioned
+earlier, Evix talks to Nix through the C API. This was not done for aesthetic
+purity, although I do enjoy not parsing human-facing text (or using C++) like an
+animal. It was done because an embedding library needs typed boundaries.
+
+An input is one of three things:
+
+1. a flake reference,
+2. a Nix file, or
+3. an inline expression.
+
+Auto-call arguments can be expressions or strings. Flake inputs can be
+overridden while locking. Nix options can be passed through to the worker
+environment before the worker opens the store or builds its eval state. Flake
+locking is handled before workers start, and the locked graph is imported inside
+workers so multi-worker evaluation is not each process inventing its own answer
+to what the flake meant at that moment. Local path flakes are checked against
+their `flake.lock`; non-local refs are still a place where reproducibility needs
+care, because reality remains rude.
+
+The output is typed first and JSON later. The Rust enum has variants for
+derivations, attrsets and errors. The CLI flattens those into NDJSON because
+NDJSON is useful and boring, two properties I respect deeply in formats. With
+`--meta`, Evix tries to convert `meta` into freeform JSON and drops nested
+fields that cannot be forced or represented. With `--show-input-drvs`, it reads
+input derivations from the `.drv` file. Aggregate jobs with `constituents` carry
+those too. None of this needs a regex, or plural, regrets.
+
+That is also why the project is not really about the CLI. The CLI is convenient,
+and I use it, but the library is the point. A Rust service can open a `Session`,
+drain the stream, query the warm graph, compute a diff, or run a watcher without
+shelling out and reconstructing structure from text. If the service is a web
+backend, Evix can live as a native sidecar or daemon behind whatever HTTP or
+WebSocket API you actually want. If you want browser WASM, bad news: the current
+backend is native by design. It links libnix, opens a Nix store, uses Unix
+subprocesses, and speaks Unix sockets and TCP. An in-browser evaluator would
+need a different backend, probably one we control entirely. Sad, I know. Alas,
+that's what we have. However it's not the end.
+
+### What Evix Solves
+
+The problem Evix solves is not "Nix evaluation exists." The problem is that
+serious tools around Nix need evaluation to become a reusable service boundary,
+and not a ceremony performed by a subprocess every time. For CI specifically,
+the useful object is a graph that can be diffed between commits. For your fleet
+of NixOS configurations, it is a graph that can be filtered by system, prefix,
+name or `.drv` path. For a watch command, it is a previous graph and a new graph
+with errors attached to the comparison instead of hidden in a terminal
+scrollback. For distributed evaluation, it is a queue of independent attribute
+paths that local and remote workers can pull from without changing what the
+final graph means. For an embedding application, it is a typed API that does not
+ask the caller to summon a shell and interpret stdout as ontology. Thus, this
+I've built Evix. Circus needs to evaluate jobsets often, keep them around, ask
+what changed, and eventually hand builds to the right place. I do not want that
+CI to spend its life recomputing the same graph because the previous process
+threw away the one thing I cared about. I do not want an `aarch64` board to be
+represented by an `x86_64` laptop. I do not want one broken package to make the
+rest of the job graph unknowable. I do not want the evaluator and the builder to
+become one swollen process just because both words appear near each other in a
+README. Yada yada. My point is that Evix draws the line where I needed it.
+Evaluation discovers derivations. Building is somebody else's problem, usually
+Nix itself or [Circus]. Building is stateful, resource-hungry, cache-sensitive,
+failure-prone in completely different ways, and full of policy. Evaluation is
+already enough of a problem, and I have 99 problems. Evaluation is 99 of them.
+
+### Where It Stops
+
+Evix is rather young, and there are real ceilings. If you end up trying Evix and
+get rather disappointed, I ask that you attribute to its lack of maturity. I've
+recently released 2.0.0 to revise its model in its entirety and it was a much
+larger refactor than I feel I was equipped to deal with. Still, it turned out
+quite well and Circus' own CI test suite is now green across the board. That
+said I'll be amiss if I don't mention the issues such as that a worker can still
+die inside one awful force. Remote workers need compatible stores and trusted
+networking; expose the TCP service over a tunnel or VPN, not to the entire
+internet like you are trying to speedrun regret. System routing is also rather
+constrained by the fact that the system is discovered after evaluation. The
+daemon keeps warm sessions, but it is not a distributed database and should not
+be asked to cosplay as one. THOUGH, it may be possible in the future. Last but
+not least remember that the C API is stable enough to build on, but Nix is still
+Nix, with all the fun that implies and several other kinds of fun it invents at
+runtime.
+
+There are also things Evix _intentionally_ does not do. One big example is
+building. I've considered giving it a component like `evix build`, but compared
+to the surface of evaluation, building is truly a different kind of monster. To
+let Evix also do building, I would be required to solve _several_ problems that
+are not even remotely addressed in flakes, and I do not have the patience for
+that can of worms yet---no, I'm not a patient man.
+
+It does not solve binary cache policy. It does not make remote flakes locally
+watchable when there is no local path to subscribe to. It does not turn a Nix
+graph into a web frontend by itself. It will tell you what derivations exist,
+what paths they would produce, what inputs they mention if you ask, and how a
+later evaluation differs from an earlier one. That is the promise. A narrow
+promise, but a useful one. I do not expect Evix to be _groundbreaking_, but I
+expect it to be useful. It's got a lot of potential, and thus my dear reader, I
+invite you to harness it. Come talk to me, let me know what you need even.
 
 ## Closing Thoughts
 
@@ -393,4 +497,4 @@ with enough scheduling machinery that the work could survive large graphs, leaky
 workers and machines that are not the one under my hands. That is a narrow need,
 and it is mine.
 
-Evix is [on GitHub][evix] if that sounds like your problem too. Cheers.
+Evix is [on GitHub][Evix] if that sounds like your problem too. Cheers.
