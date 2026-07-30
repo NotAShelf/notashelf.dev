@@ -1,7 +1,7 @@
 ---
 title: "Nix Evaluation Is a Scheduling Problem"
-description: "Why I built Evix, and rambling on Nix evaluation"
-date: "2026-06-25"
+description: "Why I built Evix, and my ramblings on Nix evaluation"
+date: "2026-07-30"
 keywords: ["nix", "rust", "programming"]
 ---
 
