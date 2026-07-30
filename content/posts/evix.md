@@ -1,6 +1,6 @@
 ---
 title: "Nix Evaluation Is a Scheduling Problem"
-description: "Why I built Evix, and Rambling On Nix Evaluation"
+description: "Why I built Evix, and rambling on Nix evaluation"
 date: "2026-06-25"
 keywords: ["nix", "rust", "programming"]
 ---
@@ -446,16 +446,16 @@ get rather disappointed, I ask that you attribute to its lack of maturity. I've
 recently released 2.0.0 to revise its model in its entirety and it was a much
 larger refactor than I feel I was equipped to deal with. Still, it turned out
 quite well and Circus' own CI test suite is now green across the board. That
-said I'll be amiss if I don't mention the issues such as that a worker can still
-die inside one awful force. Remote workers need compatible stores and trusted
-networking; expose the TCP service over a tunnel or VPN, not to the entire
-internet like you are trying to speedrun regret. System routing is also rather
-constrained by the fact that the system is discovered after evaluation. The
-daemon keeps warm sessions, but it is not a distributed database and should not
-be asked to cosplay as one. THOUGH, it may be possible in the future. Last but
-not least remember that the C API is stable enough to build on, but Nix is still
-Nix, with all the fun that implies and several other kinds of fun it invents at
-runtime.
+said, I'll be remiss if I don't mention the issues such as that a worker can
+still die inside one awful force. Remote workers need compatible stores and
+trusted networking; expose the TCP service over a tunnel or VPN, not to the
+entire internet like you are trying to speedrun regret. System routing is also
+rather constrained by the fact that the system is discovered _after_
+evaluation---rather unsurprisingly. The daemon keeps warm sessions, but it is
+not a distributed database and should not be asked to cosplay as one. THOUGH, it
+may be possible in the future. Last but not least, remember that the C API is
+stable enough to build on, but Nix is still Nix, with all the fun that implies
+and several other kinds of fun it invents at runtime.
 
 There are also things Evix _intentionally_ does not do. One big example is
 building. I've considered giving it a component like `evix build`, but compared
