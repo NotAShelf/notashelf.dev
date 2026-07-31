@@ -3,7 +3,10 @@ import path from "node:path";
 
 const root = new URL("..", import.meta.url).pathname;
 const projectsDir = path.join(root, "apps/notashelf.dev/src/data/projects");
-const exemptionsFile = path.join(root, ".github/project-catalog-exemptions.json");
+const exemptionsFile = path.join(
+  root,
+  ".github/project-catalog-exemptions.json",
+);
 const yearMs = 365 * 24 * 60 * 60 * 1000;
 const staleBefore = new Date(Date.now() - yearMs);
 

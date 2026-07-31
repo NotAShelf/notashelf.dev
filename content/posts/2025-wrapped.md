@@ -5,29 +5,33 @@ date: 2025-12-31
 keywords: ["thoughts", "programming"]
 ---
 
-Howdy, it seems creating something with "wrapped" in the name is a ritual this
-year around so I decided to name my 2025 recap this way... It is also
-fashionably late because _Nix_ is a wonderful piece of software.
+Howdy! It seems like creating something with "wrapped" in its name is this
+year's tradition (looking at you, _literally every music platform_ and their
+poor copycats) so I decided to use this opportunity to make a recap and name it
+that way. It is also _fashionably_ late. So you'll _probably_ not be reading
+this in 2025. Don't blame me, blame Nix.
 
-Another year almost in the books. I thought about skipping the recap thing
-because honestly who cares, but then I remembered I care (a little), and also
-the blog has been quiet lately so might as well fill the void with some
-self-indulgent yapping before my time runs out. If you are surprised by me
-posting at the last second (i.e., after it became 2026 for some people reading
-this), I am honestly impressed. I thought myself more predictable and you...
-less gullible. That said, I am sufficiently intoxicated for the New Year
-celebrations and jokes aside my dear reader, 2025 has been a very long year and
+Another year is almost in the books. I'm writing those lines maybe a few hours
+before it is midnight, and I'm _strongly_ contemplating skipping this whole
+"recap" thing because, well, honestly _who cares_ but then I remembered I care
+(a little) and the blog has been quiet lately so _might as well_ fill the void
+with some self-indulgent yapping before my time turns out. If you are surprised
+by me posting at the last second (i.e., after it became 2026 for some people
+reading this), I am honestly impressed. I thought myself more predictable and
+you... less gullible. That said, I am sufficiently intoxicated for the New Year
+celebrations, and jokes aside my dear reader, 2025 has been a very long year and
 a lot has happened. Hope you've got a drink or some snacks ready, because this
 is a long one.
 
-Starting strong, NixOS 25.05 happened and I took part as a release editor. This
-coincided with a lot of important real-life events so I could not do as much as
-I hoped to but it was a good release regardless, and I'm proud of however much I
-was able to contribute. You can thank me for most of the grammar or typo fixes
-in the changelog. In the end it was the usual mix of module arguments,
-inconsistent defaults, and people discovering that `lib.mkForce` is both
-powerful and a crime scene. We shipped without total catastrophe, nobody died. I
-count that as a win.
+Starting strong, NixOS 25.05 has happened and I took part as a release editor.
+This coincided with a lot of important real-life events so I could not do as
+much as I hoped to but it was a good release regardless, and I'm proud of
+however much I was able to contribute. You can thank me for most of the grammar
+or typo fixes in the changelog. It was a good release. I reckon it ended with
+inconsistent defaults, config breakages in deployment (what part of
+nixos-_unstable_ is confusing?) and people discovering `lib.mkForce` exists...
+and that you can use it! Crazy I know. In the end we shipped without total
+catastrophe, nobody died. I count that as a win.
 
 Hyprland is also coming along nicely, for those interested. I'm a little over
 Hyprland at this point, but it appears that wlroots -> Aquamarine migration is
@@ -36,7 +40,8 @@ still the resident babysitter for the community, I took off from the Nix side of
 thing as those are usually not deferred to me. We've got some Nix-related
 changes coming along, but there is some time until those are actually...
 tangible. Long story short, the ecosystem is still alive. That's more than most
-Wayland compositors can say after three years.
+Wayland compositors can say after three years. It's even _improving_, and that's
+even rarer.
 
 ## Project News
 
@@ -120,6 +125,10 @@ Some other projects worth mentioning are:
   done for the C API, and as such the bindings will only evolve further over
   time. Perhaps those bindings will make their way into more projects of mine to
   replace instances where I shell out to Nix.
+- [Microfetch] has gotten _much_ faster and has taught me a lot about Rust. It
+  has also seen a bit of attention late 2025, so perhaps it is now adopted by
+  more NixOS users. It will, of course, continue to get faster. Sky is the
+  limit. In both speed and pointlessness.
 - I have finally [forked tuigreet] to solve many of the minor issues that were
   bothering me. This ended up with me implementing some requested features,
   modernizing the codebase over a single week, and adding a new configuration
@@ -127,13 +136,9 @@ Some other projects worth mentioning are:
   foreseeable future, I plan to maintain it as much as I can. If you _also_ use
   tuigreet and have had feature requests or bugs to report, then head over to
   the issue tracker and let me know. I promise to keep an open mind. PRs are
-  also very welcome as you might guess. Ratatouille is an infinitely powerful
-  TUI framework and I plan to leverage its powers further as time goes by. The
+  also very welcome as you might guess. Ratatui is an infinitely powerful TUI
+  framework and I plan to leverage its powers further as time goes by. The
   result? Terribly extensible TUI greeter. You're welcome.
-- [Microfetch] has gotten _much_ faster and has taught me a lot about Rust. It
-  has also seen a bit of attention late 2025, so perhaps it is now adopted by
-  more NixOS users. It will, of course, continue to get faster. Sky is the
-  limit. In both speed and pointlessness.
 
 [watt]: https://github.com/notashelf/watt
 [tailray]: https://github.com/notashelf/tailray
@@ -142,14 +147,19 @@ Some other projects worth mentioning are:
 
 Other than that, I've continued housekeeping work on [watt] (CPU power
 management), [tailray] (Tailscale systray in Rust), and a dozen smaller things
-like [flint] (flake input linter), and [tempus]. Nothing revolutionary, but they
-ship, people use them, and my system feels marginally less awful.
+like [flint] (flake input linter), and [tempus]. Admittedly they're nothing
+revolutionary, but who says they have to be? They work, they're shipped and even
+if it's useful to one person it's a win for me. They all make my system feel
+marginally less awful so I win in either case.
 
 ## Blog Updates
 
-My blog has remained opinionated and chaotic as it was designed to be. I think
-I've dropped plenty of posts within 2025, but I'd like to highlight a few that
-I'm particularly proud of:
+My blog remained opinionated, chaotic and dare I say half-assed as it was
+designed to be. I will not bore you with the technical updates since a) they're
+boring and b) you'll get to experience them first-hand once the site is updated.
+Instead, I'll talk about the posts published this year. I think I've dropped
+plenty of posts within 2025, but I'd like to highlight a few that I'm
+particularly proud of:
 
 - "_The Curse of Knowing How, or; Fixing Everything_" was my most popular post
   this year, and it opened the door to many interesting conversations about
@@ -171,31 +181,30 @@ make a few more posts in early 2026 as I get to finishing them, so maybe also
 stay tuned? I've got an [RSS feed](https://notashelf.dev/rss.xml) that you can
 subscribe to if what I write interests you :)
 
-Shorter rants sprinkled in about Golang deliberately dodging good patterns,
-mutation testing as the only test metric that matters, why Hydra is ironic hell
-for a declarative ecosystem, and the usual Nix-sucks-but-less-than-alternatives
-sermon.
-
 ## Other Stuff
 
-I think I aged like ten years over the last year. A lot of things happened, but
-most prominently, _burnout happened_. Still ongoing work on privacy/data
-integrity in policy contexts. Briefly relapsed to Arch in November---don't ask,
-it was bad, I'm back on NixOS, lesson learned (again).
+Now the heavy part. It's been a long and terribly annoying year. I think I aged
+almost ten years of the last year, and a lot of things happened. Most
+prominently, _burnout_ happened. Still ongoing work on privacy/data integrity in
+policy contexts. I've also gotten really annoyed with NixOS and took a
+quick...detour where I've briefly relapsed to Arch around November---don't ask,
+it was bad, I'm back on NixOS and the lesson is learned... again.
 
 Sailing, as usual, was alright when weather allowed. It seems that I am making
 less time for things I actually enjoy. Chess ELO still trapped in the 1100-1150
 limbo but I haven't played chess in almost six months. I guess you can't climb
 in ELO without, you know, actually playing the damn game.
 
-Overall? Just the slow realization that software culture is still mostly vibes,
-politics, and bloat, and we're all just trying to carve out tiny corners where
-it sucks marginally less. We make do, we always do.
+In the end I think I'm slowly realizing that software culture is still mostly
+vibes, politics, and bloat, and we're all just trying to carve out tiny corners
+where it sucks marginally less. We make do, we always do. However it's a tiring
+endeavour and I'm getting tired.
 
 ## 2026 Wishlist: bigger than projects, smaller than miracles
 
-This brings us to my 2026 wishlist, and I'm tired of small asks. Polish is nice,
-but polish on a rotting foundation is just expensive lipstick.
+This brings us to the _hopeful_ part of this post---my 2026 wishlist. Let me
+start by telling you that I'm rather tired of small asks. Polish is nice, but
+polish on a rotting foundation is just expensive lipstick.
 
 What I _actually_ want this year is an industry (and our little corners of it)
 that _starts punishing redundant complexity_. Not rewarding it with stars,
@@ -206,10 +215,11 @@ and for some godforsaken reason our computer resources seem like they will be
 dwindling over time. Do you know what this means? OPTIMIZATION god damn you,
 actually think about it for once. I am tired of useless Typescript projects for
 desktop or Python in production. Write actual languages. Write Rust, write C,
-write C++ but stop overcomplicating. On this note, tooling that does not
-actually hate maintainers would not be so bad either. NixOS modules cleaner from
-the start. A CI that isn't as ugly as the nightmare that is Hydra. Less YAML
-worship. Less vibe "coding" in infra that people rely on daily.
+write C++ but stop overcomplicating it by conjuring a new Typescript GUI
+framework for no good reason. On this note, tooling that does not actually hate
+maintainers would not be so bad either. NixOS modules cleaner from the start. A
+CI that isn't as ugly as the nightmare that is Hydra. Less YAML worship. Less
+vibe "coding" in infra that people rely on daily.
 
 Minimalism that isn't performative or cultish. Suckless is an unfunny joke sure,
 but it is not and has never been the endgame. We need small _and_ correct, small
@@ -223,19 +233,20 @@ should understand well enough to get angry about. Educate your wine aunt.
 Educate your siblings. Explain it in plain language until it clicks that
 "exceptional access" is just marketing speak for "someone else gets to read your
 shit". No more ChatControl style proposals quietly sliding through because
-someone mumbled "_but cyberbullying uwu_" and everyone nodded along to avoid
-looking callous. That rhetorical trick needs to stop working. I need widespread
-acceptance of a very boring technical truth: every backdoor is just an exploit
-wearing a badge. There is no such thing as a friendly vulnerability, no such
-thing as access that only the good guys use, no such thing as a hole that stays
-politely scoped to its original intent. If a system can be accessed, it will be
-accessed, by actors you did not anticipate and in ways you did not authorize.
-Governments, companies, and especially mid-tier tech bros need to internalize
-this as a fact of reality, not treat it as optional flavor you can trade away
-for optics or convenience. You _wish_ this is paranoia, but it isn't. It is
-_pattern recognition_ and anyone with more than just a goldfish brain should be
-able to notice the patterns as well. There is a rant coming about this, but I
-will spare you for today. Or rather, I will spare you _the rest_ for today.
+someone mumbled "_but why won't someone think of the children!_" and everyone
+nodded along to avoid looking callous. That rhetorical trick **needs to stop
+working**. I need widespread acceptance of a very boring technical truth: every
+backdoor is just an exploit wearing a badge. There is no such thing as a
+friendly vulnerability, no such thing as access that only the good guys use, no
+such thing as a hole that stays politely scoped to its original intent. If a
+system can be accessed, it will be accessed, by actors you did not anticipate
+and in ways you did not authorize. Governments, companies, and especially
+mid-tier tech bros need to internalize this as a fact of reality, not treat it
+as optional flavor you can trade away for optics or convenience. You _wish_ this
+is paranoia, but it isn't. It is _pattern recognition_ and anyone with more than
+just a goldfish brain should be able to notice the patterns as well. There is a
+rant coming about this, but I will spare you for today. Or rather, I will spare
+you _the rest_ for today.
 
 Last but not least, I wish for a single ecosystem somewhere, anywhere, that
 still chooses craft over clout. Not as branding, not as a values statement, not
@@ -283,4 +294,4 @@ of... _you_. I've met a many amazing people over 2025 that I am happy to call
 you are appreciated my dear reader, and see you next year, or; see you when I've
 got something worth saying. Have a nice one.
 
---- raf
+Cheers.

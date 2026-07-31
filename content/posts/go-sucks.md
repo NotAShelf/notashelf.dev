@@ -1,6 +1,6 @@
 ---
 title: "Why I think Go is a Terrible Language"
-description: "Rants and Ramblings on this little known language known as Go"
+description: "Rants and ramblings on this little known language known as Go"
 date: "2026-04-26"
 updated: "2026-05-24"
 keywords: ["thoughts", "programming", "software"]
@@ -681,4 +681,3 @@ users---a language that makes wrong programs easy to write. The ceiling was
 chosen knowingly. The question is whether you want to live under it, and whether
 you think the tradeoff of knowing how to deal with a language's quirks is worth
 not picking a language with considerably less quirks.
-

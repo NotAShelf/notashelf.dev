@@ -1,6 +1,6 @@
 ---
 title: "My New Tech Stack"
-description: "From Javascript, to Golang and Rust: A Technical Journey"
+description: "From Javascript, to Golang and Rust: A technical journey"
 date: 2025-04-03
 keywords: ["software", "programming"]
 ---

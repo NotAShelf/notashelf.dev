@@ -6,9 +6,9 @@ keywords: ["thoughts"]
 ---
 
 Not long ago---by which I mean an annoyingly short time ago---I wrote a post
-titled _I've bought a farm_. In it, I declared a hard reset: I was stepping away
-from the metropolis, stepping away from the bureaucratic weight of my day job,
-and, most emphatically, stepping away from the endless, abstract churn of
+titled _I'm Moving to a Farm_. In it, I declared a hard reset: I was stepping
+away from the metropolis, stepping away from the bureaucratic weight of my day
+job, and, most emphatically, stepping away from the endless, abstract churn of
 software. I wanted to trade the exhaustion of complex systems for the simple,
 tangible reality of the soil.
 

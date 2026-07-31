@@ -1,7 +1,7 @@
 ---
 title: "The Nihilist's Guide to Cross-Compiling Dioxus for Windows"
+description: "One stack to rule them all"
 date: 2026-02-01
-description: "One Stack to Rule Them All"
 keywords: ["programming", "software", "guide"]
 ---
 
@@ -17,7 +17,8 @@ bring the declarative "hooks and components" model and the entire CSS/Tailwind
 ecosystem into a native context, effectively bridging the gap between
 high-velocity web development and the efficiency of a Rust backend.
 
-In the case you didn't know, I come from a frontend background. As such, I
+In the case you didn't know, I used to do a lot of frontend work with Javascript
+being my first language and React being my first ever challenge. As such, I
 expected to be _right at home_ when I started with Dioxus. I was not wrong.
 
 ## Why Dioxus

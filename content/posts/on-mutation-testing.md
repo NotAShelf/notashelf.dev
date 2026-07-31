@@ -1,7 +1,6 @@
 ---
 title: "On Mutation Testing"
-description: |
-  Do You Have A Moment To Talk About Your Codebase's Extended Warranty?
+description: Do you have a moment to talk about your codebase's extended warranty?
 date: 2025-06-06
 keywords: ["thoughts", "programming", "software"]
 ---

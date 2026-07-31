@@ -108,6 +108,8 @@ async function main() {
   // Print summary reportF
   if (all) {
     printBuildReport(results);
+  } else if (results.some((r) => r.status === "fail")) {
+    process.exit(1);
   }
 }
 

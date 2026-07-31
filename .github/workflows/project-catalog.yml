@@ -9,7 +9,7 @@ on:
       - "apps/notashelf.dev/src/data/projects/**"
       - "scripts/check-project-catalog.js"
   push:
-    branches: [ "main" ]
+    branches: ["main"]
     paths:
       - ".github/project-catalog-exemptions.json"
       - ".github/workflows/project-catalog.yml"

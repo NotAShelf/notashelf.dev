@@ -1,6 +1,6 @@
 ---
 title: Nix's Substituter List Is Not a Routing Table
-description: "Optimizing Nix's Binary Cache Model"
+description: "Optimizing Nix's binary cache model"
 date: 2026-05-24
 keywords: ["software", "programming", "nix"]
 ---

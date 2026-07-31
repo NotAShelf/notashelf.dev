@@ -37,7 +37,12 @@ $text-tag: color.scale($secondary, $lightness: -5%);
 $text-project-desc: color.scale($secondary, $lightness: -8%);
 $text-link-bright: color.scale($secondary, $lightness: 20%);
 
-$grid-pattern: rgba(255, 255, 255, 0.04); // somewhat subtle grid pattern for the background
+$grid-pattern: rgba(
+  255,
+  255,
+  255,
+  0.04
+); // somewhat subtle grid pattern for the background
 
 // Semantic colors with proper contrast
 $success-color: #58d68d; // green for success states (4.8:1)

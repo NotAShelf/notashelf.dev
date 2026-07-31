@@ -1,7 +1,7 @@
 ---
 title: "Enter: Beginner's guide to Writing Error Messages"
-date: 2025-01-02
 description: "Thoughts and rants on key principles of writing polite, effective and user-friendly error messages"
+date: 2025-01-02
 keywords: ["rant", "software", "thoughts"]
 ---
 

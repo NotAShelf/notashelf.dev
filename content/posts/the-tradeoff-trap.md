@@ -1,6 +1,6 @@
 ---
 title: "The Tradeoff Trap"
-description: "When Simplicity Feels Like Surrender"
+description: "When simplicity feels like surrender"
 date: 2025-08-11
 keywords: ["thoughts", "software", "programming"]
 ---
@@ -9,8 +9,8 @@ Not so long ago, I have spent quite a bit of time writing a new component for my
 site. It is not really _that_ fancy. Though suffice it to say, it took more time
 than it was worth; the component is written in Rust, compiled to WASM using
 `wasm-pack` and it's shoehorned into my Astro stack through a Vite plugin that I
-_probably_ regret adding to my site. It does work, technically, but it's not
-too clean. It's not even clever. It just... feels heavy. [^1]
+_probably_ regret adding to my site. It does work, technically, but it's not too
+clean. It's not even clever. It just... feels heavy. [^1]
 
 [^1]: And the performance benefits aren't even that great! What happened to my
     blazingly fast, memory-safe Rust?
@@ -54,12 +54,12 @@ something unnecessarily beautiful. To prove that I can.
 ## The Joy Tax
 
 Truth be told, joy matters. It drives creativity. It is also why I still spend
-time programming. However, it comes with a tax. Joy tells you that
-layering three patterns on top of each other is fine because you will _totally_
-clean it up later. Joy tells you that you are learning. Sometimes that's true.
-But more often, it leaves behind a breadcrumb trail of entropy. Small
-complications that add up over time until you're afraid to touch anything
-without a full test suite and a stiff drink.
+time programming. However, it comes with a tax. Joy tells you that layering
+three patterns on top of each other is fine because you will _totally_ clean it
+up later. Joy tells you that you are learning. Sometimes that's true. But more
+often, it leaves behind a breadcrumb trail of entropy. Small complications that
+add up over time until you're afraid to touch anything without a full test suite
+and a stiff drink.
 
 Simplicity, on the other hand, has a kind of power I have a hard time
 describing. If I were to try and visualise it for you, I'd tell you of a puzzle
@@ -75,10 +75,9 @@ solution usually uses less memory and runs faster without requiring a profiler.
 
 Yet there is this intriguing feeling that accompanies simplicity. It feels
 almost like surrender. It feels like admitting the challenge was too difficult
-Maybe we fear judgement for writing something that looks
-pedestrian. We call it _boring_ code instead of reliable code. We convince
-ourselves that plain means uninspired when in reality it often means practical
-and predictable.
+Maybe we fear judgement for writing something that looks pedestrian. We call it
+_boring_ code instead of reliable code. We convince ourselves that plain means
+uninspired when in reality it often means practical and predictable.
 
 ## A Fork in the Road
 
@@ -100,8 +99,8 @@ raw performance. It _might_ benefit from dynamic typing or metaprogramming even
 if that code will never see production. In that realm the joy of creativity and
 the speed of iteration trump long term maintenance. The cost of rewriting from
 scratch is acceptable because you will probably scrap it once you learn what
-works. The cost of learning something new is far less than the cost of missing new
-knowledge.
+works. The cost of learning something new is far less than the cost of missing
+new knowledge.
 
 The real trap is believing you can have everything. High performance plus
 effortless maintainability plus endless enjoyment. Right. There is a narrow
@@ -128,11 +127,11 @@ clever trick. Ask yourself what you truly need from this project. Do you need
 speed or delight in playing with language features? Do you need rock solid
 uptime or rapid feedback on a research question? Answer that and choose
 deliberately. Honor the tradeoff. There is no perfect solution, only the right
-compromise for now. When you are racing against a deadline, choose simplicity and
-accept the dullness. When you are prototyping a radical idea, choose
+compromise for now. When you are racing against a deadline, choose simplicity
+and accept the dullness. When you are prototyping a radical idea, choose
 sophistication and accept the technical debt. When you are building something
-meant to last, choose the combination that yields reliability, even if it does not
-inspire a standing ovation from your future self.
+meant to last, choose the combination that yields reliability, even if it does
+not inspire a standing ovation from your future self.
 
 And remember: simplicity or sophistication, they are not sole measures of your
 talent. They are tools you wield to shape the experience of building and

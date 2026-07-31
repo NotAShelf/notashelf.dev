@@ -1,35 +1,39 @@
 ---
 title: "Moving To A Farm"
-description: "Trading the Metropolis and Software for a New Life (on a farm)"
+description: "Trading the metropolis and software for a new life (on a farm)"
 date: 2026-06-27
 keywords: ["thoughts"]
 ---
 
-I think I'm depressed. Yeah that's it that's the post. You can stop reading now.
+I think I'm depressed. Yeah that's it, that's the post. You can stop reading
+now.
 
 No, really. Despite all the constant jokes, easy-going attitude (which you might
-think is a façade, and you wouldn't be entirely wrong) alongside everything else
-that creates the illusion of normalcy, I think I'm depressed. I've been this way
-for a while now. Everything is tiring, every inconvenience is a stab to my
-nerves and it does not go away. It _never_ goes away. Everything inconvenience,
-even the most minor ones, just become another mark on the tally. It keeps
-growing and growing and growing. Never goes anywhere, and the weight keeps
-increasing. I'm also pretty sick if you weren't aware. My health is not exactly
-getting better and that's obviously not doing wonders for my mental health
-either. Naturally, at what I consider my lowest, I have had some time and
-incentive to reflect.
+think is a façade, and you wouldn't be entirely wrong) and alongside everything
+else that creates the illusion of normalcy, _I think I'm depressed_. It was a
+rather difficult realization to come to, but I don't think I can explain it any
+other way. Come to think of it, I've been this way for a while now. Everything
+is tiring, every inconvenience is a stab to my nerves and it does not go away.
+It _never_ goes away. Every inconvenience, even the most minor ones, just become
+another mark on the tally. It keeps growing and growing and growing. Never goes
+anywhere, and the weight keeps increasing. It also doesn't help that I'm rather
+sick. In case you weren't aware. My health is not exactly getting better and
+that's obviously not doing wonders for my mental health either. Naturally, at
+what I consider my lowest, I have had some time and incentive to reflect.
 
 One thing I realized while on this (rather somber) note, I've long felt the
-weight of the metropolis pressing down. The endless noise of society, the
-relentless pace of the city with people who are too stupid to walk in a straight
-line, and---perhaps least surprisingly to anyone who regularly reads this
-blog---the suffocating endlessness of software. Chances are you've subscribed to
-my RSS feed or irregularly follow this blogpost for technical posts, opinion
-pieces and my "deep dives". You are probably used to me dissecting the nuances
-of system architecture, sharing the intricacies of managing tens of thousands of
-lines of declarative system configurations, or exploring the finer points of
-compiling and cross-compiling code. Software has been my refuge, my creative
-outlet, and the primary focus of these pages.
+weight of the metropolis pressing down. The endless noise of society, traffic,
+the relentless pace of the city with people who are too stupid to walk in a
+straight line on a 20 foot wide street, and---perhaps least surprisingly to
+anyone who regularly reads this blog---the suffocating endlessness of software.
+Chances are you've subscribed to my RSS feed or irregularly follow this blog for
+technical posts, opinion pieces and my "deep dives" I publish from time to time.
+You are probably used to me dissecting the nuances of system architecture,
+sharing the intricacies of managing tens of thousands of lines of declarative
+system configurations, or exploring the finer points of compiling and
+cross-compiling code. Software has been my refuge, my creative outlet, and the
+primary focus of these pages. Hell, my entire personality online is software in
+stark contrast to my actual self that's strictly against it.
 
 But, admittedly, none of this is without a cost. Up until this time I've been
 paying a "rent" of sorts. A reoccurring payment that comes back up every once in
@@ -41,9 +45,12 @@ I used to think that building perfect, logical, minimalist systems on a screen
 was an antidote to the chaos of the real world. Instead, it just became another
 form of noise. I found myself endlessly staring at glowing rectangles, tweaking
 architectures, and optimizing processes that ultimately exist only as electrons.
-The pursuit of the perfect, reproducible setup started to feel hollow. So, I am
-stepping away. I am leaving a bunch of things behind, like my concrete sprawl,
-and moving out to the land. _You probably saw this coming_.
+The pursuit of the perfect, reproducible setup and a "perfect" ecosystem to
+match has started to feel hollow. So, I am stepping away. I am leaving a bunch
+of things behind, like my concrete sprawl, and moving out to the land. _You
+probably saw this coming_. [^1]
+
+[^1]: Not like I haven't joked about doing it.
 
 At this point in time I have decided that I should be trading the abstract for
 the tangible. A farm isn't a reproducible system. You can't strictly declare the
@@ -57,12 +64,13 @@ One thing I used to enjoy in videogames when I'd practically completed all
 challenges and done everything that can be done is to strip myself of my
 end-game gear and "start fresh". It's not exactly the most practical way to play
 a game but it feels somewhat enjoyable to re-engage with previous challenges
-with what I know now, but without the fruits of my own labor. In a similar
-sense, I want to feel the physical weight of my labor instead of measuring it in
-lines of code or academic citations. I want to build things that cast a shadow,
-rather than things that live on a server---all of which is meaningless.
+with what I know now, but without the fruits of my own labor that have long felt
+stale. In a similar sense, I want to feel the physical weight of my labor
+instead of measuring it in lines of code or academic citations. I want to build
+things that cast a shadow, rather than things that live on a server---all of
+which is meaningless.
 
-Frankly I don't know entirely what this means for the future of this blog. I'll
+Frankly, I don't know entirely what this means for the future of this blog. I'll
 probably write a bit less while I downscale my work on my existing software. If
 you use my software because you find it genuinely useful, then I am glad. Since
 I have not yet decided what I'll do, besides going to a farm, outside the city,

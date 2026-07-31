@@ -5,17 +5,20 @@ date: "2026-07-30"
 keywords: ["nix", "rust", "programming"]
 ---
 
+[a crate for that]: https://crates.io/crates/cognos
+
 Most, if not all, Nix tools I build (or at least, consider building) eventually
-want to do one little boring thing. They want _a list of derivations an
-expression produces_. Not necessarily a build log---I've got [a crate for that]
-already and those are relatively trivial to parse already and not a closure but
-**a list of jobs**. Those usually require their attribute paths, names, systems,
-`.drv` paths and outputs to be visible and _if_ you're building something like
-Hydra then you need those before you can decide what to build. i.e., those are
-the things a CI system needs before it can decide what changed. While I haven't
-quite tried, those are also things I imagine a deployment tool needs before it
-can decide whether the graph in front of it is the same abomination it saw five
-minutes ago.
+want to do one little, _very boring_ thing. They want _a list of derivations an
+expression produces_, and well, they need to find a way to get it. Not
+necessarily a build log---I've got [a crate for that] already and those are
+relatively trivial to parse already and not a closure but **a list of jobs**.
+Those usually require their attribute paths, names, systems, `.drv` paths and
+outputs to be visible and _if_ you're building something like Hydra then you
+need those before you can decide what to build, i.e., those are the things a CI
+system needs before it can decide what changed. While I haven't quite tried,
+those are also things I imagine a deployment tool needs before it can decide
+whether the graph in front of it is the same abomination or/and deployment
+abstraction it saw five minutes ago.
 
 This isn't exactly a problem statement, but it's more or less the problem I've
 had. Because it _sounds_ like a one-time cost, however, you eventually realize
@@ -35,16 +38,16 @@ free either. It is thousands of attributes, lazy thunks waking up (just enough
 to hurt you), and a wall-clock cost you notice mostly because you pay it again
 for the next question. Now let me state the obvious: Nix's eval cache
 _**sucks**_. And I can tell you that I am not interested in a cache-shaped
-_thing_ that's masquerading as one.
+_thing_ that's masquerading as one. Although Evix fixes that too. Just because.
 
 For a very long time I've thought that my complaint was that evaluation was slow
 (it is) and that the output was annoying to parse (it is). It's roughly the same
 kind of experience as having an entire piano fall on top of your head while
-taking a stroll but that's not what ruins my day. What annoys me the most is
-_not_ having a gravitationally-challenged piano deciding to ruin my evening
-stroll but the cost that is the program doing the evaluation had already built
-the interesting structure, printed a representation of it, and then died.
-Naturally the graph dies with it. Go figure.
+taking a nice little evening stroll but that's not what ruins my day. What
+annoys me the most is _not_ having a gravitationally-challenged piano deciding
+to ruin my evening stroll but the cost that is the program doing the evaluation
+had already built the interesting structure, printed a representation of it, and
+then died. Naturally the graph dies with it. Go figure.
 
 When I started calling `jq` (which I'm not a huge fan of) I slowly started to
 grow suspicious that the tool I'm using is... wrong. As I've mentioned, I
@@ -54,19 +57,21 @@ _not_ what I was looking for. There were still a lot of annoying gaps that would
 take too long to fill via traditional means and I _know_ it'd suck to do so
 because C++ sucks. Anyway, my point is that it's a relatively good tool for
 finding what a Nix job evaluator should find and [Evix] still leans on it in
-benchmarks because I acknowledge it, and I strive to be _better_ than it.
+benchmarks because I acknowledge it, and I strive to create something _better_
+than it.
 
 [^1]: I'm pointing out so that you don't mistakenly think that I'm inherently
     negative to every project I aim to replace. I do have my reservations about
-    nix-eval-jobs and some of its development but it would be very easy to
-    dishonestly tell you Evix is good because nix-eval-jobs is bad. The main
-    difference between the two projects ultimately boils down to the fact that
-    my eyes are on a different boundary. I wish to evaluate, keep the graph,
-    answer typed questions and let work happen on machines that are not
-    necessarily this one. Hope it is clear that this is not me discouraging you
-    to drop nix-eval-jobs because it is bad; this is me telling you why Evix
-    exists and how it operates under different assumptions. Namely, regarding
-    your needs.
+    nix-eval-jobs, and some of its development, but it would be too easy to
+    dishonestly tell you _Evix is good because nix-eval-jobs is bad_ and, well,
+    that's not what I'm interested in doing here. The main difference between
+    the two projects ultimately boils down to the fact that my eyes are on a
+    different boundary. I wish to evaluate, keep the graph, answer typed
+    questions and let work happen on machines that are not necessarily this one.
+    Hope it is clear that this is not me discouraging you to drop nix-eval-jobs
+    because it is bad; this is me telling you why Evix exists and how it
+    operates under different assumptions for an ultimately larger scope. Namely,
+    regarding surrounding my needs. Maybe even yours.
 
 ## Enter, Evix
 
@@ -91,12 +96,12 @@ As much as I want to replace Nix, Evix is not a Nix replacement and I don't
 replace Nix _yet_. Evix is, most simply put, the architecture around evaluation:
 process isolation, scheduling, backpressure, event accumulation, daemon state,
 remote workers, and enough respect for the C API that I do not have to scrape a
-terminal and call it data or torture yourself with the C++ API. If there is a
+terminal and call it data or torture myself with the C++ API. If there is a
 technical marvel here, it is not that I discovered fire. No, I was not there to
-discover fire. But the parts of Evix are quite interesting. Most of them mundane
-and sharp-edged, line up into a proper model where Nix evaluation becomes
-something more reliable and something you can pretty much _hold on to_---for the
-lack of a better term.
+discover fire (I'm not that old) but the parts of Evix are quite interesting
+nevertheless. Most of them mundane and sharp-edged, line up into a proper model
+where Nix evaluation becomes something more reliable and something you can
+pretty much _hold on to_---for the lack of a better term.
 
 ## One Value, One Event
 
@@ -105,20 +110,21 @@ you'll find it interesting, or maybe you've got better ideas than me and you'll
 help develop mine. In either case, I would like to spend the rest of this post
 talking about how Evix operates.
 
-The model starts smaller than people expect. A worker does not walk a whole
-flake. It evaluates one attribute path and returns one event. Hand it
-`packages.x86_64-linux.hello` and it navigates from the root value to that path
-through the Nix C API, auto-calling functions on the way when the configured
-arguments make that possible. Then it asks what it found. If the value is a
-derivation, Evix reads the derivation name, target system, `.drv` path and
-outputs. If requested, it also reads `meta`, input derivations from the `.drv`,
-Hydra-style `constituents`, and registers GC roots. If the value is an attribute
-set, Evix does not recursively disappear into it. It returns the child names as
-an event. If forcing the value throws, that is an error event. Nonfatal errors
-are part of the stream, not a reason to throw away the whole run.
+The model starts smaller than what you might expect. A worker does not walk a
+whole flake as most tools often do as I've come to observe. It evaluates one
+attribute path and returns one event. Hand it `packages.x86_64-linux.hello` and
+it navigates from the root value to that path through the Nix C API,
+auto-calling functions on the way when the configured arguments make that
+possible. Then it asks what it found. If the value is a derivation, Evix reads
+the derivation name, target system, `.drv` path and outputs. If requested, it
+also reads `meta`, input derivations from the `.drv`, Hydra-style
+`constituents`, and registers GC roots. If the value is an attribute set, Evix
+does not recursively disappear into it. It returns the child names as an event.
+If forcing the value throws, that is an error event. Nonfatal errors are part of
+the stream, not a reason to throw away the whole run.
 
 That last sentence is more important than it looks. A large Nix graph is not a
-Victorian (or 19th century Ottoman) novel where every character has to survive
+Victorian---or 19th century Ottoman---novel where every character has to survive
 until the last chapter. One bad package should not erase the packages next to
 it. Errors need names and paths and enough structure that a caller (and
 consequently, you) can decide what to do with them. A byte stream can tell you
@@ -138,7 +144,7 @@ this:
 │  │  └─ ripgrep         derivation (leaf)  ripgrep-14.1.0
 │  └─ aarch64-linux      attrset
 │     ├─ hello           derivation (leaf)
-│     └─ git             derivation (leaf)
+│     └─ firefox         derivation (leaf)
 └─ devShells
    └─ x86_64-linux
       └─ default         derivation (leaf)
@@ -161,8 +167,8 @@ queue: [ .# ]
   packages.x86_64-linux         attrset    -> enqueue ...hello, ...git, ...ripgrep
   packages.x86_64-linux.hello   derivation -> emit; enqueue nothing
   packages.x86_64-linux.git     derivation -> emit; enqueue nothing
-  …
-empty queue, nothing in flight  → done
+  ...
+empty queue, nothing in flight  -> we're done
 ```
 
 > [!NOTE]
@@ -172,12 +178,12 @@ empty queue, nothing in flight  → done
 > `--force-recurse` option for the times you really do want to kick down every
 > door, but the default is _less_ stupid. Nixpkgs has many rooms. Some contain
 > jobs. Some contain machinery. Some contain things that make you regret
-> curiosity as a concept.
+> curiosity as a concept and think about the poor cats.
 
-The important invariant, which I call important because it caused many
-breakages, is that the answer is a graph keyed by attribute path, not by the
-order events happened to arrive. One worker and four workers should produce the
-same graph. Naturally, local workers and remote workers should feed the same
+The important invariant, which I call important because it caused many breakages
+and a lot of pain, is that the answer is a graph keyed by attribute path, not by
+the order events happened to arrive. One worker and four workers should produce
+the same graph. Naturally, local workers and remote workers should feed the same
 accumulator. The event stream is temporal because programs live in time, but the
 resulting graph is not supposed to depend on scheduler luck. That is the licence
 to use parallelism. [^2]
@@ -216,7 +222,8 @@ the part that concerns you. [^5] Evix workers are subprocesses, not threads. The
 host process owns the queue and the warm graph. Each worker owns its Nix
 context, store handle, eval state and root value. The boundary is crude in the
 way Unix is crude, which is to say it is one of the few crude things in
-computing that still works.
+computing that still works. I also have some few _crass_ things to say about it
+all.
 
 [^5]: It concerns me _so much_ in fact, that I have Nix cgrouped to limit how
     much CPU, RAM and IO it can use thanks to Systemd's cgroup accounting.
@@ -227,23 +234,24 @@ After each attribute, the worker checks its maximum resident set size against a
 configured limit, 4 GB by default. If the worker is over the line, it returns a
 `Restart` status and exits. The coordinator goes ahead and spawns a fresh worker
 and continues feeding the same queue. The graph is in the parent, so the graph
-survives. The worker's heap is in the worker, so the leak does not become a
-blood oath the host process has to honor forever. This is _especially_ important
-if you're interested in embedding. By default, local workers re-exec the
-embedding binary and enter the worker protocol when `EVIX_WORKER` is set. If
+survives. The worker's heap is in the worker, so the leak does not become some
+kind of a blood oath the host process has to honor forever. This is _especially_
+important if you're interested in embedding. By default, local workers re-exec
+the embedding binary and enter the worker protocol when `EVIX_WORKER` is set. If
 your host program cannot or should not re-exec itself, you can point
 `ConfigBuilder::worker_exe` at a dedicated worker executable instead. The worker
 protocol is still the same: setup message, work path, event, status. The magic
 is mostly refusing to make the embedding process also be the place where libnix
 gets to leak memory for sport.
 
-One footnote worth keeping around is that the memory check happens between
-attributes. It catches the common case where a worker grows over many paths,
-BUT, it does not save you from one attribute that detonates mid-force before
-control returns to the check. Evix can time out an item, abort a worker and
-reconnect. It can report stderr. It can keep the host alive. It cannot make
-libnix interruption into a property it does not have. I'm a poor man. All I've
-got is a process boundary and an RSS check. Different budgets, I guess.
+One footnote worth keeping around before I wrap up this section is that the
+memory check happens between attributes. It catches the common case where a
+worker grows over many paths, BUT, it does not save you from one attribute that
+detonates mid-force before control returns to the check. Evix can time out an
+item, abort a worker and reconnect. It can report stderr. It can keep the host
+alive. It cannot make libnix interruption into a property it does not have. I'm
+a poor man. All I've got is a process boundary and an RSS check. Different
+budgets, I guess.
 
 ## The Session Is The Product
 
@@ -271,14 +279,13 @@ need backpressure, as one does, and unbounded channels are a nice way to turn
 "my stdout is slow" into "honey, why is my process enormous?" Ask me how I know.
 Actually, please don't.
 
-### The Daemonhost [^7]
-
-[^7]: Like in Warhammer? Hmm? Hmm?
+### The Daemon(host)
 
 The daemon is a thin extension of the same idea as Evix. It listens on a Unix
 socket, keeps a small registry of warm sessions, and keys them by the evaluation
 config: input, arguments, Nix options, worker count, memory limit, remote
-endpoints, metadata flags, the whole boring lot.
+endpoints, metadata flags, the whole boring lot. It's also primed to do a lot
+more.
 
 Actually the idea for the daemon comes from our goals in [Circus] to distribute
 _not only builds_, _but evaluation as well_. A cache that ignores the
@@ -314,10 +321,10 @@ nicer way of doing what Hydra does, and more reliable too.
 ## Workers That Aren't Here (They Are On Strike)
 
 A worker is an odd little thing that I decided to mirror from Circus'
-distributed _agents_ design where a worker _receives an attribute path and
-returns an event_. Once you phrase it that way, there is no deep reason it has
-to be on the same machine as the coordinator---similar to Circus' agents. This
-is where Evix stops being a local optimization and starts looking like a
+distributed _agents_ design/concept where a worker _receives an attribute path
+and returns an event_. Once you phrase it that way, there is no deep reason it
+has to be on the same machine as the coordinator---similar to Circus' agents.
+This is where Evix stops being a local optimization and starts looking like a
 scheduler in the old-fashioned sense. It has a queue, and opinions about who
 should do what. Remote workers are TCP services speaking Cap'n Proto messages.
 Remember when I said distributed evaluation? Yeah that's exactly it.
@@ -343,15 +350,15 @@ endpoint. With `--workers 0` and at least one remote, the coordinator can run no
 local workers at all. At that point your local process is almost pure scheduler:
 it owns the queue and graph, while the machines that can actually evaluate the
 interesting systems do the forcing. On this note, however, system routing has a
-subtle limitation worth saying plainly. **A derivation's `system` is not known
-until the attribute has been evaluated**. Evix therefore cannot always know,
-before evaluation, which machine is the perfect one for a path. Remotes declare
-the systems they own, and the coordinator checks returned derivations against
-the pool. If some local, catch-all, or owning remote accepts that system, the
-event is valid. If no worker in the pool accepts it, evaluation fails by name
-with a fatal error instead of quietly losing the derivation. That is less
-magical than perfect pre-routing and much better than lying to ourselves or
-making a best-effort guess.
+subtle limitation: **a derivation's `system` is not known until the attribute
+has been evaluated**. Evix therefore cannot always know, before evaluation,
+which machine is the perfect one for a path. Remotes declare the systems they
+own, and the coordinator checks returned derivations against the pool. If some
+local, catch-all, or owning remote accepts that system, the event is valid. If
+no worker in the pool accepts it, evaluation fails by name with a fatal error
+instead of quietly losing the derivation. That is less magical than perfect
+pre-routing and much better than lying to ourselves or making a best-effort
+guess.
 
 There is also a store-directory handshake. A remote whose Nix store directory
 does not match the coordinator's is rejected, because `.drv` and output paths
@@ -367,7 +374,7 @@ serializable, the event is already serializable, and a worker was already
 disposable. Put a socket between them. Make the protocol explicit. Refuse
 remotes that cannot mean the same store paths. Move on.
 
-## Talking To Nix Without Becoming A Shell Script
+## Talking To Nix Without Bespoke Bash
 
 Earlier in this post I've mentioned using Nix (and friends) in CI. If you don't
 remember this, it's fine---I'm aware I've been yapping for too long. Long story
@@ -477,8 +484,8 @@ invite you to harness it. Come talk to me, let me know what you need even.
 
 So, that is Evix as it stands today. It's certainly been through a lot of
 iterations over I can probably only describe as _ages_ before I decided to sit
-down and port my low-effort Python to proper Rust. It is not a one-shot
-evaluator (anymore) with a nicer coat of paint, but a session-oriented
+down and port my low-effort Python/Bash/C++ bullshit to proper Rust. It is not a
+one-shot evaluator (anymore) with a nicer coat of paint, but a session-oriented
 evaluation engine with a proper CLI attached. The combination changes the
 question from "how do I print the jobs again?" to "what do I want to ask the
 graph I already have?" If you're _building with_ Evix it gives you a very nice

@@ -3,6 +3,7 @@ title: "Considerations"
 description: "Yet another heart-to-heart for no reason other than to empty my head"
 date: 2025-04-07
 keywords: ["thoughts"]
+archived: true
 ---
 
 > I am a sick man... I am a spiteful man. I am an unattractive man. I believe my
