@@ -8,8 +8,8 @@ keywords: ["thoughts", "programming", "math"]
 Lately, I have been thinking a lot about my relationship with mathematics. I
 blame it on a certain friend of mine who's rather passionate about math, and as
 a byproduct of a somewhat recent discussion, I've been thinking about how
-math---something that's more or less an inescapable pillar of my life--- start
-feeling... cold. Come to think of it, my profession a sailmaker is
+math---something that's more or less an inescapable pillar of my life--- starts
+feeling... cold. Come to think of it, my profession as a sailmaker is
 _fundamentally an exercise in applied geometry and physics_---calculating draft,
 camber, broadseams, and tension across non-Euclidean surfaces---and my hobby as
 a software "engineer" is built entirely on discrete mathematics and logic. Sure
