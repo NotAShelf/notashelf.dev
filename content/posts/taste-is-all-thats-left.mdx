@@ -5,8 +5,21 @@ date: 2026-08-06
 keywords: ["thoughts", "programming", "software"]
 ---
 
-For most of the time I have been writing software, the hard part was making the
-thing exist at all.
+import Banner from "@components/Banner.astro";
+
+<Banner type="info" title="Post Mortem " showIcon={false}>
+  Hey. I've been kindly informed that this post has hit the frontpage of
+  Hacker News, and combing through the comments I have been shown that this
+  post reads of as what I would describe as, well, AI slop. If this is a
+  concern of yours, please honor me with a quick glance at the
+  [post-mortem](#post-mortem) section below. Thanks!
+</Banner>
+
+For the most of the time I have been writing software---which, compared to some
+of my readers, is not that long---I have come to believe that the hard thing was
+making the thing exist _at all_. It is not necessarily a new belief of mine. I
+started through the difficult and tedious experience of building web
+applications and watching them crash and burn.
 
 You had an idea, and between the idea and the working program stood hours---
 sometimes weeks---of typing, of reading manuals, of misunderstanding an API and
@@ -15,9 +28,9 @@ the wall. Everyone hit it. It was the thing that separated the people who
 _could_ from the people who could only talk about it.
 
 That wall is gone. Or rather, it has been rented out. [^1] You can describe a
-thing now and receive a plausible version of it faster than you could have typed
-the first function by hand. The idea-to-artifact distance, the one that defined
-the entire craft, has collapsed to almost nothing.
+thing now and receive a plausible version of it much faster than you could have
+typed the first function by hand. The idea-to-artifact distance, the one that
+defined the entire craft, has collapsed to almost nothing.
 
 [^1]: There is an older word for this arrangement. You no longer own the means
     of production; you rent them, by the token, from whoever trained the model.
@@ -30,21 +43,23 @@ the entire craft, has collapsed to almost nothing.
     Draw your own conclusions about which part that is.
 
 Though, you have not been warned about one little thing: the value you built by
-learning to climb that wall does not disappear. It _moves_.
+learning to climb that wall does not disappear. It simply... _moves_.
 
 ## The Bar Went Somewhere
 
-We keep asking whether the machines are any good. It is the wrong question. The
-output is good enough---that is the problem. Good enough is a solvent. It
-dissolves the reason to do better. For as long as making things was expensive,
-the expense did quiet work on our behalf. It rationed output. It meant that
-anything which existed had, at minimum, survived the cost of being made. You
-know what I mean? Effort was a _filter_, and like all filters it was invisible
-until it was removed. Nobody shipped a thousand mediocre variations of a
-feature, because a thousand mediocre variations cost a thousand times as much as
-one. The economics enforced a floor.
+We keep asking whether the machines are any good. Even yesterday I had a rather
+short discussion on whether they are reliable. While we have concluded that they
+are "reliably unreliable," I think It is the wrong question. The output is good
+enough, generally anyway, and that is the problem---most of it, at least. Good
+enough is a _solvent_. It dissolves the reason to do better. For as long as
+making things was expensive, the expense did quiet work on our behalf. It
+rationed output. It meant that anything which existed had, at minimum, survived
+the cost of being made. You know what I mean? Effort was a _filter_, and like
+all filters it was invisible until it was removed. Nobody shipped a thousand
+mediocre variations of a feature, because a thousand mediocre variations cost a
+thousand times as much as one. The economics enforced a floor.
 
-The floor is now gone. And when the floor goes, the thing that decides what is
+That floor is now gone. And when the floor goes, the thing that decides what is
 worth keeping is no longer the cost of making it. It is you. Your judgement. The
 verdict you reach when you look at three plausible versions of the same function
 and know, somehow, that two of them are wrong. That verdict has a name we are
@@ -72,13 +87,25 @@ good editor feels the sentence sag before she can name the clause that failed. [
     is about a great deal more than motorcycles, and almost nothing about Zen.
 
 Taste is that. It is the compressed, wordless verdict you reach faster than you
-can justify. It is the "no, again" you say to yourself with total conviction and
-no available argument. And it is not soft at all. It is the hardest thing in the
-work, because it is the only part that was never mechanical to begin with.
+can justify. It is partially [^3] the "no, again" you say to yourself with total
+conviction and no available argument. And it is not soft at all. It is the
+hardest thing in the work, because it is the only part that was never mechanical
+to begin with.
+
+[^3]: Someone will (and has!) object that taste is not _only_ the "no,
+    again"---that compressing it to a verdict makes the work sound like leaning
+    back in a chair and rejecting things while the machine does the labour. The
+    objection is fair, which is why the sentence above says _partially_. The
+    "no, again" is the shorthand, not the whole of it. The verdict lives
+    _inside_ the work---in the data structures that have to actually scale, in
+    the privacy you have to actually mean, in the function you rewrite a fourth
+    time because the third was merely fine. Taste is not the chair you lean back
+    in. It is the reason you lean forward into all the rest of it.
 
 Everything downstream of the verdict---the typing, the syntax, the wiring of one
 library to another---was always, in principle, automatable. We just had not
-gotten around to it. The verdict was the thing the machine could not do for you.
+gotten around to it. The verdict _was the thing the machine could not do for
+you_.
 
 It still cannot. It can only make the absence of it cheaper to ignore.
 
@@ -144,23 +171,28 @@ an incentive gradient that runs the other way.
 Harry Frankfurt once drew a careful line between the liar and the bullshitter.
 The liar at least respects the truth enough to work against it. The bullshitter
 does not care about the truth in either direction; he is simply indifferent to
-it. [^3] Slop is the bullshit of engineering. It is not wrong, exactly. It is
+it. [^4] Slop is the bullshit of engineering. It is not wrong, exactly. It is
 _indifferent_. It works, it passes, it is fine. And fine, produced without
 friction and shipped without judgement, is now the most abundant substance in
 the field.
 
-[^3]: _On Bullshit_. Frankfurt, 2005, though the essay is older. Yes, that is
+[^4]: _On Bullshit_. Frankfurt, 2005, though the essay is older. Yes, that is
     the real title.
 
 ## The Flood
 
 Sturgeon said it decades ago, defending science fiction from a critic: ninety
-percent of everything is crap. He meant it as consolation. Ninety percent of
-every field is bad, so do not judge the field by its bulk. But the ratio was
+percent of everything is crap. [^5] He meant it as consolation. Ninety percent
+of every field is bad, so do not judge the field by its bulk. But the ratio was
 never the danger. It held steady for centuries. What held the flood back was
 that producing the crap _cost something_. Bad novels still took a year to write.
 Bad software still took a month to build. The ninety percent was throttled at
 the source by the sheer inconvenience of making it.
+
+[^5]: Now called Sturgeon's Law, or Sturgeon's Revelation. He put it in print in
+    his book-review column in _Venture Science Fiction_, March 1958, after years
+    of using it to rebut critics who judged the whole genre by its worst
+    examples.
 
 We have now removed the throttle and left the ratio intact. Ninety percent of an
 infinite output is still infinite. The signal did not get worse. The noise
@@ -226,3 +258,42 @@ that a human was here and gave a damn.
 Everyone can make anything. Almost no one can tell you what is worth making.
 
 That was always the harder skill. It is now the only one left.
+
+## Post-Mortem
+
+### On Language
+
+This post reads off as AI slop. You said it, I see it. I'm sincerely sorry for
+publishing something that has allowed you to feel this way. If my word means
+anything to you, I would like to assure you that this post was _not_ authored by
+a LLM. Nor was it storyboarded, reviewed, checked, etc. by a LLM. Some readers
+have pointed out that people do not speak this way. That is correct. I do not
+speak, nor _usually_ write, like this and this post will go down as my
+not-the-proudest, however, I take your criticism to heart---although not
+personally---and strive to improve.
+
+I do write like this sometimes. The short sentences, the reversals, the one-word
+lines---all of it. It's just the way it is. A LLM writes that way too, because
+it was trained on the same essays I grew up reading, so me doing it badly and a
+machine doing it look about the same to you on the page. That says something
+about my writing. It says nothing about who wrote it.
+
+So let me be plain about it: Claude was not here. No LLM wrote this---not a
+sentence of it, nor was it outlined, drafted, reviewed, checked, etc. by one,
+and there is no prompt behind it either. It is just me, writing worse than
+usual. I will write the next one plainer. Next time, write to me. I too am a
+person behind this screen.
+
+### In Appreciation
+
+Be assured that I have read all of your comments---the good and the bad. As with
+my previous post that reached Hacker News, I've received _many_ insightful ones.
+Whether it was people sharing their experience, or negative comments with the
+decency to criticize with substance, I have learned something new today---for
+which I am thankful.
+
+### On Taste
+
+I do not care about your taste. If this posts has offended you, then it tells
+more about you than it does about me. As they say, _"throw an insult on the
+ground, its owner will pick it up"_---this one I am not sorry about.
