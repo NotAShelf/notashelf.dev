@@ -1,0 +1,228 @@
+---
+title: "Taste Is All That's Left"
+description: "On what is left to do once the machine can make anything, and why taste is the last craft worth keeping."
+date: 2026-08-06
+keywords: ["thoughts", "programming", "software"]
+---
+
+For most of the time I have been writing software, the hard part was making the
+thing exist at all.
+
+You had an idea, and between the idea and the working program stood hours---
+sometimes weeks---of typing, of reading manuals, of misunderstanding an API and
+slowly grinding the wrong version into a slightly less wrong one. Production was
+the wall. Everyone hit it. It was the thing that separated the people who
+_could_ from the people who could only talk about it.
+
+That wall is gone. Or rather, it has been rented out. [^1] You can describe a
+thing now and receive a plausible version of it faster than you could have typed
+the first function by hand. The idea-to-artifact distance, the one that defined
+the entire craft, has collapsed to almost nothing.
+
+[^1]: There is an older word for this arrangement. You no longer own the means
+    of production; you rent them, by the token, from whoever trained the model.
+    An English teacher of mine---a committed socialist---would have had the
+    whole thing diagrammed on the board before I finished the sentence: the
+    worker separated first from his tools, then from the labour itself, then
+    sold a frictionless substitute for the labour and told this was liberation.
+    He would also, I suspect, have been the first to note the one part of the
+    process that cannot be rented back to you, because it never left your head.
+    Draw your own conclusions about which part that is.
+
+Though, you have not been warned about one little thing: the value you built by
+learning to climb that wall does not disappear. It _moves_.
+
+## The Bar Went Somewhere
+
+We keep asking whether the machines are any good. It is the wrong question. The
+output is good enough---that is the problem. Good enough is a solvent. It
+dissolves the reason to do better. For as long as making things was expensive,
+the expense did quiet work on our behalf. It rationed output. It meant that
+anything which existed had, at minimum, survived the cost of being made. You
+know what I mean? Effort was a _filter_, and like all filters it was invisible
+until it was removed. Nobody shipped a thousand mediocre variations of a
+feature, because a thousand mediocre variations cost a thousand times as much as
+one. The economics enforced a floor.
+
+The floor is now gone. And when the floor goes, the thing that decides what is
+worth keeping is no longer the cost of making it. It is you. Your judgement. The
+verdict you reach when you look at three plausible versions of the same function
+and know, somehow, that two of them are wrong. That verdict has a name we are
+slightly embarrassed to use in engineering circles, because it sounds soft and
+unfalsifiable and vaguely aristocratic.
+
+Taste.
+
+## What Taste Actually Is
+
+I want to be careful here, because "taste" is doing a lot of work and it is easy
+to hear it as decoration. A matter of preferences. Whether you like your braces
+on the same line.
+
+That is not what I mean.
+
+Robert Pirsig spent an entire book circling a word he refused to define, because
+he had convinced himself that defining it would kill it. He called it _Quality_.
+His argument, roughly, was that you recognise Quality before you can explain
+it--- that the recognition comes first and the reasons arrive later, if they
+arrive at all. A good mechanic knows the engine is wrong before he knows why. A
+good editor feels the sentence sag before she can name the clause that failed. [^2]
+
+[^2]: _Zen and the Art of Motorcycle Maintenance_, if you have not read it. It
+    is about a great deal more than motorcycles, and almost nothing about Zen.
+
+Taste is that. It is the compressed, wordless verdict you reach faster than you
+can justify. It is the "no, again" you say to yourself with total conviction and
+no available argument. And it is not soft at all. It is the hardest thing in the
+work, because it is the only part that was never mechanical to begin with.
+
+Everything downstream of the verdict---the typing, the syntax, the wiring of one
+library to another---was always, in principle, automatable. We just had not
+gotten around to it. The verdict was the thing the machine could not do for you.
+
+It still cannot. It can only make the absence of it cheaper to ignore.
+
+## Taste Is Downstream of Friction
+
+Here is the uncomfortable mechanism, the part I would rather not think about.
+
+_Where did your taste come from?_
+
+No really. Where did it come from, was it genetic? Were you abducted by aliens
+one day that forcefully injected your sense of taste into your mind and wiped
+your memory?
+
+I'll tell you this much: it's not from consuming good work. You cannot read a
+hundred excellent programs and absorb the judgement by osmosis, any more than
+you can become a chef by eating in good restaurants. Taste is built the slow,
+stupid, humiliating way: you make something bad, you are forced to live with it,
+it fails in front of you, and some part of you files the failure away. Then you
+do it again. The palate is an accretion of your own mistakes, sat with long
+enough to sting.
+
+The friction was not an obstacle to developing taste. The friction was the
+_curriculum_. Every wall I cursed while climbing it was, without my noticing,
+teaching me which walls were worth climbing. The cost that rationed my output
+also educated my judgement, because paying the cost over and over is how you
+learn what is worth paying for.
+
+So watch what happens when you remove the friction for the next person.
+
+They can generate fluently from the first day. They will never ship the bad
+version and be forced to sit in it, because the tool offers them a competent
+version for free. They will climb no wall, and so they will learn nothing from
+the climb. They will arrive at fluency having skipped the entire apprenticeship
+that fluency used to require---and they will be _more_ productive than I was at
+their stage, by every metric anyone bothers to measure.
+
+They will be able to make anything, and unable to tell (or stop to think)
+whether they should. Not necessarily through any fault of their own. We removed
+the part of the process that would have taught them, and we called it progress,
+and by most definitions it _was_.
+
+## The Economics Are Against You
+
+Suppose you have taste. Suppose you paid the full price and you can feel the sag
+in the sentence and the wrongness in the function.
+
+Congratulations! You now ship at exactly the same speed as the person who
+cannot.
+
+This is the quiet cruelty of the situation and I do not have a comforting way to
+phrase it. Taste is slow. It says "no, again." It sends the plausible thing back
+because plausible is not the same as right, and while it is doing that, the
+person without it has already shipped, closed the ticket, and moved on. The
+market timed you both with the same stopwatch and it did not see the difference.
+It cannot see the difference. Taste does not show up in the diff.
+
+It is unmeasurable, uncreditable, and invisible on a dashboard. You cannot point
+to the disasters it prevented, because prevented disasters leave no trace. You
+carry a cost---the extra hours, the returned work, the refusal to ship the fine
+thing when the right thing is still reachable---and you carry it alone, against
+an incentive gradient that runs the other way.
+
+Harry Frankfurt once drew a careful line between the liar and the bullshitter.
+The liar at least respects the truth enough to work against it. The bullshitter
+does not care about the truth in either direction; he is simply indifferent to
+it. [^3] Slop is the bullshit of engineering. It is not wrong, exactly. It is
+_indifferent_. It works, it passes, it is fine. And fine, produced without
+friction and shipped without judgement, is now the most abundant substance in
+the field.
+
+[^3]: _On Bullshit_. Frankfurt, 2005, though the essay is older. Yes, that is
+    the real title.
+
+## The Flood
+
+Sturgeon said it decades ago, defending science fiction from a critic: ninety
+percent of everything is crap. He meant it as consolation. Ninety percent of
+every field is bad, so do not judge the field by its bulk. But the ratio was
+never the danger. It held steady for centuries. What held the flood back was
+that producing the crap _cost something_. Bad novels still took a year to write.
+Bad software still took a month to build. The ninety percent was throttled at
+the source by the sheer inconvenience of making it.
+
+We have now removed the throttle and left the ratio intact. Ninety percent of an
+infinite output is still infinite. The signal did not get worse. The noise
+became free, and free noise rises without limit, and every real thing you make
+now arrives into a sea of plausible nothing that looks, at a glance, exactly
+like it.
+
+Which means the scarce act is no longer making. It is _choosing_. Deciding what,
+out of the endless generated plausible, deserves to exist and be kept. Curation
+was a minor virtue when things were expensive to make. It is the whole game when
+they are free.
+
+## What Deserves to Exist
+
+There is a rhyme here, if you go back far enough.
+
+When the factories came, they could suddenly make _everything_---cheaply,
+uniformly, by the thousand. And a handful of people, Morris and Ruskin among
+them, looked at the flood of cheap identical goods and asked a question that
+sounded, at the time, sentimental and doomed: not _can_ we make this, but
+_should_ this be made, and made this way, by no one, for no reason but that the
+machine could.
+
+They lost the economic argument. They were always going to. But they were right
+about the thing that mattered, which is that when the making becomes free, the
+_choosing_ becomes the craft. The human question stops being "can I build it"
+and becomes "does this deserve to exist"---and that question was always the more
+serious one. We just could not afford to ask it while we were busy climbing
+walls.
+
+I keep coming back to this turn. It is not consolation but a correction.
+
+The tools did not devalue the skill. They stripped away everything that _was
+not_ the skill. All those years I thought the work was the production---the
+typing, the wiring, the wall---and production turns out to have been the toll.
+The tax you paid for the privilege of exercising judgement. Now the tax is close
+to zero, and what is left standing, exposed, with nowhere to hide, is the
+judgement itself. The part that was always the point.
+
+Taste did not become less valuable. It became the _only_ thing that was ever
+scarce. We just could not see it, because it was buried under all the labour it
+used to take to get to it.
+
+## A Defense, Then
+
+So here is the defense, such as it is.
+
+Anyone can generate now. That race is over and it was never worth winning. The
+discipline that remains---the one the machine cannot rent you and the dashboard
+cannot see---is in the deletion. In the "no, again." In caring about the
+difference between _fine_ and _right_ when nothing external will ever reward you
+for caring, when the market has timed you and shrugged, when the plausible
+version sits there working and passing and asking only to be let through.
+
+Refuse it anyway. Not out of nostalgia for the friction---I do not miss the
+wall, and I will not pretend to. Refuse it because the verdict is the last part
+of this that is actually yours. It is unmeasurable, which means no one can take
+it from you by measuring it. It is unautomatable, which means no one can sell it
+back to you. It is slow, which in a field optimising for infinite speed is
+starting to look less like a handicap and more like the only remaining evidence
+that a human was here and gave a damn.
+
+Everyone can make anything. Almost no one can tell you what is worth making.
+
+That was always the harder skill. It is now the only one left.
