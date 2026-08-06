@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.2.1",
-    "@astrojs/mdx": "^7.0.3",
+    "@astrojs/mdx": "^7.0.4",
     "@astrojs/partytown": "^2.1.7",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
@@ -25,9 +25,9 @@
     "@esbuild/linux-x64": "0.28.1",
     "@mdx-js/mdx": "^3.1.1",
     "@notashelf/content": "workspace:*",
-    "astro": "^7.0.9",
+    "astro": "^7.1.4",
     "astro-email-obfuscation": "workspace:*",
-    "astro-expressive-code": "^0.44.0",
+    "astro-expressive-code": "^0.44.1",
     "astro-icon": "^1.1.5",
     "astro-mathjax": "workspace:*",
     "astro-plausible": "workspace:*",
@@ -64,6 +64,6 @@
     "vite-copyright-replace": "workspace:*"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.9"
+    "@astrojs/check": "^0.9.10"
   }
 }
