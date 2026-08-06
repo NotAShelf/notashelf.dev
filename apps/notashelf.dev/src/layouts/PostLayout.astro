@@ -124,17 +124,22 @@ const sourceHref = `${postSrc}/blob/${gitRevision}/${
       <div class="meta-left">
         {
           formattedDate && (
-            <time datetime={date || ""}>Published {formattedDate}</time>
+            <time datetime={date || ""}>
+              <Icon name="calendar" /> Published {formattedDate}
+            </time>
           )
         }
         {
           hasSignificantUpdate && formattedUpdatedDate && (
             <time datetime={updated || ""} class="updated-date">
-              Updated {formattedUpdatedDate}
+              <Icon name="calendar" /> Updated {formattedUpdatedDate}
             </time>
           )
         }
-        <span class="reading-time">{readingTime} min read</span>
+        <span class="reading-time">
+          <Icon name="clock" />
+          {readingTime} min read
+        </span>
         <a
           href={sourceHref}
           class="source-link"
@@ -261,8 +266,16 @@ const sourceHref = `${postSrc}/blob/${gitRevision}/${
   }
 
   .post-meta time {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     color: $text-subtle;
     font-size: 0.9rem;
+
+    :global(svg) {
+      width: 0.9rem !important;
+      height: 0.9rem !important;
+    }
   }
 
   .updated-date {
@@ -270,10 +283,18 @@ const sourceHref = `${postSrc}/blob/${gitRevision}/${
   }
 
   .reading-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     color: $text-subtle;
     font-size: 0.9rem;
     padding-left: 1rem;
     border-left: 1px solid $border-light;
+
+    :global(svg) {
+      width: 0.9rem !important;
+      height: 0.9rem !important;
+    }
   }
 
   .source-link {
