@@ -600,7 +600,10 @@ describe("Core Functionality", () => {
           return Promise.resolve(htmlContent);
         });
 
-        let processedContent = "";
+        // When no emails are found the file is never rewritten, so the file on
+        // disk keeps its original content. Model that by seeding the captured
+        // content with the input HTML.
+        let processedContent = htmlContent;
         mockFs.writeFile.mockImplementation((_: any, content: any) => {
           processedContent = content;
           return Promise.resolve();

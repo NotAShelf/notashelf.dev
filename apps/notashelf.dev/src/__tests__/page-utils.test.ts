@@ -101,10 +101,8 @@ describe("PageUtils", () => {
       expect(scrollArrow.classList.contains("animate")).toBe(true);
     });
 
-    it("should handle missing scroll arrow gracefully", () => {
-      PageUtils.initScrollArrow();
-      // Should not throw error when no scroll arrow exists
-      expect(true).toBe(true);
+    it("should not throw when no scroll arrow exists", () => {
+      expect(() => PageUtils.initScrollArrow()).not.toThrow();
     });
   });
 
