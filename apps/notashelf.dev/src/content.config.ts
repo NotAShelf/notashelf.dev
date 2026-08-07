@@ -1,4 +1,5 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
+import { z } from "astro/zod";
 import { glob } from "astro/loaders";
 
 const posts = defineCollection({
@@ -29,8 +30,30 @@ const projects = defineCollection({
     }),
 });
 
+const lists = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.toml", base: `./src/data/lists` }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    icon: z.string().optional(),
+    order: z.number().default(0),
+    items: z
+      .array(
+        z.object({
+          title: z.string(),
+          subtitle: z.string().optional(),
+          url: z.string().optional(),
+          note: z.string().optional(),
+          year: z.string().optional(),
+          rating: z.number().int().min(1).max(5).optional(),
+        }),
+      )
+      .default([]),
+  }),
+});
+
 const affiliations = defineCollection({
-  loader: glob({ pattern: "*.toml", base: "./src/data/affiliations" }),
+  loader: glob({ pattern: "**/[^_]*.toml", base: "./src/data/affiliations" }),
   schema: z.object({
     logo: z.string().optional(),
     logoIcon: z.string().optional(),
@@ -43,5 +66,6 @@ const affiliations = defineCollection({
 export const collections = {
   posts,
   projects,
+  lists,
   affiliations,
 };

@@ -4,6 +4,7 @@ import type { CollectionEntry } from "astro:content";
 export type PostEntry = CollectionEntry<"posts">;
 export type ArchiveEntry = CollectionEntry<"posts">;
 export type ProjectEntry = CollectionEntry<"projects">;
+export type ListEntry = CollectionEntry<"lists">;
 export type AffiliationsEntry = CollectionEntry<"affiliations">;
 
 // Post with reading time information

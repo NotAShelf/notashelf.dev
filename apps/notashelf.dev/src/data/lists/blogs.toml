@@ -1,0 +1,70 @@
+description = "Blogs and personal sites I visit frequently, or those I read regularly."
+icon        = "rss"
+order       = 2
+title       = "Blogs"
+
+# Fields: url links the title, subtitle is the author or site.
+[[items]]
+subtitle = "Julia Evans"
+title    = "jvns.ca"
+url      = "https://jvns.ca"
+
+[[items]]
+subtitle = "Amos Wenger"
+title    = "fasterthanli.me"
+url      = "https://fasterthanli.me"
+
+[[items]]
+subtitle = "Dan Luu"
+title    = "danluu.com"
+url      = "https://danluu.com"
+
+[[items]]
+subtitle = "Ian Henry"
+title    = "ianthehenry.com"
+url      = "https://ianthehenry.com"
+
+[[items]]
+subtitle = "Russ Cox"
+title    = "research.swtch.com"
+url      = "https://research.swtch.com"
+
+[[items]]
+subtitle = "Aleksey Kladov"
+title    = "matklad.github.io"
+url      = "https://matklad.github.io"
+
+[[items]]
+subtitle = "Chris Wellons"
+title    = "nullprogram.com"
+url      = "https://nullprogram.com"
+
+[[items]]
+subtitle = "Salvatore Sanfilippo"
+title    = "antirez.com"
+url      = "https://antirez.com"
+
+[[items]]
+subtitle = "Bartosz Ciechanowski"
+title    = "ciechanow.ski"
+url      = "https://ciechanow.ski"
+
+[[items]]
+subtitle = "Fabien Sanglard"
+title    = "fabiensanglard.net"
+url      = "https://fabiensanglard.net"
+
+[[items]]
+subtitle = "Hillel Wayne"
+title    = "hillelwayne.com"
+url      = "https://www.hillelwayne.com"
+
+[[items]]
+subtitle = "Gwern Branwen"
+title    = "gwern.net"
+url      = "https://gwern.net"
+
+[[items]]
+subtitle = "Simon Willison"
+title    = "simonwillison.net"
+url      = "https://simonwillison.net"
