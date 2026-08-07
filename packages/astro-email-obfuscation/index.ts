@@ -411,6 +411,7 @@ export default function astroEmailObfuscation(
       ".home", // common home-network convention
       ".internal", // corp/cloud internal DNS
       ".corp", // corporate internal
+      ".hole", // Pi-hole default hostname (pi.hole)
       ".localhost", // RFC 2606 reserved
       ".test", // RFC 2606 reserved
       ".invalid", // RFC 2606 reserved
