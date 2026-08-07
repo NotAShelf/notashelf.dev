@@ -16,6 +16,11 @@ function initSidenotes(): void {
   );
   if (!refs.length) return;
 
+  // Build one sidenote per ref and keep each note's ideal top (its ref's
+  // position) for the de-overlap pass below.
+  const asides: { el: HTMLElement; idealTop: number; targetId: string }[] = [];
+  const sidenoteActive = window.matchMedia("(min-width: 1250px)").matches;
+
   refs.forEach((ref) => {
     const targetId = ref.getAttribute("href")?.slice(1);
     if (!targetId) return;
@@ -30,31 +35,39 @@ function initSidenotes(): void {
     const aside = document.createElement("aside");
     aside.className = "sidenote";
     aside.innerHTML = `<sup class="sidenote-num">${num}</sup> ${clone.innerHTML.trim()}`;
-    aside.style.top = `${getTopRelative(ref, wrapper)}px`;
+    const idealTop = getTopRelative(ref, wrapper);
+    aside.style.top = `${idealTop}px`;
     container.appendChild(aside);
+    asides.push({ el: aside, idealTop, targetId });
   });
 
-  // Mirror the CSS breakpoint directly; 1250px matches max-width:1249px boundary.
-  const sidenoteActive = window.matchMedia("(min-width: 1250px)").matches;
+  // Below the breakpoint the container is display:none, so heights can't be
+  // measured and notes aren't shown. Sucks, skip the layout.
+  if (!sidenoteActive) return;
 
-  if (sidenoteActive) {
-    // Transfer ids now that we know sidenotes are shown
-    document.querySelectorAll<HTMLElement>(".sidenote").forEach((aside, i) => {
-      const ref = refs[i];
-      if (!ref) return;
-      const targetId = ref.getAttribute("href")?.slice(1);
-      if (!targetId) return;
-      const fnLi = document.getElementById(targetId); // find li first
-      aside.id = targetId;
-      fnLi?.removeAttribute("id");
-    });
-
-    document
-      .querySelectorAll(
-        '.toc-item[href="#footnote-label"], .toc-sidebar-item[href="#footnote-label"]',
-      )
-      .forEach((el) => el.remove());
+  // Walk top-to-bottom; if a note would overlap the revious one, push it
+  // *down* to sit GAP px below it, else keep its ideal top.
+  const GAP = 12;
+  let lastBottom = -Infinity;
+  for (const { el, idealTop } of asides) {
+    const top = Math.max(idealTop, lastBottom + GAP);
+    el.style.top = `${top}px`;
+    lastBottom = top + el.offsetHeight;
   }
+
+  // Transfer ids now that sidenotes are shown, so a footnote ref scrolls to the
+  // note in the margin rather than the (now redundant) list at the bottom.
+  asides.forEach(({ el, targetId }) => {
+    const fnLi = document.getElementById(targetId);
+    el.id = targetId;
+    fnLi?.removeAttribute("id");
+  });
+
+  document
+    .querySelectorAll(
+      '.toc-item[href="#footnote-label"], .toc-sidebar-item[href="#footnote-label"]',
+    )
+    .forEach((el) => el.remove());
 }
 
 function initBackToTop(): void {
