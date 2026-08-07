@@ -1,0 +1,324 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import type { ListEntry } from "@lib/types";
+import { Icon } from "astro-icon/components";
+import { getCollection } from "astro:content";
+
+// Each TOML file in src/data/lists is one list, rendered in `order` order.
+const lists = (await getCollection("lists")) as ListEntry[];
+const sortedLists = lists.sort((a, b) => {
+  const orderA = a.data.order ?? 0;
+  const orderB = b.data.order ?? 0;
+  if (orderA !== orderB) return orderA - orderB;
+  return a.id.localeCompare(b.id);
+});
+---
+
+<BaseLayout
+  title="Lists"
+  description="Books I've read, blogs I follow, and other lists I keep."
+>
+  <div class="lists-container">
+    <div class="lists-header">
+      <h1 class="page-title">Lists</h1>
+      <p class="page-description">
+        Books I've read, blogs I follow, and other things I like to keep track
+        of.
+      </p>
+
+      {
+        sortedLists.length > 1 && (
+          <nav class="lists-nav" aria-label="Jump to a list">
+            {sortedLists.map((list) => (
+              <a class="lists-nav-link" href={`#${list.id}`}>
+                {list.data.icon && (
+                  <Icon name={list.data.icon} class="nav-icon" />
+                )}
+                {list.data.title}
+              </a>
+            ))}
+          </nav>
+        )
+      }
+    </div>
+
+    {
+      sortedLists.map((list) => (
+        <section id={list.id} class="list-section">
+          <div class="list-heading">
+            {list.data.icon && <Icon name={list.data.icon} class="list-icon" />}
+            <h2 class="list-title">{list.data.title}</h2>
+            <span class="list-count">{list.data.items.length}</span>
+          </div>
+
+          {list.data.description && (
+            <p class="list-description">{list.data.description}</p>
+          )}
+
+          {list.data.items.length > 0 ? (
+            <ul class="list-items">
+              {list.data.items.map((item) => (
+                <li class="list-item">
+                  <div class="item-row">
+                    <span class="item-title">
+                      {item.url ? (
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {item.title}
+                        </a>
+                      ) : (
+                        item.title
+                      )}
+                    </span>
+                    {item.subtitle && (
+                      <span class="item-subtitle">{item.subtitle}</span>
+                    )}
+                    {item.rating && (
+                      <span
+                        class="item-rating"
+                        role="img"
+                        aria-label={`Rated ${item.rating} out of 5`}
+                      >
+                        {[1, 2, 3, 4, 5].map((n) => (
+                          <Icon
+                            name="star"
+                            class={
+                              n <= (item.rating ?? 0) ? "star filled" : "star"
+                            }
+                          />
+                        ))}
+                      </span>
+                    )}
+                    {item.year && <span class="item-year">{item.year}</span>}
+                  </div>
+                  {item.note && <p class="item-note">{item.note}</p>}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="list-empty">Nothing here yet.</p>
+          )}
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style lang="scss">
+  @use "../styles/global" as *;
+
+  .lists-container {
+    max-width: var(--container-width, 1200px);
+    margin: 0 auto;
+    padding: 2rem 0 4rem;
+  }
+
+  .lists-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .page-title {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+
+  .page-description {
+    color: $text-description;
+    font-size: 1.1rem;
+    max-width: 60ch;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+  }
+
+  // In-page jump links between lists.
+  .lists-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .lists-nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: $text-muted;
+    text-decoration: none;
+    border: 1px solid $card-border;
+    border-radius: $radius-md;
+    background-color: $tag-bg;
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease,
+      border-color 0.2s ease;
+
+    &:hover {
+      color: $secondary;
+      border-color: $border-medium;
+      background-color: $card-hover-bg;
+    }
+
+    .nav-icon {
+      width: 0.85em;
+      height: 0.85em;
+    }
+  }
+
+  .list-section {
+    margin-bottom: 3rem;
+    scroll-margin-top: 90px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .list-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid $border-light;
+
+    .list-icon {
+      width: 1.1rem;
+      height: 1.1rem;
+      color: $text-subtle;
+      flex-shrink: 0;
+    }
+  }
+
+  .list-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .list-count {
+    font-size: 0.8rem;
+    color: $text-subtle;
+    background-color: $tag-bg;
+    border: 1px solid $card-border;
+    border-radius: $radius-sm;
+    padding: 0.1rem 0.55rem;
+    line-height: 1.5;
+  }
+
+  .list-description {
+    color: $text-subtle;
+    font-size: 0.95rem;
+    margin: 0 0 1.25rem;
+  }
+
+  .list-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .list-item {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid $border-light;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .item-row {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+  }
+
+  .item-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $secondary;
+
+    a {
+      color: $secondary;
+      text-decoration: none;
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: $hover-color;
+        transition: width 0.3s ease;
+      }
+
+      &:hover {
+        color: $hover-color;
+
+        &::after {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .item-subtitle {
+    font-size: 0.9rem;
+    color: $text-subtle;
+  }
+
+  // Filled stars use the bright text color, empty ones a dim grey.
+  .item-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.1rem;
+
+    .star {
+      // Star viewBox is 576x512 (not square); set width and let height auto so
+      // it keeps its aspect ratio.
+      width: 0.85rem;
+      height: auto;
+      color: $border-medium;
+    }
+
+    .star.filled {
+      color: $secondary;
+    }
+  }
+
+  .item-year {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: $text-date;
+    white-space: nowrap;
+  }
+
+  .item-note {
+    margin: 0.35rem 0 0;
+    font-size: 0.9rem;
+    color: $text-project-desc;
+    line-height: 1.5;
+  }
+
+  .list-empty {
+    color: $text-subtle;
+    font-style: italic;
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 480px) {
+    .item-year {
+      margin-left: 0;
+    }
+  }
+</style>

@@ -1,0 +1,55 @@
+description = "Documentation, guides and long-form manuals."
+icon        = "circle-info"
+order       = 3
+title       = "Manuals"
+
+# Fields: subtitle is the author or maintainer, url links the title.
+[[items]]
+subtitle = "Nicholas Nethercote"
+title    = "The Rust Performance Book"
+url      = "https://nnethercote.github.io/perf-book/"
+
+[[items]]
+subtitle = "The Rust Project"
+title    = "The Rustonomicon"
+url      = "https://doc.rust-lang.org/nomicon/"
+
+[[items]]
+subtitle = "NixOS"
+title    = "Nix Pills"
+url      = "https://nixos.org/guides/nix-pills/"
+
+[[items]]
+subtitle = "NixOS"
+title    = "nix.dev"
+url      = "https://nix.dev/"
+
+[[items]]
+subtitle = "Remzi & Andrea Arpaci-Dusseau"
+title    = "Operating Systems: Three Easy Pieces"
+url      = "https://pages.cs.wisc.edu/~remzi/OSTEP/"
+
+[[items]]
+subtitle = "Robert Nystrom"
+title    = "Crafting Interpreters"
+url      = "https://craftinginterpreters.com/"
+
+[[items]]
+subtitle = "Brian \"Beej\" Hall"
+title    = "Beej's Guide to Network Programming"
+url      = "https://beej.us/guide/bgnet/"
+
+[[items]]
+subtitle = "MIT"
+title    = "The Missing Semester of Your CS Education"
+url      = "https://missing.csail.mit.edu/"
+
+[[items]]
+subtitle = "Google"
+title    = "Google SRE Book"
+url      = "https://sre.google/sre-book/table-of-contents/"
+
+[[items]]
+subtitle = "Scott Chacon & Ben Straub"
+title    = "Pro Git"
+url      = "https://git-scm.com/book/en/v2"

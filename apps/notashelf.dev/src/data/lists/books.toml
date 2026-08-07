@@ -1,0 +1,145 @@
+description = "Books I've read, rated out of five."
+icon        = "layer-group"
+order       = 1
+title       = "Books"
+
+# Fields: subtitle is the author, year (optional) shows right-aligned, rating is
+# an optional 1-5 score, url links the title, note is an optional one-liner.
+# Reference books come first (by year), then fiction grouped by author in
+# reading order.
+[[items]]
+rating   = 4
+subtitle = "George Pólya"
+title    = "How to Solve It"
+url      = "https://openlibrary.org/works/OL4569830W"
+year     = "1945"
+
+[[items]]
+rating   = 4
+subtitle = "Frederick P. Brooks Jr."
+title    = "The Mythical Man-Month"
+url      = "https://openlibrary.org/works/OL3510570W"
+year     = "1975"
+
+[[items]]
+rating   = 5
+subtitle = "Douglas Hofstadter"
+title    = "Gödel, Escher, Bach: An Eternal Golden Braid"
+url      = "https://openlibrary.org/works/OL716850W"
+year     = "1979"
+
+[[items]]
+rating   = 5
+subtitle = "Brian W. Kernighan & Rob Pike"
+title    = "The Unix Programming Environment"
+url      = "https://openlibrary.org/works/OL4617636W"
+year     = "1984"
+
+[[items]]
+note     = "Free to read online."
+rating   = 5
+subtitle = "Harold Abelson & Gerald Jay Sussman"
+title    = "Structure and Interpretation of Computer Programs"
+url      = "https://sarabander.github.io/sicp/"
+year     = "1985"
+
+[[items]]
+rating   = 4
+subtitle = "Andrew Hunt & David Thomas"
+title    = "The Pragmatic Programmer"
+url      = "https://openlibrary.org/works/OL5748544W"
+year     = "1999"
+
+[[items]]
+rating   = 4
+subtitle = "Luke Rhinehart"
+title    = "The Dice Man"
+url      = "https://openlibrary.org/works/OL1842342W"
+year     = "1971"
+
+[[items]]
+rating   = 3
+subtitle = "Luke Rhinehart"
+title    = "The Search for the Dice Man"
+url      = "https://openlibrary.org/works/OL28613333W"
+year     = "1993"
+
+[[items]]
+note     = "The Mistborn Saga, book 1."
+rating   = 5
+subtitle = "Brandon Sanderson"
+title    = "Mistborn: The Final Empire"
+url      = "https://openlibrary.org/works/OL5738148W"
+year     = "2006"
+
+[[items]]
+note     = "The Mistborn Saga, book 2."
+rating   = 5
+subtitle = "Brandon Sanderson"
+title    = "The Well of Ascension"
+url      = "https://openlibrary.org/works/OL5738150W"
+year     = "2007"
+
+[[items]]
+note     = "The Mistborn Saga, book 3."
+rating   = 5
+subtitle = "Brandon Sanderson"
+title    = "The Hero of Ages"
+url      = "https://openlibrary.org/works/OL5738154W"
+year     = "2008"
+
+[[items]]
+note     = "Free to read online."
+rating   = 4
+subtitle = "Brandon Sanderson"
+title    = "Warbreaker"
+url      = "https://www.brandonsanderson.com/blogs/blog/warbreaker-rights-and-downloads"
+year     = "2009"
+
+[[items]]
+note     = "The Stormlight Archive, book 1."
+rating   = 5
+subtitle = "Brandon Sanderson"
+title    = "The Way of Kings"
+url      = "https://openlibrary.org/works/OL15358691W"
+year     = "2010"
+
+[[items]]
+note     = "Malazan Book of the Fallen, book 1."
+rating   = 5
+subtitle = "Steven Erikson"
+title    = "Gardens of the Moon"
+url      = "https://openlibrary.org/works/OL5734756W"
+year     = "1999"
+
+[[items]]
+note     = "Malazan Book of the Fallen, book 2."
+rating   = 5
+subtitle = "Steven Erikson"
+title    = "Deadhouse Gates"
+url      = "https://openlibrary.org/works/OL5734770W"
+year     = "2000"
+
+[[items]]
+note     = "The Kingkiller Chronicle, book 1."
+rating   = 5
+subtitle = "Patrick Rothfuss"
+title    = "The Name of the Wind"
+url      = "https://openlibrary.org/works/OL8479867W"
+year     = "2007"
+
+[[items]]
+note     = "The Kingkiller Chronicle, book 2."
+rating   = 4
+subtitle = "Patrick Rothfuss"
+title    = "The Wise Man's Fear"
+url      = "https://openlibrary.org/works/OL8479869W"
+year     = "2011"
+
+[[items]]
+note     = "The Dandelion Dynasty, book 1."
+rating   = 4
+subtitle = "Ken Liu"
+title    = "The Grace of Kings"
+url      = "https://openlibrary.org/works/OL19831623W"
+year     = "2015"
