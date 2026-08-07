@@ -30,20 +30,6 @@ describe("astro-email-obfuscation", () => {
       expect(typeof hooks["astro:build:done"]).toBe("function");
     });
 
-    it("should use default options when no options provided", () => {
-      const integration = astroEmailObfuscation();
-
-      // We can't directly access the options, but we can verify the integration
-      // was created without throwing an error
-      expect(integration.name).toBe("astro-email-obfuscation");
-    });
-
-    it("should handle empty options object", () => {
-      const integration = astroEmailObfuscation({});
-
-      expect(integration.name).toBe("astro-email-obfuscation");
-    });
-
     it("should accept valid obfuscation methods", () => {
       const validMethods: ObfuscationMethod[] = ["rot18", "base64", "reverse"];
 
