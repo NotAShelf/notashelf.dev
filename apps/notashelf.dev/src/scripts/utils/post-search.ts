@@ -41,11 +41,15 @@ export function loadPostSearchState(): PostSearchState {
 export function savePostSearchState(state: PostSearchState): void {
   try {
     sessionStorage.setItem(POST_SEARCH_STORAGE_KEY, JSON.stringify(state));
-  } catch {}
+  } catch {
+    // sessionStorage may be unavailable (private mode, quota); ignore.
+  }
 }
 
 export function clearPostSearchState(): void {
   try {
     sessionStorage.removeItem(POST_SEARCH_STORAGE_KEY);
-  } catch {}
+  } catch {
+    // sessionStorage may be unavailable (private mode, quota); ignore.
+  }
 }
