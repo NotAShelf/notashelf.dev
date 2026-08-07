@@ -66,7 +66,7 @@ and interoperability issues. :::
 
 <!--markdownlint-enable MD013-->
 
-First and foremost, this is a bogus warning. It uses handwavy, vague langauge
+First and foremost, this is a bogus warning. It uses handwavy, vague language
 because either the author has no idea what they're warning against or they think
 they're too important to explain to you what "compatibility and interoperability
 issues" mean.
