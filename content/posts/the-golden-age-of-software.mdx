@@ -75,15 +75,17 @@ rather than a way around it.
 There is a wall, there has _always_ been a wall. But it's never been the point.
 Also, there is a difference between a difficulty and an obstacle.
 
-Learning how a program works is difficult. Learning how an _arbitrary_ program
-works is even more difficult. A lot is involved in both cases. Remembering the
-details of a language, understanding a data structure, finding the boundary
-between two abstractions, and developing the judgement to know when a solution
-is going wrong---these are the difficult parts. They are the work.
+Learning how a program works is difficult. No really, it is pretty difficult no
+matter how truly talented you are. Learning how an _arbitrary_ program works is
+even more difficult. A lot is involved in both cases. Remembering the details of
+a language, understanding a data structure, finding the boundary between two
+abstractions, and developing the judgement to know when a solution is going
+wrong---these are the difficult parts. They, for the purposes of this essay, are
+what I will call _the work_.
 
 Finding the right compiler flag in a manual written for somebody else, writing
 the same twenty lines of plumbing for the fifth time, and discovering that an
-API changed three minor versions ago are often just obstacles. They can be
+API changed three minor versions ago are often just _obstacles_. They can be
 useful obstacles when you are beginning. They force you to read. They make you
 look at the shape of the machine. But they are not sacred. I.e., they are not
 absolutely necessary steps you have some moral obligation to follow.
@@ -137,15 +139,18 @@ with you.
 ## The Best Age to Learn
 
 When I was learning---and "was" is wrong here because I'm still learning---each
-stupid question came with a cost. I had a lot of those too. Back when I was
-first trying to learn programming through C++ (because I was told JavaScript is
-not programming, actually), I had to search for the right words, find a page
+stupid question came with a cost. I had an awful lot of those too. Back when I
+was first trying to learn programming through C++ (because I was told JavaScript
+is not programming, actually), I had to search for the right words, find a page
 that assumed you already knew the thing you were trying to learn, and then work
 backwards through three other pages to understand the first one. Sometimes the
 answer was in a Stack Overflow post from 2009. Sometimes the answer was in the
 source code. Sometimes I found someone who's ~~gullible~~ patient enough to sit
-down with me and show me I was approaching it wrong. Other times I decided that
-this whole ordeal was probably not important anyway, and gave up.
+down with me and show me I was approaching it wrong. [^kas] Other times I
+decided that this whole ordeal was probably not important anyway, and gave up.
+
+[^kas]: On this note I think I owe this one furry from my game guild a very
+    special thanks for being patient with me.
 
 I _still_ think there is value in that struggle. It taught me how to search and
 how to remain patient. It also wasted a _remarkable_ amount of time.
@@ -160,6 +165,20 @@ it for the whole program, but that's not my point.
 
 My point is that it is an _extraordinary_ learning environment. It is also very
 easy to ruin.
+
+### Recognition Is Not Understanding
+
+Here's where I regularly fool myself. I can look at an answer and mistake that
+pleasant little feeling of recognition for having known it all along. You have
+probably done this too. "Make a guess first" can become a little ritual we
+perform before immediately peeking at the answer, then congratulating ourselves
+for having learned something.
+
+If I actually want to learn, I have to make the answer inconvenient to reach. I
+write down my prediction, make a real attempt, and close the answer before
+trying to explain the idea back to myself. Then I solve a fresh variation
+without the model in front of me. If I cannot do that, I learned how to
+recognise a solution, not how to produce one.
 
 If you ask for the answer before you have tried to form one, you are not using a
 tutor. You are using an answer machine. The distinction is _critical_ because
@@ -204,7 +223,10 @@ You have something to compare against. Great. You can see which parts it
 interpreted correctly and which parts it quietly invented. Even better. You can
 ask for three different implementations and learn from the differences. You can
 throw all three away and write the fourth one yourself, now with a better
-understanding of the shape of the problem.
+understanding of the shape of the problem. But do not mistake comparing three
+answers for learning how to derive one. If you have not tried to produce the
+thing yourself, those implementations are examples to inspect, not evidence that
+you could write the next one without them.
 
 The important thing is that the machine should be helping you think more
 clearly, not giving you a place to put the thinking you did not do.
@@ -397,38 +419,33 @@ programmers I have met and tried to recall how they leverage LLMs.
 
 One of those conversations was with [outfoxxed](https://github.com/outfoxxed),
 the author of [Quickshell](https://quickshell.org). He gave me a more useful
-distinction than "AI is good" or "AI is bad." I have lightly edited the
-punctuation and grammar, but left the substance and the apparent bluntness
-intact for your reading pleasure:
+distinction than "AI is good" or "AI is bad." This is what he had to say, which
+I have left as is:
 
-> I can describe my two cases pretty well:
+> I've found using AI makes me anywhere from slightly slower to much faster over
+> all, usually dependent on how much I need to learn in the course of an
+> implementation.
 >
-> I care about the code quality. If that's the case, I review everything,
-> sometimes regenerate it multiple times, sometimes rewrite some or all of it by
-> hand, or go through a lot of prompting cycles. If it involves anything
-> non-obvious, I go back and forth with the bot and look it up if I think it's
-> bullshitting me, which isn't really uncommon.
+> For any serious work, I review everything a model produces the same way I
+> would a random PR.
 >
-> I don't care about the code quality. If it's already doomed---Android is the
-> designated shitting operating system, so there's really no saving it---then I
-> barely review anything and go almost entirely off testing the output, with a
-> light review before merging things.
+> Since most problems are large enough to contain choices I might disagree with
+> the model on, researching those choices and making further revisions often
+> becomes the bulk of my development time.
 >
-> Usually I do things with feature-level granularity. Mixing the two ends
-> poorly.
->
-> For the stuff I care about, using AI to implement things can be anywhere from
-> a bit slower to much faster than doing it fully by hand. Usually it depends on
-> how much I know about what I want up front. The more I can tell it, the less I
-> have to correct it.
+> Of course, for some projects such as personal software patches, I don't really
+> care about code quality. In those cases I just throw a model at the problem
+> until it seems to work well enough, then skim the results for anything too
+> ridiculous.
 
 This is a much better description of responsible AI use than the idea that a
-programmer simply accepts or rejects every generated line. The important
-distinction is not whether he reviews everything with equal intensity. It is
-whether he knows which parts deserve his attention, and keeps that boundary
-clear. Feature-level granularity matters here---mixing "I trust this enough to
-test" with "I need to understand this" in the same piece of work is how things
-fall through the gap.
+programmer simply accepts or rejects every generated line. What is important to
+me is not whether he uses AI but whether he knows which work deserves his
+attention, and keeps that boundary clear. I'll risk summarizing what you already
+inferred, but bear with me. For serious work, the model's output gets the same
+treatment as a random PR. For a personal patch that is already doomed, testing
+and a quick skim are apparently enough. This is _taste_, judgement applied to
+the actual cost of being wrong as opposed to some universal workflow.
 
 Secondly, I sat down and tried to build a project using Claude Opus 5, with
 access lent to me by a good friend who was gracious enough to let me use some of
@@ -450,12 +467,12 @@ it's also not a marginal result.
 
 Suffice to say the results are mixed, but they are also insightful. Most
 talented programmers I know _do_ leverage LLMs. Because they already have the
-capacity to distinguish optimal code from utter garbage, they can use LLMs
-without surrendering the judgement that makes that distinction possible. I
-suspect the consequences are already visible to them before the code reaches
-production, so they use it with only a little more than "optimistic
-caution"---as opposed to cautious optimism. The moral of this post, if anything,
-is that you should be careful with what you offload to a prediction machine and
-how you do so.
+intellectual capacity---and taste--- to distinguish optimal code from utter
+garbage, they can use LLMs without surrendering the judgement that makes that
+distinction possible. I suspect the consequences are already visible to them
+before the code reaches production, so they use it with only a little more than
+"optimistic caution"---as opposed to cautious optimism. The moral of this post,
+if anything, is that you should be careful with what you offload to a prediction
+machine and how you do so.
 
 Cheers.
