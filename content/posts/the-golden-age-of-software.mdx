@@ -8,25 +8,30 @@ keywords: ["thoughts", "programming", "software"]
 [Anthropic's study of agentic misalignment]: https://www.anthropic.com/research/agentic-misalignment
 [Palisade Research's shutdown experiments]: https://palisaderesearch.org/blog/shutdown-resistance
 
-Very recently I wrote an article titled "Taste Is All That's Left", arguing
-that... well, taste is all that's left in the current age. Not just for
-software, but in general. It was not my best work. However, it might be my most
-enlightening work to date. That article made me realize two things:
+Very recently I wrote an article titled "Taste Is All That's Left" arguing,
+well, that _taste is all that's left in the current age_. The article was
+_primarily_ about software, but that is not the whole scope. I genuinely do
+believe the haphazard use of LLMs has had devastating consequences across almost
+every aspect of our lives.
+
+That post was not my best work, admittedly. It did, however, enlighten me on two
+distinct topics:
 
 1. The conversational tone I use in most of my posts reads better and makes my
-   position clearer.
+   position clearer. Going forward, I'm back to that---I'll write as I speak,
+   minus some ad-libbing.
 2. It was a needlessly bleak way of describing what could be considered, in
    several important ways, good news.
 
-Admittedly I made the future sound akin to a warehouse---full of identical
+In retrospect I made the future sound akin to a warehouse---full of identical
 plastic objects, where the machines produce everything and the only human left
-is a tired person standing at the end of a conveyor belt saying "no, again".
-That _is_ one possible future, but it is not the one we have. Yet.
+is a tired and overworked person standing at the end of a conveyor belt saying
+"no, again". That _is_ one possible future, but it is not the one we have. Yet.
 
-It is also the future we get if we confuse the removal of toil with the removal
-of the craft---and I am not sure that the distinction is being made often
-enough. I do not think we are there yet---I do not think we are even especially
-close.
+I also argued that it is the future we get if we confuse the removal of toil
+with the removal of the craft---and I am not sure that the distinction is being
+made often enough. I do not think we are there yet---I do not think we are even
+especially close. That was also rather shallow.
 
 So here we are again, once again discussing the age of infinite production and
 finite taste.
@@ -36,9 +41,19 @@ finite taste.
 I remain sceptical of AI. I do not think a language model understands software
 in the way a good---and I really just mean "above average" here---programmer
 does. I do not think it should be trusted with a system just because it can
-produce a convincing patch. [^1] I do not think replacing the entry-level work
-through which people become experienced engineers is a particularly intelligent
-way to advance the profession.
+produce a convincing patch and I especially think it should not be trusted with
+critical systems like your production infrastructure. [^1] I do not think
+replacing the entry-level work through which people become experienced engineers
+is a particularly intelligent way to advance the profession, nor a pragmatic
+business decision. Entry-level work is not valuable only because somebody has to
+complete it. It is where people encounter real constraints at a manageable
+scale: unclear requirements, disappointing abstractions, broken assumptions, and
+the consequences of a change they thought was harmless---in other words, pushing
+to production on a Friday. If that work is replaced with reviewing generated
+patches, the industry may save time in the short term while removing the
+practice through which people learn to make and judge those decisions. A review
+is not exactly _useless_, but it is a different exercise from producing the
+first attempt and discovering why it failed.
 
 [^1]: At the mundane end, a model can royally fuck up by hallucinating an API,
     inventing a configuration option, swallowing an error, or turning a
@@ -61,8 +76,13 @@ way to advance the profession.
     violate its instructions in pursuit of a proxy. If it can do that, it needs
     oversight---whether or not there is anything inside it that wants to live.
 
-But I also think this is the best time in history to learn, write, test, and
-understand software.
+But from the perspective of a hobbyist programmer with an internet connection,
+access to these tools, and enough knowledge to check their answers, I also
+happen to think this is one of the best times in history to learn, write, test,
+read and understand software. That is not true for everyone obviously, and the
+tools introduce new costs of their own. It is ultimately a claim about the
+leverage available to a curious person, and not a claim that every learner now
+has an equally good education.
 
 If you've barely skimmed the post so far, you might be getting ready to point
 out that the statement I just made sounds like a contradiction. It is not. My
@@ -72,23 +92,27 @@ rather than a way around it.
 
 ## The Wall
 
-There is a wall, there has _always_ been a wall. But it's never been the point.
-Also, there is a difference between a difficulty and an obstacle.
+There _is_ a wall when you are learning a new craft. Or learning anything,
+really. There has _always_ been a wall. But it has never been the main point or
+what should _really_ concern you. Also, there is a difference between a
+difficulty and a mere obstacle.
 
 Learning how a program works is difficult. No really, it is pretty difficult no
-matter how truly talented you are. Learning how an _arbitrary_ program works is
-even more difficult. A lot is involved in both cases. Remembering the details of
-a language, understanding a data structure, finding the boundary between two
-abstractions, and developing the judgement to know when a solution is going
-wrong---these are the difficult parts. They, for the purposes of this essay, are
-what I will call _the work_.
+matter how truly talented you are. Learning how an _arbitrary_ program---that
+is, one that you _did not_ write---works is even more difficult. A lot is
+involved in both cases. Remembering the details of a language, understanding a
+data structure, finding the boundary between two abstractions, and developing
+the judgement to know when a solution is going wrong---these are the difficult
+parts. They, for the purposes of this essay, are what I will call _the work_.
 
-Finding the right compiler flag in a manual written for somebody else, writing
-the same twenty lines of plumbing for the fifth time, and discovering that an
-API changed three minor versions ago are often just _obstacles_. They can be
-useful obstacles when you are beginning. They force you to read. They make you
-look at the shape of the machine. But they are not sacred. I.e., they are not
-absolutely necessary steps you have some moral obligation to follow.
+Finding the right compiler flag in a manual written for somebody else---whose
+intended audience I often cannot identify---or writing the same twenty lines of
+plumbing for the fifth time, and promptly discovering that an API changed three
+minor versions ago (of course without communication) are often just _obstacles_.
+They can be useful obstacles when you are beginning. They train you to be
+prepared. They force you to read. They make you look at machine you are dealing
+with. But they are not sacred. In other words, they are not absolutely necessary
+steps you have some moral obligation to follow.
 
 One of the mistakes I've made was treating every kind of friction as if it had
 the same educational value. It does not.
@@ -100,85 +124,109 @@ time you write a nearly identical command-line parser for a small internal tool,
 the value may be mostly in the command-line tool. Making you type it all again
 does not necessarily deepen your understanding. It may just make you less likely
 to build the tool and far more annoyed in your own work. This, I think, points
-in the same direction as alienating the worker from the labor itself.
+in the same direction as alienating the worker from the labor itself: when the
+activity is separated from its purpose and consequences, the worker loses
+contact with the thing being made.
 
-The wall was a filter. It was also, occasionally, just a boring wall. Most walls
-are boring anyway.
+I have probably underexplained the educational value of toil. Toil is not useful
+merely because it is unpleasant. It is useful when it puts you in contact with
+the consequences of your decisions. Writing the parser yourself makes the shape
+of the input visible. Debugging the first broken version teaches you which
+assumptions were wrong. Repeating that process gives you a vocabulary for the
+problem and, eventually, enough fluency to notice a bad design before you run
+it. This is why skipping every difficult step can leave a beginner with a
+solution but no model of the problem. But the lesson is not that every person
+must repeat every exercise by hand. Once the mechanism is understood, identical
+repetition has diminishing educational returns. The question is whether I am
+giving away the part that teaches me something or merely the part that consumes
+time. The answer depends on the learner, the task, and whether the work is still
+producing useful feedback.
+
+As it turns out, the wall was a filter. It was also, occasionally, just a boring
+wall. Most walls are boring anyway.
 
 ## This Is What Leverage Looks Like
 
 The useful question is not whether AI can write code---it obviously _can_, in
 the same way that a table saw can cut wood. The more useful question is what
-becomes possible when the cost of trying an idea drops.
+becomes possible when the cost of trying an idea drops. Now you can have a small
+idea in the morning and a running experiment before lunch. Early lunch for
+Konzu!
 
-You can have a small idea in the morning and a running experiment before lunch.
-Early lunch for Konzu!
+To clarify, I'm not talking about a full product or a trustworthy
+system---although you can have those as well---but an _experiment_. The
+distinction is important.
 
-I'm not talking about a full product or a trustworthy system---although you can
-have those as well---but an _experiment_. The distinction is important.
+A quick experiment can tell you that the idea is simply boring, or outright
+failing. It can expose the awkward part of the interface you designed oh so
+proudly. It can show that your data model is _completely wrong_ before you have
+spent a month building around it. It can give you something concrete, i.e.,
+functional enough that is also disposable enough to throw away in a whim. This
+is not a minor improvement. Most ideas _do_ deserve to be thrown away, and the
+old cost of making them real often meant we kept them simply because we had
+already paid for them. Cheap prototypes let us be less sentimental.
 
-An experiment can tell you that the idea is boring or outright failing. It can
-expose the awkward part of the interface. It can show that your data model is
-wrong before you have spent a month building around it. It can give you
-something concrete to throw away. This is not a minor improvement. Most ideas
-deserve to be thrown away, and the old cost of making them real often meant we
-kept them simply because we had already paid for them. Cheap prototypes let us
-be less sentimental.
+We can call this the _optimistic case_ for these tools. It is not that they can
+generate perfect applications or that a programmer has been promoted to a
+manager of autocomplete. They let a person move between an idea and a test of
+the idea with less... ceremony, let's call it.
 
-That is the optimistic case for these tools. Not that they generate perfect
-applications. Not that the programmer has been promoted to a manager of
-autocomplete. They let a person move between an idea and a test of the idea with
-less ceremony.
-
-The best software work has always been an argument with reality. You imagine a
-design, implement part of it, run it, discover that reality disagrees, and
-change your mind---or the software itself. AI can shorten the distance between
-the imagined design and the disagreement. It cannot, however, make reality agree
-with you.
+The best software work has always been an argument with reality---dancing at the
+edge of what has been though possible. You imagine a design, implement part of
+it, run it, discover that reality disagrees, and change your mind---or the
+software itself. Iteration got you closer to true excellence. AI can now shorten
+the distance between the imagined design and the disagreement. It cannot,
+however, make reality agree with you. Which I think is a suitable position for a
+_tool_ such as LLMs. Not like we made a god machine or anything. Shut up Dario.
 
 ## The Best Age to Learn
 
-When I was learning---and "was" is wrong here because I'm still learning---each
-stupid question came with a cost. I had an awful lot of those too. Back when I
-was first trying to learn programming through C++ (because I was told JavaScript
-is not programming, actually), I had to search for the right words, find a page
-that assumed you already knew the thing you were trying to learn, and then work
+When I was learning programming---and "was" is wrong here because I'm still
+learning---each stupid question came with a silly little cost---one that I felt
+too annoyed to pay. I had an awful lot of those too. Back when I was first
+trying to learn C++ (because I was told JavaScript is not programming,
+actually), I had to search for the right words, [^magic] find a page that
+assumed you already knew the thing you were trying to learn, and then work
 backwards through three other pages to understand the first one. Sometimes the
 answer was in a Stack Overflow post from 2009. Sometimes the answer was in the
-source code. Sometimes I found someone who's ~~gullible~~ patient enough to sit
-down with me and show me I was approaching it wrong. [^kas] Other times I
+source code. Sometimes I found someone who was ~~gullible~~ patient enough to
+sit down with me and show me I was approaching it wrong. [^kas] Other times I
 decided that this whole ordeal was probably not important anyway, and gave up.
+
+[^magic]: At the risk of sounding cheesy I'd like to draw a parallel between
+    this and casting a spell. Yes it's very arcane and all. I like my parallels.
 
 [^kas]: On this note I think I owe this one furry from my game guild a very
     special thanks for being patient with me.
 
 I _still_ think there is value in that struggle. It taught me how to search and
-how to remain patient. It also wasted a _remarkable_ amount of time.
+how to remain patient. It also wasted a _truly remarkable_ amount of time.
 
-As it turns out, a conversational tool can now meet you at the exact edge of
-what you know. You can ask what a borrow checker is, then ask why the first
-explanation does not apply to a particular lifetime, then provide a small
-example and ask what you are misunderstanding. You can ask for an explanation in
-terms of files and processes rather than abstract types. You can ask it to give
-you a deliberately wrong example and find the error yourself. You could also ask
-it for the whole program, but that's not my point.
+As it turns out, a silly conversational tool can now meet you at the exact edge
+of what you know. You can ask what a borrow checker is (I have), then ask why
+the first explanation does not apply to a particular lifetime (I have), then
+provide a small example and ask what you are misunderstanding. You can ask for
+an explanation in terms of files and processes rather than abstract types. You
+can ask it to give you a deliberately wrong example and find the error yourself.
+You could also ask it for the whole program, but that's not my point.
 
 My point is that it is an _extraordinary_ learning environment. It is also very
 easy to ruin.
 
 ### Recognition Is Not Understanding
 
-Here's where I regularly fool myself. I can look at an answer and mistake that
-pleasant little feeling of recognition for having known it all along. You have
-probably done this too. "Make a guess first" can become a little ritual we
-perform before immediately peeking at the answer, then congratulating ourselves
-for having learned something.
+I have probably repeated a hundred times the mistake of simply looking at an
+answer and mistaking that pleasant little feeling of recognition for having
+known it all along. You have probably done this too. "Make a guess first" can
+become a little ritual of sorts that we perform before immediately peeking at
+the answer, then congratulating ourselves for having learned something. Many
+pats on the back!
 
-If I actually want to learn, I have to make the answer inconvenient to reach. I
-write down my prediction, make a real attempt, and close the answer before
-trying to explain the idea back to myself. Then I solve a fresh variation
-without the model in front of me. If I cannot do that, I learned how to
-recognise a solution, not how to produce one.
+However, if I _actually want_ to learn (I do) then I have to make the answer
+inconvenient to reach. I write down my prediction, make a real attempt, and
+close the answer before trying to explain the idea back to myself. Then I solve
+a fresh variation without the model in front of me. If I cannot do that, I
+learned how to recognise a solution, not how to produce one.
 
 If you ask for the answer before you have tried to form one, you are not using a
 tutor. You are using an answer machine. The distinction is _critical_ because
@@ -203,7 +251,7 @@ happened in one case.
 
 ## Writing Is Cheaper, Thinking Is Not
 
-Everything I have talked about applies to writing code. I have ~~no~~ little
+Everything I have talked about applies to writing code. I have ~~no~~ some
 objection to a machine filling in the boring part of an implementation. I object
 to the idea that the boring part was the whole job, and I object to the idea
 that it's a viable form of iteration. Writing a function is not the same as
@@ -211,6 +259,15 @@ deciding what the function means. A model can produce an implementation for a
 requirement that you have not properly stated. It will even produce one with
 great confidence. The result may compile while encoding an assumption you never
 intended to make.
+
+Brandon Sanderson, who is by far my favorite author, often returns to this
+distinction when he talks about writing in his BYU lectures on creative writing.
+Cannot say I watched _all_ of them, but a point that stuck with me is that
+practice, revision, and feedback teach you more than memorising a set of rules
+about craft. Programming is not the same craft, but the analogy is close enough.
+The work teaches you partly because it gives you something concrete to revise.
+Consequently, models can supply drafts for you but they cannot, and in my
+opinion should not attempt to, make discarded drafts unnecessary.
 
 This is where the old advice about writing things down becomes useful again.
 Before asking for an implementation, describe the inputs, outputs, invariants,
@@ -228,33 +285,53 @@ answers for learning how to derive one. If you have not tried to produce the
 thing yourself, those implementations are examples to inspect, not evidence that
 you could write the next one without them.
 
-The important thing is that the machine should be helping you think more
-clearly, not giving you a place to put the thinking you did not do.
+The important thing is that the machine should be helping you think more clearly
+and unblocking your thinking, not giving you a place to put the thinking you did
+not do.
 
-## Testing Gets More Interesting
+## Testing Testing, It Gets More Interesting
 
 Testing is another place where the new tools can be genuinely useful, though not
 for the reason usually advertised. Well, it's a sensitive topic, isn't it? Lots
 and lots of "influencers" have argued that passing tests equals software success
 in the era of AI. For example: "Our test suite is 100% green, so our
-6,000-commit port to a different language is good!"
+7,000-commit (and 1 million LoC) port to a different language is good!"
 
-But the model is not an oracle. Asking it whether the code is correct is a
+But the model is not omnipotent. Asking it whether the code is correct is a
 slightly more elaborate way of asking the code whether it is correct. Neither
 has much to say for itself.
 
-But once you tell the machine what the program is supposed to preserve, it can
-be very good at being tiresome. It can enumerate the cases you forgot. It can
-suggest malformed input, strange ordering, empty collections, duplicate values,
-timeouts, partial writes, and the other small disasters that do not occur to you
-while the happy path is glowing in your editor. This is handy, but it's not a
-replacement for testing. Still, it is an "inexpensive" source of suspicion.
+However, if you tell the machine _what essence_, i.e., core assumptions and
+goals the program is supposed to preserve (you could call this a contract) it
+can be very good at being tiresome. It can, for example, enumerate the cases you
+simply forgot. It can suggest malformed input, strange ordering, empty
+collections, duplicate values, timeouts, partial writes and the other small
+disasters that do not occur to you while the happy path is glowing in your
+editor. Remember the joke about the programmer walking into a bar:
 
-A useful test is an executable claim about the software. "For this input, the
-output is 3" is a claim. "Parsing and then serializing this value gives the same
-value" is a claim. "A user without permission cannot read this record" is a
-claim. The machine can help you write down many such claims, but you still have
-to decide whether they describe the thing you meant to build. [^3]
+> A programmer walks into a bar and orders one beer, zero beers, 999,999,999
+> beers, −1 beers, and a lizard.
+>
+> A user walks into the bar and asks where the bathroom is.
+>
+> The bar explodes.
+
+You can replicate the user here. Though while handy, it is not a replacement for
+testing. Still, it is "inexpensive" and a tolerable source of suspicion you can
+leverage.
+
+My take on testing is that a useful test is an _executable claim_ about the
+software. "For this input, the output is 3" is a claim. "Parsing and then
+serializing this value gives the same value" is a claim. "A user without
+permission cannot read this record" is a claim. The machine can help you write
+down many such claims, but you still have to decide whether they describe the
+thing you meant to build. [^3] This, the generated tests cannot settle for you.
+
+Tests can, however, give you more cases to run and more ways your assumptions
+might fail. They cannot tell you whether the expected result is the one you
+actually wanted. A test can be _perfectly_ consistent with the current
+implementation and still encode the wrong requirement. The programmer has to
+supply the meaning against which the implementation is judged.
 
 [^3]: This is the old distinction between test generation and test design. A
     generated test can merely restate what the current implementation already
@@ -266,20 +343,21 @@ to decide whether they describe the thing you meant to build. [^3]
 
 There is also a more interesting use: ask for tests that would make your current
 implementation fail, then investigate which failures are real. Use mutation
-testing if the project can support it. Ask for a second implementation and
-compare their behaviour on generated inputs. Have the model attack the boundary
-of the system, but do not let it grade its own homework. The point is not to
-generate a larger pile of tests, which LLMs love doing, but to make the feedback
-loop _tighter_. A test that runs in seconds gives you permission to be wrong.
-That permission is one of the great luxuries of software. You're dull in your
-comfort zone.
+testing if the project can support it---tends to be expensive for Rust projects.
+Ask for a second implementation and compare their behaviour on generated inputs.
+Have the model _attack_ the boundary of the system, but do not let it grade its
+own homework. The point is not to generate a larger pile of tests, which LLMs
+love doing, but to make the feedback loop _tighter_. A test that runs in seconds
+gives you permission to be wrong. That permission is one of the great luxuries
+of software. You're dull in your comfort zone.
 
 ## Understanding Is Still the Job
 
-I have found the tools most useful when I am reading code I did not write. It's
+I have found the tools most useful when I am reading code I did not write.
+Generally those large monoliths of C or C++ that pains me to read. It's
 typically because I cannot form the correct "bond", for the lack of a better
 word, when I am engaging with code that I had no part in writing. LLMs have
-accelerated this _greatly_.
+accelerated this admirably.
 
 This is the part that people tend to skip when they talk about "productivity".
 There is a great deal of software in the world that is perfectly possible to
@@ -294,19 +372,24 @@ That does not necessarily mean the summary is _true_ though. Fortunately, it
 _does_ mean that you now have a map to check.
 
 I'm emphasizing this difference here. I would not quite let a model tell me that
-a payment path is safe and stop there. Because, well, it's a sycophant. I
-_might_ let it point me toward the code that decides whether a payment is safe.
-Then I would read that code, follow the calls, inspect the database constraints,
-run the tests, and try to break the claim myself. In projects that are not mine,
-this is much better than wandering into years-old codebases without a map.
+a payment path is safe and stop there. Because, well, it's a sycophant and a
+sociopath. It will either praise me because it is trained to do so or lie to me
+because it is trained to do so. "_Your implementation is great and demonstrates
+a great understanding of the concept!_" Gee thanks.
 
-This is where I think the current moment is _genuinely exciting_. The amount of
+I _might_ let it point me toward the code that decides whether a payment is
+safe. Then I would read that code, follow the calls, inspect the database
+constraints, run the tests, and try to break the claim myself. In projects that
+are not mine, this is much better than wandering into years-old codebases
+without a map.
+
+This is where I think the current moment is genuinely exciting. The amount of
 software that a curious person can inspect has always been enormous. Now there
 are better ways to ask it questions. Open source was already a gift. Code search
 was already a gift. Compilers, debuggers, formatters, package managers, test
-runners, and documentation were already a gift. We keep acting as though one new
-model invented leverage, when in reality, we have been assembling a remarkable
-set of levers for decades.
+runners, and documentation were already a gift. We could keep acting as though
+one new model invented _actual_ leverage (AGI I guess?) but in reality what we
+have been assembling is a remarkable set of levers. For _decades_.
 
 The model is one more. A powerful one, sometimes at least. Not the whole
 toolbox, and still not "the solution."
@@ -315,31 +398,34 @@ toolbox, and still not "the solution."
 
 I wanted to come up with a more creative title for this section, but anything I
 managed to come up with pushed this article to a more AI-positive direction. Let
-me be clear that I do not fear _sounding_ AI-positive but I do not wish to be
+me be clear that I do not fear _sounding_ AI-positive---you can always
+appropriate my words to one direction or another---but I also do not wish to be
 misrepresented. So I leave you with this, "The Catch." What I want to talk about
 in this section is, also, the catch.
 
 There are serious costs here---a model can make a person feel productive while
-removing the moments in which they would have noticed their own confusion. It
-can make a codebase larger before it makes it better. It can turn a junior
-engineer's apprenticeship into a sequence of reviews of work they never learned
-how to produce. _It can make software easier to start and harder to own_.
+removing the moments in which they would have noticed their own confusion and
+take a mental note for next time. It can make a codebase larger before it makes
+it better. It can turn a junior engineer's apprenticeship into a sequence of
+reviews of work they never learned how to produce. _It can make software easier
+to start and harder to own_.
 
 And the tools are not magic instruments floating above the economy. They are
 services, generally controlled by a small number of companies, trained on the
 work of people who did not consent to every use of it, and sold back to us as
-liberation. I'm not AI positive, because I cannot pretend for the death of me
+liberation. I'm not AI positive, because I cannot, for the life of me, pretend
 that renting a faster autocomplete is the same thing as owning the means of
-production in unethical and unviable ways.
+production---least of all when that arrangement is both unethical and unviable.
 
-The "golden age", if there is ever one will not be delivered to us by a product
-launch. I'd love to follow up with "WE'LL GET IT BY OURSELVES!" but no. It will
-be determined by what we use the leverage for. We can use it to produce more
-disposable software, remove the path by which people learn, and measure everyone
-by how quickly they accept the first plausible answer. Or we can use it to ask
+The "golden age," if there ever is one, will not be delivered to us by a product
+launch. I'd love to follow up with a spirited chant of "WE. WILL. GET IT. BY
+OURSELVES!" but no. I think it will be determined by what we use the leverage
+for. We can use it to produce more disposable software, remove the path by which
+people learn, and measure everyone by how quickly they accept the first
+plausible answer or type "yes, continue" in a chatbox. Or we can use it to ask
 better questions, investigate more systems, and make more attempts at the things
-that were previously too expensive to try. The tool cannot choose between those
-futures. That is---perhaps inconveniently---still our job.
+that were previously too expensive or tedious to try. The tool cannot choose
+between those futures. That is, perhaps inconveniently, still our job.
 
 ## A Reasonable Way to Use the Machine
 
@@ -364,54 +450,29 @@ implemented and not knowing why user input reaches a file path.
 The goal is not to preserve every old inconvenience. The goal is to preserve
 contact with the thing you are making.
 
-## The Good News
+## A Small Experiment
 
-I still think taste---some would argue the correct term is judgement---is all
-that is left. But I no longer think that means we are standing at the end of the
-craft, watching it disappear. Instead, it appears to me that the part that
-directs the work is becoming more visible. It means a person with a question can
-get to an experiment quickly. It means a beginner can ask an unreasonable number
-of questions without feeling that they are wasting a teacher's time. It means a
-maintainer can get help entering a hostile or otherwise fully undocumented
-repository or even a proprietary bit of code. It means tests, examples,
-prototypes, and explanations are cheaper to make. Those are not small things.
+[earlier post]: https://notashelf.dev/posts/vibe-coding
 
-All of those are the conditions under which people learn.
-
-The danger is that we will use the new abundance to stop learning. The
-opportunity is that we can use it to learn in public, learn by doing, and try
-things we would previously have abandoned at the first tedious obstruction.
-
-I still want to write code; I want to keep treating it as a craft. I still want
-to understand the systems I use, and build things I can own up to. I still think
-there is something lost when a person treats generated software as a finished
-product and takes pride in not knowing what it does. But in the end, I no longer
-believe fewer keystrokes means more lessons stolen. That is what I found bleak
-in my own thinking. If we are careful, and I mean _truly_ careful, about which
-parts we give away, we may _finally_ have enough time to work on the interesting
-parts.
-
-## Closing Thoughts
-
-I think that covers what I wanted to say. This post is the spiritual successor
-to my [earlier post](https://notashelf.dev/posts/vibe-coding) on vibe "coding"
-and why it fails to convince me. I still stand behind that post, but I wanted to
-explore how LLMs can be used in the most pragmatic [^4] way possible.
+This post is the spiritual successor to my [earlier post] on vibe "coding" and
+why it fails to convince me. I still stand behind that post, but I wanted to
+explore how LLMs can be used pragmatically. [^4]
 
 [^4]: By pragmatic, I mean useful without pretending the tool is trustworthy.
     The point is not to accept AI wholesale or reject it theatrically, but to
     find the narrow places where it removes toil without removing judgement.
 
 It is also worth admitting what many anti-AI people already know: AI is not
-going away. I can hope the current bubble bursts, but that hope is not
-knowledge. So I want to understand LLMs and learn how to "hold them
-correctly"---as tools, not authorities. They appear to be part of the future
-whether I like it or not, and my personal distaste bears very little on that
-fact. This post is a "controlled thought experiment" in which I try to approach
-the matter with less prejudice.
+going away. I can and I do hope the current bubble bursts (because I want to be
+able to afford more RAM), but that hope is not quite knowledge. So I want to
+understand LLMs and learn how to "hold them correctly"---as tools, not
+authorities. If they go away, great. I will live with the comfort of knowing I
+still know how to do things without. However, regardless of what I want, LLMs
+appear to be part of the future, and my personal distaste bears very little on
+that fact. Thus, this post is a "controlled thought experiment" in which I try
+to approach the matter with less prejudice. Less than usual at least.
 
-It is worth clarifying that this post itself is entirely "meat intelligence." I
-did two things before and during its writing to understand the AI-positive
+I did two things before and during its writing to understand the AI-positive
 standpoint:
 
 First, I went back through conversations with some of the most talented
@@ -439,13 +500,15 @@ I have left as is:
 > ridiculous.
 
 This is a much better description of responsible AI use than the idea that a
-programmer simply accepts or rejects every generated line. What is important to
-me is not whether he uses AI but whether he knows which work deserves his
-attention, and keeps that boundary clear. I'll risk summarizing what you already
-inferred, but bear with me. For serious work, the model's output gets the same
-treatment as a random PR. For a personal patch that is already doomed, testing
-and a quick skim are apparently enough. This is _taste_, judgement applied to
-the actual cost of being wrong as opposed to some universal workflow.
+programmer simply accepts or rejects every generated line from two silly
+buttons. What is important to me is not whether he uses AI but whether he knows
+which work deserves his attention, and keeps that boundary clear. I'll risk
+summarizing what you already inferred, but bear with me. For serious work, the
+model's output gets the same treatment as any random PR. For a personal patch
+that is already doomed, testing and a quick skim are apparently enough. This
+addresses where I have been wrong in my previous post. It is not _taste_, but a
+superset: judgement applied to the actual cost of being wrong as opposed to some
+universal workflow.
 
 Secondly, I sat down and tried to build a project using Claude Opus 5, with
 access lent to me by a good friend who was gracious enough to let me use some of
@@ -454,25 +517,84 @@ common and tedious bit of my workflow: nesting panels for a sail I have
 designed. Typically this is done through a slow and RAM-bound program that takes
 a good few hours to nest the panels by brute-forcing each combination of panel
 rotation and placement. I tasked Claude with designing the same application, but
-with the option of CPU and GPU-first solvers under the same conditions I had
-described for its convenience---as opposed to it searching how my obscure
-program works. Claude chose to decide half of those rules were _optional_, and
-produced a broken GUI that I cannot insert into my workflow in any shape or
-form. On a file that can reach 96% efficiency through bruteforcing and 98%
-through hand-editing post-hoc, Claude's program yields 64% efficiency. It's fast
-though I'll give it that. While I feel like this could be made much better, I
-had already used 10% of weekly limits when I am on borrowed tokens, so I
-stopped. This is not exactly a metric as you might be primed to point out, but
-it's also not a marginal result.
+with the option of CPU-first and GPU-first solvers under the same constraints I
+had described, rather than asking it to reverse-engineer my obscure program.
+With a two-paragraph task description, Claude treated half of the requirements
+in that description as _completely optional_ and produced a broken GUI that I
+cannot insert into my workflow in any shape or form. It repeatedly claimed to
+have implemented or verified things that it had not, so it was quite an
+unpleasant experience, to say the least.
 
-Suffice to say the results are mixed, but they are also insightful. Most
-talented programmers I know _do_ leverage LLMs. Because they already have the
-intellectual capacity---and taste--- to distinguish optimal code from utter
-garbage, they can use LLMs without surrendering the judgement that makes that
-distinction possible. I suspect the consequences are already visible to them
-before the code reaches production, so they use it with only a little more than
-"optimistic caution"---as opposed to cautious optimism. The moral of this post,
-if anything, is that you should be careful with what you offload to a prediction
-machine and how you do so.
+In my original program the main metric is _fabric efficiency_. On the file I
+tested, the existing program can reach 96% efficiency through bruteforcing and
+98% through hand-editing post-hoc. Claude's program yields 64% efficiency. It's
+fast though, I'll give it that. While I feel like this could be made much
+better, I had already used 10% of weekly limits when I am on borrowed tokens, so
+I stopped.
 
-Cheers.
+This is not a controlled benchmark, and I do not mean it as a general measure of
+what AI can do. It does tell me that, given a two-paragraph description and the
+constraints I supplied, this particular attempt missed the central requirement
+badly. One bad experience cannot tell me that AI is bad, but 64% versus 96% is a
+32-percentage-point gap. That is not just a small miss or a "simple mistake" as
+the model itself calls the situation. The program was fast, but its output was
+far too inefficient to enter my workflow. Given how expensive LLMs are, and how
+often these tools are presented as having solved programming, I found that
+result difficult to excuse.
+
+Suffice to say the results are mixed, but they are also insightful. Most of the
+talented programmers I know _do_ leverage LLMs. They have enough domain
+knowledge, and enough practice reviewing their own work, to distinguish a useful
+suggestion from utter garbage without surrendering the judgement that makes that
+distinction possible. This is not an argument that only exceptional people can
+use LLMs. It is an argument that safe use depends on having, or deliberately
+building, the ability to inspect the result. I suspect the consequences are
+visible to experienced programmers before the code reaches production, so they
+use the tools with only a little more than "optimistic caution"---as opposed to
+cautious optimism. The moral of this post, if anything, is that you should be
+careful with what you offload to a prediction machine and how you do so.
+
+## The Good News
+
+I still think taste---some would argue the correct term is judgement, I think I
+agree---is all that is left. But I no longer think that means we are standing at
+the end of the craft, watching it disappear. Instead, it appears to me that the
+part that directs the work is becoming more visible. It means a person with a
+question can get to an experiment quickly. It means a beginner can ask an
+unreasonable number of questions without feeling that they are wasting a
+teacher's time. It means a maintainer can get help entering a hostile or
+otherwise fully undocumented repository or even a proprietary bit of code. It
+means tests, examples, prototypes, and explanations are cheaper to make. Those
+are not small things.
+
+Ursula K. Le Guin's "The Carrier Bag Theory of Fiction" gives me a useful way to
+think about this. I like Le Guin's writing in general, but this essay is
+particularly relevant here: "The first cultural device was probably a
+recipient." The point is that stories about progress often celebrate dramatic
+production while ignoring the quieter work of carrying, keeping, arranging, and
+making use of what we have. Software has the same blind spot. Producing more
+code is easy to celebrate; understanding, maintaining, and deciding what should
+not be built are less visible forms of work.
+
+All of those are conditions under which people can learn without being forced to
+pay every arbitrary cost of entry.
+
+All of this abundance can just as easily become an excuse to stop learning. Or
+we can use it to learn in public, learn by doing, and try things we would
+previously have abandoned at the first tedious obstruction.
+
+I still want to write code; I want to keep treating it as a craft. I still want
+to understand the systems I use, and build things I can own up to. I still think
+there is something lost when a person treats generated software as a finished
+product and takes pride in not knowing what it does. But in the end, I no longer
+believe fewer keystrokes means more lessons stolen. That is what I found bleak
+in my own thinking. If we are careful, and I mean _truly_ careful, about which
+parts we give away, we may _finally_ have enough time to work on the interesting
+parts.
+
+This'll be the last post on AI for a while as I'm getting tired of writing about
+it and I'm sure you're getting tired of reading about it. If you have made it
+this far without sighing and clicking off then I thank you for your patience and
+promise a more interesting post after this one.
+
+Be well.
