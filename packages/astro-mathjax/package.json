@@ -38,13 +38,13 @@
     "astro": "^7.0.0"
   },
   "dependencies": {
-    "remark-math": "^6.0.0",
-    "rehype-mathjax": "^7.1.0"
+    "rehype-mathjax": "^7.1.0",
+    "remark-math": "^6.0.0"
   },
   "devDependencies": {
-    "@types/node": "^26.0.0",
+    "@types/node": "^26.6.2",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.11"
   },
   "publishConfig": {
     "access": "public"
