@@ -17,9 +17,9 @@
     "astro": "^7.0.0"
   },
   "dependencies": {
-    "cssnano": "^8.0.2",
+    "cssnano": "^9.0.3",
     "glob": "^13.0.6",
-    "postcss": "^8.5.15",
+    "postcss": "^8.5.28",
     "purgecss": "^8.0.0"
   },
   "scripts": {
