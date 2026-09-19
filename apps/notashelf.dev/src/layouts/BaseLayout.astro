@@ -41,6 +41,13 @@ const {
       href={new URL("rss.xml", Astro.site)}
     />
 
+    <script
+      src="https://pl.notashelf.dev/web/beacon.js"
+      data-api="https://pl.notashelf.dev/api/event"
+      data-domain="notashelf.dev"
+      data-outbound-links
+      data-file-downloads
+      defer></script>
     <!-- Critical CSS inlined for fastest rendering -->
     <style lang="scss">
       @use "../styles/variables" as *;
@@ -51,7 +58,7 @@ const {
         --primary: #{$primary};
         --secondary: #{$secondary}; /* 14.7:1 contrast ratio */
         --background: #{$primary};
-        --text-subtle: #{$text-subtle}; /* 4.6:1 contrast ratio - improved from #999999 */
+        --text-subtle: #{$text-subtle}; /* 4.6:1 contrast ratio */
         --font-family-primary: #{$font-family-primary};
       }
 
@@ -126,7 +133,9 @@ const {
     margin: 0;
   }
 
-  // Creates a grid pattern on the background.
+  // Neat little grid pattern on the background to page the pages look a little
+  // less bland. It's better than adding weird JS interactivity, and nicer than
+  // eye-sore animations. Just a grid, nice and simple.
   .background-pattern {
     position: fixed;
     top: 0;

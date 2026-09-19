@@ -55,9 +55,9 @@ sources for my posts.
 - [notashelf.dev](https://notashelf.dev) is my personal website and blog. It
   contains some information about me, and about my projects. It also contains my
   technical writings. This site collects anonymized analytics about user traffic
-  using [Plausible Analytics](https://plausible.io). This site does not store
-  any cookies. NGINX logs for the site are anonymized in a similar fashion to
-  protect your privacy.
+  using [Watchdog](https://github.com/manic-systems/watchdog). This site does
+  not store any cookies. NGINX logs for the site are anonymized in a similar
+  fashion to protect your privacy.
 
 ### Content
 
@@ -75,10 +75,6 @@ time being, it contains three distinct packages.
 - [astro-email-obfuscation](./packages/astro-email-obfuscation/) is a home-made
   Astro integration with advanced e-mail obfuscation capabilities, designed to
   fend off scrapers to the best of my ability.
-- [astro-plausible](./packages/astro-plausible) is an Astro integration,
-  refactored out of my previous `notashelf.dev` app where it was a tiny
-  component. Now it's a fully tested integration with various customizability
-  options.
 - [astro-purge-css](./packages/astro-purge-css/) is a small Astro integration
   that purges unused styles using PurgeCSS.
 - [remark-em-dash](/packages/remark-em-dash/) is a Remark plugin to replace
@@ -196,15 +192,9 @@ be added. `pnpm run test` is the quickest way to run your test.
 > any and release remixed content under the same legal conditions as this
 > repository.
 
-Any Typescript, Javascript, Astro, Svelte, Rust etc. code, my Astro
-integrations, Vite plugins other package components of this repository have been
-made available under the **Mozilla Public License v2.0**, as
-[dictated](./packages/astrp-plausible/LICENSE)
-[by](./packages/vite-copyright-replace/LICENSE)
-[their](./packages/astro-email-obfuscation/LICENSE)
-[respective](./packages/remark-em-dash/LICENSE)
-[license](./packages/astro-purge-css/LICENSE)
-[files](./packages/vite-copyright-replace/LICENSE).
+Any TypeScript, JavaScript, Astro, Svelte, Rust, and other code in this
+repository is made available under the **Mozilla Public License v2.0**. See the
+individual package `LICENSE` files for package-specific notices.
 
 Please do not modify or redistribute post contents without my express
 permission. For any code taken directly (which I know to be happening), an
