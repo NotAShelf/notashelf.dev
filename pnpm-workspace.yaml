@@ -8,6 +8,9 @@ onlyBuiltDependencies:
   - '@swc/core'
   - esbuild
   - sharp
+overrides:
+  '@types/node': 26.2.0
+  lru-cache: 11.5.2
 
 peerDependencyRules:
   allowedVersions:
