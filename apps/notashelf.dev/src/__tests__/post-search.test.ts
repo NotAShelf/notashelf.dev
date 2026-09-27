@@ -1,8 +1,5 @@
-/**
- * @vitest-environment happy-dom
- */
-
-import { beforeEach, describe, expect, it, vi } from "vitest";
+/** @vitest-environment happy-dom */
+import { describe, expect, it } from "vitest";
 import {
   clearPostSearchState,
   DEFAULT_POST_SEARCH_STATE,
@@ -12,19 +9,7 @@ import {
 } from "../scripts/utils/post-search";
 
 describe("PostSearch storage", () => {
-  beforeEach(() => {
-    vi.mocked(sessionStorage.getItem).mockReset();
-    vi.mocked(sessionStorage.setItem).mockReset();
-    vi.mocked(sessionStorage.removeItem).mockReset();
-    vi.mocked(sessionStorage.clear).mockReset();
-    vi.mocked(sessionStorage.getItem).mockReturnValue(null);
-  });
-
-  it("loads the default state when storage is empty", () => {
-    expect(loadPostSearchState()).toEqual(DEFAULT_POST_SEARCH_STATE);
-  });
-
-  it("saves and loads the Svelte search state shape", () => {
+  it("persists the active search filters and clears them", () => {
     const state = {
       searchTerm: "nix",
       activeTag: "nixos",
@@ -33,41 +18,20 @@ describe("PostSearch storage", () => {
     };
 
     savePostSearchState(state);
-
-    expect(sessionStorage.setItem).toHaveBeenCalledWith(
-      POST_SEARCH_STORAGE_KEY,
-      JSON.stringify(state),
-    );
-    vi.mocked(sessionStorage.getItem).mockReturnValue(JSON.stringify(state));
     expect(loadPostSearchState()).toEqual(state);
-  });
-
-  it("ignores stale storage entries with the old shape", () => {
-    vi.mocked(sessionStorage.getItem).mockReturnValue(
-      JSON.stringify({ searchTerm: "nix", activeTag: "nixos", viewAll: true }),
-    );
-
+    clearPostSearchState();
     expect(loadPostSearchState()).toEqual(DEFAULT_POST_SEARCH_STATE);
   });
 
-  it("clears stored search state", () => {
-    savePostSearchState({
-      searchTerm: "astro",
-      activeTag: "svelte",
-      viewAll: true,
-      recentlyUpdated: false,
-    });
-
-    clearPostSearchState();
-
-    expect(sessionStorage.removeItem).toHaveBeenCalledWith(
-      POST_SEARCH_STORAGE_KEY,
-    );
-  });
-
-  it("falls back to defaults on invalid JSON", () => {
-    vi.mocked(sessionStorage.getItem).mockReturnValue("not json");
-
+  it.each([
+    ["stale state", '{"searchTerm":"nix","activeTag":"nixos","viewAll":true}'],
+    [
+      "invalid field type",
+      '{"searchTerm":"nix","activeTag":"nixos","viewAll":true,"recentlyUpdated":"yes"}',
+    ],
+    ["invalid JSON", "not json"],
+  ])("ignores %s in session storage", (_reason, raw) => {
+    sessionStorage.setItem(POST_SEARCH_STORAGE_KEY, raw);
     expect(loadPostSearchState()).toEqual(DEFAULT_POST_SEARCH_STATE);
   });
 });
