@@ -38,16 +38,14 @@ export function copyrightYearPlugin(
       isProduction = config.command === "build";
     },
     transform(code: string, id: string) {
-      // Only process relevant files (avoid processing node_modules and other irrelevant files)
-      if (id.includes("node_modules")) {
+      // Vite appends queries to module IDs (for example, .astro?astro&type=template).
+      const queryIndex = id.indexOf("?");
+      const fileId = queryIndex === -1 ? id : id.slice(0, queryIndex);
+      if (/(?:^|[/\\])node_modules[/\\]/.test(fileId)) {
         return null;
       }
 
-      // Efficient extension checking using Set lookup
-      const hasValidExtension = validExtensions.has(
-        id.slice(id.lastIndexOf(".")),
-      );
-      if (!hasValidExtension) {
+      if (!validExtensions.has(fileId.slice(fileId.lastIndexOf(".")))) {
         return null;
       }
 
@@ -59,15 +57,7 @@ export function copyrightYearPlugin(
             `Replacing ${placeholder} with ${copyrightYear} in ${fileName}`,
           );
         }
-        // Escape special regex characters in the placeholder to treat it as a literal string
-        const escapedPlaceholder = placeholder.replace(
-          /[.*+?^${}()|[\]\\]/g,
-          "\\$&",
-        );
-        const transformedCode = code.replace(
-          new RegExp(escapedPlaceholder, "g"),
-          copyrightYear,
-        );
+        const transformedCode = code.replaceAll(placeholder, copyrightYear);
 
         return {
           code: transformedCode,
