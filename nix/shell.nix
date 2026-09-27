@@ -1,23 +1,22 @@
 {
-  self,
   mkShell,
   # Node
   nodejs-slim,
-  pnpm,
+  pnpm_11,
   taplo,
   # Testing/Linting
   typos,
   google-lighthouse,
   ...
 }: let
-  inherit (builtins) concatStringsSep match;
+  pnpm' = pnpm_11;
 in
   mkShell {
     name = "blog-dev";
     packages = [
       # Website
       nodejs-slim
-      pnpm
+      pnpm'
 
       # TOML formatting
       taplo
@@ -28,6 +27,4 @@ in
       # Analytics
       google-lighthouse
     ];
-
-    env.BUILD_DATE = concatStringsSep "-" (match "(.{4})(.{2})(.{2}).*" self.lastModifiedDate);
   }

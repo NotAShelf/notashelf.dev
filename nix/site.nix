@@ -1,5 +1,4 @@
 {
-  self,
   lib,
   stdenv,
   # Used to build the website package
@@ -7,16 +6,14 @@
   nodejs,
   fetchPnpmDeps,
   pnpmConfigHook,
+  buildDate,
+  rev,
 }: let
-  buildDate = builtins.concatStringsSep "-" (builtins.match "(.{4})(.{2})(.{2}).*" self.lastModifiedDate);
-  pnpm = pnpm_11;
+  pnpm' = pnpm_11;
 in
   stdenv.mkDerivation (finalAttrs: {
     pname = "notashelf-dev";
-    version =
-      if (self ? rev)
-      then (builtins.substring 0 7 self.rev)
-      else buildDate;
+    version = "0-unstable-${buildDate}";
 
     src = let
       fs = lib.fileset;
@@ -42,7 +39,7 @@ in
 
     nativeCheckInputs = [
       nodejs
-      pnpm
+      pnpm'
     ];
 
     pnpmInstallFlags = ["--prod"]; # don't install dev dependencies
@@ -51,14 +48,14 @@ in
     # If we could build just one workspace, we could also just specify a workspace here
     # to fetch deps for and build. Alas, NodeJS.
     pnpmDeps = fetchPnpmDeps {
-      inherit pnpm;
+      pnpm = pnpm';
       inherit (finalAttrs) pname src pnpmInstallFlags;
       hash = "sha256-8ckNuINFcIoE8bZ7QpO4T3uJDhV+Tq1KXQRK7TgJZMM=";
       fetcherVersion = 4; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
     };
 
     nativeBuildInputs = [
-      pnpm
+      pnpm'
       pnpmConfigHook
       nodejs # build scripts require node :/
     ];
@@ -87,7 +84,7 @@ in
       ASTRO_TELEMETRY_DISABLED = true;
       SITE_SRC = "https://github.com/notashelf/notashelf.dev";
       BUILD_DATE = buildDate;
-      GIT_REV = finalAttrs.version;
+      GIT_REV = rev;
     };
 
     meta = {
