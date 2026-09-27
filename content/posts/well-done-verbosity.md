@@ -31,7 +31,7 @@ that detailed information.
 The end user should instead see a simple, _polite_ message explaining that
 something went wrong and reassuring them that steps are being taken to resolve
 it. Offer them hope, not despair. Lie if you must, but don't scare them away.
-Keep verbose error messages hidden—where they belong---in your backend.
+Keep verbose error messages hidden---where they belong---in your backend.
 
 On the other hand, you _do_ need verbose stack traces or whatever form your
 program's detailed crash information takes. You can't omit these, and you
@@ -171,14 +171,14 @@ In this godawful example, the end-user is bombarded with irrelevant technical
 details like stack traces and environment variables. This is not only
 overwhelming and confusing, but it also exposes sensitive information that
 should never be seen by the user. The error message is not actionable and serves
-only to frustrate the user. More importantly, it's a security risk—exposing
+only to frustrate the user. More importantly, it's a security risk---exposing
 environment variables could allow a malicious party to take advantage of what
 you might consider technical mumbo-jumbo (and therefore safe to spew.)
 
 Moreover, this approach is just plain ugly. A wall of text is neither helpful
 nor appropriate for a user who just wants to know what went wrong and if
 anything is being done to fix it. Imagine receiving a message like this on your
-own, and ask yourself—would you ever come back to this website?
+own, and ask yourself---would you ever come back to this website?
 
 If you take anything away from this, let it be that error handling should always
 prioritize clarity, security and proper compartmentalization.

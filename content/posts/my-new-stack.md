@@ -171,11 +171,11 @@ performance-critical tasks, interfacing with legacy systems, or working on
 projects where every cycle counts. However, there are areas where C leaves a lot
 to be desired.
 
-- Build Systems Are a Mess – Make, CMake, Autotools—none of them are great, and
+- Build Systems Are a Mess – Make, CMake, Autotools---none of them are great, and
   package management is nonexistent.
 - Undefined Behavior Everywhere – The sheer number of ways you can shoot
   yourself in the foot in C is staggering. Buffer overflows, use-after-free,
-  integer overflows—Rust eliminates these entirely.
+  integer overflows---Rust eliminates these entirely.
 - Lack of Modern Language Features – No generics, no proper modules, and macros
   are still the hacky preprocessor-based mess they have always been.
 

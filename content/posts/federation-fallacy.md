@@ -30,7 +30,7 @@ it got outsourced.
 
 But here is where things take a turn. The same technology used to monitor,
 categorize, and manipulate us also holds the potential to set us free. The
-internet, encryption, decentralized platforms—these aren't just tools, they are
+internet, encryption, decentralized platforms---these aren't just tools, they are
 weapons in a fight most people don't even realize they're a part of. And that's
 the problem. Too many of us engage with technology passively, as consumers and
 not as participants. We think of it as a service, not a structure of power. That

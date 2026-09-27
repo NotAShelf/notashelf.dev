@@ -41,13 +41,13 @@ introduce `allowUnfree`, which might cause ideological or legal (_see:
 licensing_) issues depending on the context.
 
 `nixConfig` is a powerful option that can modify settings you do not want
-changed haphazardly—from package sources to substitution and trusted keys your
+changed haphazardly---from package sources to substitution and trusted keys your
 build process will use. Oftentimes, this option is more of a hassle than a
 convenience, though some might find it incredibly useful.
 
 There exists an `accept-flake-config` option that you can set as
 `nix.settings.accept-flake-config`. Keep this set to _false_, as automatically
-accepting those options---without the prompt above—is more insecure than you
+accepting those options---without the prompt above---is more insecure than you
 think. There are _many_ vulnerabilities that can come from blindly trusting a
 flake's `nixConfig`.
 

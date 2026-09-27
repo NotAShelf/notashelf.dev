@@ -17,7 +17,7 @@ archived: true
 > is precisely that I am mortifying in this case by my spite: I am perfectly
 > well aware that by all this I am only injuring myself and no one else. But
 > still, if I don’t consult a doctor, it is out of spite. My liver is bad;
-> well—let it get worse!
+> well---let it get worse!
 
 The first page of Dostoyevsky's _Notes From Underground_ has always been
 fascinating to me. Not because I fully relate to this sick, spiteful,
@@ -75,7 +75,7 @@ more moment of survival. Every nanosecond becomes minutes until it ends.
 
 I enjoy solitude, possibly more than anything else. More than the company of
 people I love. It is liberating---not subconsciously overanalyzing every
-expression or making small predictions based on clues within a conversation—not
+expression or making small predictions based on clues within a conversation---not
 something I do willingly. In fact, for a while now, my dream has been to get my
 things and live in the middle of nowhere with not a single soul around. Not one.
 I do not care for a warm greeting, I do not care for any appreciation. If we are
