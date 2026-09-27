@@ -6,15 +6,15 @@ process.
 ## Usage
 
 ```typescript
-# In your Astro config
+// astro.config.ts
 import { defineConfig } from "astro/config";
 import purgeCss from "astro-purge-css";
 
 export default defineConfig({
   integrations: [
     purgeCss({
-      safelist: ["safe-class"],
-      blocklist: ["blocked-class"],
+      safelist: ["active"],
+      keyframes: true,
     }),
   ],
 });
@@ -24,8 +24,9 @@ export default defineConfig({
 
 [PurgeCSS options]: https://purgecss.com/configuration.html
 
-This plugin accepts all [PurgeCSS options]. The `content` and `css` options are
-automatically handled by the plugin.
+Pass [PurgeCSS options] through `purgeCSS`. `content`, `css`, and
+`defaultExtractor` are managed by the integration. Use `postcss.plugins` for
+additional PostCSS plugins and `cssnano: false` to disable minification.
 
 ### Common Options
 
@@ -36,9 +37,11 @@ automatically handled by the plugin.
 
 ## How it works
 
-The integration analyzes your HTML and JavaScript files after the build is
-complete to determine which CSS selectors are actually used, then removes unused
-CSS from all generated CSS files.
+The integration reads generated HTML and JavaScript after the build to determine
+which CSS selectors are used, then processes generated CSS files with PurgeCSS,
+optional PostCSS plugins, and cssnano (enabled by default). HTML and JavaScript
+outputs are not modified. A CSS processing error fails the build rather than
+leaving an unoptimized file unnoticed.
 
 ## Attributions
 

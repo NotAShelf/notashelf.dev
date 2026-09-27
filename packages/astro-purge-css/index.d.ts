@@ -1,38 +1,21 @@
+import type { AstroIntegration } from "astro";
+import type { Options as CSSNanoOptions } from "cssnano";
+import type { AcceptedPlugin, ProcessOptions } from "postcss";
 import type { UserDefinedOptions } from "purgecss";
-import type { ProcessOptions, Plugin, PluginCreator } from "postcss";
-
-export interface CSSNanoOptions {
-  preset?: [string, Record<string, any>] | string;
-  plugins?: any[];
-  [key: string]: any;
+interface PostCSSConfig {
+    plugins?: AcceptedPlugin[];
+    options?: ProcessOptions;
 }
-
-export type AnyPostCSSPlugin =
-  | Plugin
-  | PluginCreator<any>
-  | { postcssPlugin: string }
-  | [Plugin | PluginCreator<any>, any]
-  | string
-  | [string, any];
-
-export interface PostCSSConfig {
-  plugins?: AnyPostCSSPlugin[];
-  options?: ProcessOptions;
+interface PurgeCSSIntegrationOptions {
+    purgeCSS?: Partial<UserDefinedOptions>;
+    cssnano?: boolean | CSSNanoOptions;
+    postcss?: PostCSSConfig;
+    safelist?: string[];
+    blocklist?: string[];
+    keyframes?: boolean;
+    fontFace?: boolean;
 }
-
-export interface PurgeCSSIntegrationOptions {
-  purgeCSS?: Partial<UserDefinedOptions>;
-  cssnano?: boolean | CSSNanoOptions;
-  postcss?: PostCSSConfig;
-  safelist?: string[];
-  blocklist?: string[];
-  keyframes?: boolean;
-  fontFace?: boolean;
-}
-
-declare function purgeCSSIntegration(
-  options?: PurgeCSSIntegrationOptions,
-): import("astro").AstroIntegration;
-
+declare function purgeCSSIntegration(options?: PurgeCSSIntegrationOptions): AstroIntegration;
 export default purgeCSSIntegration;
 export { purgeCSSIntegration };
+export type { PurgeCSSIntegrationOptions, CSSNanoOptions, PostCSSConfig };
