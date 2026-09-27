@@ -2,9 +2,13 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": true,
+    "rootDir": ".",
+    "outDir": "dist",
     "composite": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
     "noEmit": false
   },
-  "include": ["index.ts", "src/**/*.ts"],
+  "include": ["index.ts", "src/index.ts"],
   "exclude": ["dist", "node_modules"]
 }

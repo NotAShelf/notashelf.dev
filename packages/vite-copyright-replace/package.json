@@ -11,6 +11,7 @@
       "types": "./index.ts"
     }
   },
+  "files": ["index.ts", "LICENSE"],
   "scripts": {
     "build": "tsc",
     "test": "vitest",

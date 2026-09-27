@@ -2,10 +2,14 @@
   "name": "remark-em-dash",
   "version": "1.0.0",
   "description": "Remark plugin to convert double and triple dashes to en and em dashes",
+  "type": "module",
   "main": "index.ts",
   "types": "index.d.ts",
   "files": [
-    "dist"
+    "index.ts",
+    "index.d.ts",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc",
@@ -34,7 +38,6 @@
     "remark-stringify": "^11.0.0",
     "typescript": "^6.0.3",
     "unified": "^11.0.5",
-    "unist-util-visit": "^5.1.0",
     "vitest": "^4.1.11"
   },
   "dependencies": {

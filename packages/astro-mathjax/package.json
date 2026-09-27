@@ -15,6 +15,7 @@
   },
   "files": [
     "index.ts",
+    "src/index.ts",
     "index.d.ts",
     "README.md",
     "LICENSE"
