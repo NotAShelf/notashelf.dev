@@ -2,16 +2,17 @@
 import { getViteConfig } from "astro/config";
 import path from "path";
 
+const srcDir = path.resolve(import.meta.dirname, "src");
 export default getViteConfig({
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
-      "@components": path.resolve(__dirname, "./src/components"),
-      "@layouts": path.resolve(__dirname, "./src/layouts"),
-      "@styles": path.resolve(__dirname, "./src/styles"),
-      "@lib": path.resolve(__dirname, "./src/lib"),
-      "@data": path.resolve(__dirname, "./src/data"),
-      "@scripts": path.resolve(__dirname, "./src/scripts"),
+      "@": srcDir,
+      "@components": path.join(srcDir, "components"),
+      "@layouts": path.join(srcDir, "layouts"),
+      "@styles": path.join(srcDir, "styles"),
+      "@lib": path.join(srcDir, "lib"),
+      "@data": path.join(srcDir, "data"),
+      "@scripts": path.join(srcDir, "scripts"),
     },
   },
 
