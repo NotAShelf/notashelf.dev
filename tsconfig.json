@@ -10,13 +10,12 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "isolatedModules": true,
     "incremental": true,
-    "baseUrl": ".",
     "paths": {
-      "astro-email-obfuscation": ["packages/astro-email-obfuscation"],
-      "astro-mathjax": ["packages/astro-mathjax"],
-      "astro-purge-css": ["packages/astro-purge-css"],
-      "remark-em-dash": ["packages/remark-em-dash"],
-      "vite-copyright-replace": ["packages/vite-copyright-replace"]
+      "astro-email-obfuscation": ["./packages/astro-email-obfuscation"],
+      "astro-mathjax": ["./packages/astro-mathjax"],
+      "astro-purge-css": ["./packages/astro-purge-css"],
+      "remark-em-dash": ["./packages/remark-em-dash"],
+      "vite-copyright-replace": ["./packages/vite-copyright-replace"]
     }
   },
   "references": [
