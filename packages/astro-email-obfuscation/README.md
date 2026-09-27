@@ -179,6 +179,9 @@ user@domain.com → dXNlckBkb21haW4uY29t
 - **Screen reader compatibility**: Poor
 - **Best used**: In combination with other methods
 
+With `includeFallbacks: false`, the reverse method displays the configured
+click-to-reveal placeholder rather than the reversed address.
+
 ## Method Chaining
 
 Combine multiple methods for maximum protection:
@@ -211,6 +214,11 @@ emailObfuscation({
   target: "both", // Both text and links (default)
 });
 ```
+
+When processing a `mailto:` link, the integration replaces the link (including
+its text or nested markup) with an email revealer; after activation the revealer
+contains a working `mailto:` link. With `http-redirect`, it becomes a link to
+your redirect endpoint without exposing the address in a plain-text attribute.
 
 ## Server-side Redirect Setup
 

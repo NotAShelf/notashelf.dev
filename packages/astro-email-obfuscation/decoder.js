@@ -35,7 +35,10 @@ function makeInteractive(element) {
 
   // Add keyboard support
   element.addEventListener("keydown", function (event) {
-    if (event.key === "Enter" || event.key === " ") {
+    if (
+      !element.classList.contains("email-obfuscation-revealed") &&
+      (event.key === "Enter" || event.key === " ")
+    ) {
       event.preventDefault();
       element.click();
     }
@@ -54,6 +57,9 @@ function revealEmail(element, email, animated = true) {
         element.removeChild(element.firstChild);
       }
       element.appendChild(anchor);
+      element.removeAttribute("role");
+      element.removeAttribute("tabindex");
+      element.removeAttribute("aria-label");
       element.classList.remove(
         "email-obfuscation-revealing",
         "email-obfuscation-interactive",
@@ -66,6 +72,9 @@ function revealEmail(element, email, animated = true) {
       element.removeChild(element.firstChild);
     }
     element.appendChild(anchor);
+    element.removeAttribute("role");
+    element.removeAttribute("tabindex");
+    element.removeAttribute("aria-label");
     element.classList.remove("email-obfuscation-interactive");
     element.classList.add("email-obfuscation-revealed");
   }

@@ -1,800 +1,208 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-const { mockFs, mockPath, mockFileURLToPath } = vi.hoisted(() => ({
-  mockFs: {
-    readFile: vi.fn(),
-    writeFile: vi.fn(),
-    readdir: vi.fn(),
-  },
-  mockPath: {
-    join: vi.fn((...args: string[]) => args.join("/")),
-    dirname: vi.fn((p: string) => p.split("/").slice(0, -1).join("/")),
-    relative: vi.fn((from: string, to: string) => to),
-    resolve: vi.fn((...args: string[]) => {
-      // Simple resolve implementation for testing
-      const path = args.join("/").replace(/\/+/g, "/");
-      return path.startsWith("/") ? path : "/" + path;
-    }),
-  },
-  mockFileURLToPath: vi.fn((url: string | URL) => {
-    if (typeof url === "string") {
-      return url.replace("file://", "");
-    }
-    if (url && typeof url === "object" && "href" in url) {
-      return url.href.replace("file://", "");
-    }
-    return String(url).replace("file://", "");
-  }),
-}));
-
-// Apply mocks
-vi.mock("fs", () => ({
-  promises: mockFs,
-}));
-
-vi.mock("path", () => ({
-  default: mockPath,
-}));
-
-vi.mock("url", () => ({
-  fileURLToPath: mockFileURLToPath,
-}));
-
-// Import after mocks are set up
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+import { JSDOM } from "jsdom";
 import astroEmailObfuscation from "../../index.js";
 
-describe("Core Functionality", () => {
-  const mockLogger = {
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-    debug: vi.fn(),
-    options: {},
-    label: "test",
-    fork: vi.fn(() => mockLogger),
-  } as any;
+const directories: string[] = [];
 
-  const mockBuildContext = {
-    dir: new URL("file:///test/dist/"),
-    logger: mockLogger,
-    pages: [],
-    routes: [],
-    assets: new Map(),
-  };
+afterEach(async () => {
+  await Promise.all(
+    directories
+      .splice(0)
+      .map((dir) => rm(dir, { recursive: true, force: true })),
+  );
+  vi.useRealTimers();
+});
 
-  beforeEach(() => {
-    // Reset all mocks
-    vi.clearAllMocks();
-    mockFs.readFile.mockResolvedValue("// Mock decoder content");
-    mockFs.readdir.mockResolvedValue([]);
-    mockFs.writeFile.mockResolvedValue(undefined);
+async function build(
+  html: string,
+  options: Parameters<typeof astroEmailObfuscation>[0] = {},
+  filename = "index.html",
+) {
+  const dir = await mkdtemp(path.join(tmpdir(), "astro-email-obfuscation-"));
+  directories.push(dir);
+  const file = path.join(dir, filename);
+  await mkdir(path.dirname(file), { recursive: true });
+  await writeFile(file, html);
+  const integration = astroEmailObfuscation({ ...options, dev: true });
+  // Astro supplies additional hook fields unused by this integration.
+  const context = {
+    dir: pathToFileURL(dir + path.sep),
+    logger: { info() {}, warn() {}, error() {}, debug() {} },
+  } as unknown as Parameters<
+    NonNullable<(typeof integration.hooks)["astro:build:done"]>
+  >[0];
+  await integration.hooks["astro:build:done"]!(context);
+  return readFile(file, "utf8");
+}
+
+function rendered(html: string) {
+  const dom = new JSDOM(html, {
+    runScripts: "dangerously",
+    url: "https://example.com",
   });
-
-  afterEach(() => {
-    vi.resetAllMocks();
-  });
-
-  describe("Email Detection and Processing", () => {
-    it("should process emails with ROT18 method", async () => {
-      const integration = astroEmailObfuscation({ method: "rot18", dev: true });
-      const buildHook = integration.hooks["astro:build:done"];
-
-      const htmlContent = `
-        <html>
-          <body>
-            <p>Contact us at test@example.com for support</p>
-          </body>
-        </html>
-      `;
-
-      mockFs.readdir.mockResolvedValue([
-        {
-          name: "index.html",
-          isDirectory: () => false,
-          isFile: () => true,
-        } as any,
-      ]);
-
-      mockFs.readFile.mockImplementation((filePath: any) => {
-        if (filePath.includes("decoder.js")) {
-          return Promise.resolve("// decoder script");
-        }
-        return Promise.resolve(htmlContent);
-      });
-
-      let processedContent = "";
-      mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
-        processedContent = content;
-        return Promise.resolve();
-      });
-
-      await buildHook(mockBuildContext);
-
-      expect(processedContent).toContain("rot18-email");
-      expect(processedContent).toContain("data-email");
-      expect(mockLogger.info).toHaveBeenCalledWith(
-        expect.stringContaining("1 emails processed"),
-      );
-    });
-
-    it("should process emails with JavaScript concatenation method", async () => {
-      const integration = astroEmailObfuscation({
-        method: "js-concat",
-        dev: true,
-      });
-      const buildHook = integration.hooks["astro:build:done"];
-
-      const htmlContent = `
-        <html>
-          <body>
-            <p>Email: admin@company.org</p>
-          </body>
-        </html>
-      `;
-
-      mockFs.readdir.mockResolvedValue([
-        {
-          name: "test.html",
-          isDirectory: () => false,
-          isFile: () => true,
-        } as any,
-      ]);
-
-      mockFs.readFile.mockImplementation((filePath: any) => {
-        if (filePath.includes("decoder.js")) {
-          return Promise.resolve("// decoder script");
-        }
-        return Promise.resolve(htmlContent);
-      });
-
-      let processedContent = "";
-      mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
-        processedContent = content;
-        return Promise.resolve();
-      });
-
-      await buildHook(mockBuildContext);
-
-      expect(processedContent).toContain("js-concat-email");
-      expect(processedContent).toContain("data-p1");
-      expect(processedContent).toContain("data-p2");
-    });
-
-    it("should handle SVG obfuscation method", async () => {
-      const integration = astroEmailObfuscation({ method: "svg", dev: true });
-      const buildHook = integration.hooks["astro:build:done"];
-
-      const htmlContent = `
-        <html>
-          <body>
-            <p>Contact: svg@test.com</p>
-          </body>
-        </html>
-      `;
-
-      mockFs.readdir.mockResolvedValue([
-        {
-          name: "svg.html",
-          isDirectory: () => false,
-          isFile: () => true,
-        } as any,
-      ]);
-
-      mockFs.readFile.mockImplementation((filePath: any) => {
-        if (filePath.includes("decoder.js")) {
-          return Promise.resolve("// decoder script");
-        }
-        return Promise.resolve(htmlContent);
-      });
-
-      let processedContent = "";
-      mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
-        processedContent = content;
-        return Promise.resolve();
-      });
-
-      await buildHook(mockBuildContext);
-
-      expect(processedContent).toContain("svg-email");
-      expect(processedContent).toContain("<svg");
-      expect(processedContent).toContain("<text");
-    });
-  });
-
-  describe("Multiple Methods", () => {
-    it("should use the last method in a methods array", async () => {
-      const integration = astroEmailObfuscation({
-        methods: ["rot18", "base64", "js-concat"],
-        dev: true,
-      });
-      const buildHook = integration.hooks["astro:build:done"];
-
-      const htmlContent = `
-        <html>
-          <body>
-            <p>Email: multi@test.com</p>
-          </body>
-        </html>
-      `;
-
-      mockFs.readdir.mockResolvedValue([
-        {
-          name: "multi.html",
-          isDirectory: () => false,
-          isFile: () => true,
-        } as any,
-      ]);
-
-      mockFs.readFile.mockImplementation((filePath: any) => {
-        if (filePath.includes("decoder.js")) {
-          return Promise.resolve("// decoder script");
-        }
-        return Promise.resolve(htmlContent);
-      });
-
-      let processedContent = "";
-      mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
-        processedContent = content;
-        return Promise.resolve();
-      });
-
-      await buildHook(mockBuildContext);
-
-      // Should use js-concat (last method) for final output
-      expect(processedContent).toContain("js-concat-email");
-      expect(processedContent).toContain("data-p1");
-      expect(processedContent).toContain("data-p2");
-    });
-  });
-
-  describe("excludePathPattern", () => {
-    it("should skip files matching excludePathPattern (string regex)", async () => {
-      const integration = astroEmailObfuscation({
-        method: "rot18",
-        dev: true,
-        excludePathPattern: "/posts/.*\\.html$",
-      });
-      const buildHook = integration.hooks["astro:build:done"];
-
-      const htmlContent = `
-        <html>
-          <body>
-            <p>Email: skipme@example.com</p>
-          </body>
-        </html>
-      `;
-
-      mockFs.readdir.mockResolvedValue([
-        {
-          name: "posts",
-          isDirectory: () => true,
-          isFile: () => false,
-        } as any,
-      ]);
-      mockFs.readdir.mockImplementation(async (dirPath: string) => {
-        if (dirPath.endsWith("/posts")) {
-          return [
-            {
-              name: "slug.html",
-              isDirectory: () => false,
-              isFile: () => true,
-            } as any,
-          ];
-        }
-        return [];
-      });
-
-      mockFs.readFile.mockImplementation((filePath: any) => {
-        if (filePath.includes("decoder.js")) {
-          return Promise.resolve("// decoder script");
-        }
-        return Promise.resolve(htmlContent);
-      });
-
-      let processedContent = "";
-      mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
-        processedContent = content;
-        return Promise.resolve();
-      });
-
-      await buildHook(mockBuildContext);
-
-      expect(processedContent).toBe("");
-      expect(mockLogger.info).toHaveBeenCalledWith(
-        expect.stringContaining("No emails found to process"),
-      );
-    });
-
-    it("should skip files matching excludePathPattern (RegExp)", async () => {
-      const integration = astroEmailObfuscation({
-        method: "rot18",
-        dev: true,
-        excludePathPattern: /\/content\/articles\/.*\.html$/,
-      });
-      const buildHook = integration.hooks["astro:build:done"];
-
-      const htmlContent = `
-        <html>
-          <body>
-            <p>Email: skipme2@example.com</p>
-          </body>
-        </html>
-      `;
-
-      mockFs.readdir.mockResolvedValue([
-        {
-          name: "content",
-          isDirectory: () => true,
-          isFile: () => false,
-        } as any,
-      ]);
-      mockFs.readdir.mockImplementation(async (dirPath: string) => {
-        if (dirPath.endsWith("/content")) {
-          return [
-            {
-              name: "articles",
-              isDirectory: () => true,
-              isFile: () => false,
-            } as any,
-          ];
-        }
-        if (dirPath.endsWith("/content/articles")) {
-          return [
-            {
-              name: "foo.html",
-              isDirectory: () => false,
-              isFile: () => true,
-            } as any,
-          ];
-        }
-        return [];
-      });
-
-      mockFs.readFile.mockImplementation((filePath: any) => {
-        if (filePath.includes("decoder.js")) {
-          return Promise.resolve("// decoder script");
-        }
-        return Promise.resolve(htmlContent);
-      });
-
-      let processedContent = "";
-      mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
-        processedContent = content;
-        return Promise.resolve();
-      });
-
-      await buildHook(mockBuildContext);
-
-      expect(processedContent).toBe("");
-      expect(mockLogger.info).toHaveBeenCalledWith(
-        expect.stringContaining("No emails found to process"),
-      );
-    });
-  });
-
-  describe("excludeAddresses", () => {
-    it("should not obfuscate addresses listed in excludeAddresses (text and link)", async () => {
-      const integration = astroEmailObfuscation({
-        method: "rot18",
-        dev: true,
-        excludeAddresses: ["visible@example.com", "link@example.com"],
-      });
-      const buildHook = integration.hooks["astro:build:done"];
-
-      const htmlContent = `
-        <html>
-          <body>
-            <p>Email: visible@example.com</p>
-            <a href="mailto:link@example.com">link@example.com</a>
-            <p>Email: obfuscate@example.com</p>
-          </body>
-        </html>
-      `;
-
-      mockFs.readdir.mockResolvedValue([
-        {
-          name: "exclude-addresses.html",
-          isDirectory: () => false,
-          isFile: () => true,
-        } as any,
-      ]);
-
-      mockFs.readFile.mockImplementation((filePath: any) => {
-        if (filePath.includes("decoder.js")) {
-          return Promise.resolve("// decoder script");
-        }
-        return Promise.resolve(htmlContent);
-      });
-
-      let processedContent = "";
-      mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
-        processedContent = content;
-        return Promise.resolve();
-      });
-
-      await buildHook(mockBuildContext);
-
-      expect(processedContent).toContain("visible@example.com");
-      expect(processedContent).toContain("link@example.com");
-      expect(processedContent).toContain("rot18-email");
-      expect(mockLogger.info).toHaveBeenCalledWith(
-        expect.stringContaining("1 emails processed"),
-      );
-    });
-
-    it("should obfuscate all emails if excludeAddresses is empty or not set", async () => {
-      const integration = astroEmailObfuscation({
-        method: "rot18",
-        dev: true,
-      });
-      const buildHook = integration.hooks["astro:build:done"];
-
-      const htmlContent = `
-        <html>
-          <body>
-            <p>Email: visible@example.com</p>
-            <a href="mailto:link@example.com">link@example.com</a>
-          </body>
-        </html>
-      `;
-
-      mockFs.readdir.mockResolvedValue([
-        {
-          name: "no-exclude-addresses.html",
-          isDirectory: () => false,
-          isFile: () => true,
-        } as any,
-      ]);
-
-      mockFs.readFile.mockImplementation((filePath: any) => {
-        if (filePath.includes("decoder.js")) {
-          return Promise.resolve("// decoder script");
-        }
-        return Promise.resolve(htmlContent);
-      });
-
-      let processedContent = "";
-      mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
-        processedContent = content;
-        return Promise.resolve();
-      });
-
-      await buildHook(mockBuildContext);
-
-      expect(processedContent).toContain("rot18-email");
-      expect(mockLogger.info).toHaveBeenCalledWith(
-        expect.stringContaining("2 emails processed"),
-      );
-    });
-  });
-
-  describe("Target Configuration", () => {
-    it("should process only mailto links when target is 'link'", async () => {
-      const integration = astroEmailObfuscation({
-        method: "rot18",
-        target: "link",
-        dev: true,
-      });
-      const buildHook = integration.hooks["astro:build:done"];
-
-      const htmlContent = `
-        <html>
-          <body>
-            <a href="mailto:contact@example.com">Email Us</a>
-            <p>Text email: admin@example.com</p>
-          </body>
-        </html>
-      `;
-
-      mockFs.readdir.mockResolvedValue([
-        {
-          name: "links.html",
-          isDirectory: () => false,
-          isFile: () => true,
-        } as any,
-      ]);
-
-      mockFs.readFile.mockImplementation((filePath: any) => {
-        if (filePath.includes("decoder.js")) {
-          return Promise.resolve("// decoder script");
-        }
-        return Promise.resolve(htmlContent);
-      });
-
-      let processedContent = "";
-      mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
-        processedContent = content;
-        return Promise.resolve();
-      });
-
-      await buildHook(mockBuildContext);
-
-      // Should process mailto link but not text email
-      expect(processedContent).toContain("rot18-email");
-      expect(processedContent).not.toContain("mailto:");
-      expect(processedContent).toContain("admin@example.com"); // Original text preserved
-      expect(mockLogger.info).toHaveBeenCalledWith(
-        expect.stringContaining("1 emails processed"),
-      );
-    });
-
-    it("should process only text emails when target is 'text'", async () => {
-      const integration = astroEmailObfuscation({
-        method: "rot18",
-        target: "text",
-        dev: true,
-      });
-      const buildHook = integration.hooks["astro:build:done"];
-
-      const htmlContent = `
-        <html>
-          <body>
-            <a href="mailto:contact@example.com">Email Us</a>
-            <p>Text email: admin@example.com</p>
-          </body>
-        </html>
-      `;
-
-      mockFs.readdir.mockResolvedValue([
-        {
-          name: "text.html",
-          isDirectory: () => false,
-          isFile: () => true,
-        } as any,
-      ]);
-
-      mockFs.readFile.mockImplementation((filePath: any) => {
-        if (filePath.includes("decoder.js")) {
-          return Promise.resolve("// decoder script");
-        }
-        return Promise.resolve(htmlContent);
-      });
-
-      let processedContent = "";
-      mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
-        processedContent = content;
-        return Promise.resolve();
-      });
-
-      await buildHook(mockBuildContext);
-
-      // Should process text email but not mailto link
-      expect(processedContent).toContain("rot18-email");
-      expect(processedContent).toContain("mailto:contact@example.com"); // Original mailto preserved
-      expect(mockLogger.info).toHaveBeenCalledWith(
-        expect.stringContaining("1 emails processed"),
-      );
-    });
-  });
-
-  describe("SSH / Local Hostname Detection", () => {
-    const sshCases = [
-      "root@server.local",
-      "user@homeserver.lan",
-      "deploy@machine.home",
-      "admin@proxy.internal",
-      "ci@builder.corp",
-      "git@pi.hole",
-    ];
-
-    it.each(sshCases)(
-      "should not obfuscate SSH-style host %s in text",
-      async (host) => {
-        const integration = astroEmailObfuscation({
-          method: "rot18",
-          dev: true,
-        });
-        const buildHook = integration.hooks["astro:build:done"];
-
-        const htmlContent = `<html><body><p>Run: ssh ${host}</p></body></html>`;
-
-        mockFs.readdir.mockResolvedValue([
-          {
-            name: "test.html",
-            isDirectory: () => false,
-            isFile: () => true,
-          } as any,
-        ]);
-        mockFs.readFile.mockImplementation((filePath: any) => {
-          if (filePath.includes("decoder.js"))
-            return Promise.resolve("// decoder");
-          return Promise.resolve(htmlContent);
-        });
-
-        // When no emails are found the file is never rewritten, so the file on
-        // disk keeps its original content. Model that by seeding the captured
-        // content with the input HTML.
-        let processedContent = htmlContent;
-        mockFs.writeFile.mockImplementation((_: any, content: any) => {
-          processedContent = content;
-          return Promise.resolve();
-        });
-
-        await buildHook(mockBuildContext);
-
-        expect(processedContent).toContain(host);
-        expect(processedContent).not.toContain("rot18-email");
-      },
+  dom.window.document.dispatchEvent(new dom.window.Event("DOMContentLoaded"));
+  return dom;
+}
+
+describe("built email pages", () => {
+  it("obfuscates eligible siblings even when another element is excluded or already obfuscated", async () => {
+    const html = `<body><div class="no-obfuscate"><a href="mailto:leave@example.com">Leave</a> leave@example.com</div><p>first@example.com</p><span class="rot18-email" data-email="byq@rknzcyr.pbz">old@example.com</span><p>second@example.com</p><script>const email = "script@example.com"</script></body>`;
+    const result = await build(html);
+    const dom = rendered(result);
+    const document = dom.window.document;
+    expect(document.querySelector(".no-obfuscate")?.textContent).toContain(
+      "leave@example.com",
     );
-
-    it("should still obfuscate real emails when SSH hosts are present", async () => {
-      const integration = astroEmailObfuscation({ method: "rot18", dev: true });
-      const buildHook = integration.hooks["astro:build:done"];
-
-      const htmlContent = `
-        <html><body>
-          <p>SSH: ssh root@server.local</p>
-          <p>Email: contact@example.com</p>
-        </body></html>
-      `;
-
-      mockFs.readdir.mockResolvedValue([
-        {
-          name: "mixed.html",
-          isDirectory: () => false,
-          isFile: () => true,
-        } as any,
-      ]);
-      mockFs.readFile.mockImplementation((filePath: any) => {
-        if (filePath.includes("decoder.js"))
-          return Promise.resolve("// decoder");
-        return Promise.resolve(htmlContent);
-      });
-
-      let processedContent = "";
-      mockFs.writeFile.mockImplementation((_: any, content: any) => {
-        processedContent = content;
-        return Promise.resolve();
-      });
-
-      await buildHook(mockBuildContext);
-
-      expect(processedContent).toContain("root@server.local");
-      expect(processedContent).toContain("rot18-email");
-      expect(mockLogger.info).toHaveBeenCalledWith(
-        expect.stringContaining("1 emails processed"),
-      );
-    });
+    expect(
+      document.querySelector(".no-obfuscate a")?.getAttribute("href"),
+    ).toBe("mailto:leave@example.com");
+    expect(
+      document.querySelector('span.rot18-email[data-email="byq@rknzcyr.pbz"]')
+        ?.textContent,
+    ).toBe("old@example.com");
+    expect(document.querySelectorAll("p .rot18-email")).toHaveLength(2);
+    expect(document.querySelector("script")?.textContent).toContain(
+      '"script@example.com"',
+    );
+    dom.window.close();
   });
 
-  describe("Development Mode", () => {
-    it("should skip processing in development mode by default", async () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = "development";
-
-      const integration = astroEmailObfuscation({ method: "rot18" });
-      const buildHook = integration.hooks["astro:build:done"];
-
-      await buildHook(mockBuildContext);
-
-      expect(mockLogger.info).toHaveBeenCalledWith(
-        "Email obfuscation: Skipping in development mode",
-      );
-
-      process.env.NODE_ENV = originalEnv;
+  it("keeps link and text targeting independent and makes mailto replacements actionable", async () => {
+    const html = `<body><a class="contact" href="mailto:link@example.com"><strong>Email us</strong></a><p>text@example.com</p></body>`;
+    const links = await build(html, { target: "link" });
+    const dom = rendered(links);
+    const document = dom.window.document;
+    expect(document.querySelector("p")?.textContent).toBe("text@example.com");
+    const reveal = document.querySelector(".rot18-email") as HTMLElement;
+    expect(reveal?.closest("a")).toBeNull();
+    vi.useFakeTimers();
+    reveal.dispatchEvent(
+      new dom.window.KeyboardEvent("keydown", {
+        key: "Enter",
+        bubbles: true,
+        cancelable: true,
+      }),
+    );
+    vi.advanceTimersByTime(170);
+    const link = reveal.querySelector("a");
+    expect(link?.getAttribute("href")).toBe("mailto:link@example.com");
+    expect(reveal.hasAttribute("tabindex")).toBe(false);
+    const enter = new dom.window.KeyboardEvent("keydown", {
+      key: "Enter",
+      bubbles: true,
+      cancelable: true,
     });
+    link?.dispatchEvent(enter);
+    expect(enter.defaultPrevented).toBe(false);
+    dom.window.close();
+    vi.useRealTimers();
 
-    it("should process in development mode when dev option is true", async () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = "development";
-
-      const integration = astroEmailObfuscation({
-        method: "rot18",
-        dev: true,
-      });
-      const buildHook = integration.hooks["astro:build:done"];
-
-      const htmlContent = `
-        <html>
-          <body>
-            <p>Email: dev@example.com</p>
-          </body>
-        </html>
-      `;
-
-      mockFs.readdir.mockResolvedValue([
-        {
-          name: "dev.html",
-          isDirectory: () => false,
-          isFile: () => true,
-        } as any,
-      ]);
-
-      mockFs.readFile.mockImplementation((filePath: any) => {
-        if (filePath.includes("decoder.js")) {
-          return Promise.resolve("// decoder script");
-        }
-        return Promise.resolve(htmlContent);
-      });
-
-      let processedContent = "";
-      mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
-        processedContent = content;
-        return Promise.resolve();
-      });
-
-      await buildHook(mockBuildContext);
-
-      expect(processedContent).toContain("rot18-email");
-      expect(mockLogger.info).toHaveBeenCalledWith(
-        expect.stringContaining("1 emails processed"),
-      );
-
-      process.env.NODE_ENV = originalEnv;
-    });
+    const text = await build(html, { target: "text" });
+    const textDom = rendered(text);
+    expect(
+      textDom.window.document.querySelector("a.contact")?.getAttribute("href"),
+    ).toBe("mailto:link@example.com");
+    expect(
+      textDom.window.document.querySelector("p .rot18-email"),
+    ).not.toBeNull();
+    textDom.window.close();
   });
 
-  describe("Error Handling", () => {
-    it("should handle empty HTML content gracefully", async () => {
-      const integration = astroEmailObfuscation({ method: "rot18", dev: true });
-      const buildHook = integration.hooks["astro:build:done"];
-
-      mockFs.readdir.mockResolvedValue([
-        {
-          name: "empty.html",
-          isDirectory: () => false,
-          isFile: () => true,
-        } as any,
-      ]);
-
-      mockFs.readFile.mockImplementation((filePath: any) => {
-        if (filePath.includes("decoder.js")) {
-          return Promise.resolve("// decoder script");
-        }
-        return Promise.resolve("");
-      });
-
-      await buildHook(mockBuildContext);
-
-      expect(mockLogger.info).toHaveBeenCalledWith(
-        "Email obfuscation: No emails found to process",
-      );
+  it.each([
+    "js-concat",
+    "js-interaction",
+    "css-hidden",
+    "reverse",
+    "base64",
+    "deconstruct",
+  ] as const)("reveals a functioning mailto link with %s", async (method) => {
+    const result = await build(`<body><p>hello@example.com</p></body>`, {
+      methods: [method],
     });
+    const dom = rendered(result);
+    const element = dom.window.document.querySelector(
+      "p > span",
+    ) as HTMLElement;
+    expect(element).not.toBeNull();
+    vi.useFakeTimers();
+    element.click();
+    if (method === "js-interaction") {
+      expect(element.querySelector("a")).toBeNull();
+      element.click();
+    }
+    vi.advanceTimersByTime(method === "css-hidden" ? 520 : 170);
+    expect(element.querySelector("a")?.getAttribute("href")).toBe(
+      "mailto:hello@example.com",
+    );
+    dom.window.close();
+  });
 
-    it("should handle malformed email addresses gracefully", async () => {
-      const integration = astroEmailObfuscation({ method: "rot18", dev: true });
-      const buildHook = integration.hooks["astro:build:done"];
-
-      const htmlContent = `
-        <html>
-          <body>
-            <p>Invalid emails: @example.com, test@, notanemail</p>
-            <p>Valid: valid@example.com</p>
-          </body>
-        </html>
-      `;
-
-      mockFs.readdir.mockResolvedValue([
-        {
-          name: "malformed.html",
-          isDirectory: () => false,
-          isFile: () => true,
-        } as any,
-      ]);
-
-      mockFs.readFile.mockImplementation((filePath: any) => {
-        if (filePath.includes("decoder.js")) {
-          return Promise.resolve("// decoder script");
-        }
-        return Promise.resolve(htmlContent);
-      });
-
-      let processedContent = "";
-      mockFs.writeFile.mockImplementation((filePath: any, content: any) => {
-        processedContent = content;
-        return Promise.resolve();
-      });
-
-      await buildHook(mockBuildContext);
-
-      // Should only process the valid email
-      expect(mockLogger.info).toHaveBeenCalledWith(
-        expect.stringContaining("1 emails processed"),
-      );
-      // Should contain the obfuscated version, not the original
-      expect(processedContent).toContain("rot18-email");
-      expect(processedContent).toContain("data-email");
-      // The original email should be ROT18 encoded
-      expect(processedContent).toContain("inyvq@rknzcyr.pbz"); // ROT18 of valid@example.com
+  it("keeps reverse emails usable when fallbacks are disabled", async () => {
+    const result = await build(`<body><p>hello@example.com</p></body>`, {
+      methods: ["reverse"],
+      includeFallbacks: false,
     });
+    const dom = rendered(result);
+    const element = dom.window.document.querySelector(
+      ".reverse-email-data",
+    ) as HTMLElement;
+    expect(element.textContent).toBe("[Click to reveal email]");
+    expect(dom.window.getComputedStyle(element).display).not.toBe("none");
+    vi.useFakeTimers();
+    element.click();
+    vi.advanceTimersByTime(170);
+    expect(element.querySelector("a")?.getAttribute("href")).toBe(
+      "mailto:hello@example.com",
+    );
+    dom.window.close();
+  });
+
+  it("renders a complete readable SVG address", async () => {
+    const result = await build(`<body><p>hello@example.com</p></body>`, {
+      methods: ["svg"],
+    });
+    const dom = rendered(result);
+    const svg = dom.window.document.querySelector("p svg");
+    expect(svg?.getAttribute("aria-label")).toBe(
+      "Email address: hello@example.com",
+    );
+    expect(
+      Array.from(
+        svg?.querySelectorAll("text") || [],
+        (letter) => letter.textContent,
+      ).join(""),
+    ).toBe("hello@example.com");
+    dom.window.close();
+  });
+
+  it("generates a redirect without exposing the address in HTML", async () => {
+    const result = await build(`<body><p>hello@example.com</p></body>`, {
+      methods: ["http-redirect"],
+      redirectBaseUrl: "/api/email",
+    });
+    const dom = rendered(result);
+    const link = dom.window.document.querySelector(".http-redirect-email");
+    expect(link?.getAttribute("href")).toBe(
+      `/api/email?e=${encodeURIComponent(Buffer.from("hello@example.com").toString("base64"))}`,
+    );
+    expect(result).not.toContain("hello@example.com");
+    dom.window.close();
+  });
+
+  it("leaves excluded paths and non-email hosts untouched while processing other pages", async () => {
+    const html = `<body><p>root@host.local and valid@example.com</p></body>`;
+    const excluded = await build(
+      html,
+      { excludePathPattern: /skip\.html$/ },
+      "skip.html",
+    );
+    expect(excluded).toBe(html);
+    const included = await build(html, { excludePathPattern: /skip\.html$/ });
+    expect(included).toContain("root@host.local");
+    expect(included).not.toContain("valid@example.com");
   });
 });

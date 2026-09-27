@@ -285,7 +285,7 @@ export default function astroEmailObfuscation(
       const encoded = base64Encode(email);
       const redirectUrl = `${options.redirectBaseUrl}?e=${encodeURIComponent(encoded)}`;
 
-      return `<a href="${escapeHtml(redirectUrl)}" class="http-redirect-email" data-original="${escapeHtml(email)}" title="Contact via email">${escapeHtml(options.placeholder)}</a>`;
+      return `<a href="${escapeHtml(redirectUrl)}" class="http-redirect-email" title="Contact via email">${escapeHtml(options.placeholder)}</a>`;
     },
 
     /**
@@ -302,7 +302,7 @@ export default function astroEmailObfuscation(
         return `<span id="${id}" class="reverse-email" data-reversed="${escapeHtml(reversed)}" role="button" tabindex="0" aria-label="Email address reversed - click to reveal normally" title="Email address reversed for privacy" style="unicode-bidi: bidi-override; direction: rtl; cursor: pointer;">${escapeHtml(reversed)}</span>`;
       }
 
-      return `<span id="${id}" class="reverse-email-data" data-reversed="${escapeHtml(reversed)}" style="display: none;"></span>`;
+      return `<span id="${id}" class="reverse-email-data" data-reversed="${escapeHtml(reversed)}" role="button" tabindex="0" aria-label="Click to reveal email address">${escapeHtml(options.placeholder)}</span>`;
     },
 
     /**
@@ -361,15 +361,12 @@ export default function astroEmailObfuscation(
     content: string,
   ): { content: string; emailCount: number } => {
     let emailCount = 0;
-    const excludeAddressesSet = new Set(
-      Array.isArray(options.excludeAddresses) ? options.excludeAddresses : [],
-    );
-
-    // Skip if already processed to avoid double processing
+    const excludedAddresses = new Set(options.excludeAddresses);
     const obfuscationClasses = [
       "rot18-email",
       "b64-email",
       "reverse-email",
+      "reverse-email-data",
       "deconstructed-email",
       "js-concat-email",
       "js-interaction-email",
@@ -377,20 +374,6 @@ export default function astroEmailObfuscation(
       "css-hidden-email",
       "http-redirect-email",
     ];
-
-    if (obfuscationClasses.some((cls) => content.includes(cls))) {
-      return { content, emailCount: 0 };
-    }
-
-    // Skip elements with exclude selector - basic implementation
-    if (
-      options.excludeSelector &&
-      content.includes(options.excludeSelector.replace(".", ""))
-    ) {
-      return { content, emailCount: 0 };
-    }
-
-    // Systemd suffixes to exclude from email detection
     const systemdSuffixes = [
       ".service",
       ".socket",
@@ -403,102 +386,146 @@ export default function astroEmailObfuscation(
       ".swap",
       ".path",
     ];
-
-    // Local/non-internet TLDs that appear in SSH hosts but never in real emails
     const localDomainSuffixes = [
-      ".local", // mDNS / Avahi / Bonjour
-      ".lan", // common home-network convention
-      ".home", // common home-network convention
-      ".internal", // corp/cloud internal DNS
-      ".corp", // corporate internal
-      ".hole", // Pi-hole default hostname (pi.hole)
-      ".localhost", // RFC 2606 reserved
-      ".test", // RFC 2606 reserved
-      ".invalid", // RFC 2606 reserved
-      ".arpa", // infrastructure / reverse DNS
+      ".local",
+      ".lan",
+      ".home",
+      ".internal",
+      ".corp",
+      ".hole",
+      ".localhost",
+      ".test",
+      ".invalid",
+      ".arpa",
     ];
-
-    // Email regex; must have a dot in the domain part (avoids SSH user@host)
-    // Group 1: local part, Group 2: domain part
     const emailPattern =
       /\b([A-Za-z0-9](?:[A-Za-z0-9._%+-]*[A-Za-z0-9])?)@([A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?\.[A-Za-z]{2,})\b/g;
-
-    // Check if domain ends with a systemd suffix
-    function isSystemdUnit(domain: string): boolean {
-      return systemdSuffixes.some((suffix) => domain.endsWith(suffix));
-    }
-
-    // Check if domain is a local/non-internet hostname (SSH targets, etc.)
-    function isLocalDomain(domain: string): boolean {
-      return localDomainSuffixes.some((suffix) => domain.endsWith(suffix));
-    }
-
-    // Process mailto links if target includes "link"
-    if (options.target === "link" || options.target === "both") {
-      content = content.replace(
-        /(<a[^>]*?)href=["']mailto:([^"']+)["']([^>]*?>)([^<]*?)(<\/a>)/gi,
-        (match, openTag, email: string, middleTag, linkText, closeTag) => {
-          // Validate email format before processing
-          emailPattern.lastIndex = 0;
-          const matchParts = emailPattern.exec(email);
-          if (
-            matchParts &&
-            validateEmail(email) &&
-            !isSystemdUnit(matchParts[2]) &&
-            !isLocalDomain(matchParts[2]) &&
-            !excludeAddressesSet.has(email)
-          ) {
-            emailCount++;
-            const obfuscatedEmail = applyObfuscationChain(email);
-            // For mailto links, we replace the entire link content
-            const newOpenTag = openTag
-              .replace(/href=["'][^"']*["']/gi, "")
-              .trim();
-            return `${newOpenTag}${middleTag}${obfuscatedEmail}${closeTag}`;
-          }
-          return match;
-        },
+    const eligible = (email: string, domain: string) =>
+      validateEmail(email) &&
+      !excludedAddresses.has(email) &&
+      !systemdSuffixes.some((suffix) =>
+        domain.toLowerCase().endsWith(suffix),
+      ) &&
+      !localDomainSuffixes.some((suffix) =>
+        domain.toLowerCase().endsWith(suffix),
       );
-    }
 
-    // Process standalone emails in text content if target includes "text"
-    if (options.target === "text" || options.target === "both") {
-      content = content.replace(
-        />((?:[^<]*?[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}[^<]*?))</g,
-        (match, textContent) => {
-          // Skip if this text is inside an already obfuscated element
-          if (
-            obfuscationClasses.some((cls) => textContent.includes(cls)) ||
-            textContent.includes("data-email") ||
-            textContent.includes("data-obfuscated-email") ||
-            textContent.includes("data-parts") ||
-            textContent.includes(options.placeholder)
-          ) {
-            return match;
-          }
-
-          // Replace only valid emails, skip SSH/systemd
-          const replacedText = textContent.replace(
-            emailPattern,
-            (full: string, local: string, domain: string) => {
-              if (
-                !validateEmail(full) ||
-                isSystemdUnit(domain) ||
-                isLocalDomain(domain) ||
-                excludeAddressesSet.has(full)
-              ) {
-                return full;
-              }
-              emailCount++;
-              return applyObfuscationChain(full);
-            },
+    // A token keeps quoted > characters inside opening tags intact. Only text
+    // nodes and simple mailto anchors are rewritten; scripts and attributes are not.
+    const tokens =
+      content.match(/<!--[\s\S]*?-->|<(?:[^>"']|"[^"]*"|'[^']*')*>|[^<]+|</g) ||
+      [];
+    const open: { name: string; skip: boolean }[] = [];
+    const voidElements = [
+      "area",
+      "base",
+      "br",
+      "col",
+      "embed",
+      "hr",
+      "img",
+      "input",
+      "link",
+      "meta",
+      "param",
+      "source",
+      "track",
+      "wbr",
+    ];
+    const ignoredElements = [
+      "script",
+      "style",
+      "textarea",
+      "template",
+      "noscript",
+      "svg",
+    ];
+    const selectors = options.excludeSelector
+      .split(",")
+      .map((selector) => selector.trim())
+      .filter(Boolean);
+    const attr = (tag: string, name: string): string | undefined => {
+      const match = new RegExp(
+        `\\s${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`,
+        "i",
+      ).exec(tag);
+      return match?.[1] ?? match?.[2] ?? match?.[3];
+    };
+    const isExcluded = (tag: string, name: string) => {
+      const classes = (attr(tag, "class") || "").split(/\s+/);
+      const id = attr(tag, "id");
+      return (
+        classes.some((cls) => obfuscationClasses.includes(cls)) ||
+        selectors.some((selector) => {
+          const match = /^(?:([\w-]+))?(?:([.#])([\w-]+))?$/.exec(selector);
+          if (!match) return false;
+          return (
+            (!match[1] || match[1].toLowerCase() === name) &&
+            (!match[2] ||
+              (match[2] === "." ? classes.includes(match[3]) : id === match[3]))
           );
-          return `>${replacedText}<`;
-        },
+        })
       );
+    };
+    let result = "";
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i];
+      const closing = /^<\/([\w:-]+)\s*>$/.exec(token);
+      if (closing) {
+        const position = open.findLastIndex(
+          (entry) => entry.name === closing[1].toLowerCase(),
+        );
+        if (position !== -1) open.length = position;
+        result += token;
+        continue;
+      }
+      const opening = /^<([\w:-]+)(?=[\s/>])/.exec(token);
+      if (opening) {
+        const name = opening[1].toLowerCase();
+        const skip =
+          open.some((entry) => entry.skip) ||
+          ignoredElements.includes(name) ||
+          isExcluded(token, name);
+        if (!skip && name === "a" && options.target !== "text") {
+          const href = attr(token, "href");
+          const address = href?.match(/^mailto:(.+)$/i)?.[1];
+          const email = address?.match(
+            /^([A-Za-z0-9._%+-]+)@([A-Za-z0-9.-]+\.[A-Za-z]{2,})$/,
+          );
+          if (address && email && eligible(address, email[2])) {
+            // An anchor may contain formatting or icons; consume its complete
+            // content so no live mailto href or nested anchor remains.
+            let end = i + 1;
+            while (end < tokens.length && !/^<\/a\s*>$/i.test(tokens[end]))
+              end++;
+            if (end < tokens.length) {
+              result += applyObfuscationChain(address);
+              emailCount++;
+              i = end;
+              continue;
+            }
+          }
+        }
+        if (!voidElements.includes(name) && !token.endsWith("/>"))
+          open.push({ name, skip });
+        result += token;
+        continue;
+      }
+      if (
+        token.startsWith("<") ||
+        open.some((entry) => entry.skip) ||
+        options.target === "link"
+      ) {
+        result += token;
+        continue;
+      }
+      result += token.replace(emailPattern, (email, _local, domain: string) => {
+        if (!eligible(email, domain)) return email;
+        emailCount++;
+        return applyObfuscationChain(email);
+      });
     }
-
-    return { content, emailCount };
+    return { content: result, emailCount };
   };
 
   return {
@@ -518,6 +545,10 @@ export default function astroEmailObfuscation(
           "base64",
           "deconstruct",
         ];
+
+        if (options.methods.length === 0) {
+          throw new Error("At least one obfuscation method is required");
+        }
 
         for (const method of options.methods) {
           if (!validMethods.includes(method)) {
@@ -621,6 +652,7 @@ export default function astroEmailObfuscation(
                 } else {
                   pattern = userOptions.excludePathPattern;
                 }
+                pattern.lastIndex = 0;
                 if (pattern.test(filePath)) {
                   logger.info(
                     `Skipping file due to excludePathPattern: ${path.relative(distPath, filePath)}`,
@@ -633,19 +665,21 @@ export default function astroEmailObfuscation(
               const { content: processedContent, emailCount } =
                 processHTMLContent(content);
 
-              // Only inject decoder script if we actually processed emails
+              // Add the decoder only once when a previously processed page gains an email.
               if (emailCount > 0) {
-                // Inject decoder script before closing body tag, or at end if no body tag
-                let finalContent: string;
-                if (processedContent.includes("</body>")) {
-                  finalContent = processedContent.replace(
-                    "</body>",
-                    `<script>\n${decoderScript}\n</script>\n</body>`,
-                  );
-                } else {
-                  finalContent =
-                    processedContent +
-                    `\n<script>\n${decoderScript}\n</script>`;
+                const script = `<script>\n${decoderScript}\n</script>`;
+                let finalContent = processedContent;
+                if (
+                  !processedContent.includes(
+                    "Email Obfuscation Decoder - Client-side JavaScript",
+                  )
+                ) {
+                  finalContent = /<\/body>/i.test(processedContent)
+                    ? processedContent.replace(
+                        /<\/body>/i,
+                        `${script}\n</body>`,
+                      )
+                    : `${processedContent}\n${script}`;
                 }
 
                 await fs.writeFile(filePath, finalContent);
