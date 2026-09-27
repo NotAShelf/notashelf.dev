@@ -3,7 +3,7 @@ import * as path from "path";
 
 const alias = (name: string) => {
   const find = `@notashelf.dev/${name}`;
-  const replacement = path.join(__dirname, "packages", name, "src");
+  const replacement = path.join(import.meta.dirname, "packages", name, "src");
   return { find, replacement };
 };
 
@@ -19,6 +19,7 @@ export default defineConfig({
     projects: [
       "./apps/notashelf.dev",
       "./packages/astro-email-obfuscation",
+      "./packages/astro-mathjax",
       "./packages/astro-purge-css",
       "./packages/remark-em-dash",
       "./packages/vite-copyright-replace",
