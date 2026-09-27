@@ -1,22 +1,17 @@
 # Astro Email Obfuscation
 
-An Astro integration that obfuscates email addresses in your built HTML files to
-protect them from scrapers and spam bots. Features advanced obfuscation methods
-with layered defense capabilities, based on empirical testing[^1] for maximum
-effectiveness.
-
-[^1]: I tested it on my own setup, hope it counts.
+An Astro integration that obfuscates email addresses in built HTML using a
+selected method. A small decoder script is added to pages that need client-side
+reveal behavior.
 
 ## Features
 
 - **Several obfuscation methods**: ROT18, JavaScript concatenation, SVG
   rendering, CSS hiding, and more
-- **Method chaining**: Apply multiple obfuscation techniques in sequence for
-  layered defense
 - **Selective targeting**: Process email text, mailto links, or both
 - **Accessibility focused**: Screen reader compatible with proper ARIA labels
   and fallbacks
-- **Zero runtime overhead**: Build-time processing for static sites
+- **Build-time processing**: Only pages with obfuscated emails receive the decoder script
 - **Customizable**: Exclude elements, customize placeholders, and configure
   behavior
 - **Development friendly**: Skip obfuscation in development mode for rapid
@@ -52,14 +47,11 @@ export default defineConfig({
 export default defineConfig({
   integrations: [
     emailObfuscation({
-      // Multiple methods for layered defense
-      methods: ["js-interaction", "rot18"],
+      // Select one method; if several are given, only the last is used.
+      methods: ["rot18"],
 
       // Control what to process
       target: "both", // "text" | "link" | "both"
-
-      // Server redirect for ultimate protection
-      redirectBaseUrl: "/api/email-redirect",
 
       // Accessibility and UX
       placeholder: "📧 Click to reveal email",
@@ -147,7 +139,7 @@ user@domain.com → hjre@qbznva.pbz
 <a href="/api/email-redirect?e=dXNlckBkb21haW4uY29t">Contact</a>
 ```
 
-### Moderate Effectiveness (Better when combined)
+### Other Methods
 
 #### 7. `reverse` - String Reversal
 
@@ -157,7 +149,9 @@ user@domain.com → moc.niamod@resu
 
 - **Bot resistance**: Low-Medium (easily reversible)
 - **Screen reader compatibility**: Poor (reads backwards)
-- **Best used**: In combination with other methods
+
+With `includeFallbacks: false`, the reverse method displays the configured
+click-to-reveal placeholder rather than the reversed address.
 
 #### 8. `base64` - Base64 Encoding
 
@@ -167,7 +161,6 @@ user@domain.com → dXNlckBkb21haW4uY29t
 
 - **Bot resistance**: Low-Medium (easily decoded)
 - **Screen reader compatibility**: Poor (gibberish)
-- **Best used**: In combination with other methods
 
 #### 9. `deconstruct` - Character Array
 
@@ -177,31 +170,17 @@ user@domain.com → dXNlckBkb21haW4uY29t
 
 - **Bot resistance**: Low-Medium (simple joining)
 - **Screen reader compatibility**: Poor
-- **Best used**: In combination with other methods
 
-With `includeFallbacks: false`, the reverse method displays the configured
-click-to-reveal placeholder rather than the reversed address.
+## Selecting a Method
 
-## Method Chaining
-
-Combine multiple methods for maximum protection:
+Choose one method for each integration instance:
 
 ```typescript
-emailObfuscation({
-  // Apply methods in sequence
-  // Each adds a layer of protection
-  methods: ["js-interaction", "rot18"],
-
-  // Or create a "fortress" of obfuscation
-  methods: ["css-hidden", "js-concat", "base64"],
-});
+emailObfuscation({ methods: ["js-interaction"] });
 ```
 
-**Recommended combinations:**
-
-- `["js-interaction", "rot18"]` - Double security with great UX
-- `["css-hidden", "js-concat"]` - Visual + dynamic protection
-- `["svg", "js-interaction"]` - Crawler-resistant + user-verified
+For existing configurations with multiple entries, only the **last** method
+is applied. Earlier entries do not add protection; this is not method chaining.
 
 ## Processing Targets
 
@@ -267,6 +246,10 @@ emailObfuscation({
 });
 ```
 
+Excluded elements and their descendants are left unchanged; other emails on
+the same page are still processed. Simple class (`.keep-plain`), ID (`#public`),
+and element (`aside`) selectors are supported, including comma-separated lists.
+
 ## Development Mode
 
 Skip obfuscation during development:
@@ -281,13 +264,12 @@ emailObfuscation({
 
 | Option             | Type       | Default                     | Description                                      |
 | ------------------ | ---------- | --------------------------- | ------------------------------------------------ |
-| `methods`          | `string[]` | `["rot18"]`                 | Array of obfuscation methods to apply            |
-| `method`           | `string`   | -                           | ⚠️ **Deprecated**: Use `methods` array instead   |
+| `methods`          | `string[]` | `["rot18"]`                 | Non-empty list; only the last method is used    |
 | `target`           | `string`   | `"both"`                    | What to process: `"text"`, `"link"`, or `"both"` |
 | `dev`              | `boolean`  | `false`                     | Enable obfuscation in development mode           |
 | `excludeSelector`  | `string`   | `".no-obfuscate"`           | CSS selector for elements to skip                |
 | `placeholder`      | `string`   | `"[Click to reveal email]"` | Text shown for clickable emails                  |
-| `redirectBaseUrl`  | `string`   | `"/api/email-redirect"`     | Base URL for http-redirect method                |
+| `redirectBaseUrl`  | `string`   | -                           | Required for the `http-redirect` method         |
 | `includeFallbacks` | `boolean`  | `true`                      | Include `<noscript>` fallbacks for accessibility |
 
 ## Examples
@@ -304,7 +286,7 @@ emailObfuscation({
 
 ```typescript
 emailObfuscation({
-  methods: ["js-interaction", "css-hidden"],
+  methods: ["js-interaction"],
   placeholder: "🔒 Secure email - click to access",
 });
 ```

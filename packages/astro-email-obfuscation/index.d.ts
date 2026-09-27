@@ -37,17 +37,11 @@ type ProcessingTarget = "text" | "link" | "both";
  */
 interface AstroEmailObfuscationOptions {
   /**
-   * Array of obfuscation methods to apply in sequence for layered defense.
-   * Methods are applied in the order specified, allowing for method chaining.
+   * Obfuscation methods. Only the last method in the array is used.
    * @default ["rot18"]
    */
   methods?: ObfuscationMethod[];
 
-  /**
-   * Legacy single method support (deprecated, use methods array instead)
-   * @deprecated Use methods array for better security
-   */
-  method?: ObfuscationMethod;
 
   /**
    * Control which parts of HTML to process

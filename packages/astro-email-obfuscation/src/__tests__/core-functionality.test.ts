@@ -193,6 +193,18 @@ describe("built email pages", () => {
     dom.window.close();
   });
 
+  it("uses the selected last method without requiring options for unused methods", async () => {
+    const result = await build(`<body><p>hello@example.com</p></body>`, {
+      methods: ["http-redirect", "rot18"],
+    });
+    const dom = rendered(result);
+    expect(dom.window.document.querySelector(".rot18-email")).not.toBeNull();
+    expect(
+      dom.window.document.querySelector(".http-redirect-email"),
+    ).toBeNull();
+    dom.window.close();
+  });
+
   it("leaves excluded paths and non-email hosts untouched while processing other pages", async () => {
     const html = `<body><p>root@host.local and valid@example.com</p></body>`;
     const excluded = await build(

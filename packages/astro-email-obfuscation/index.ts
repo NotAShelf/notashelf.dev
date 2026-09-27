@@ -20,15 +20,8 @@ export type ObfuscationMethod =
 type ProcessingTarget = "text" | "link" | "both";
 
 interface AstroEmailObfuscationOptions {
-  /**
-   * Array of obfuscation methods to apply in sequence for layered defense.
-   */
+  /** Only the last method in the array is used. */
   methods?: ObfuscationMethod[];
-
-  /**
-   * Legacy single method support (deprecated)
-   */
-  method?: ObfuscationMethod;
 
   /**
    * Control which parts of HTML to process
@@ -56,17 +49,10 @@ interface AstroEmailObfuscationOptions {
 export default function astroEmailObfuscation(
   userOptions: AstroEmailObfuscationOptions = {},
 ): AstroIntegration {
-  // Handle legacy method option and new methods array
-  const methods =
-    userOptions.methods ||
-    (userOptions.method ? [userOptions.method] : ["rot18"]);
+  const methods = userOptions.methods ?? ["rot18"];
 
-  // Validate http-redirect method requirements BEFORE applying defaults
-  // Validate if http-redirect is used and redirectBaseUrl is not provided or is empty
-  if (
-    methods.includes("http-redirect") &&
-    (!userOptions.redirectBaseUrl || userOptions.redirectBaseUrl === "")
-  ) {
+  // Only the selected method can require a redirect endpoint.
+  if (methods.at(-1) === "http-redirect" && !userOptions.redirectBaseUrl) {
     throw new Error(
       "redirectBaseUrl is required when using http-redirect method",
     );
@@ -78,7 +64,7 @@ export default function astroEmailObfuscation(
     dev: userOptions.dev || false,
     excludeSelector: userOptions.excludeSelector || ".no-obfuscate",
     placeholder: userOptions.placeholder || "[Click to reveal email]",
-    redirectBaseUrl: userOptions.redirectBaseUrl || "/api/email-redirect",
+    redirectBaseUrl: userOptions.redirectBaseUrl,
     includeFallbacks: userOptions.includeFallbacks !== false,
     excludeAddresses: userOptions.excludeAddresses || [],
   } as const;
@@ -340,23 +326,14 @@ export default function astroEmailObfuscation(
     },
   };
 
-  /**
-   * Apply multiple obfuscation methods in sequence for layered defense
-   */
-  function applyObfuscationChain(email: string): string {
-    let result = email;
-
-    // Use the last method in the chain for the final output
+  /** Render the selected (last) obfuscation method. */
+  function obfuscateEmail(email: string): string {
     const method = options.methods[options.methods.length - 1];
-
-    if (obfuscationMethods[method]) {
-      result = obfuscationMethods[method](email);
-    }
-
-    return result;
+    return obfuscationMethods[method](email);
   }
 
-  // Function to process HTML content and obfuscate emails
+  // Walk markup instead of treating the presence of one excluded or already
+  // obfuscated element as a reason to skip the entire page.
   const processHTMLContent = (
     content: string,
   ): { content: string; emailCount: number } => {
@@ -499,7 +476,7 @@ export default function astroEmailObfuscation(
             while (end < tokens.length && !/^<\/a\s*>$/i.test(tokens[end]))
               end++;
             if (end < tokens.length) {
-              result += applyObfuscationChain(address);
+              result += obfuscateEmail(address);
               emailCount++;
               i = end;
               continue;
@@ -522,7 +499,7 @@ export default function astroEmailObfuscation(
       result += token.replace(emailPattern, (email, _local, domain: string) => {
         if (!eligible(email, domain)) return email;
         emailCount++;
-        return applyObfuscationChain(email);
+        return obfuscateEmail(email);
       });
     }
     return { content: result, emailCount };
