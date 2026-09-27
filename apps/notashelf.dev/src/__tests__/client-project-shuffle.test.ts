@@ -2,14 +2,14 @@
  * @vitest-environment happy-dom
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import ProjectShuffle from "../scripts/utils/project-shuffle";
 
-function addCards(container: Element, count: number) {
+function addCards(container: Element, count: number, offset = 0) {
   for (let i = 0; i < count; i++) {
     const card = document.createElement("div");
     card.className = "project-card pre-shuffle-hide";
-    card.dataset.index = String(i);
+    card.dataset.index = String(i + offset);
     container.appendChild(card);
   }
 }
@@ -20,6 +20,8 @@ describe("ProjectShuffle", () => {
     document.body.innerHTML = "";
     window.history.replaceState({}, "", "/");
   });
+
+  afterEach(() => vi.useRealTimers());
 
   it("shows three shuffled cards on the homepage featured grid", () => {
     const section = document.createElement("section");
@@ -36,6 +38,14 @@ describe("ProjectShuffle", () => {
     vi.runAllTimers();
 
     expect(grid.children).toHaveLength(3);
+    const selected = Array.from(
+      grid.children,
+      (card) => (card as HTMLElement).dataset.index,
+    );
+    expect(new Set(selected).size).toBe(3);
+    expect(
+      selected.every((index) => Number(index) >= 0 && Number(index) < 8),
+    ).toBe(true);
     expect(grid.classList.contains("pre-shuffle-hide-grid")).toBe(false);
     expect(
       Array.from(grid.children).every(
@@ -58,7 +68,7 @@ describe("ProjectShuffle", () => {
     const bottom = document.createElement("div");
     bottom.className = "bottom-row";
     addCards(top, 4);
-    addCards(bottom, 4);
+    addCards(bottom, 4, 4);
     container.append(top, bottom);
     section.appendChild(container);
     document.body.appendChild(section);
@@ -68,6 +78,13 @@ describe("ProjectShuffle", () => {
 
     expect(top.children).toHaveLength(3);
     expect(bottom.children).toHaveLength(2);
+    const selected = [...top.children, ...bottom.children];
+    expect(
+      new Set(selected.map((card) => (card as HTMLElement).dataset.index)).size,
+    ).toBe(5);
+    expect(
+      selected.every((card) => !card.classList.contains("pre-shuffle-hide")),
+    ).toBe(true);
     expect(container.classList.contains("pre-shuffle-hide-grid")).toBe(false);
   });
 });
