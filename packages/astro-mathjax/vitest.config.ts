@@ -9,7 +9,6 @@ export default defineConfig({
     exclude: ["node_modules", "dist"],
     pool: "forks",
     isolate: false,
-    setupFiles: ["./src/__tests__/setup.ts"],
     testTimeout: 10000,
     hookTimeout: 10000,
     teardownTimeout: 5000,

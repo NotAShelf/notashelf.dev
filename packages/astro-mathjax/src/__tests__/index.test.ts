@@ -1,76 +1,83 @@
-import { describe, it, expect } from "vitest";
-import mathjax from "../../index.ts";
-import remarkMath from "remark-math";
-import rehypeMathjaxSvg from "rehype-mathjax/svg";
-import { unified, isUnifiedProcessor } from "@astrojs/markdown-remark";
-import { createMockSetupContext } from "./setup.ts";
+import { describe, it, expect, vi } from "vitest";
+import {
+  unified,
+  type MarkdownProcessor,
+  type UnifiedResolvedOptions,
+} from "@astrojs/markdown-remark";
+import type { AstroIntegration } from "astro";
+import mathjax, { type AstroMathJaxOptions } from "../../index.ts";
+
+async function renderMath(
+  markdown: string,
+  options?: AstroMathJaxOptions,
+  processor?: MarkdownProcessor<UnifiedResolvedOptions>,
+) {
+  const updateConfig =
+    vi.fn<
+      (change: {
+        markdown: { processor: MarkdownProcessor<UnifiedResolvedOptions> };
+      }) => void
+    >();
+  const ctx = {
+    config: { markdown: processor ? { processor } : {} },
+    updateConfig,
+  } as unknown as Parameters<
+    NonNullable<AstroIntegration["hooks"]["astro:config:setup"]>
+  >[0];
+  await mathjax(options).hooks["astro:config:setup"]!(ctx);
+  const configured = updateConfig.mock.calls[0][0].markdown.processor;
+  const renderer = await configured.createRenderer({ syntaxHighlight: false });
+  return (await renderer.render(markdown)).code;
+}
 
 describe("astro-mathjax integration", () => {
-  it("has correct integration name", () => {
-    const integration = mathjax();
-    expect(integration.name).toBe("astro-mathjax");
+  it("renders inline and display math as SVG without altering surrounding prose", async () => {
+    const html = await renderMath("Before $x^2$ after.\n\n$$\ny^2\n$$");
+
+    expect(html).toMatch(
+      /<p>Before <mjx-container class="MathJax" jax="SVG"><svg\b[\s\S]*?<\/svg><\/mjx-container> after\.<\/p>/,
+    );
+    expect(html).toMatch(
+      /<mjx-container class="MathJax" jax="SVG" display="true"><svg\b[\s\S]*?<\/svg><\/mjx-container>/,
+    );
+    expect(html).not.toContain("$x^2$");
   });
 
-  it("calls updateConfig with a unified processor", async () => {
-    const integration = mathjax();
-    const ctx = createMockSetupContext();
-    await integration.hooks["astro:config:setup"]!(ctx);
+  it("honors SVG output configuration without losing glyphs", async () => {
+    const local = await renderMath("$x$", { svg: { fontCache: "local" } });
+    const uncached = await renderMath("$x$", { svg: { fontCache: "none" } });
+    const global = await renderMath("$x$", { svg: { fontCache: "global" } });
 
-    expect(ctx.updateConfig).toHaveBeenCalledOnce();
-    const [calledWith] = ctx.updateConfig.mock.calls[0];
-    expect(isUnifiedProcessor(calledWith.markdown.processor)).toBe(true);
+    expect(local).toContain("<defs>");
+    expect(local).toContain("<use ");
+    expect(uncached).not.toContain("<defs>");
+    expect(uncached).not.toContain("<use ");
+    expect(uncached).toContain("<path ");
+    expect(global).toMatch(
+      /<defs><path id="([^"]+)"[\s\S]*?<\/defs>[\s\S]*?<use [^>]*xlink:href="#\1"/,
+    );
   });
 
-  it("includes remarkMath in processor plugins", async () => {
-    const integration = mathjax();
-    const ctx = createMockSetupContext();
-    await integration.hooks["astro:config:setup"]!(ctx);
+  it("retains existing processor settings and plugins while rendering math", async () => {
+    const existing = unified({
+      gfm: false,
+      rehypePlugins: [
+        () => (tree) => {
+          const paragraph = tree.children.find(
+            (node) => node.type === "element" && node.tagName === "p",
+          );
+          if (paragraph?.type === "element") {
+            paragraph.properties["data-existing"] = "retained";
+          }
+        },
+      ],
+    });
 
-    const [calledWith] = ctx.updateConfig.mock.calls[0];
-    const { remarkPlugins } = calledWith.markdown.processor.options;
-    expect(remarkPlugins).toContain(remarkMath);
-  });
+    const html = await renderMath("~~literal~~ and $x$", undefined, existing);
 
-  it("includes rehypeMathjaxSvg in processor plugins", async () => {
-    const integration = mathjax();
-    const ctx = createMockSetupContext();
-    await integration.hooks["astro:config:setup"]!(ctx);
-
-    const [calledWith] = ctx.updateConfig.mock.calls[0];
-    const { rehypePlugins } = calledWith.markdown.processor.options;
-    expect(rehypePlugins[0][0]).toBe(rehypeMathjaxSvg);
-  });
-
-  it("passes empty svg options by default", async () => {
-    const integration = mathjax();
-    const ctx = createMockSetupContext();
-    await integration.hooks["astro:config:setup"]!(ctx);
-
-    const [calledWith] = ctx.updateConfig.mock.calls[0];
-    const [, svgOptions] =
-      calledWith.markdown.processor.options.rehypePlugins[0];
-    expect(svgOptions).toEqual({});
-  });
-
-  it("forwards svg options to rehype-mathjax", async () => {
-    const integration = mathjax({ svg: { fontCache: "global", scale: 1.2 } });
-    const ctx = createMockSetupContext();
-    await integration.hooks["astro:config:setup"]!(ctx);
-
-    const [calledWith] = ctx.updateConfig.mock.calls[0];
-    const [, svgOptions] =
-      calledWith.markdown.processor.options.rehypePlugins[0];
-    expect(svgOptions).toEqual({ fontCache: "global", scale: 1.2 });
-  });
-
-  it("extends an existing unified processor", async () => {
-    const existingProcessor = unified({ remarkPlugins: [], rehypePlugins: [] });
-    const integration = mathjax();
-    const ctx = createMockSetupContext(existingProcessor);
-    await integration.hooks["astro:config:setup"]!(ctx);
-
-    const [calledWith] = ctx.updateConfig.mock.calls[0];
-    const { remarkPlugins } = calledWith.markdown.processor.options;
-    expect(remarkPlugins).toContain(remarkMath);
+    expect(html).toMatch(
+      /<p data-existing="retained">~~literal~~ and <mjx-container class="MathJax" jax="SVG"><svg\b/,
+    );
+    expect(html).not.toContain("<del>");
   });
 });

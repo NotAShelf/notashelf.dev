@@ -17,12 +17,15 @@ export default function mathjax(
   options: AstroMathJaxOptions = {},
 ): AstroIntegration {
   const { svg = {} } = options;
+  // Static Markdown output has no document-wide MathJax glyph definitions.
+  const svgOptions =
+    svg.fontCache === "global" ? { ...svg, fontCache: "local" as const } : svg;
 
   return {
     name: "astro-mathjax",
     hooks: {
       "astro:config:setup": ({ config, updateConfig }) => {
-        const existing = (config.markdown as any)?.processor;
+        const existing = config.markdown?.processor;
         if (existing && isUnifiedProcessor(existing)) {
           const opts = existing.options;
           updateConfig({
@@ -32,7 +35,7 @@ export default function mathjax(
                 remarkPlugins: [...(opts.remarkPlugins ?? []), remarkMath],
                 rehypePlugins: [
                   ...(opts.rehypePlugins ?? []),
-                  [rehypeMathjaxSvg, svg],
+                  [rehypeMathjaxSvg, { svg: svgOptions }],
                 ],
               }),
             },
@@ -42,7 +45,7 @@ export default function mathjax(
             markdown: {
               processor: unified({
                 remarkPlugins: [remarkMath],
-                rehypePlugins: [[rehypeMathjaxSvg, svg]],
+                rehypePlugins: [[rehypeMathjaxSvg, { svg: svgOptions }]],
               }),
             },
           });

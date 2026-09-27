@@ -31,15 +31,24 @@ $$
 
 ## Options
 
+<!--markdownlint-disable MD013-->
+
 ```ts
 mathjax({
   svg: {
-    fontCache: "local", // "local" (default) | "global" | "none"
+    fontCache: "local", // "local" (default) | "none" | "global" (falls back to "local")
     scale: 1,
     minScale: 0.5,
   },
 });
 ```
+
+<!--markdownlint-enable MD013-->
+
+`svg` configures MathJax's SVG output. For example, `fontCache: "none"` embeds
+glyph paths directly in each SVG instead of using a local glyph cache.
+`fontCache: "global"` falls back to `"local"`: standalone Markdown HTML does not
+contain the document-wide glyph definitions needed by MathJax's global cache.
 
 ## License
 
