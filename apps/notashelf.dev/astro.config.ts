@@ -18,17 +18,18 @@ import remarkEmDash from "remark-em-dash";
 import icon from "astro-icon";
 import expressiveCode from "astro-expressive-code";
 import postcssNormalize from "postcss-normalize";
+import type { AcceptedPlugin } from "postcss";
 import postcssPresetEnv from "postcss-preset-env";
-import autoprefixer from "autoprefixer";
 
-import remarkGfm from "remark-gfm";
 import remarkToc from "remark-toc";
 import rehypeExternalLinks from "rehype-external-links";
+
+// The normalize typings model an object, but the package exports a PostCSS factory.
+const normalizePlugin = postcssNormalize as unknown as AcceptedPlugin;
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://notashelf.dev",
-  output: "static",
   trailingSlash: "never",
   devToolbar: {
     enabled: false,
@@ -40,14 +41,6 @@ export default defineConfig({
 
   image: {
     remotePatterns: [{ protocol: "https" }],
-    service: {
-      entrypoint: "astro/assets/services/sharp",
-    },
-  },
-
-  build: {
-    inlineStylesheets: "auto",
-    assets: "_astro",
   },
 
   experimental: {
@@ -85,13 +78,12 @@ export default defineConfig({
     mdx(),
 
     emailObfuscation({
-      methods: ["js-interaction", "rot18"],
+      methods: ["rot18"],
       placeholder: "me @ domain",
     }),
 
     purgeCss({
       safelist: [
-        "safe-class",
         "archive-banner",
         "visible",
         "animate",
@@ -104,28 +96,18 @@ export default defineConfig({
         // PostSearch.svelte: class:disabled on pagination links
         "disabled",
       ],
-      blocklist: ["blocked-class"],
       postcss: {
-        options: {
-          from: undefined,
-          to: undefined,
-        },
         plugins: [
-          postcssNormalize() as any, // yuck
-          autoprefixer({
-            overrideBrowserslist: ["> 1%", "last 2 versions"],
-          }),
-          [
-            postcssPresetEnv,
-            {
-              stage: 3,
-              features: {
-                "nesting-rules": true,
-                "custom-media-queries": true,
-                "media-query-ranges": true,
-              },
+          normalizePlugin,
+          postcssPresetEnv({
+            browsers: ["> 1%", "last 2 versions"],
+            stage: 3,
+            features: {
+              "nesting-rules": true,
+              "custom-media-queries": true,
+              "media-query-ranges": true,
             },
-          ],
+          }),
         ],
       },
 
@@ -133,21 +115,7 @@ export default defineConfig({
         preset: [
           "default",
           {
-            discardComments: {
-              removeAll: true,
-            },
-            normalizeWhitespace: true,
-            mergeLonghand: true,
-            mergeRules: true,
-            minifySelectors: true,
-            minifyParams: true,
-            minifyFontValues: true,
-            colormin: true,
-            convertValues: true,
-            discardDuplicates: true,
-            discardEmpty: true,
-            discardOverridden: true,
-            normalizeUrl: true,
+            discardComments: { removeAll: true },
             reduceIdents: false,
             zindex: false,
           },
@@ -160,11 +128,7 @@ export default defineConfig({
     processor: unified({
       gfm: true,
       smartypants: true,
-      remarkPlugins: [
-        remarkEmDash,
-        remarkGfm,
-        [remarkToc, { heading: "contents" }],
-      ],
+      remarkPlugins: [remarkEmDash, [remarkToc, { heading: "contents" }]],
       rehypePlugins: [
         [
           rehypeExternalLinks,
@@ -177,12 +141,8 @@ export default defineConfig({
     }),
   },
 
-  // Prefetch configuration
-  // https://docs.astro.build/en/reference/configuration-reference/#prefetch-options
-  prefetch: {
-    prefetchAll: false,
-    defaultStrategy: "hover",
-  },
+  // Enable prefetching for internal links with data-astro-prefetch.
+  prefetch: true,
 
   vite: {
     // Variables used by the build process. We can easily pass values to those with Nix
@@ -203,32 +163,14 @@ export default defineConfig({
       copyrightYearPlugin(),
     ],
 
-    // Aggressively optimise Vite's build process. Terser is 1-3% slower, but it produces
-    // roughly 10% smaller results. Since we deploy this site exclusively on system switches
-    // the speed hit is not critical. It's a static site, not my super-epic online e-commerce.
+    // Terser compresses the static client bundles without unsafe transformations.
     build: {
       minify: "terser",
       terserOptions: {
         compress: {
           passes: 2,
-          unsafe_arrows: true,
-          unsafe_methods: true,
-          unsafe_proto: true,
-          unsafe_regexp: true,
           drop_console: true,
           drop_debugger: true,
-          pure_funcs: [
-            "console.log",
-            "console.info",
-            "console.debug",
-            "console.warn",
-          ],
-        },
-
-        mangle: {
-          properties: {
-            regex: /^_/,
-          },
         },
 
         format: {
