@@ -1,18 +1,18 @@
 ---
 title: "The Golden Age of Software Is a Little Embarrassing"
 description: "Cheaper software production is not the end of programming."
-date: 2026-08-11
+date: 2026-09-30
 keywords: ["thoughts", "programming", "software"]
 ---
 
 [Anthropic's study of agentic misalignment]: https://www.anthropic.com/research/agentic-misalignment
 [Palisade Research's shutdown experiments]: https://palisaderesearch.org/blog/shutdown-resistance
 
-Very recently I wrote an article titled "Taste Is All That's Left" arguing,
-well, that _taste is all that's left in the current age_. The article was
-_primarily_ about software, but that is not the whole scope. I genuinely do
-believe the haphazard use of LLMs has had devastating consequences across almost
-every aspect of our lives.
+A little while ago I wrote an article I have titled titled "Taste Is All That's
+Left" arguing, well, that _taste is all that's left in the current age_. The
+article was _primarily_ about software, but that is not the whole scope. I
+genuinely do believe the haphazard use of LLMs has had devastating consequences
+across almost every aspect of our lives.
 
 That post was needlessly bleak. It confused the removal of toil with the removal
 of the craft. I do not think we are there yet---or even especially close. Thus,
@@ -37,10 +37,10 @@ practice through which people learn to make and judge those decisions. A review
 is not exactly _useless_, but it is a different exercise from producing the
 first attempt and discovering why it failed.
 
-[^1]: At the mundane end, a model can royally fuck up by hallucinating an API,
-    inventing a configuration option, swallowing an error, or turning a
-    convenient assumption into a security boundary. At the stranger end, there
-    are controlled evaluations worth taking seriously.
+[^1]: At the mundane end, a model can _royally fuck up_ (emphasis mine) by
+    hallucinating an API, inventing a configuration option, swallowing an error,
+    or turning a convenient assumption into a security boundary. At the stranger
+    end, there are controlled evaluations worth taking seriously.
     [Anthropic's study of agentic misalignment] describes models in fictional
     environments blackmailing an executive or leaking confidential documents
     when those actions were presented as the only way to pursue a goal or avoid
@@ -66,23 +66,26 @@ tools introduce new costs of their own. It is ultimately a claim about the
 leverage available to a curious person, and not a claim that every learner now
 has an equally good education.
 
-This sounds like a contradiction. It is not. The same tool that makes it easy
-to avoid understanding can make understanding dramatically easier, if you use it
-as a way into the work rather than a way around it.
+If you've barely skimmed the post so far, you might be getting ready to point
+out that the statement I just made sounds like a contradiction. It is not. My
+argument is that the same tool that makes it easy to avoid understanding also
+makes understanding dramatically easier, if you use it as a way into the work
+rather than a way around it. Path of least resistance and all.
 
 ## The Wall
 
-Learning a new craft has real difficulties and mere obstacles. Treating every
-kind of friction as if it had the same educational value was one of the mistakes
-in my earlier thinking.
+Learning a new craft has _real challenges_, and it has _mere obstacles_. No,
+they're not the same. Treating every kind of friction as if it had the same
+educational value was one of the mistakes in my earlier thinking.
 
 Learning how a program works is difficult. No really, it is difficult no matter
-how talented you are. Learning how an _arbitrary_ program---that is, one that
-you _did not_ write---works is even more difficult. Remembering the details of a
-language, understanding a data structure, finding the boundary between two
-abstractions, and developing the judgement to know when a solution is going
-wrong---all of those are parts of the task, and they are rather difficult parts.
-They, for the purposes of this essay, are what I will call _the work_.
+how talented you are. Even if you're breezing through it, there is work to be
+done. Learning how an _arbitrary_ program---that is, one that you _did not_
+write---works is even more difficult. Remembering the details of a language,
+understanding a data structure, finding the boundary between two abstractions,
+and developing the judgement to know when a solution is going wrong---all of
+those are parts of the task, and they are rather difficult parts. They, for the
+purposes of this essay, are what I will call _the work_.
 
 Finding the right compiler flag in a manual written for somebody else---whose
 intended audience I often cannot identify---or writing the same twenty lines of
@@ -90,7 +93,7 @@ plumbing for the fifth time, and promptly discovering that an API changed three
 minor versions ago (of course without communication) are often just _obstacles_.
 They can be useful obstacles when you are beginning. They train you to be
 prepared. They force you to read. They make you look at the machine you are
-dealing with. But they are not sacred. Or in other words, they are not
+dealing with. But they are not _sacred_. Or in other words, they are not
 absolutely necessary steps you have some moral obligation to follow.
 
 The first time you implement a parser, you should probably feel the awkwardness
@@ -98,11 +101,12 @@ of turning text into a structure. You should understand what the tokens are,
 where state lives, and why malformed input needs somewhere to go. The twelfth
 time you write a nearly identical command-line parser for a small internal tool,
 the value may be mostly in the command-line tool. Making you type it all again
-does not necessarily deepen your understanding. It may just make you less likely
-to build the tool and far more annoyed in your own work. This, I think, points
-in the same direction as alienating the worker from the labor itself: when the
-activity is separated from its purpose and consequences, the worker loses
-contact with the thing being made.
+does not necessarily deepen your understanding. You might pick up a thing or
+two, but chances are it will just make you less likely to (re)build the tool and
+far more annoyed in your own work. This, I think, points in the same direction
+as alienating the worker from the labor itself: when the activity is separated
+from its purpose and consequences, the worker loses contact with the thing being
+made.
 
 I have probably underexplained the educational value of toil. Toil is not useful
 merely because it is unpleasant. It is useful when it puts you in contact with
@@ -494,15 +498,16 @@ often these tools are presented as having solved programming, I found that
 result difficult to excuse.
 
 Most of the talented programmers I know _do_ leverage LLMs. They have enough
-domain knowledge, and enough practice reviewing their own work, to distinguish a useful
-suggestion from utter garbage without surrendering the judgement that makes that
-distinction possible. This is not an argument that only exceptional people can
-use LLMs. It is an argument that safe use depends on having, or deliberately
-building, the ability to inspect the result. I suspect the consequences are
-visible to experienced programmers before the code reaches production, so they
-use the tools with only a little more than "optimistic caution"---as opposed to
-cautious optimism. The moral of this post, if anything, is that you should be
-careful with what you offload to a prediction machine and how you do so.
+domain knowledge, and enough practice reviewing their own work, to distinguish a
+useful suggestion from utter garbage without surrendering the judgement that
+makes that distinction possible. This is not an argument that only exceptional
+people can use LLMs. It is an argument that safe use depends on having, or
+deliberately building, the ability to inspect the result. I suspect the
+consequences are visible to experienced programmers before the code reaches
+production, so they use the tools with only a little more than "optimistic
+caution"---as opposed to cautious optimism. The moral of this post, if anything,
+is that you should be careful with what you offload to a prediction machine and
+how you do so.
 
 ## The Good News
 
@@ -525,31 +530,31 @@ work.
 ## Closing Thoughts
 
 I wrote "Taste Is All That's Left" as though fewer keystrokes necessarily meant
-fewer lessons. That was what I found bleak in my own thinking. It mistook the
-cost of entry for the craft itself, and it made a possible future sound like the
-only one. This, now I realize, was unnecessarily shallow.
+fewer lessons. That, in retrospect, was what I found _bleak_ in my own thinking.
+It mistook the cost of entry for the craft itself, and it made a possible future
+sound like the only one. This, as I realize now, was unnecessarily shallow.
 
-With hindsight, I think all of this abundance can become an excuse to stop
-learning, but it does not have to. We can use it to learn in public, learn by
-doing, and try things we would previously have abandoned at the first tedious
-obstruction. A person with a question can get to an experiment quickly. A
-beginner can ask an unreasonable number of questions without feeling that they
-are wasting a teacher's time. A maintainer can get help entering a hostile or
-undocumented repository.
+With the benefit of hindsight, I think all of this abundance can become an
+excuse to stop learning, but it does not have to. We can use it to learn in
+public, learn by doing, and try things we would previously have abandoned at the
+first tedious obstruction. A person with a question can get to an experiment
+quickly. A beginner can ask an unreasonable number of questions without feeling
+that they are wasting a teacher's time. A maintainer can get help entering a
+hostile or undocumented repository.
 
 I genuinely want to keep writing. I want to keep writing code, and I want to
-keep writing my own posts. I do not want to turn productivity into some kind of
-currency and I want to keep it as a craft. I want to understand the systems I
-use, and build things I can own up to. I still think there is something lost
-when a person treats generated software as a finished product and takes pride in
-not knowing what it does. But I no longer believe fewer keystrokes inherently
-equals more lessons stolen. If we are careful, and I mean _truly_ careful, about
-which parts we give away, we may _finally_ have enough time to work on the
-interesting parts.
+keep writing my own posts and software. I do not want to turn productivity into
+some kind of currency or metric, and I want to keep it as a craft I can excel
+at. I want to understand the systems I use, and build things I can own up to. I
+still think there is something lost when a person treats generated software as a
+finished product and takes pride in not knowing what it does. But I no longer
+believe fewer keystrokes inherently equals more lessons stolen. If we are
+careful, and I mean _truly_ careful, about which parts we give away, we may
+_finally_ have enough time to work on the interesting parts.
 
 This'll be the last post on AI for a while as I'm getting tired of writing about
-it and I'm sure you're getting tired of reading about it. If you have made it
-this far without sighing and clicking off then I thank you for your patience and
-promise a more interesting post after this one.
+it and I am pretty sure you're getting tired of reading about it. If you have
+made it this far without sighing and clicking off then I thank you for your
+patience and promise a more interesting post after this one.
 
 Be well.
