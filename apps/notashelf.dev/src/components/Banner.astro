@@ -57,24 +57,20 @@ const getTypeIcon = () => {
       {title && <h3>{title}</h3>}
     </div>
     <div class="banner-actions">
-      {
-        collapsible && (
-          <button
-            class="banner-toggle"
-            aria-label={expanded ? "Collapse banner" : "Expand banner"}
-            title={expanded ? "Collapse" : "Expand"}
-          >
-            <Icon name="chevron-down" class="toggle-icon" />
-          </button>
-        )
-      }
-      {
-        closable && (
-          <button class="banner-close" aria-label="Close banner" title="Close">
-            <Icon name="xmark" class="close-icon" />
-          </button>
-        )
-      }
+      {collapsible && (
+        <button
+          class="banner-toggle"
+          aria-label={expanded ? "Collapse banner" : "Expand banner"}
+          title={expanded ? "Collapse" : "Expand"}
+        >
+          <Icon name="chevron-down" class="toggle-icon" />
+        </button>
+      )}
+      {closable && (
+        <button class="banner-close" aria-label="Close banner" title="Close">
+          <Icon name="xmark" class="close-icon" />
+        </button>
+      )}
     </div>
   </div>
   <div class="banner-content">

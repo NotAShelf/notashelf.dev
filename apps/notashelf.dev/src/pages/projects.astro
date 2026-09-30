@@ -43,62 +43,60 @@ const formatDate = (date: Date | undefined) => {
       <h1 class="page-title">Projects</h1>
       <p class="page-description">
         A collection of personal and open source projects I've worked on.
-        <span class="projects-stats"
-          >Currently maintaining {activeProjectsCount} active projects.</span
-        >
+        <span class="projects-stats">
+          Currently maintaining {activeProjectsCount} active projects.
+        </span>
       </p>
     </div>
 
     <div class="projects-grid">
-      {
-        sortedProjects.map((project) => (
-          <div class={`project-card ${!project.data.active ? "inactive" : ""}`}>
-            <div class="project-content">
-              <h2 class="project-title">
-                <a
-                  href={project.data.sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {project.data.title}
-                </a>
-              </h2>
-
-              <div class="project-meta">
-                <span class="project-date">
-                  {formatDate(project.data.startDate)}
-                </span>
-                {project.data.active ? (
-                  <span class="status-badge active">Active</span>
-                ) : (
-                  <span class="status-badge inactive">Inactive</span>
-                )}
-              </div>
-
-              {project.data.description && (
-                <div class="description-container">
-                  <p class="project-description">{project.data.description}</p>
-                </div>
-              )}
-
-              <div class="project-tags">
-                {project.data.tags.map((tag) => (
-                  <span class="project-tag">{tag}</span>
-                ))}
-              </div>
-
+      {sortedProjects.map((project) => (
+        <div class={`project-card ${!project.data.active ? "inactive" : ""}`}>
+          <div class="project-content">
+            <h2 class="project-title">
               <a
                 href={project.data.sourceUrl}
-                class="view-project"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                View Project →
+                {project.data.title}
               </a>
+            </h2>
+
+            <div class="project-meta">
+              <span class="project-date">
+                {formatDate(project.data.startDate)}
+              </span>
+              {project.data.active ? (
+                <span class="status-badge active">Active</span>
+              ) : (
+                <span class="status-badge inactive">Inactive</span>
+              )}
             </div>
+
+            {project.data.description && (
+              <div class="description-container">
+                <p class="project-description">{project.data.description}</p>
+              </div>
+            )}
+
+            <div class="project-tags">
+              {project.data.tags.map((tag) => (
+                <span class="project-tag">{tag}</span>
+              ))}
+            </div>
+
+            <a
+              href={project.data.sourceUrl}
+              class="view-project"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Project →
+            </a>
           </div>
-        ))
-      }
+        </div>
+      ))}
     </div>
   </div>
 </BaseLayout>

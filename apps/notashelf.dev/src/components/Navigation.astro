@@ -17,20 +17,18 @@ const secondaryNavItems = [
       </a>
     </div>
     <div class="nav-right">
-      {
-        secondaryNavItems.map((item, index) => {
-          const isActive = currentPath.startsWith(item.url);
-          return (
-            <a
-              class={`nav-button ${isActive ? "active" : ""}`}
-              href={item.url}
-              data-key={`nav-${index}`}
-            >
-              {item.title}
-            </a>
-          );
-        })
-      }
+      {secondaryNavItems.map((item, index) => {
+        const isActive = currentPath.startsWith(item.url);
+        return (
+          <a
+            class={`nav-button ${isActive ? "active" : ""}`}
+            href={item.url}
+            data-key={`nav-${index}`}
+          >
+            {item.title}
+          </a>
+        );
+      })}
     </div>
   </div>
 </div>

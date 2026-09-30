@@ -102,40 +102,37 @@ const sourceHref = `${postSrc}/blob/${gitRevision}/${
     aria-valuemin={0}
     aria-valuemax={100}
     aria-valuenow={0}
-  >
-  </div>
-  {
-    showToc && (
-      <nav class="toc-sidebar" aria-hidden="true" aria-label="Page navigation">
-        <PostToc headings={headings} itemClass="toc-sidebar-item" client:load />
-      </nav>
-    )
-  }
+  ></div>
+  {showToc && (
+    <nav class="toc-sidebar" aria-hidden="true" aria-label="Page navigation">
+      <PostToc headings={headings} itemClass="toc-sidebar-item" client:load />
+    </nav>
+  )}
 
-  <button class="back-to-top" aria-label="Back to top">↑</button>
+  <button class="back-to-top" aria-label="Back to top">
+    ↑
+  </button>
 
   <article class="post">
     <h1 class="post-title" id="post-title">
-      <a href="#post-title" class="title-anchor" aria-label="Link to title">#</a
-      >{title}
+      <a href="#post-title" class="title-anchor" aria-label="Link to title">
+        #
+      </a>
+      {title}
     </h1>
 
     <div class="post-meta">
       <div class="meta-left">
-        {
-          formattedDate && (
-            <time datetime={date || ""}>
-              <Icon name="calendar" /> Published {formattedDate}
-            </time>
-          )
-        }
-        {
-          hasSignificantUpdate && formattedUpdatedDate && (
-            <time datetime={updated || ""} class="updated-date">
-              <Icon name="calendar" /> Updated {formattedUpdatedDate}
-            </time>
-          )
-        }
+        {formattedDate && (
+          <time datetime={date || ""}>
+            <Icon name="calendar" /> Published {formattedDate}
+          </time>
+        )}
+        {hasSignificantUpdate && formattedUpdatedDate && (
+          <time datetime={updated || ""} class="updated-date">
+            <Icon name="calendar" /> Updated {formattedUpdatedDate}
+          </time>
+        )}
         <span class="reading-time">
           <Icon name="clock" />
           {readingTime} min read
@@ -151,29 +148,25 @@ const sourceHref = `${postSrc}/blob/${gitRevision}/${
         </a>
       </div>
 
-      {
-        keywords.length > 0 && (
-          <div class="post-tags">
-            {keywords.map((tag) => (
-              <span class="tag">{tag}</span>
-            ))}
-          </div>
-        )
-      }
+      {keywords.length > 0 && (
+        <div class="post-tags">
+          {keywords.map((tag) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      )}
     </div>
 
-    {
-      showToc && (
-        <div class="toc-container">
-          <details class="toc" open>
-            <summary>Table of Contents</summary>
-            <nav class="toc-list">
-              <PostToc headings={headings} itemClass="toc-item" client:load />
-            </nav>
-          </details>
-        </div>
-      )
-    }
+    {showToc && (
+      <div class="toc-container">
+        <details class="toc" open>
+          <summary>Table of Contents</summary>
+          <nav class="toc-list">
+            <PostToc headings={headings} itemClass="toc-item" client:load />
+          </nav>
+        </details>
+      </div>
+    )}
 
     <div class="post-content-wrapper">
       <div class="post-content">

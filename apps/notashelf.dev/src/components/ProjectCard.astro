@@ -30,9 +30,7 @@ const formatDate = (date?: Date) => {
     </h3>
 
     <div class="project-meta">
-      <span class="project-date">
-        {formatDate(project.data.startDate)}
-      </span>
+      <span class="project-date">{formatDate(project.data.startDate)}</span>
       <span
         class={`status-badge ${project.data.active ? "active" : "inactive"}`}
       >
@@ -40,27 +38,21 @@ const formatDate = (date?: Date) => {
       </span>
     </div>
 
-    {
-      project.data.description && (
-        <div class="description-container">
-          <p class="project-description">{project.data.description}</p>
-        </div>
-      )
-    }
+    {project.data.description && (
+      <div class="description-container">
+        <p class="project-description">{project.data.description}</p>
+      </div>
+    )}
 
     <div class="project-tags">
-      {
-        project.data.tags
-          .slice(0, maxTagsToShow)
-          .map((tag) => <span class="project-tag">{tag}</span>)
-      }
-      {
-        project.data.tags.length > maxTagsToShow && (
-          <span class="project-tag more">
-            +{project.data.tags.length - maxTagsToShow}
-          </span>
-        )
-      }
+      {project.data.tags.slice(0, maxTagsToShow).map((tag) => (
+        <span class="project-tag">{tag}</span>
+      ))}
+      {project.data.tags.length > maxTagsToShow && (
+        <span class="project-tag more">
+          +{project.data.tags.length - maxTagsToShow}
+        </span>
+      )}
     </div>
 
     <a

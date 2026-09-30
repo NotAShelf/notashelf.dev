@@ -3,14 +3,48 @@ packages:
   - packages/*
   - content
 
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - '@swc/core'
-  - esbuild
-  - sharp
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  esbuild: true
+  sharp: true
+
+minimumReleaseAgeExclude:
+  - '@vitest/coverage-v8@5.0.3'
+  - '@vitest/mocker@5.0.3'
+  - '@vitest/pretty-format@5.0.3'
+  - '@vitest/spy@5.0.3'
+  - '@vitest/ui@5.0.3'
+  - '@vitest/utils@5.0.3'
+  - cssnano-preset-default@9.1.2
+  - cssnano@9.1.2
+  - postcss-colormin@9.0.5
+  - postcss-convert-values@9.0.6
+  - postcss-discard-comments@9.0.5
+  - postcss-discard-empty@9.0.5
+  - postcss-discard-overridden@9.0.5
+  - postcss-merge-longhand@9.1.1
+  - postcss-merge-rules@9.0.6
+  - postcss-minify-font-values@9.0.5
+  - postcss-minify-gradients@9.0.5
+  - postcss-minify-params@9.0.5
+  - postcss-normalize-charset@9.0.5
+  - postcss-normalize-display-values@9.0.5
+  - postcss-normalize-positions@9.0.5
+  - postcss-normalize-repeat-style@9.0.5
+  - postcss-normalize-timing-functions@9.0.5
+  - postcss-normalize-url@9.0.5
+  - postcss-normalize-whitespace@9.0.5
+  - postcss-ordered-values@9.0.5
+  - postcss-reduce-initial@9.0.5
+  - postcss-unique-selectors@9.0.5
+  - sass@1.105.1
+  - stylehacks@9.0.6
+  - vitest@5.0.3
+
 overrides:
-  '@types/node': 26.2.0
-  lru-cache: 11.5.2
+  '@types/node': 26.6.3
+  lru-cache: 11.5.3
 
 peerDependencyRules:
   allowedVersions:

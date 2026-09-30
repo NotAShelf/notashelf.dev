@@ -58,32 +58,10 @@ const bottomRowProjects = displayProjects.slice(3);
 >
   <h2 class="section-title">{title}</h2>
 
-  {
-    mode === "recent" ? (
-      <div class="recent-projects-container pre-shuffle-hide-grid">
-        <div class="top-row">
-          {topRowProjects.map((project) => (
-            <ProjectCard
-              project={project}
-              data-project-id={project.id}
-              class="pre-shuffle-hide"
-            />
-          ))}
-        </div>
-
-        <div class="bottom-row">
-          {bottomRowProjects.map((project) => (
-            <ProjectCard
-              project={project}
-              data-project-id={project.id}
-              class="pre-shuffle-hide"
-            />
-          ))}
-        </div>
-      </div>
-    ) : (
-      <div class="projects-grid pre-shuffle-hide-grid">
-        {displayProjects.map((project) => (
+  {mode === "recent" ? (
+    <div class="recent-projects-container pre-shuffle-hide-grid">
+      <div class="top-row">
+        {topRowProjects.map((project) => (
           <ProjectCard
             project={project}
             data-project-id={project.id}
@@ -91,8 +69,28 @@ const bottomRowProjects = displayProjects.slice(3);
           />
         ))}
       </div>
-    )
-  }
+
+      <div class="bottom-row">
+        {bottomRowProjects.map((project) => (
+          <ProjectCard
+            project={project}
+            data-project-id={project.id}
+            class="pre-shuffle-hide"
+          />
+        ))}
+      </div>
+    </div>
+  ) : (
+    <div class="projects-grid pre-shuffle-hide-grid">
+      {displayProjects.map((project) => (
+        <ProjectCard
+          project={project}
+          data-project-id={project.id}
+          class="pre-shuffle-hide"
+        />
+      ))}
+    </div>
+  )}
 
   <div class="see-all">
     <a href="/projects" class="see-all-link">

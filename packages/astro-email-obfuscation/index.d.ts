@@ -42,7 +42,6 @@ interface AstroEmailObfuscationOptions {
    */
   methods?: ObfuscationMethod[];
 
-
   /**
    * Control which parts of HTML to process
    * - "text": Only process standalone email text

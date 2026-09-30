@@ -30,15 +30,13 @@ const title = currentPage === 1 ? "Archive" : `Archive | Page ${currentPage}`;
 
   <ArchivePostList posts={posts} />
 
-  {
-    totalPages > 1 && (
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        baseUrl="/archive"
-      />
-    )
-  }
+  {totalPages > 1 && (
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      baseUrl="/archive"
+    />
+  )}
 </BaseLayout>
 
 <style lang="scss">

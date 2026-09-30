@@ -28,64 +28,62 @@ function getPageUrl(page: number) {
 }
 ---
 
-{
-  totalPages > 1 && (
-    <nav class="pagination" aria-label="Pagination">
-      <a
-        href={currentPage > 1 ? getPageUrl(currentPage - 1) : "#"}
-        class={`pagination-link prev ${currentPage <= 1 ? "disabled" : ""}`}
-        aria-label="Previous page"
-        aria-disabled={currentPage <= 1}
-        tabindex={currentPage <= 1 ? -1 : 0}
-      >
-        <Icon name="chevron-left" class="chevron-icon" />
-      </a>
+{totalPages > 1 && (
+  <nav class="pagination" aria-label="Pagination">
+    <a
+      href={currentPage > 1 ? getPageUrl(currentPage - 1) : "#"}
+      class={`pagination-link prev ${currentPage <= 1 ? "disabled" : ""}`}
+      aria-label="Previous page"
+      aria-disabled={currentPage <= 1}
+      tabindex={currentPage <= 1 ? -1 : 0}
+    >
+      <Icon name="chevron-left" class="chevron-icon" />
+    </a>
 
-      {startPage > 1 && (
-        <>
-          <a href={getPageUrl(1)} class="pagination-link">
-            1
-          </a>
-          {startPage > 2 && <span class="pagination-ellipsis">...</span>}
-        </>
-      )}
-
-      {Array.from(
-        { length: endPage - startPage + 1 },
-        (_, i) => startPage + i,
-      ).map((page) => (
-        <a
-          href={getPageUrl(page)}
-          class={`pagination-link ${currentPage === page ? "active" : ""}`}
-          aria-current={currentPage === page ? "page" : undefined}
-        >
-          {page}
+    {startPage > 1 && (
+      <>
+        <a href={getPageUrl(1)} class="pagination-link">
+          1
         </a>
-      ))}
+        {startPage > 2 && <span class="pagination-ellipsis">...</span>}
+      </>
+    )}
 
-      {endPage < totalPages && (
-        <>
-          {endPage < totalPages - 1 && (
-            <span class="pagination-ellipsis">...</span>
-          )}
-          <a href={getPageUrl(totalPages)} class="pagination-link">
-            {totalPages}
-          </a>
-        </>
-      )}
-
+    {Array.from(
+      { length: endPage - startPage + 1 },
+      (_, i) => startPage + i,
+    ).map((page) => (
       <a
-        href={currentPage < totalPages ? getPageUrl(currentPage + 1) : "#"}
-        class={`pagination-link next ${currentPage >= totalPages ? "disabled" : ""}`}
-        aria-label="Next page"
-        aria-disabled={currentPage >= totalPages}
-        tabindex={currentPage >= totalPages ? -1 : 0}
+        href={getPageUrl(page)}
+        class={`pagination-link ${currentPage === page ? "active" : ""}`}
+        aria-current={currentPage === page ? "page" : undefined}
       >
-        <Icon name="chevron-right" class="chevron-icon" />
+        {page}
       </a>
-    </nav>
-  )
-}
+    ))}
+
+    {endPage < totalPages && (
+      <>
+        {endPage < totalPages - 1 && (
+          <span class="pagination-ellipsis">...</span>
+        )}
+        <a href={getPageUrl(totalPages)} class="pagination-link">
+          {totalPages}
+        </a>
+      </>
+    )}
+
+    <a
+      href={currentPage < totalPages ? getPageUrl(currentPage + 1) : "#"}
+      class={`pagination-link next ${currentPage >= totalPages ? "disabled" : ""}`}
+      aria-label="Next page"
+      aria-disabled={currentPage >= totalPages}
+      tabindex={currentPage >= totalPages ? -1 : 0}
+    >
+      <Icon name="chevron-right" class="chevron-icon" />
+    </a>
+  </nav>
+)}
 
 <style lang="scss">
   @use "sass:color";

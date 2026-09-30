@@ -67,17 +67,24 @@ if (featuredPosts.length >= 3) {
         <p>
           Most of my writings are on Linux, Nix, NixOS, System Administration
           and Software Development. While I try to avoid the dogma of writing
-          about <i>how</i> to do things, I enjoy talking about the process of actually
-          doing things. In the future I intend to expand the scope of this website
-          and my writing to cover areas outside of programming, software and technology
-          in general. History, philosophy and mathematics are all neat candidates
-          for what it might be. Either way, I hope you find something useful here!
+          about <i>how</i> to do things, I enjoy talking about the process of
+          actually doing things. In the future I intend to expand the scope of
+          this website and my writing to cover areas outside of programming,
+          software and technology in general. History, philosophy and
+          mathematics are all neat candidates for what it might be. Either way,
+          I hope you find something useful here!
         </p>
       </div>
       <div class="cta-buttons">
-        <a href="/posts" class="cta-button secondary">Blog Posts</a>
-        <a href="/projects" class="cta-button secondary">My Projects</a>
-        <a href="/about" class="cta-button secondary">About Me</a>
+        <a href="/posts" class="cta-button secondary">
+          Blog Posts
+        </a>
+        <a href="/projects" class="cta-button secondary">
+          My Projects
+        </a>
+        <a href="/about" class="cta-button secondary">
+          About Me
+        </a>
       </div>
     </div>
     <div class="scroll-arrow">
@@ -87,21 +94,19 @@ if (featuredPosts.length >= 3) {
     </div>
   </section>
 
-  {
-    spotlightPost && sidePosts.length >= 2 && (
-      <section id="latest-notes" class="latest-notes fade-in">
-        <h2 class="section-title">Latest Notes</h2>
+  {spotlightPost && sidePosts.length >= 2 && (
+    <section id="latest-notes" class="latest-notes fade-in">
+      <h2 class="section-title">Latest Notes</h2>
 
-        <PostSpotlight spotlightPost={spotlightPost} sidePosts={sidePosts} />
+      <PostSpotlight spotlightPost={spotlightPost} sidePosts={sidePosts} />
 
-        <div class="see-all">
-          <a href="/posts" class="see-all-link">
-            View all notes <Icon name="arrow-right" class="icon" />
-          </a>
-        </div>
-      </section>
-    )
-  }
+      <div class="see-all">
+        <a href="/posts" class="see-all-link">
+          View all notes <Icon name="arrow-right" class="icon" />
+        </a>
+      </div>
+    </section>
+  )}
 
   <FeaturedProjects mode="featured" title="Featured Projects" />
 </BaseLayout>

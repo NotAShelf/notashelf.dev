@@ -153,13 +153,11 @@ const skillCategories = [
           />
         </div>
         <div class="tech-badges">
-          {
-            techBadges.map((badge) => (
-              <span class="tech-badge">
-                <Icon name={badge.icon} />
-              </span>
-            ))
-          }
+          {techBadges.map((badge) => (
+            <span class="tech-badge">
+              <Icon name={badge.icon} />
+            </span>
+          ))}
         </div>
       </div>
       <div class="about-intro">
@@ -187,7 +185,9 @@ const skillCategories = [
 
     <div class="content-grid">
       <section class="about-section fade-in" style="--delay: 0.1s">
-        <h2>Background <Icon name="user" /></h2>
+        <h2>
+          Background <Icon name="user" />
+        </h2>
         <div class="section-content">
           <p>
             I've been programming since 2018, entering the world of Linux,
@@ -209,27 +209,29 @@ const skillCategories = [
       </section>
 
       <section class="about-section fade-in" style="--delay: 0.2s">
-        <h2>Tech Stack <Icon name="layer-group" /></h2>
+        <h2>
+          Tech Stack <Icon name="layer-group" />
+        </h2>
         <div class="section-content">
           <div class="skills-container">
-            {
-              skillCategories.map((category) => (
-                <div class="skill-category">
-                  <h3>{category.title}</h3>
-                  <ul class="skill-list">
-                    {category.skills.map((skill) => (
-                      <li>{skill}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))
-            }
+            {skillCategories.map((category) => (
+              <div class="skill-category">
+                <h3>{category.title}</h3>
+                <ul class="skill-list">
+                  {category.skills.map((skill) => (
+                    <li>{skill}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       <section class="about-section fade-in" style="--delay: 0.25s">
-        <h2>Affiliations <Icon name="user-group" /></h2>
+        <h2>
+          Affiliations <Icon name="user-group" />
+        </h2>
         <div class="section-content">
           <p>
             I'm actively involved with several open-source communities and
@@ -237,33 +239,31 @@ const skillCategories = [
             communities I help maintain and support.
           </p>
           <div class="affiliations-grid">
-            {
-              affiliations.map((affiliation) => (
-                <div class="affiliation-card">
-                  <div class="affiliation-logo">
-                    {affiliation.isIcon ? (
-                      <Icon name={affiliation.logo as string} />
-                    ) : affiliation.logo ? (
-                      <Image
-                        src={affiliation.logo as string}
-                        alt={`${affiliation.name} Logo`}
-                        width={40}
-                        height={40}
-                        loading="lazy"
-                        decoding="async"
-                        fetchpriority="auto"
-                      />
-                    ) : (
-                      <span class="logo-placeholder">No Logo</span>
-                    )}
-                  </div>
-                  <div class="affiliation-content">
-                    <h3>{affiliation.name}</h3>
-                    <p>{affiliation.description}</p>
-                  </div>
+            {affiliations.map((affiliation) => (
+              <div class="affiliation-card">
+                <div class="affiliation-logo">
+                  {affiliation.isIcon ? (
+                    <Icon name={affiliation.logo as string} />
+                  ) : affiliation.logo ? (
+                    <Image
+                      src={affiliation.logo as string}
+                      alt={`${affiliation.name} Logo`}
+                      width={40}
+                      height={40}
+                      loading="lazy"
+                      decoding="async"
+                      fetchpriority="auto"
+                    />
+                  ) : (
+                    <span class="logo-placeholder">No Logo</span>
+                  )}
                 </div>
-              ))
-            }
+                <div class="affiliation-content">
+                  <h3>{affiliation.name}</h3>
+                  <p>{affiliation.description}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -273,7 +273,9 @@ const skillCategories = [
       </section>
 
       <section id="contact" class="about-section fade-in" style="--delay: 0.5s">
-        <h2>Let's Connect <Icon name="envelope" /></h2>
+        <h2>
+          Let's Connect <Icon name="envelope" />
+        </h2>
         <div class="section-content">
           <p class="contact-text">
             Want to talk? Ask a question? Want to discuss NixOS, Hyprland, or
@@ -281,23 +283,19 @@ const skillCategories = [
             following channels:
           </p>
           <div class="contact-options">
-            {
-              contactOptions.map((option) => (
-                <a
-                  href={option.href}
-                  class="contact-option"
-                  target={
-                    option.href.startsWith("mailto:") ? undefined : "_blank"
-                  }
-                  rel={
-                    option.href.startsWith("mailto:") ? undefined : "noopener"
-                  }
-                >
-                  <Icon name={option.icon} />
-                  <span>{option.text}</span>
-                </a>
-              ))
-            }
+            {contactOptions.map((option) => (
+              <a
+                href={option.href}
+                class="contact-option"
+                target={
+                  option.href.startsWith("mailto:") ? undefined : "_blank"
+                }
+                rel={option.href.startsWith("mailto:") ? undefined : "noopener"}
+              >
+                <Icon name={option.icon} />
+                <span>{option.text}</span>
+              </a>
+            ))}
           </div>
         </div>
       </section>

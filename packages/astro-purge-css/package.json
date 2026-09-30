@@ -13,12 +13,17 @@
       "default": "./index.ts"
     }
   },
-  "files": ["index.ts", "index.d.ts", "README.md", "LICENSE"],
+  "files": [
+    "index.ts",
+    "index.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
   "peerDependencies": {
     "astro": "^7.0.0"
   },
   "dependencies": {
-    "cssnano": "^8.0.10",
+    "cssnano": "^9.1.2",
     "glob": "^13.0.6",
     "postcss": "^8.5.28",
     "purgecss": "^8.0.0"
@@ -30,10 +35,10 @@
     "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "@types/node": "26.2.0",
-    "astro": "^7.3.3",
+    "@types/node": "26.6.3",
+    "astro": "^7.3.5",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.11"
+    "vitest": "^5.0.3"
   },
   "keywords": [
     "astro",

@@ -26,84 +26,80 @@ const sortedLists = lists.sort((a, b) => {
         of.
       </p>
 
-      {
-        sortedLists.length > 1 && (
-          <nav class="lists-nav" aria-label="Jump to a list">
-            {sortedLists.map((list) => (
-              <a class="lists-nav-link" href={`#${list.id}`}>
-                {list.data.icon && (
-                  <Icon name={list.data.icon} class="nav-icon" />
-                )}
-                {list.data.title}
-              </a>
-            ))}
-          </nav>
-        )
-      }
+      {sortedLists.length > 1 && (
+        <nav class="lists-nav" aria-label="Jump to a list">
+          {sortedLists.map((list) => (
+            <a class="lists-nav-link" href={`#${list.id}`}>
+              {list.data.icon && (
+                <Icon name={list.data.icon} class="nav-icon" />
+              )}
+              {list.data.title}
+            </a>
+          ))}
+        </nav>
+      )}
     </div>
 
-    {
-      sortedLists.map((list) => (
-        <section id={list.id} class="list-section">
-          <div class="list-heading">
-            {list.data.icon && <Icon name={list.data.icon} class="list-icon" />}
-            <h2 class="list-title">{list.data.title}</h2>
-            <span class="list-count">{list.data.items.length}</span>
-          </div>
+    {sortedLists.map((list) => (
+      <section id={list.id} class="list-section">
+        <div class="list-heading">
+          {list.data.icon && <Icon name={list.data.icon} class="list-icon" />}
+          <h2 class="list-title">{list.data.title}</h2>
+          <span class="list-count">{list.data.items.length}</span>
+        </div>
 
-          {list.data.description && (
-            <p class="list-description">{list.data.description}</p>
-          )}
+        {list.data.description && (
+          <p class="list-description">{list.data.description}</p>
+        )}
 
-          {list.data.items.length > 0 ? (
-            <ul class="list-items">
-              {list.data.items.map((item) => (
-                <li class="list-item">
-                  <div class="item-row">
-                    <span class="item-title">
-                      {item.url ? (
-                        <a
-                          href={item.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {item.title}
-                        </a>
-                      ) : (
-                        item.title
-                      )}
-                    </span>
-                    {item.subtitle && (
-                      <span class="item-subtitle">{item.subtitle}</span>
-                    )}
-                    {item.rating && (
-                      <span
-                        class="item-rating"
-                        role="img"
-                        aria-label={`Rated ${item.rating} out of 5`}
+        {list.data.items.length > 0 ? (
+          <ul class="list-items">
+            {list.data.items.map((item) => (
+              <li class="list-item">
+                <div class="item-row">
+                  <span class="item-title">
+                    {item.url ? (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
-                          <Icon
-                            name="star"
-                            class={
-                              n <= (item.rating ?? 0) ? "star filled" : "star"
-                            }
-                          />
-                        ))}
-                      </span>
+                        {item.title}
+                      </a>
+                    ) : (
+                      item.title
                     )}
-                    {item.year && <span class="item-year">{item.year}</span>}
-                  </div>
-                  {item.note && <p class="item-note">{item.note}</p>}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p class="list-empty">Nothing here yet.</p>
-          )}
-        </section>
-      ))
-    }
+                  </span>
+                  {item.subtitle && (
+                    <span class="item-subtitle">{item.subtitle}</span>
+                  )}
+                  {item.rating && (
+                    <span
+                      class="item-rating"
+                      role="img"
+                      aria-label={`Rated ${item.rating} out of 5`}
+                    >
+                      {[1, 2, 3, 4, 5].map((n) => (
+                        <Icon
+                          name="star"
+                          class={
+                            n <= (item.rating ?? 0) ? "star filled" : "star"
+                          }
+                        />
+                      ))}
+                    </span>
+                  )}
+                  {item.year && <span class="item-year">{item.year}</span>}
+                </div>
+                {item.note && <p class="item-note">{item.note}</p>}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="list-empty">Nothing here yet.</p>
+        )}
+      </section>
+    ))}
   </div>
 </BaseLayout>
 

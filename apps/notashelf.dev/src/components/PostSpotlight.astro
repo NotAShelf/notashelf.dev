@@ -18,51 +18,47 @@ const formatDate = (date: Date) => {
 ---
 
 <div class="featured-content">
-  {
-    spotlightPost && (
-      <a href={`/posts/${spotlightPost.id}`} class="spotlight-post">
-        <div class="spotlight-content">
-          <div class="content-header">
-            <h3>{spotlightPost.data.title}</h3>
-            <div class="post-meta">
-              <time datetime={spotlightPost.data.date.toISOString()}>
-                {formatDate(spotlightPost.data.date)}
-              </time>
-              <span class="reading-time">
-                {spotlightPost.readingTime} min read
-              </span>
-            </div>
-          </div>
-
-          <div class="content-body">
-            {spotlightPost.data.description ? (
-              <p>{spotlightPost.data.description}</p>
-            ) : (
-              <div class="spacer" />
-            )}
+  {spotlightPost && (
+    <a href={`/posts/${spotlightPost.id}`} class="spotlight-post">
+      <div class="spotlight-content">
+        <div class="content-header">
+          <h3>{spotlightPost.data.title}</h3>
+          <div class="post-meta">
+            <time datetime={spotlightPost.data.date.toISOString()}>
+              {formatDate(spotlightPost.data.date)}
+            </time>
+            <span class="reading-time">
+              {spotlightPost.readingTime} min read
+            </span>
           </div>
         </div>
-      </a>
-    )
-  }
+
+        <div class="content-body">
+          {spotlightPost.data.description ? (
+            <p>{spotlightPost.data.description}</p>
+          ) : (
+            <div class="spacer" />
+          )}
+        </div>
+      </div>
+    </a>
+  )}
 
   <div class="posts-side">
-    {
-      sidePosts.map((post, index) => (
-        <a
-          href={`/posts/${post.id}`}
-          class={`side-post ${index === 0 ? "first" : "second"}`}
-        >
-          <h3>{post.data.title}</h3>
-          <div class="post-meta">
-            <time datetime={post.data.date.toISOString()}>
-              {formatDate(post.data.date)}
-            </time>
-            <span class="reading-time">{post.readingTime} min read</span>
-          </div>
-        </a>
-      ))
-    }
+    {sidePosts.map((post, index) => (
+      <a
+        href={`/posts/${post.id}`}
+        class={`side-post ${index === 0 ? "first" : "second"}`}
+      >
+        <h3>{post.data.title}</h3>
+        <div class="post-meta">
+          <time datetime={post.data.date.toISOString()}>
+            {formatDate(post.data.date)}
+          </time>
+          <span class="reading-time">{post.readingTime} min read</span>
+        </div>
+      </a>
+    ))}
   </div>
 </div>
 
