@@ -1,0 +1,311 @@
+---
+import Link from "@components/Link.astro";
+import astroLicense from "@data/licenses/astro.txt?raw";
+import clsxLicense from "@data/licenses/clsx.txt?raw";
+import codeLicense from "@data/licenses/code.txt?raw";
+import contentLicense from "@data/licenses/content.txt?raw";
+import esmEnvLicense from "@data/licenses/esm-env.txt?raw";
+import expressiveCodeLicense from "@data/licenses/expressive-code.txt?raw";
+import mathjaxLicense from "@data/licenses/mathjax.txt?raw";
+import svelteAdapterLicense from "@data/licenses/svelte-adapter.txt?raw";
+import svelteLicense from "@data/licenses/svelte.txt?raw";
+import watchdogLicense from "@data/licenses/watchdog.txt?raw";
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+const projects = [
+  {
+    name: "Astro",
+    source: "https://github.com/withastro/astro",
+    authors: "Fred K. Schott and the Astro contributors",
+    contribution: "for the static pages and component integration.",
+    license: "MIT",
+    notice: `${astroLicense}\n\nAstro's Svelte integration\n\n${svelteAdapterLicense}`,
+  },
+  {
+    name: "Svelte",
+    source: "https://github.com/sveltejs/svelte",
+    authors: "the Svelte contributors",
+    contribution: "for the interactive post search and table of contents.",
+    license: "MIT",
+    notice: `${svelteLicense}\n\nclsx by Luke Edwards\nhttps://github.com/lukeed/clsx\n\n${clsxLicense}\n\nesm-env by Benjamin McCann\nhttps://github.com/benmccann/esm-env\n\n${esmEnvLicense}`,
+  },
+  {
+    name: "Expressive Code",
+    source: "https://github.com/expressive-code/expressive-code",
+    authors: "Tibor Schiemann and the Expressive Code contributors",
+    contribution: "for readable, accessible code examples.",
+    license: "MIT",
+    notice: expressiveCodeLicense,
+  },
+  {
+    name: "MathJax",
+    source: "https://github.com/mathjax/MathJax-src/tree/3.2.2",
+    authors: "the MathJax Consortium and contributors",
+    contribution: "for the mathematical typesetting in my posts.",
+    license: "Apache-2.0",
+    notice: `MathJax\nCopyright (c) 2018-2022 The MathJax Consortium\n\n${mathjaxLicense}`,
+  },
+  {
+    name: "Watchdog",
+    source: "https://github.com/manic-systems/watchdog",
+    authors: "the Watchdog contributors",
+    contribution: "for lightweight site analytics.",
+    license: "EUPL-1.2",
+    notice: watchdogLicense,
+  },
+];
+---
+
+<BaseLayout
+  title="Licenses"
+  description="Licenses for this site's code and writing, and thanks to the open source projects behind it."
+>
+  <article class="licenses-page">
+    <div class="licenses-header">
+      <h1>Licenses</h1>
+      <p>
+        About reusing this site's work, and the projects that help me make it.
+      </p>
+    </div>
+
+    <section aria-labelledby="repository-licenses">
+      <h2 id="repository-licenses">This repository</h2>
+      <p>
+        The{" "}
+        <Link href="https://github.com/notashelf/notashelf.dev" underline>
+          source code
+        </Link>
+        {" is available under the "}
+        <Link href="https://www.mozilla.org/en-US/MPL/2.0/" underline>
+          Mozilla Public License 2.0
+        </Link>
+        . You're welcome to use and adapt it under those terms.
+      </p>
+      <p>
+        My writing and other original creative content are licensed under{" "}
+        <Link href="https://creativecommons.org/licenses/by-nc/4.0/" underline>
+          CC BY-NC 4.0
+        </Link>
+        , unless noted otherwise. You can share and adapt them for noncommercial
+        use with explicit credit to NotAShelf, a license link, and a note of any
+        changes. Please get in touch for commercial use.
+      </p>
+      <details>
+        <summary>Full repository license texts</summary>
+        <h3>Code · MPL-2.0</h3>
+        <pre class="no-obfuscate">{codeLicense}</pre>
+        <h3>Content · CC BY-NC 4.0</h3>
+        <pre class="no-obfuscate">{contentLicense}</pre>
+      </details>
+    </section>
+
+    <section aria-labelledby="project-credits">
+      <h2 id="project-credits">Acknowledgements</h2>
+      <p>Thank you to the people behind the tools I use to build this site:</p>
+      <ul class="project-credits">
+        {projects.map(({ name, source, authors, contribution }) => (
+          <li>
+            <p>
+              <Link href={source} underline>
+                {name}
+              </Link>
+              {" by "}
+              {authors}, {contribution}
+            </p>
+          </li>
+        ))}
+      </ul>
+      <p>
+        Thanks also to Luke Edwards for{" "}
+        <Link href="https://github.com/lukeed/clsx" underline>
+          clsx
+        </Link>
+        {" and Benjamin McCann for "}
+        <Link href="https://github.com/benmccann/esm-env" underline>
+          esm-env
+        </Link>
+        , which support Svelte's runtime.
+      </p>
+      <p>
+        Behind the build are{" "}
+        <Link href="https://vite.dev/" underline>
+          Vite
+        </Link>
+        ,{" "}
+        <Link href="https://www.typescriptlang.org/" underline>
+          TypeScript
+        </Link>
+        ,{" "}
+        <Link href="https://sass-lang.com/" underline>
+          Sass
+        </Link>
+        ,{" "}
+        <Link href="https://postcss.org/" underline>
+          PostCSS
+        </Link>
+        ,{" "}
+        <Link href="https://sharp.pixelplumbing.com/" underline>
+          Sharp
+        </Link>
+        ,{" and the "}
+        <Link href="https://unifiedjs.com/" underline>
+          unified
+        </Link>{" "}
+        ecosystem, and their authors and maintainers.
+      </p>
+      <details>
+        <summary>Software license texts</summary>
+        {projects.map(({ name, license, notice }) => (
+          <div>
+            <h3>
+              {name} ({license})
+            </h3>
+            <pre class="no-obfuscate">{notice}</pre>
+          </div>
+        ))}
+      </details>
+    </section>
+
+    <section aria-labelledby="artwork-credits">
+      <h2 id="artwork-credits">Icons and artwork</h2>
+      <p>
+        The interface icons are from{" "}
+        <Link href="https://fontawesome.com/" underline>
+          Font Awesome Free 7.0.0
+        </Link>{" "}
+        by Fonticons, Inc. (copyright 2025), used under{" "}
+        <Link href="https://creativecommons.org/licenses/by/4.0/" underline>
+          CC BY 4.0
+        </Link>
+        . They are embedded and styled to fit the site.{" "}
+        <Link href="https://fontawesome.com/license/free" underline>
+          License details
+        </Link>
+        .
+      </p>
+      <p>
+        The NixOS logo is the work of Simon Frankau and Tim Cuthbertson, with
+        later revisions by Daniel Baker, maintained by the NixOS Marketing Team.
+        It is shared through{" "}
+        <Link href="https://github.com/NixOS/branding" underline>
+          NixOS / branding
+        </Link>
+        {" under "}
+        <Link href="https://creativecommons.org/licenses/by/4.0/" underline>
+          CC BY 4.0
+        </Link>
+        . The footer's Nix-derived artwork comes from{" "}
+        <Link href="https://codeberg.org/poz/nixwebr.ing" underline>
+          the Nix webring
+        </Link>
+        . Both are resized for display here.
+      </p>
+      <details>
+        <summary>Affiliation logos</summary>
+        <p>
+          The official{" "}
+          <Link href="https://git-scm.com/community/logos" underline>
+            Git logo
+          </Link>
+          {" by Jason Long is licensed under "}
+          <Link href="https://creativecommons.org/licenses/by/3.0/" underline>
+            CC BY 3.0
+          </Link>
+          . I use the Git, Hyprland, Simply, the Nix User Group, and Nix webring
+          logos to identify the projects and communities I'm involved with.
+          Their artwork retains its own licensing terms and isn't covered by my
+          site's content license.
+        </p>
+      </details>
+    </section>
+  </article>
+</BaseLayout>
+
+<style lang="scss">
+  @use "../styles/global" as *;
+
+  .licenses-page {
+    max-width: 68ch;
+    margin: 0 auto;
+    padding: 1.5rem 0 2rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .licenses-header {
+    text-align: left;
+    margin-bottom: 2rem;
+
+    h1 {
+      margin: 0 0 0.75rem;
+      font-size: 1.8rem;
+    }
+
+    p {
+      color: $text-muted;
+    }
+  }
+
+  section {
+    margin-bottom: 2.5rem;
+  }
+
+  h2 {
+    font-size: 1.35rem;
+    margin: 0 0 1rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem;
+  }
+
+  p {
+    margin: 0 0 1rem;
+    font-size: 0.95rem;
+  }
+
+  .project-credits {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+
+    li + li {
+      margin-top: 0.6rem;
+    }
+
+    p {
+      margin-bottom: 0.35rem;
+    }
+  }
+
+  details {
+    margin-bottom: 1rem;
+
+    &[open] > summary {
+      margin-bottom: 1rem;
+    }
+  }
+
+  summary {
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: $text-muted;
+
+    &:hover {
+      color: $hover-color;
+    }
+  }
+
+  pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 0.8rem;
+    padding: 1rem;
+    background: $background-dark;
+    border: 1px solid $border-medium;
+    border-radius: $radius-sm;
+    max-height: 28rem;
+    overflow-y: auto;
+  }
+</style>
