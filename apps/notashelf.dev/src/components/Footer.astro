@@ -10,8 +10,11 @@ const gitRevision = import.meta.env.GIT_REV || "development";
   <div class="footer-content-wide">
     <div class="footer-row">
       <div class="footer-left">
-        <Link href="/privacy" class="privacy-link" aria-label="Privacy Policy">
+        <Link href="/privacy" class="legal-link" aria-label="Privacy Policy">
           Privacy
+        </Link>
+        <Link href="/licenses" class="legal-link">
+          Licenses
         </Link>
       </div>
       <div class="footer-center">
@@ -154,6 +157,7 @@ const gitRevision = import.meta.env.GIT_REV || "development";
       .footer-left {
         justify-content: flex-start;
         flex: 1 1 0;
+        flex-wrap: wrap;
       }
 
       .footer-center {
@@ -169,7 +173,7 @@ const gitRevision = import.meta.env.GIT_REV || "development";
         flex: 1 1 0;
       }
 
-      .privacy-link {
+      .legal-link {
         color: $secondary;
         opacity: 0.8;
         font-size: 0.95em;
