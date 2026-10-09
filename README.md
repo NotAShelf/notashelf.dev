@@ -181,24 +181,29 @@ scripts. For Astro components I do _not_ have tests yet, but they'll eventually
 be added. `pnpm run test` is the quickest way to run your test.
 `pnpm run test:coverage` can be used to view a coverage report.
 
-## License
+## Licenses
 
-<!-- I'm looking at you. You know who you are. -->
+[licenses page]: https://notashelf.dev/licenses
+
+<!-- I'm looking at you. Yes you, you know who you are. -->
 
 > [!NOTE]
-> All creative content, which includes all of my blog posts, project data and
-> affiliations, are available under the [CC BY-NC License](./LICENSE). By the
-> terms of this license, you must provide proper attribution, state changes if
-> any and release remixed content under the same legal conditions as this
-> repository.
+> Original creative content, including blog posts, project descriptions and
+> affiliations, is available under [CC BY-NC 4.0](./LICENSE), unless noted
+> otherwise. Sharing and adaptation are permitted for noncommercial purposes
+> with appropriate attribution, a license link and an indication of changes. CC
+> BY-NC does not require ShareAlike; commercial use needs separate permission.
 
 Any TypeScript, JavaScript, Astro, Svelte, Rust, and other code in this
-repository is made available under the **Mozilla Public License v2.0**. See the
-individual package `LICENSE` files for package-specific notices.
+repository is made available under the **Mozilla Public License v2.0**. Some
+packages provide their own licenses, which you can see as individual packages'
+`LICENSE` files.
 
-Please do not modify or redistribute post contents without my express
-permission. For any code taken directly (which I know to be happening), an
-attribution would be nice out of respect for my efforts.
+Third-party software and artwork retain their own licenses. The site's
+[licenses page] gives a brief overview of the repository terms, credits project
+authors and contributors, and keeps software license texts in one expandable
+section. Affiliation logos are credited separately. Attribution for reused code
+is appreciated in addition to MPL-2.0 requirements :)
 
 ---
 
