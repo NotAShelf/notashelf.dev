@@ -50,7 +50,7 @@ in
     pnpmDeps = fetchPnpmDeps {
       pnpm = pnpm';
       inherit (finalAttrs) pname src pnpmInstallFlags;
-      hash = "sha256-d8kkkYyUNs5arjzyUJy2F+JkDhwxKv7Mb1VfWZ/B/Ho=";
+      hash = "sha256-KSbhlSbx3IvZR0Vt+DaIG952WXd2vGqKy1lYYf0U+Rc=";
       fetcherVersion = 4; # https://nixos.org/manual/nixpkgs/stable/#javascript-pnpm-fetcherVersion
     };
 
