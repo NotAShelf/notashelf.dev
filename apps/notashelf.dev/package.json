@@ -15,18 +15,18 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
-    "@astrojs/markdown-remark": "^7.3.1",
-    "@astrojs/mdx": "^8.0.2",
+    "@astrojs/markdown-remark": "^7.3.4",
+    "@astrojs/mdx": "^8.1.1",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
-    "@astrojs/svelte": "^9.0.1",
+    "@astrojs/svelte": "^9.1.1",
     "@astrojs/ts-plugin": "^1.10.12",
     "@esbuild/linux-x64": "0.28.2",
     "@mdx-js/mdx": "^3.1.1",
     "@notashelf/content": "workspace:*",
-    "astro": "^7.3.5",
+    "astro": "^7.4.2",
     "astro-email-obfuscation": "workspace:*",
-    "astro-expressive-code": "^0.44.2",
+    "astro-expressive-code": "^0.44.3",
     "astro-icon": "^1.2.0",
     "astro-mathjax": "workspace:*",
     "astro-purge-css": "workspace:*",
@@ -57,6 +57,6 @@
     "vite-copyright-replace": "workspace:*"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.10"
+    "@astrojs/check": "^0.9.12"
   }
 }
