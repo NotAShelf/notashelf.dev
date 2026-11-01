@@ -35,14 +35,15 @@ async function mdxToHtml(content: string): Promise<string> {
       .use(remarkMdx)
       .use(remarkGfm)
       .use(() => (tree) => {
-        // This plugin removes mdxJsxFlowElement and mdxJsxTextElement nodes
-        // which represent JSX in MDX files
+        // This plugin removes MDX JSX nodes and import/export nodes, which
+        // cannot be rendered directly in an RSS feed.
         const visit = (node: any) => {
           if (node.children) {
             node.children = node.children.filter(
               (child: any) =>
                 child.type !== "mdxJsxFlowElement" &&
-                child.type !== "mdxJsxTextElement",
+                child.type !== "mdxJsxTextElement" &&
+                child.type !== "mdxjsEsm",
             );
             node.children.forEach(visit);
           }
