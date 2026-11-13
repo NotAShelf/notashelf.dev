@@ -53,11 +53,11 @@
   },
   "dependencies": {
     "astro": "^7.3.5",
-    "cssnano": "^9.1.2",
+    "cssnano": "^9.9.0",
     "glob": "^13.0.6",
     "he": "1.2.0",
-    "postcss": "^8.5.28",
-    "purgecss": "^8.0.0",
+    "postcss": "^8.5.32",
+    "purgecss": "^9.1.0",
     "svelte": "5.57.1"
   }
 }
