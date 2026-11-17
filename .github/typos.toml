@@ -1,5 +1,9 @@
+[default.extend-identifiers]
+McCann = "McCann"
+
 default.extend-ignore-words-re = [
-  "moreso",      # this is a valid word.
+  "moreso",      # this is a valid word, to me anyway
   "(?i)ratatui", # this is a project name
 ]
+
 files.extend-exclude = [ "flake.lock" ]
