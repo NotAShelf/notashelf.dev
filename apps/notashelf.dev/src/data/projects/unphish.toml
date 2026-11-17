@@ -1,4 +1,4 @@
-active      = true
+active      = false
 description = "Cloudflare Phishing Report API and Frontend"
 sourceUrl   = "https://github.com/NotAShelf/unphish"
 startDate   = 2025-09-15
