@@ -1,4 +1,4 @@
-description = "Supporting developer and community manager for the beautiful and innovative Wayland compositor, Hyprland"
+description = "Supporting developer for Nix and community manager for Hyprland, a dynamic tiling Wayland compositor."
 isIcon      = false
 logo        = "hyprland-logo.png"
 name        = "Hyprland"

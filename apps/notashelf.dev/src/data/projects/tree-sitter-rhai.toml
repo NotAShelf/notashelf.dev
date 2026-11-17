@@ -1,0 +1,6 @@
+active      = true
+description = "Tree-sitter grammar for Rhai"
+sourceUrl   = "https://github.com/NotAShelf/tree-sitter-rhai"
+startDate   = 2026-10-05
+tags        = [ "treesitter", "rhai", "grammar", "C" ]
+title       = "tree-sitter-rhai"

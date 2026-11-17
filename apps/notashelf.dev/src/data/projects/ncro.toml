@@ -1,0 +1,6 @@
+active      = true
+description = "Lightweight HTTP proxy for optimizing Nix cache routes for fast access"
+sourceUrl   = "https://github.com/manic-systems/ncro"
+startDate   = 2026-05-11
+tags        = [ "nix", "nix-binary-cache", "nix-cache", "nix-proxy", "nixos", "rust" ]
+title       = "ncro"

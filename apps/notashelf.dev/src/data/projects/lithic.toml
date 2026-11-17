@@ -1,0 +1,6 @@
+active      = true
+description = "Cross-platform mod and instance manager for Vintage Story with CLI and GUI workflows"
+sourceUrl   = "https://github.com/NotAShelf/lithic"
+startDate   = 2026-05-23
+tags        = [ "vintage-story", "mod-manager", "Rust" ]
+title       = "lithic"

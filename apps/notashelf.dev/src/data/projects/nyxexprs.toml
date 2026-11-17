@@ -1,7 +1,7 @@
 active      = true
-description = "Collection of packages not found in Nixpkgs"
+description = "Personal Nix package collection and overlay"
 featurable  = true
 sourceUrl   = "https://github.com/notashelf/nyxexprs"
 startDate   = 2023-11-03
 tags        = [ "Nix" ]
-title       = "Nyxpkgs"
+title       = "Nyxexprs"

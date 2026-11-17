@@ -1,4 +1,4 @@
-description = "NixOS hacker, Nixpkgs contributor and 25.05 release editor. I am always looking for new ways to improve the Nix/OS ecosystem."
+description = "NixOS hacker, Nixpkgs contributor and Nix Steering Committee member (2026–2028). Release editor for NixOS 25.05, 26.05 and 26.11."
 isIcon      = false
 logo        = "nixos-logo.svg"
 name        = "NixOS"

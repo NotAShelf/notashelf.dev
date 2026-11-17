@@ -1,0 +1,7 @@
+active      = true
+description = "Horizontally spinning Hyprland"
+featurable  = false
+sourceUrl   = "https://github.com/NotAShelf/hyprascii"
+startDate   = 2023-12-31
+tags        = [ "hyprland", "ascii", "JavaScript" ]
+title       = "hyprascii"

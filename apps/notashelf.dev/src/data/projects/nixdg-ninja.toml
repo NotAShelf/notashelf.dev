@@ -1,0 +1,6 @@
+active      = true
+description = "Helper module system for more XDG-compliant Nix and NixOS environments"
+sourceUrl   = "https://github.com/NotAShelf/nixdg-ninja"
+startDate   = 2025-07-29
+tags        = [ "nix", "nixos", "xdg" ]
+title       = "nixdg-ninja"

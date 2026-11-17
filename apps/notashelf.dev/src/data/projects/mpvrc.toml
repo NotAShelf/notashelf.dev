@@ -1,7 +1,7 @@
 active      = true
 description = "Minimalistic, yet robust API wrapper and remote controller for MPV, the video player."
 featurable  = true
-sourceUrl   = "https://github.com/NotAShelf/mrc"
+sourceUrl   = "https://github.com/NotAShelf/mpvrc"
 startDate   = 2024-12-21
 tags        = [ "Rust", "API", "MPV", "Remote Control" ]
-title       = "mrc"
+title       = "mpvrc"

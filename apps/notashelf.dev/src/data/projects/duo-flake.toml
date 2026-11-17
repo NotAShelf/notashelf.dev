@@ -1,0 +1,6 @@
+active      = true
+description = "Nix flake for cross-compiling NixOS images for RISC-V hardware"
+sourceUrl   = "https://github.com/NotAShelf/duo-flake"
+startDate   = 2026-06-21
+tags        = [ "nix", "nixos", "risc-v", "embedded" ]
+title       = "duo-flake"

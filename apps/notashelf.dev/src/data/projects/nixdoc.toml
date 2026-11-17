@@ -1,0 +1,6 @@
+active      = true
+description = "RFC-145 compliant Nixdoc parser in pure Rust"
+sourceUrl   = "https://github.com/feel-co/nixdoc"
+startDate   = 2026-02-19
+tags        = [ "nix", "nixdoc", "Rust" ]
+title       = "nixdoc"

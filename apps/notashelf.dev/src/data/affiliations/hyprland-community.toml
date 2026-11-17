@@ -1,0 +1,4 @@
+description = "Member of Hyprland Community, an unofficial organization for sharing and developing Hyprland-related projects."
+isIcon      = false
+logo        = "git-logo.svg"
+name        = "Hyprland Community"

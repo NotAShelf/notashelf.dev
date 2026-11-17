@@ -1,0 +1,6 @@
+active      = true
+description = "Direct network printer interface with PDF preview"
+sourceUrl   = "https://github.com/NotAShelf/np"
+startDate   = 2025-12-08
+tags        = [ "printing", "networking", "Python" ]
+title       = "np"

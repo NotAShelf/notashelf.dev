@@ -1,0 +1,4 @@
+description = "Member of nix-community, a community project incubator supporting the Nix ecosystem alongside NixOS."
+isIcon      = false
+logo        = "git-logo.svg"
+name        = "nix-community"

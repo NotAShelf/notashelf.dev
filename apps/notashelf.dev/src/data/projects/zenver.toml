@@ -1,0 +1,6 @@
+active      = true
+description = "A post-modern versioning scheme"
+sourceUrl   = "https://github.com/NotAShelf/ZenVer"
+startDate   = 2024-05-13
+tags        = [ "versioning", "specification" ]
+title       = "ZenVer"

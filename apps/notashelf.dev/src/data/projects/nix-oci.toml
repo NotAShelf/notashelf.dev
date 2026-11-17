@@ -1,0 +1,7 @@
+active      = false
+description = "Experiments with building OCI images of NixOS systems"
+featurable  = false
+sourceUrl   = "https://github.com/NotAShelf/nix-oci"
+startDate   = 2025-10-02
+tags        = [ "nix", "nixos", "containers", "oci" ]
+title       = "nix-oci"

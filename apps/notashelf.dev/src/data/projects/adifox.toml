@@ -1,0 +1,6 @@
+active      = true
+description = "Adios-based Firefox wrapper built on wrapFirefox"
+sourceUrl   = "https://github.com/NotAShelf/adifox"
+startDate   = 2026-02-07
+tags        = [ "nix", "firefox", "browser" ]
+title       = "adifox"

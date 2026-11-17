@@ -1,0 +1,7 @@
+active      = true
+description = "Turn off your computer by flipping it off"
+featurable  = false
+sourceUrl   = "https://github.com/NotAShelf/flipoff"
+startDate   = 2026-04-07
+tags        = [ "desktop", "Python" ]
+title       = "flipoff"

@@ -1,5 +1,5 @@
-active      = true
-description = "First child of chaos, and my ever-evolving NixOS configuration"
+active      = false
+description = "First child of chaos, and my archived NixOS configuration"
 featurable  = false
 sourceUrl   = "https://github.com/notashelf/nyx"
 startDate   = 2022-11-03

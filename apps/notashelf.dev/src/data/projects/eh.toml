@@ -1,0 +1,6 @@
+active      = true
+description = "Ergonomic Nix helper"
+sourceUrl   = "https://github.com/NotAShelf/eh"
+startDate   = 2026-05-09
+tags        = [ "nix", "CLI", "Rust" ]
+title       = "eh"
