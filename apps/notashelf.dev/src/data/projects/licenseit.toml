@@ -1,4 +1,4 @@
-active      = true
+active      = false
 description = "Small, configurable utility program for generating license files from embedded templates"
 sourceUrl   = "https://github.com/NotAShelf/licenseit"
 startDate   = 2025-08-31
