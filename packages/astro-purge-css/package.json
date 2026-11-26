@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "cssnano": "^9.1.2",
-    "glob": "^13.0.6",
+    "glob": "^14.0.2",
     "postcss": "^8.5.28",
     "purgecss": "^8.0.0"
   },
