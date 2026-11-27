@@ -50,7 +50,7 @@
     "slugify": "^1.6.9",
     "svelte": "5.57.1",
     "svelte-fa": "^4.0.4",
-    "terser": "^5.51.2",
+    "terser": "^5.51.4",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.1.0",
     "vfile": "^6.0.3",
